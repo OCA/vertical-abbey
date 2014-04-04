@@ -51,6 +51,7 @@ class donation_donation(orm.Model):
             'quantity': donation_line.quantity,
             'intention': donation_line.intention,
             'donation_line_id': donation_line.id,
+            'company_id': donation.company_id.id,
         }
         return vals
 

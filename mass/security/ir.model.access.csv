@@ -5,3 +5,5 @@ access_mass_request_type_user,Read access on mass.request.type to Mass User,mode
 access_mass_line_user,Full access on mass.line to Mass User,model_mass_line,group_mass_user,1,1,1,1
 access_mass_account_move,Full access on account.move,account.model_account_move,group_mass_user,1,1,1,1
 access_mass_account_move_line,Full access on account.move.line,account.model_account_move_line,group_mass_user,1,1,1,1
+access_mass_request_transfer_manager,Full access on mass.request.transfer to Mass Manager,model_mass_request_transfer,group_mass_manager,1,1,1,1
+access_mass_request_transfer_user,Read access on mass.request.transfer to Mass User,model_mass_request_transfer,group_mass_user,1,0,0,0
