@@ -86,6 +86,17 @@ class mass_request(orm.Model):
                 }
         return res
 
+    def name_get(self, cr, uid, ids, context=None):
+        res = []
+        for request in self.browse(cr, uid, ids, context=context):
+            res.append(
+                (request.id,
+                u'[%dx%s] %s' % (
+                    request.quantity,
+                    request.type_id.code,
+                    request.donator_id.name)))
+        return res
+
     _columns = {
         'donator_id': fields.many2one('res.partner', 'Donator', required=True),
         'celebrant_id': fields.many2one(
@@ -105,6 +116,8 @@ class mass_request(orm.Model):
         #    string='Offering per Mass',
         #    digits_compute=dp.get_precision('Account'),
         #    help="This field is the offering amount of per mass is in "),
+        'company_id': fields.many2one(
+            'res.company', 'Company', required=True),
         'quantity': fields.integer('Quantity'),
         'mass_quantity': fields.function(
             _compute_request_properties, type="integer",
