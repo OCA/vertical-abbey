@@ -77,6 +77,7 @@
                     <field name="quantity"/>
                     <field name="mass_quantity"/>
                     <field name="mass_remaining_quantity"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </group>
             </group>
             <group name="lines" string="Mass">
