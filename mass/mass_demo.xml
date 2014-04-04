@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+<data noupdate="1">
+
+<record id="father_odilon" model="res.partner">
+    <field name="name">Father Odilon</field>
+    <field name="parent_id" ref="base.main_partner"/>
+    <field name="celebrant">1</field>
+    <field name="customer" eval="False"/>
+    <field name="use_parent_address">1</field>
+</record>
+
+<record id="father_raphael" model="res.partner">
+    <field name="name">Father Raphaël</field>
+    <field name="parent_id" ref="base.main_partner"/>
+    <field name="celebrant">1</field>
+    <field name="customer" eval="False"/>
+    <field name="use_parent_address">1</field>
+</record>
+
+</data>
+</openerp>

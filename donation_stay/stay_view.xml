@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Copyright (C) 2014 Artisanat Monastique de Provence
+                       (http://www.barroux.org)
+    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+    @author: Brother Bernard <informatique@barroux.org>
+    The licence is in the file __openerp__.py
+-->
+
+<openerp>
+<data>
+
+<record id="stay_add_donation_form" model="ir.ui.view">
+    <field name="name">add.donation.from.stay.form</field>
+    <field name="model">stay.stay</field>
+    <field name="inherit_id" ref="stay.stay_form"/>
+    <field name="arch"  type="xml">
+    	 
+        	<header position="inside">
+            	<button type="action" string="Create Donation" name="%(create_donation_stay_action)d" class="oe_highlight"/>
+        	</header> 
+            
+
+
+    </field>
+</record>
+
+
+</data>
+</openerp>
