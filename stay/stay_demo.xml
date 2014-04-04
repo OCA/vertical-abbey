@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+<data noupdate="1">
+
+<record id="refectory_monastique" model="stay.refectory">
+    <field name="name">Réfectoire monastique</field>
+    <field name="code">REF</field>
+    <field name="capacity">48</field>
+</record>
+
+<record id="refectory_ste_francoise" model="stay.refectory">
+    <field name="name">Salle Sainte Françoise Romaine</field>
+    <field name="code">SFR</field>
+    <field name="capacity">16</field>
+</record>
+
+<record id="refectory_st_bernard" model="stay.refectory">
+    <field name="name">Salle Saint Bernard</field>
+    <field name="code">BER</field>
+    <field name="capacity">12</field>
+</record>
+
+<record id="room_st_cure_ars" model="stay.room">
+    <field name="name">St Curé d'Ars</field>
+    <field name="code">211</field>
+    <field name="capacity">1</field>
+</record>
+
+<record id="room_st_jean_eudes" model="stay.room">
+    <field name="name">St Jean Eudes</field>
+    <field name="code">213</field>
+    <field name="capacity">1</field>
+</record>
+
+<record id="room_st_bruno" model="stay.room">
+    <field name="name">St Bruno</field>
+    <field name="code">214</field>
+    <field name="capacity">1</field>
+</record>
+
+<record id="room_st_elie" model="stay.room">
+    <field name="name">St Elie</field>
+    <field name="code">215</field>
+    <field name="capacity">1</field>
+</record>
+
+<record id="room_dortoir" model="stay.room">
+    <field name="name">Dortoir</field>
+    <field name="code">DOR</field>
+    <field name="capacity">12</field>
+</record>
+
+<record id="stay1" model="stay.stay">
+    <field name="partner_name">Martin Payet</field>
+    <field name="guest_qty">1</field>
+    <field name="arrival_date">2014-03-31</field>
+    <field name="arrival_time">afternoon</field>
+    <field name="departure_date">2014-04-04</field>
+    <field name="departure_time">morning</field>
+    <field name="room_id" ref="room_st_elie"/>
+</record>
+
+<record id="stay2" model="stay.stay">
+    <field name="partner_id" ref="base.res_partner_address_4"/>
+    <field name="partner_name">Michel Fletcher</field>
+    <field name="guest_qty">1</field>
+    <field name="arrival_date">2014-04-01</field>
+    <field name="arrival_time">morning</field>
+    <field name="departure_date">2014-04-08</field>
+    <field name="departure_time">evening</field>
+    <field name="room_id" ref="room_st_cure_ars"/>
+</record>
+
+<record id="base.main_company" model="res.company">
+    <field name="default_refectory_id" ref="refectory_monastique"/>
+</record>
+
+</data>
+</openerp>
