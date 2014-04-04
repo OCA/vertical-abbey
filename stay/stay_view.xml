@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Copyright (C) 2014 Artisanat Monastique de Provence
+                       (http://www.barroux.org)
+    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+    @author: Brother Bernard <informatique@barroux.org>
+    The licence is in the file __openerp__.py
+-->
+
+<openerp>
+<data>
+
+<record id="stay_form" model="ir.ui.view">
+    <field name="name">stay.form</field>
+    <field name="model">stay.stay</field>
+    <field name="arch"  type="xml">
+        <form string="Stay" version="7.0">
+            <header>
+            </header>
+            <group name="main">
+                <group name="left">
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="partner_id" on_change="partner_id_change(partner_id, context)"/>
+                    <field name="partner_name"/>
+                    <field name="guest_qty"/>
+                     <field name="create_uid" readonly="1"/>
+                </group>
+                <group name="right">
+                    <field name="arrival_date"/>
+                    <field name="arrival_time"/>
+                    <field name="departure_date"/>
+                    <field name="departure_time" />
+                    <field name="room_id" />
+<!--                    <field name="create_uid"/> -->
+                </group>
+            </group>
+            <group name="lines">
+                <field name="line_ids" nolabel="1"/>
+            </group>
+            <group name="note">
+                <field name="note"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="stay_tree" model="ir.ui.view">
+    <field name="name">stay.tree</field>
+    <field name="model">stay.stay</field>
+    <field name="arch"  type="xml">
+        <tree string="Stay">
+            <field name="name"/>
+            <field name="partner_name" invisible="context.get('partner_view')"/>
+            <field name="guest_qty"/>
+            <field name="arrival_date"/>
+            <field name="arrival_time"/>
+            <field name="departure_date"/>
+            <field name="departure_time"/>
+        </tree>
+    </field>
+</record>
+
+
+<record id="stay_search" model="ir.ui.view">
+    <field name="name">stay.search</field>
+    <field name="model">stay.stay</field>
+    <field name="arch"  type="xml">
+        <search string="Search Stays">
+            <field name="partner_name"/>
+        </search>
+    </field>
+</record>
+
+<record id="stay_action" model="ir.actions.act_window">
+    <field name="name">Stay</field>
+    <field name="res_model">stay.stay</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+
+<menuitem id="stay_top_menu" sequence="15" name="Stays" groups="group_stay_user"/>
+
+<menuitem id="stay_sub_menu" sequence="10" name="Stays" parent="stay_top_menu"/>
+
+<menuitem id="stay_menu" action="stay_action" parent="stay_sub_menu" sequence="10"/>
+
+<record id="stay_refectory_form" model="ir.ui.view">
+    <field name="name">stay.refectory.form</field>
+    <field name="model">stay.refectory</field>
+    <field name="arch"  type="xml">
+        <form string="Refectory" version="7.0">
+            <group name="main">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="capacity"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="stay_refectory_tree" model="ir.ui.view">
+    <field name="name">stay.refectory.tree</field>
+    <field name="model">stay.refectory</field>
+    <field name="arch"  type="xml">
+        <tree string="Refectories">
+            <field name="name"/>
+            <field name="code"/>
+            <field name="capacity"/>
+        </tree>
+    </field>
+</record>
+
+<record id="stay_refectory_action" model="ir.actions.act_window">
+    <field name="name">Refectories</field>
+    <field name="res_model">stay.refectory</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem id="stay_configuration" sequence="50" name="Configuration" parent="stay_top_menu"/>
+
+<menuitem id="stay_refectory_menu" action="stay_refectory_action" parent="stay_configuration" />
+
+
+<record id="stay_room_form" model="ir.ui.view">
+    <field name="name">stay.room.form</field>
+    <field name="model">stay.room</field>
+    <field name="arch"  type="xml">
+        <form string="Room" version="7.0">
+            <group name="main">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="bed_qty"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="stay_room_tree" model="ir.ui.view">
+    <field name="name">stay.room.tree</field>
+    <field name="model">stay.room</field>
+    <field name="arch"  type="xml">
+        <tree string="Rooms">
+            <field name="name"/>
+            <field name="code"/>
+            <field name="bed_qty"/>
+        </tree>
+    </field>
+</record>
+
+<record id="stay_room_action" model="ir.actions.act_window">
+    <field name="name">Room</field>
+    <field name="res_model">stay.room</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem id="stay_room_menu" action="stay_room_action" parent="stay_configuration" />
+
+<record id="stay_line_form" model="ir.ui.view">
+    <field name="name">stay.line.form</field>
+    <field name="model">stay.line</field>
+    <field name="arch"  type="xml">
+        <form string="Stay Line" version="7.0">
+            <group name="main">
+                <field name="stay_id" invisible="not context.get('stay_line_main_view')"/>
+                <field name="date"/>
+                <field name="partner_id" on_change="partner_id_change(partner_id, context)"/>
+                <field name="partner_name"/>
+                <field name="lunch_qty"/>
+                <field name="dinner_qty"/>
+                <field name="bed_night_qty"/>
+                <field name="refectory_id"/>
+                <field name="room_id"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="stay_line_tree" model="ir.ui.view">
+    <field name="name">stay.line.tree</field>
+    <field name="model">stay.line</field>
+    <field name="arch"  type="xml">
+        <tree string="Stay Lines">
+            <field name="stay_id" invisible="not context.get('stay_line_main_view')"/>
+            <field name="date"/>
+            <field name="partner_name"/>
+            <field name="lunch_qty" sum="Total Lunch"/>
+            <field name="dinner_qty" sum="Total Dinner"/>
+            <field name="bed_night_qty" sum="Total Bed Nights"/>
+            <field name="refectory_id"/>
+            <field name="room_id"/>
+        </tree>
+    </field>
+</record>
+
+<record id="stay_line_search" model="ir.ui.view">
+    <field name="name">stay.line.search</field>
+    <field name="model">stay.line</field>
+    <field name="arch"  type="xml">
+        <search string="Search Stay Lines">
+            <field name="date"/>
+            <field name="partner_name"/>
+            <group string="Group By..." name="groupby">
+                <filter name="date_groupby" string="Date" context="{'group_by': 'date'}"/>
+            </group>
+        </search>
+    </field>
+</record>
+
+<record id="stay_line_action" model="ir.actions.act_window">
+    <field name="name">Stay Lines</field>
+    <field name="res_model">stay.line</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+    <field name="context">{'stay_line_main_view': True}</field>
+</record>
+
+<menuitem id="stay_line_menu" action="stay_line_action" parent="stay_sub_menu" />
+
+
+</data>
+</openerp>

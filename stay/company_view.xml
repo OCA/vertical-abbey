@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+<data>
+
+<record id="view_company_form" model="ir.ui.view">
+    <field name="model">res.company</field>
+    <field name="inherit_id" ref="base.view_company_form"/>
+    <field name="arch"  type="xml">
+        <group name="account_grp" position="after">
+            <group name="stay" string="Stay">
+                <field name="default_refectory_id"/>
+            </group>
+        </group>
+    </field>
+</record>
+
+</data>
+</openerp>
