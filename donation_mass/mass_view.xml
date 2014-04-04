@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) 2014 Artisanat Monastique de Provence (http://www.barroux.org)
+    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+    The licence is in the file __openerp__.py
+-->
+
+<openerp>
+<data>
+
+<!-- Mass Requests -->
+<record id="mass_request_form" model="ir.ui.view">
+    <field name="name">donation.mass.request.form</field>
+    <field name="model">mass.request</field>
+    <field name="inherit_id" ref="mass.mass_request_form"/>
+    <field name="arch"  type="xml">
+        <field name="donator_id" position="after">
+            <field name="donation_id"/>
+            <field name="donation_line_id"/>
+        </field>
+    </field>
+</record>
+
+<!-- Mass Lines -->
+<record id="mass_line_form" model="ir.ui.view">
+    <field name="name">donation.mass.line.form</field>
+    <field name="model">mass.line</field>
+    <field name="inherit_id" ref="mass.mass_line_form"/>
+    <field name="arch"  type="xml">
+        <field name="celebrant_id" position="after">
+            <field name="move_id"/>
+        </field>
+    </field>
+</record>
+
+
+</data>
+</openerp>
