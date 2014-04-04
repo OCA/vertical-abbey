@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+<data noupdate="0"> <!-- TODO : put to 0 when finished -->
+
+<record id="mass_type_gregorian" model="mass.request.type">
+    <field name="name">Gregorian</field>
+    <field name="code">T</field>
+    <field name="quantity">30</field>
+    <field name="uninterrupted">1</field>
+</record>
+
+<record id="mass_type_novena" model="mass.request.type">
+    <field name="name">Novena</field>
+    <field name="code">N</field>
+    <field name="quantity">9</field>
+    <field name="uninterrupted">1</field>
+</record>
+
+<record id="mass_type_simple" model="mass.request.type">
+    <field name="name">Simple</field>
+    <field name="code">M</field>
+    <field name="quantity">1</field>
+    <field name="uninterrupted" eval="False"/>
+</record>
+
+<record id="product_category_mass" model="product.category">
+    <field name="name">Masses</field>
+    <field name="parent_id" ref="product.product_category_all"/>
+</record>
+
+<record id="product_template_mass_gregorian" model="product.template">
+    <field name="name">Gregorian Mass</field>
+    <field name="categ_id" ref="product_category_mass"/>
+    <field name="sale_ok">0</field>
+    <field name="mass">1</field>
+    <field name="mass_request_type_id" ref="mass_type_gregorian"/>
+    <field name="list_price">510</field>
+    <field name="type">service</field>
+    <field name="uom_id" ref="product.product_uom_unit"/>
+    <field name="uom_po_id" ref="product.product_uom_unit"/>
+</record>
+<record id="product_product_mass_gregorian" model="product.product">
+    <field name="product_tmpl_id" ref="product_template_mass_gregorian"/>
+    <field name="default_code">MT</field>
+</record>
+
+<record id="product_template_mass_novena" model="product.template">
+    <field name="name">Novena Mass</field>
+    <field name="categ_id" ref="product_category_mass"/>
+    <field name="sale_ok">0</field>
+    <field name="mass">1</field>
+    <field name="mass_request_type_id" ref="mass_type_novena"/>
+    <field name="list_price">160</field>
+    <field name="type">service</field>
+    <field name="uom_id" ref="product.product_uom_unit"/>
+    <field name="uom_po_id" ref="product.product_uom_unit"/>
+</record>
+<record id="product_product_mass_novena" model="product.product">
+    <field name="product_tmpl_id" ref="product_template_mass_novena"/>
+    <field name="default_code">MN</field>
+</record>
+
+<record id="product_template_mass_simple" model="product.template">
+    <field name="name">Simple Mass</field>
+    <field name="categ_id" ref="product_category_mass"/>
+    <field name="sale_ok">0</field>
+    <field name="mass">1</field>
+    <field name="mass_request_type_id" ref="mass_type_simple"/>
+    <field name="list_price">16</field>
+    <field name="type">service</field>
+    <field name="uom_id" ref="product.product_uom_unit"/>
+    <field name="uom_po_id" ref="product.product_uom_unit"/>
+</record>
+<record id="product_product_mass_simple" model="product.product">
+    <field name="product_tmpl_id" ref="product_template_mass_simple"/>
+    <field name="default_code">MO</field>
+</record>
+
+
+</data>
+</openerp>

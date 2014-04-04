@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+<data noupdate="1">
+
+<record id="module_category_mass" model="ir.module.category">
+    <field name="name">Mass</field>
+    <field name="description">Manage masses</field>
+    <field name="sequence">46</field>
+</record>
+
+<record id="group_mass_user" model="res.groups">
+    <field name="name">User</field>
+    <field name="category_id" ref="module_category_mass"/>
+</record>
+
+<record id="group_mass_manager" model="res.groups">
+    <field name="name">Manager</field>
+    <field name="category_id" ref="module_category_mass"/>
+    <field name="implied_ids" eval="[(4, ref('group_mass_user'))]"/>
+    <field name="users" eval="[(4, ref('base.user_root'))]"/>
+</record>
+
+</data>
+</openerp>
