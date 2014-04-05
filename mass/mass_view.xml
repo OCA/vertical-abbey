@@ -78,6 +78,7 @@
                     <field name="mass_quantity"/>
                     <field name="mass_remaining_quantity"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="transfer_id" states="transfered"/>
                 </group>
             </group>
             <group name="lines" string="Mass">
@@ -200,18 +201,21 @@
     <field name="model">mass.request.transfer</field>
     <field name="arch"  type="xml">
         <form string="Mass Request Transfer" version="7.0">
-        	<header>
+            <header>
+                <button type="action" name="%(mass_requests_to_transfer_action)d" string="Select Mass Requests to Transfer"/>
+                <button name="validate" type="object" string="Validate" class="oe_highlight" states="draft"/>
                 <field name="state" widget="statusbar"/>
             </header>
             <group name="main">
                 <field name="celebrant_id"/>
                 <field name="transfer_date"/>
+                <field name="company_id" groups="base.group_multi_company"/>
                 <field name="move_id"/>
                 <field name="amount_total"/>
                 <field name="mass_total"/>
             </group>
             <group name="lines" string="Masses Requests">
-                	<field name="mass_request_ids" nolabel="1"/>
+                <field name="mass_request_ids" nolabel="1"/>
             </group>
         </form>
     </field>

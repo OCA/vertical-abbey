@@ -3,8 +3,7 @@
 #
 #    Mass module for OpenERP
 #    Copyright (C) 2014 Artisanat Monastique de Provence
-#                       (http://www.barroux.org)
-#    @author
+#                  (http://www.barroux.org)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,34 +20,4 @@
 #
 ##############################################################################
 
-
-{
-    'name': 'Mass',
-    'version': '0.1',
-    'category': 'Christian Religion',
-    'license': 'AGPL-3',
-    'summary': 'Manage Mass',
-    'description': """
-Mass
-====
-
-This module manages planning of masses.
-
-It has been developped by brother Bernard and brother Irénée from Barroux Abbey and by Alexis de Lattre from Akretion.
-    """,
-    'author': 'Barroux, Akretion',
-    'website': 'http://www.barroux.org',
-    'depends': ['product', 'report_webkit', 'account'],
-    'data': [
-        'wizard/select_mass_requests_to_transfer_view.xml',
-        'mass_view.xml',
-        'mass_data.xml',
-        'partner_view.xml',
-        'product_view.xml',
-        'security/mass_security.xml',
-        'security/ir.model.access.csv',
- #       'report.xml',
-        ],
-    'demo': ['mass_demo.xml'],
-    'active': False,
-}
+from . import select_mass_requests_to_transfer
