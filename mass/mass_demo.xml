@@ -19,5 +19,14 @@
     <field name="use_parent_address">1</field>
 </record>
 
+<record id="father_lucien" model="res.partner">
+    <field name="name">Father Lucien</field>
+    <field name="celebrant">1</field>
+    <field name="supplier">1</field>
+    <field name="customer" eval="False"/>
+</record>
+
+
+
 </data>
 </openerp>

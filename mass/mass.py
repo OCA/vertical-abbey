@@ -89,8 +89,8 @@ class mass_request(orm.Model):
     def name_get(self, cr, uid, ids, context=None):
         res = []
         for request in self.browse(cr, uid, ids, context=context):
-            res.append(
-                (request.id,
+            res.append((
+                request.id,
                 u'[%dx%s] %s' % (
                     request.quantity,
                     request.type_id.code,
@@ -140,7 +140,7 @@ class mass_request(orm.Model):
             _compute_request_properties, type="integer", multi='mass_req',
             string="Mass Remaining Quantity"),
         'transfer_id': fields.many2one(
-            'mass.request.transfer', 'Transfer Operation'),
+            'mass.request.transfer', 'Transfer Operation', readonly=True),
         }
 
 # TODO : readonly sauf en waiting
@@ -193,9 +193,18 @@ class mass_line(orm.Model):
             # créer écriture comptable
         return
 
+
 class mass_request_transfer(orm.Model):
     _name = 'mass.request.transfer'
     _description = 'Transfered Mass Requests'
+
+    def name_get(self, cr, uid, ids, context=None):
+        res = []
+        for trf in self.browse(cr, uid, ids, context=context):
+            res.append((
+                trf.id, u'%s (%s)'
+                % (trf.celebrant_id.name, trf.transfer_date)))
+        return res
 
     def _compute_transfer_totals(self, cr, uid, ids, name, arg, context=None):
         res = {}
@@ -209,15 +218,21 @@ class mass_request_transfer(orm.Model):
                 res[transfer.id]['mass_total'] += request.mass_quantity
         return res
 
-
     _columns = {
         'celebrant_id': fields.many2one(
             'res.partner', 'Celebrant', required=True,
-            domain=[('celebrant', '=', True), ('supplier', '=', True)]),
-        'transfer_date': fields.date('Transfer Date', required=True),
+            domain=[('celebrant', '=', True), ('supplier', '=', True)],
+            states={'done': [('readonly', True)]}),
+        'company_id': fields.many2one(
+            'res.company', 'Company', required=True),
+        'transfer_date': fields.date(
+            'Transfer Date', required=True,
+            states={'done': [('readonly', True)]}),
         'mass_request_ids': fields.one2many(
-            'mass.request', 'transfer_id', 'Mass Requests'),
-        'move_id': fields.many2one('account.move', 'Account Move'),
+            'mass.request', 'transfer_id', 'Mass Requests',
+            states={'done': [('readonly', True)]}),
+        'move_id': fields.many2one(
+            'account.move', 'Account Move', readonly=True),
         'amount_total': fields.function(
             _compute_transfer_totals, type="float", string="Amount Total",
             digits_compute=dp.get_precision('Account'), multi="transfer"),
@@ -231,5 +246,24 @@ class mass_request_transfer(orm.Model):
         }
 
     _defaults = {
+        'state': 'draft',
         'transfer_date': fields.date.context_today,
+        'company_id': lambda self, cr, uid, context:
+        self.pool['res.company']._company_default_get(
+            cr, uid, 'mass.request.transfer', context=context),
         }
+
+    def validate(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, 'Only 1 ID for transfer validation'
+        transfer = self.browse(cr, uid, ids[0], context=context)
+        if not transfer.mass_request_ids:
+            orm.except_orm(
+                _('Error:'),
+                _('Cannot validate a Mass Request Transfer without '
+                    'Mass Requests.')
+                )
+        for mass_request in transfer.mass_request_ids:
+            mass_request.write({'state': 'transfered'}, context=context)
+        transfer.write({'state': 'done'}, context=context)
+        # TODO : generate account move
+        return
