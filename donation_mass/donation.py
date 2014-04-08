@@ -26,7 +26,17 @@ from openerp.osv import orm, fields
 class donation_line(orm.Model):
     _inherit = 'donation.line'
 
+    def product_id_change(self, cr, uid, ids, product_id, context):
+        res = super(donation_line, self).product_id_change(
+            cr, uid, ids, product_id, context=context)
+        if product_id:
+            product = self.pool['product.product'].browse(
+                cr, uid, product_id, context=context)
+            res['value']['mass'] = product.mass
+        return res
+
     _columns = {
+        'mass': fields.boolean('Is a Mass'),
         'celebrant_id': fields.many2one(
             'res.partner', 'Celebrant',
             domain=[('celebrant', '=', True)]),
