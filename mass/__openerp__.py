@@ -41,6 +41,7 @@ It has been developped by brother Bernard and brother Irénée from Barroux Abbe
     'depends': ['product', 'report_webkit', 'account'],
     'data': [
         'wizard/select_mass_requests_to_transfer_view.xml',
+        'wizard/generate_mass_journal_view.xml',
         'mass_view.xml',
         'mass_data.xml',
         'partner_view.xml',
