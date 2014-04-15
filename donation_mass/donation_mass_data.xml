@@ -4,15 +4,15 @@
 <data noupdate="0"> <!-- TODO : put to 0 when finished -->
 
 <record id="mass.product_template_mass_gregorian" model="product.template">
-    <field name="donation_ok">1</field>
+    <field name="donation">1</field>
 </record>
 
 <record id="mass.product_template_mass_novena" model="product.template">
-    <field name="donation_ok">1</field>
+    <field name="donation">1</field>
 </record>
 
 <record id="mass.product_template_mass_simple" model="product.template">
-    <field name="donation_ok">1</field>
+    <field name="donation">1</field>
 </record>
 
 </data>
