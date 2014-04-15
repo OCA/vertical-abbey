@@ -197,3 +197,5 @@ class stay_line(orm.Model):
     def partner_id_change(self, cr, uid, ids, partner_id, context=None):
         return self.pool['stay.stay'].partner_id_change(
             cr, uid, [], partner_id, context=context)
+        
+
