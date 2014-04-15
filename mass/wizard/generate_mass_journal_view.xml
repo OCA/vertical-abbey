@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) 2014 Artisanat Monastique de Provence
+                  (http://www.barroux.org)
+    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+    The licence is in the file __openerp__.py
+-->
+
+<openerp>
+<data>
+
+
+<record id="mass_journal_form" model="ir.ui.view">
+    <field name="name">mass.journal.form</field>
+    <field name="model">mass.journal</field>
+    <field name="arch" type="xml">
+        <form string="Masses Journal" version="7.0">
+            <group name="main">
+                <field name="journal_date" />
+                <field name="celebrants_ids"
+                    domain="[('celebrant', '=', True), ('supplier', '=', False)]"/>
+            </group>
+            <footer>
+                <button name="generate_journal"
+                    type="object" string="Generate Journal" class="oe_highlight"/>
+                <button special="cancel" string="Cancel" class="oe_link"/>
+            </footer>
+        </form>
+    </field>
+</record>
+
+
+<record id="mass_journal_action" model="ir.actions.act_window">
+    <field name="name">Masses Journal</field>
+    <field name="res_model">mass.journal</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+</record>
+
+<menuitem id="mass_journal_menu" sequence="30" action="mass_journal_action" parent="mass_title_menu"/>
+
+
+</data>
+</openerp>

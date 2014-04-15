@@ -52,7 +52,7 @@ class product_template(orm.Model):
     _inherit = "product.template"
 
     _columns = {
-        'mass': fields.boolean('Mass'),
+        'mass': fields.boolean('Is a Mass'),
         'mass_request_type_id': fields.many2one(
             'mass.request.type', 'Mass Request Type'),
         }
@@ -94,11 +94,11 @@ class mass_request(orm.Model):
                 u'[%dx%s] %s' % (
                     request.quantity,
                     request.type_id.code,
-                    request.donator_id.name)))
+                    request.donor_id.name)))
         return res
 
     _columns = {
-        'donator_id': fields.many2one('res.partner', 'Donator', required=True),
+        'donor_id': fields.many2one('res.partner', 'Donor', required=True),
         'celebrant_id': fields.many2one(
             'res.partner', 'Celebrant', domain=[('celebrant', '=', True)]),
         'donation_date': fields.date('Donation Date', required=True),
@@ -157,8 +157,8 @@ class mass_line(orm.Model):
     _columns = {
         'request_id': fields.many2one('mass.request', 'Mass Request'),
         'date': fields.date('Celebration Date', required=True),
-        'donator_id': fields.related(
-            'request_id', 'donator_id', string="Donator", readonly=True,
+        'donor_id': fields.related(
+            'request_id', 'donor_id', string="Donor", readonly=True,
             type="many2one", relation="mass.request"),
         'intention': fields.related(
             'request_id', 'intention', type="char", string="Intention",
@@ -257,7 +257,7 @@ class mass_request_transfer(orm.Model):
         assert len(ids) == 1, 'Only 1 ID for transfer validation'
         transfer = self.browse(cr, uid, ids[0], context=context)
         if not transfer.mass_request_ids:
-            orm.except_orm(
+            raise orm.except_orm(
                 _('Error:'),
                 _('Cannot validate a Mass Request Transfer without '
                     'Mass Requests.')

@@ -30,5 +30,5 @@ class product_product(orm.Model):
         res = super(product_product, self).mass_change(
             cr, uid, ids, mass, context=context)
         if mass:
-            res['value']['donation_ok'] = True
+            res['value']['donation'] = True
         return res
