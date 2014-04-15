@@ -31,8 +31,8 @@
                     <field name="arrival_date"/>
                     <field name="arrival_time"/>
                     <field name="departure_date"/>
-                    <field name="departure_time" />
-                    <field name="room_id" />
+                    <field name="departure_time"/>
+                    <field name="room_id"/>
 <!--                    <field name="create_uid"/> -->
                 </group>
             </group>
@@ -58,6 +58,7 @@
             <field name="arrival_time"/>
             <field name="departure_date"/>
             <field name="departure_time"/>
+            
         </tree>
     </field>
 </record>

@@ -116,6 +116,7 @@ class stay_journal_generate(orm.TransientModel):
                 'partner_id': stay.partner_id.id,
                 'partner_name': stay.partner_name,
                 'refectory_id': stay.company_id.default_refectory_id.id,
+                'room_id': stay.room_id.id,
             })
             self.pool['stay.line'].create(cr, uid, stay_vals, context=context)
 
