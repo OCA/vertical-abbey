@@ -38,8 +38,6 @@
     <field name="target">new</field>
 </record>
 
-<menuitem id="mass_journal_menu" sequence="30" action="mass_journal_action" parent="mass_title_menu"/>
-
 
 </data>
 </openerp>

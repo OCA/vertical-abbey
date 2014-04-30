@@ -38,7 +38,7 @@ It has been developped by brother Bernard and brother Irénée from Barroux Abbe
     """,
     'author': 'Barroux, Akretion',
     'website': 'http://www.barroux.org',
-    'depends': ['product', 'report_webkit', 'account'],
+    'depends': ['product', 'report_webkit', 'account', 'base_headers_webkit'],
     'data': [
         'wizard/select_mass_requests_to_transfer_view.xml',
         'wizard/generate_mass_journal_view.xml',
@@ -48,7 +48,7 @@ It has been developped by brother Bernard and brother Irénée from Barroux Abbe
         'product_view.xml',
         'security/mass_security.xml',
         'security/ir.model.access.csv',
- #       'report.xml',
+        'report.xml',
         ],
     'demo': ['mass_demo.xml'],
     'active': False,
