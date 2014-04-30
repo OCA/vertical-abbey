@@ -46,12 +46,17 @@
 
 <menuitem id="mass_top_menu" sequence="17" name="Mass"/>
 
-<menuitem id="mass_title_menu" sequence="10" name="Mass" parent="mass_top_menu"/>
+<menuitem id="mass_title_menu" sequence="10" name="Mass"
+    parent="mass_top_menu"/>
 
-<menuitem id="mass_config_menu" sequence="30" name="Configuration" parent="mass_top_menu"/>
+<menuitem id="mass_config_menu" sequence="30" name="Configuration"
+    parent="mass_top_menu"/>
 
-<menuitem id="mass_request_type_menu" action="mass_request_type_action" parent="mass_config_menu" sequence="30"/>
+<menuitem id="mass_request_type_menu" action="mass_request_type_action"
+    parent="mass_config_menu" sequence="30"/>
 
+<menuitem id="mass_journal_menu" sequence="30" action="mass_journal_action"
+    parent="mass_title_menu"/>
 
 <!-- Mass Requests -->
 <record id="mass_request_form" model="ir.ui.view">
@@ -69,6 +74,7 @@
                     <field name="request_date"/>
                     <field name="intention"/>
                     <field name="offering"/>
+                    <field name="unit_offering"/>
                     <field name="celebrant_id"/>
                 </group>
                 <group name="mass">

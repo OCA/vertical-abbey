@@ -30,7 +30,7 @@ class res_partner(orm.Model):
 
     _columns = {
         'celebrant': fields.boolean('Celebrant'),
-        # A celebrant to which we give up mass is celebrant + supplier
+        # A celebrant to which we transfer mass is celebrant + supplier
         }
 
 
@@ -80,9 +80,24 @@ class mass_request(orm.Model):
             remaining_qty = total_qty
             for line in request.line_ids:
                 remaining_qty -= 1
+            state = 'waiting'
+            if request.transfer_id:
+                state = 'transfered'
+                remaining_qty = 0
+            else:
+                if remaining_qty < total_qty:
+                    state = 'started'
+                if remaining_qty == 0:
+                    state = 'done'
+            if total_qty:
+                unit_offering = request.offering / total_qty
+            else:
+                unit_offering = 0
             res[request.id] = {
                 'mass_remaining_quantity': remaining_qty,
                 'mass_quantity': total_qty,
+                'unit_offering': unit_offering,
+                'state': state,
                 }
         return res
 
@@ -97,6 +112,10 @@ class mass_request(orm.Model):
                     request.donor_id.name)))
         return res
 
+    def _get_mass_req_from_lines(self, cr, uid, ids, context=None):
+        return self.pool['mass.request'].search(
+            cr, uid, [('line_ids', 'in', ids)], context=context)
+
     _columns = {
         'donor_id': fields.many2one('res.partner', 'Donor', required=True),
         'celebrant_id': fields.many2one(
@@ -110,15 +129,16 @@ class mass_request(orm.Model):
             string="Uninterrupted"),
         'offering': fields.float(
             'Offering', digits_compute=dp.get_precision('Account'),
-            help="The offering amount is in company currency."),
-        #'unit_offering': fields.function(
-        #    _compute_unit_offering, type="float",
-        #    string='Offering per Mass',
-        #    digits_compute=dp.get_precision('Account'),
-        #    help="This field is the offering amount of per mass is in "),
+            help="The total offering amount in company currency."),
+        'unit_offering': fields.function(
+            _compute_request_properties, type="float",
+            string='Offering per Mass', multi='mass_req',
+            digits_compute=dp.get_precision('Account'),
+            help="This field is the offering amount of per mass is in "),
         'company_id': fields.many2one(
             'res.company', 'Company', required=True),
         'quantity': fields.integer('Quantity'),
+        # quantity = quantity in the donation line
         'mass_quantity': fields.function(
             _compute_request_properties, type="integer",
             string="Total Mass Quantity", multi='mass_req',
@@ -130,24 +150,36 @@ class mass_request(orm.Model):
         'intention': fields.char('Intention', size=256),
         'line_ids': fields.one2many(
             'mass.line', 'request_id', 'Mass Lines'),
-        'state': fields.selection([
-            ('waiting', 'Waiting'),
-            ('started', 'Started'),
-            ('transfered', 'Transfered'),
-            ('done', 'Done'),
-            ], 'State', readonly=True),
+        'state': fields.function(
+            _compute_request_properties, type="selection",
+            selection=[
+                ('waiting', 'Waiting'),
+                ('started', 'Started'),
+                ('transfered', 'Transfered'),
+                ('done', 'Done'),
+                ], string='State', readonly=True, multi='mass_req', store={
+                'mass.request': (
+                    lambda self, cr, uid, ids, c={}:
+                    ids, ['transfer_id', 'quantity', 'type_id'], 10),
+                'mass.line': (_get_mass_req_from_lines, ['request_id'], 20),
+                    }),
         'mass_remaining_quantity': fields.function(
             _compute_request_properties, type="integer", multi='mass_req',
-            string="Mass Remaining Quantity"),
+            string="Mass Remaining Quantity", store={
+                'mass.request': (
+                    lambda self, cr, uid, ids, c={}:
+                    ids, ['transfer_id', 'quantity', 'type_id'], 10),
+                'mass.line': (_get_mass_req_from_lines, ['request_id'], 20),
+                }),
         'transfer_id': fields.many2one(
             'mass.request.transfer', 'Transfer Operation', readonly=True),
         }
 
-# TODO : readonly sauf en waiting
     _defaults = {
-        'state': 'waiting',
+        'company_id': lambda self, cr, uid, context:
+        self.pool['res.company']._company_default_get(
+            cr, uid, 'mass.request', context=context),
         }
-
 
 class mass_line(orm.Model):
     _name = 'mass.line'
@@ -262,8 +294,6 @@ class mass_request_transfer(orm.Model):
                 _('Cannot validate a Mass Request Transfer without '
                     'Mass Requests.')
                 )
-        for mass_request in transfer.mass_request_ids:
-            mass_request.write({'state': 'transfered'}, context=context)
         transfer.write({'state': 'done'}, context=context)
         # TODO : generate account move
         return
