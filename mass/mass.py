@@ -85,7 +85,7 @@ class mass_request(orm.Model):
                 state = 'transfered'
                 remaining_qty = 0
             else:
-                if remaining_qty < total_qty:
+                if remaining_qty < total_qty and request.uninterrupted:
                     state = 'started'
                 if remaining_qty == 0:
                     state = 'done'
@@ -109,7 +109,7 @@ class mass_request(orm.Model):
                 u'[%dx%s] %s' % (
                     request.quantity,
                     request.type_id.code,
-                    request.donor_id.name)))
+                    request.donor_id.name,)))
         return res
 
     def _get_mass_req_from_lines(self, cr, uid, ids, context=None):
@@ -191,7 +191,7 @@ class mass_line(orm.Model):
         'date': fields.date('Celebration Date', required=True),
         'donor_id': fields.related(
             'request_id', 'donor_id', string="Donor", readonly=True,
-            type="many2one", relation="mass.request"),
+            type="many2one", relation="res.partner"),
         'intention': fields.related(
             'request_id', 'intention', type="char", string="Intention",
             readonly=True),
