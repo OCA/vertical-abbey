@@ -33,7 +33,7 @@ class mass_journal(orm.TransientModel):
 
     _columns = {
         'journal_date': fields.date('Journal Date'),
-        'celebrants_ids': fields.many2many(
+        'celebrant_ids': fields.many2many(
             'res.partner', id1='partner_id', id2='wizard_id',
             string="List of celebrants"),
         }
@@ -58,22 +58,27 @@ class mass_journal(orm.TransientModel):
         if context is None:
             context = {}
         wiz = self.read(cr, uid, ids[0], context=context)
-        if wiz['celebrants_ids']:
-            number_of_celebrants = len(wiz['celebrants_ids'])
+        celebrant_ids = wiz['celebrant_ids']
+        journal_date = wiz['journal_date']
+        if celebrant_ids:
+            number_of_celebrants = len(celebrant_ids)
             number_of_masses = 0
             mass_lines = []
-            journal_date = wiz['journal_date']
             # Retreive mass requests
-            # First, requests with request date = journal date
-            request_ids = self.pool['mass.request'].search(cr, uid, [('request_date', '=', journal_date),], order='request_date,donation_date')
+            # First, requests with request date = journal date and state = started
+            request_ids = self.pool['mass.request'].search(
+                cr, uid,
+                ['|', ('request_date', '=', journal_date), ('state', '=', 'started'),],
+                order='request_date,donation_date')
             for request in self.pool['mass.request'].browse(cr, uid, request_ids, context=context):
-                if request.uninterrupted:
+                if request.uninterrupted or request.celebrant_id:
                     iter = 1
                 else:
-                    iter = request.mass_quantity
+                    iter = request.mass_remaining_quantity
                 for i in range(0, iter):
                     mass_lines.append({
                         'request_id': request.id,
+                        'celebrant_id': request.celebrant_id.id,
                         'date': journal_date,
                         'unit_offering': request.offering/request.mass_quantity,
                         })
@@ -86,11 +91,53 @@ class mass_journal(orm.TransientModel):
                     )
             if rest > 0:             
                 # Last, requests with state = waiting (fifo rule)
-                request2_ids = self.pool['mass.request'].search(cr, uid, [('state', '=', 'waiting')], order='donation_date')
-                
-            print "Nombre de messes restantes = ", rest
-            print "lignes de messes = ", mass_lines
-
-        
+                request_ids = self.pool['mass.request'].search(
+                    cr, uid, 
+                    [('state', '=', 'waiting')], order='donation_date')
+                for request in self.pool['mass.request'].browse(
+                    cr, uid, request_ids, context=context):
+                    if not request.request_date:
+                        if request.uninterrupted or request.celebrant_id:
+                            iter = 1
+                        else:
+                            iter = request.mass_remaining_quantity
+                        for i in range(0, iter):
+                            mass_lines.append({
+                                'request_id': request.id,
+                                'celebrant_id': request.celebrant_id.id,
+                                'date': journal_date,
+                                'unit_offering': request.offering/request.mass_quantity,
+                                })
+                            rest -= 1
+                            if rest == 0:
+                                break
+                        if rest == 0:
+                            break
+                    
+            # Record journal
+            # Assign a celebrant for each mass
+            for line in range(0, len(mass_lines)):
+                celebrant_id = mass_lines[line]['celebrant_id']
+                if celebrant_id:
+                    if celebrant_id in celebrant_ids:
+                        celebrant_ids.remove(celebrant_id)
+                    else:
+                        raise orm.except_orm(
+                            _('Error:'),
+                            _('More than one mass are assigned '
+                              'to the same celebrant. Please, modify requests.')
+                            ) 
+                else:
+                    celebrant_id = celebrant_ids[0]
+                    mass_lines[line]['celebrant_id'] = celebrant_id
+                    celebrant_ids.remove(celebrant_id)
+            # Create mass lines
+            for line in range(0, len(mass_lines)):
+                self.pool['mass.line'].create(cr, uid, mass_lines[line], context=context)
+        else:
+            raise orm.except_orm(
+                _('Error:'),
+                _('No celebrants were selected !'))
+    
         return
     

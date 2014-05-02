@@ -17,7 +17,7 @@
         <form string="Masses Journal" version="7.0">
             <group name="main">
                 <field name="journal_date" />
-                <field name="celebrants_ids"
+                <field name="celebrant_ids"
                     domain="[('celebrant', '=', True), ('supplier', '=', False)]"/>
             </group>
             <footer>
