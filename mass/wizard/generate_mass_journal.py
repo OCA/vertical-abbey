@@ -60,6 +60,10 @@ class mass_journal(orm.TransientModel):
         wiz = self.read(cr, uid, ids[0], context=context)
         celebrant_ids = wiz['celebrant_ids']
         journal_date = wiz['journal_date']
+        default_date = _get_default_journal_date
+        #TODO Verify journal_date == default_date
+        # if journal_date != default_date:
+            # Display a warning message
         if celebrant_ids:
             number_of_celebrants = len(celebrant_ids)
             number_of_masses = 0
