@@ -37,12 +37,43 @@ class mass_journal(orm.TransientModel):
             'res.partner', id1='partner_id', id2='wizard_id',
             string="List of celebrants"),
         }
-    
+
+    def _multi_allowed_dates(self, cr, uid, context):
+        '''We return only Christmas date'''
+        return [datetime(datetime.today().year, 12, 25)]
+
+    def journal_date_on_change(self, cr, uid, ids, journal_date, context=None):
+        line_id = self.pool['mass.line'].search(
+            cr, uid, [], limit=1, order='date desc', context=context)
+        res = {'warning': {}}
+        if line_id:
+            journal_date_dt = datetime.strptime(
+                journal_date, DEFAULT_SERVER_DATE_FORMAT)
+            multi_allowed_dates = self._multi_allowed_dates(
+                cr, uid, context=context)
+            if journal_date_dt in multi_allowed_dates:
+                res['warning'] = {
+                    'title': _('Warning'),
+                    'message': _('You are about to generate another journal '
+                        'for %s, but it allowed for that date.')
+                        % journal_date
+                    }
+            else:
+                raise orm.orm.except_orm(
+                    _('Error:'),
+                    _('There is already a journal for %s. You cannot generate '
+                        'another journal for that date. OpenERP has reverted '
+                        'to the default date') % journal_date)
+        return res
+
+
     def _get_default_journal_date(self, cr, uid, context=None):
-        request_id = self.pool['mass.line'].search(cr, uid, [], limit=1)
-        res = self.pool['mass.line'].browse(cr, uid, request_id, context=context)
-        if (res):
-            default_dt = datetime.strptime(res[0].date, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=1)
+        line_id = self.pool['mass.line'].search(
+            cr, uid, [], limit=1, order='date desc', context=context)
+        res = self.pool['mass.line'].browse(cr, uid, line_id, context=context)
+        if res:
+            default_dt = datetime.strptime(
+                res[0].date, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=1)
         else:
             today_dt = datetime.today()
             default_dt = today_dt + relativedelta(days=1)
@@ -52,7 +83,7 @@ class mass_journal(orm.TransientModel):
     _defaults = {
         'journal_date': _get_default_journal_date,
         }
-    
+
     def generate_journal(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'Only 1 ID in this wizard'
         if context is None:
@@ -61,9 +92,10 @@ class mass_journal(orm.TransientModel):
         celebrant_ids = wiz['celebrant_ids']
         journal_date = wiz['journal_date']
         default_date = _get_default_journal_date
-        #TODO Verify journal_date == default_date
-        # if journal_date != default_date:
-            # Display a warning message
+        first_journal = True
+        if self.pool['mass.line'].search(
+                cr, uid, [], limit=1, order='date desc', context=context)
+            first_journal = False
         if not celebrant_ids:
             raise orm.except_orm(
                 _('Error:'),
@@ -73,11 +105,15 @@ class mass_journal(orm.TransientModel):
         mass_lines = []
         # Retreive mass requests
         # First, requests with request date = journal date and state = started
+        if first_journal:
+            domain1 = ['|', ('request_date', '=', journal_date), ('state', '=', 'started')]
+        else:
+            domain1 = [('request_date', '=', journal_date), ('uninterrupted', '=', False)]
         request_ids = self.pool['mass.request'].search(
-            cr, uid,
-            ['|', ('request_date', '=', journal_date), ('state', '=', 'started')],
-            order='request_date,donation_date')
-        for request in self.pool['mass.request'].browse(cr, uid, request_ids, context=context):
+            cr, uid, domain1, order='request_date, donation_date',
+            context=context)
+        for request in self.pool['mass.request'].browse(
+                cr, uid, request_ids, context=context):
             if request.uninterrupted or request.celebrant_id:
                 iter = 1
             else:
@@ -96,13 +132,23 @@ class mass_journal(orm.TransientModel):
                 _('The number of requests for this day exceeds '
                     'the number of celebrants. Please, modify requests.')
                 )
-        if rest > 0:             
+        if rest > 0:
             # Last, requests with state = waiting (fifo rule)
+            if first_journal:
+                domain2 = [
+                    ('state', '=', 'waiting'),
+                    ('request_date', '=', False),
+                    ]
+            else:
+                domain2 = [
+                    ('state', '=', 'waiting'),
+                    ('request_date', '=', False),
+                    ('uninterrupted', '=', False),
+                    ]
             request_ids = self.pool['mass.request'].search(
-                cr, uid, 
-                [('state', '=', 'waiting'), ('request_date', '=', False)], order='donation_date')
+                cr, uid, domain2, order='donation_date', context=context)
             for request in self.pool['mass.request'].browse(
-                cr, uid, request_ids, context=context):
+                    cr, uid, request_ids, context=context):
                 if request.uninterrupted or request.celebrant_id:
                     iter = 1
                 else:
@@ -119,7 +165,7 @@ class mass_journal(orm.TransientModel):
                         break
                 if rest == 0:
                     break
-                
+
         # Record journal
         # Assign a celebrant for each mass
         for line in mass_lines:
@@ -140,6 +186,4 @@ class mass_journal(orm.TransientModel):
         # Create mass lines
         for line in mass_lines:
             self.pool['mass.line'].create(cr, uid, line, context=context)
-            
         return
-    
