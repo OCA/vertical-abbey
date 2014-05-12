@@ -44,7 +44,7 @@ class mass_request_type(orm.Model):
         'code': fields.char('Mass Request Code', size=5),
         'quantity': fields.integer('Quantity'),
         'uninterrupted': fields.boolean('Uninterrupted'),
-        # True for Neuvena and Gregorian series ; False for others
+        # True for Novena and Gregorian series ; False for others
     }
 
 
@@ -109,7 +109,8 @@ class mass_request(orm.Model):
                 u'[%dx%s] %s' % (
                     request.quantity,
                     request.type_id.code,
-                    request.donor_id.name,)))
+                    request.donor_id.name,
+                    )))
         return res
 
     def _get_mass_req_from_lines(self, cr, uid, ids, context=None):
