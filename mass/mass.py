@@ -249,17 +249,21 @@ class mass_line(orm.Model):
         'state': 'draft',
         }
 
-    def validate_mass_line(self, cr, uid, ids, context=None):
-        for line in self.browse(cr, uid, ids, context=context):
-            line.write({'state': 'done'}, context=context)
-            if not line.request_id.mass_remaining_quantity:
-                line.request_id.write({'state': 'done'}, context=context)
-            # créer écriture comptable
-        return
+    def unlink(self, cr, uid, ids, context=None):
+        for mass in self.browse(cr, uid, ids, context=context):
+            if mass.type_id.uninterrupted:
+                raise orm.except_orm(
+                    _('Error:'),
+                    _("Cannot delete mass dated %s for %s because it is a %s "
+                        "which is an uninterrupted mass.")
+                    % (mass.date, mass.donor_id.name, mass.type_id.name))
+            if mass.state == 'done':
+                raise orm.except_orm(
+                    _('Error:'),
+                    _('Cannot delete mass line dated %s for %s because it is in Done state.')
+                    % (mass.date, mass.donor_id.name))
+        return super(mass_line, self).unlink(cr, uid, ids, context=context)
 
-    # TODO 
-    #def unlink(self, cr, uid, ids, context=None):
-    # raise when uninterrupted = True
 
 class mass_request_transfer(orm.Model):
     _name = 'mass.request.transfer'
