@@ -34,12 +34,3 @@ class mass_request(orm.Model):
             relation='donation.donation', string="Related Donation",
             readonly=True),
         }
-
-
-class mass_line(orm.Model):
-    _inherit = 'mass.line'
-
-    _columns = {
-        'move_id': fields.many2one(
-            'account.move', 'Account Move', readonly=True),
-        }

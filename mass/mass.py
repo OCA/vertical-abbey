@@ -58,6 +58,21 @@ class product_template(orm.Model):
         }
 
 
+class religious_community(orm.Model):
+    _name = "religious.community"
+    _description = "Religious Community"
+
+    _columns = {
+        'name' : fields.char('Community Code', size=12, required=True),
+        'long_name': fields.char('Community Name', size=128),
+        'active': fields.boolean('Active'),
+        }
+
+    _defaults = {
+        'active': True,
+    }
+
+
 class product_product(orm.Model):
     _inherit = 'product.product'
 
@@ -135,7 +150,13 @@ class mass_request(orm.Model):
             _compute_request_properties, type="float",
             string='Offering per Mass', multi='mass_req',
             digits_compute=dp.get_precision('Account'),
-            help="This field is the offering amount of per mass is in "),
+            help="This field is the offering amount per mass in company currency."),
+        'stock_account_id': fields.many2one(
+            'account.account', 'Stock Account',
+            domain=[('type', '<>', 'view'), ('type','<>','closed')]),
+        'analytic_account_id': fields.many2one(
+            'account.analytic.account', 'Analytic Account',
+            domain=[('type', 'not in', ('view', 'template'))]),
         'company_id': fields.many2one(
             'res.company', 'Company', required=True),
         'quantity': fields.integer('Quantity'),
@@ -180,12 +201,14 @@ class mass_request(orm.Model):
         'company_id': lambda self, cr, uid, context:
         self.pool['res.company']._company_default_get(
             cr, uid, 'mass.request', context=context),
+        'quantity': 1,
         }
+
 
 class mass_line(orm.Model):
     _name = 'mass.line'
     _description = 'Mass Lines'
-    _order = 'date desc'
+    _order = 'date desc, id desc'
 
     _columns = {
         'request_id': fields.many2one('mass.request', 'Mass Request'),
@@ -196,6 +219,9 @@ class mass_line(orm.Model):
         'intention': fields.related(
             'request_id', 'intention', type="char", string="Intention",
             readonly=True),
+        'company_id': fields.related(
+            'request_id', 'company_id', type="many2one",
+            relation="res.company", string="Company", readonly=True),
         'request_date': fields.related(
             'request_id', 'request_date', type="date",
             string="Mass Request Date", readonly=True),
@@ -207,7 +233,12 @@ class mass_line(orm.Model):
             'Offering', digits_compute=dp.get_precision('Account'),
             help="The offering amount is in company currency."),
         'celebrant_id': fields.many2one(
-            'res.partner', 'Celebrant', required=True),
+            'res.partner', 'Celebrant', required=True,
+            domain=[('celebrant', '=', True), ('supplier', '=', False)]),
+        'conventual_id': fields.many2one(
+            'religious.community', 'Conventual'),
+        'move_id': fields.many2one(
+            'account.move', 'Account Move', readonly=True),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('done', 'Done'),
@@ -226,6 +257,9 @@ class mass_line(orm.Model):
             # créer écriture comptable
         return
 
+    # TODO 
+    #def unlink(self, cr, uid, ids, context=None):
+    # raise when uninterrupted = True
 
 class mass_request_transfer(orm.Model):
     _name = 'mass.request.transfer'
@@ -257,7 +291,8 @@ class mass_request_transfer(orm.Model):
             domain=[('celebrant', '=', True), ('supplier', '=', True)],
             states={'done': [('readonly', True)]}),
         'company_id': fields.many2one(
-            'res.company', 'Company', required=True),
+            'res.company', 'Company', required=True,
+            states={'done': [('readonly', True)]}),
         'transfer_date': fields.date(
             'Transfer Date', required=True,
             states={'done': [('readonly', True)]}),

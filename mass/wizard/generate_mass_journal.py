@@ -27,12 +27,12 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.translate import _
 
 
-class mass_journal(orm.TransientModel):
-    _name = 'mass.journal'
+class mass_journal_generate(orm.TransientModel):
+    _name = 'mass.journal.generate'
     _description = "Generate Masses Journal"
 
     _columns = {
-        'journal_date': fields.date('Journal Date'),
+        'journal_date': fields.date('Journal Date', required=True),
         'celebrant_ids': fields.many2many(
             'res.partner', id1='partner_id', id2='wizard_id',
             string="List of celebrants"),
@@ -44,7 +44,8 @@ class mass_journal(orm.TransientModel):
 
     def journal_date_on_change(self, cr, uid, ids, journal_date, context=None):
         line_id = self.pool['mass.line'].search(
-            cr, uid, [], limit=1, order='date desc', context=context)
+            cr, uid, [('date', '=', journal_date)],
+            limit=1, order='date desc', context=context)
         res = {'warning': {}}
         if line_id:
             journal_date_dt = datetime.strptime(
@@ -59,13 +60,12 @@ class mass_journal(orm.TransientModel):
                         % journal_date
                     }
             else:
-                raise orm.orm.except_orm(
+                raise orm.except_orm(
                     _('Error:'),
                     _('There is already a journal for %s. You cannot generate '
                         'another journal for that date. OpenERP has reverted '
                         'to the default date') % journal_date)
         return res
-
 
     def _get_default_journal_date(self, cr, uid, context=None):
         line_id = self.pool['mass.line'].search(
@@ -80,8 +80,16 @@ class mass_journal(orm.TransientModel):
         default_str = default_dt.strftime(DEFAULT_SERVER_DATE_FORMAT)
         return default_str
 
+    def _all_celebrant_ids(self, cr, uid, context=None):
+        all_celebrant_ids = self.pool['res.partner'].search(
+            cr, uid,
+            [('celebrant', '=', True), ('supplier', '=', False)],
+            context=context)
+        return all_celebrant_ids
+
     _defaults = {
         'journal_date': _get_default_journal_date,
+        'celebrant_ids': _all_celebrant_ids,
         }
 
     def generate_journal(self, cr, uid, ids, context=None):
@@ -90,11 +98,12 @@ class mass_journal(orm.TransientModel):
             context = {}
         wiz = self.read(cr, uid, ids[0], context=context)
         celebrant_ids = wiz['celebrant_ids']
+        
         journal_date = wiz['journal_date']
-        default_date = _get_default_journal_date
         first_journal = True
         if self.pool['mass.line'].search(
-                cr, uid, [], limit=1, order='date desc', context=context)
+                cr, uid, [('date', '=', journal_date)], limit=1,
+                order='date desc', context=context):
             first_journal = False
         if not celebrant_ids:
             raise orm.except_orm(
@@ -120,6 +129,7 @@ class mass_journal(orm.TransientModel):
                 iter = request.mass_remaining_quantity
             for i in range(0, iter):
                 mass_lines.append({
+                    'request': request,
                     'request_id': request.id,
                     'celebrant_id': request.celebrant_id.id,
                     'date': journal_date,
@@ -155,6 +165,7 @@ class mass_journal(orm.TransientModel):
                     iter = request.mass_remaining_quantity
                 for i in range(0, iter):
                     mass_lines.append({
+                        'request': request,
                         'request_id': request.id,
                         'celebrant_id': request.celebrant_id.id,
                         'date': journal_date,
@@ -168,22 +179,52 @@ class mass_journal(orm.TransientModel):
 
         # Record journal
         # Assign a celebrant for each mass
+        print "***** Liste des célébrants = ", celebrant_ids
+        celebrant_ids_origin = list(celebrant_ids)
         for line in mass_lines:
             celebrant_id = line['celebrant_id']
             if celebrant_id:
                 if celebrant_id in celebrant_ids:
-                    celebrant_ids.remove(celebrant_id)
+                    celebrant_ids.remove(celebrant_id)         
+                elif celebrant_id not in celebrant_ids_origin:
+                        print "***** Célébrant = ", request.celebrant_id
+                        raise orm.except_orm(
+                           _('Error:'),
+                            _('The celebrant %s has an assigned mass for %s, but he is '
+                              'not available today.')
+                            % (line['request'].celebrant_id.name, line['request'].donor_id.name)                         
+                            )
                 else:
                     raise orm.except_orm(
                         _('Error:'),
                         _('More than one mass are assigned '
-                          'to the same celebrant. Please, modify requests.')
+                          'to the same celebrant %s. Please, modify requests.')
+                        % line['request'].celebrant_id.name
                         ) 
             else:
                 celebrant_id = celebrant_ids[0]
                 line['celebrant_id'] = celebrant_id
                 celebrant_ids.remove(celebrant_id)
+        print "***** Reste célébrants = ", wiz['celebrant_ids']
         # Create mass lines
+        new_line_ids = []
         for line in mass_lines:
-            self.pool['mass.line'].create(cr, uid, line, context=context)
-        return
+            line.pop('request')
+            new_line_id = self.pool['mass.line'].create(
+                cr, uid, line, context=context)
+            new_line_ids.append(new_line_id)
+        print "new_line_ids=", new_line_ids
+
+        action = {
+            'name': _('Mass Lines'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'mass.line',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'domain': [('id', 'in', new_line_ids)],
+            'nodestroy': False,
+            'target': 'current',
+            'context': {'mass_line_main_view': True},
+            }
+        print "action=", action
+        return action
