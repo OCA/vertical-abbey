@@ -35,15 +35,17 @@ class mass_requests_to_transfer(orm.TransientModel):
 
     def add_to_transfer(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'Only 1 ID in this wizard'
+        assert context['active_model'] == 'mass.request.transfer', \
+            'active_model must be mass.request.transfer'
         if context is None:
             context = {}
         wiz = self.read(cr, uid, ids[0], context=context)
-        print "wiz=", wiz
         if wiz['mass_request_ids']:
             mass_request_transfer_id = context['active_id']
-            print "mass_request_transfer_id=", mass_request_transfer_id
+            mass_request_ids = \
+                [(4, req_id) for req_id in wiz['mass_request_ids']]
             self.pool['mass.request.transfer'].write(
                 cr, uid, mass_request_transfer_id,
-                {'mass_request_ids': [(6, 0, wiz['mass_request_ids'])]},
+                {'mass_request_ids': mass_request_ids},
                 context=context)
         return True

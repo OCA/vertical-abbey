@@ -60,8 +60,10 @@ class donation_donation(orm.Model):
             'request_date': donation_line.mass_request_date or False,
             'type_id': donation_line.product_id.mass_request_type_id.id,
             'offering': donation_line.amount_company_currency,
-            'stock_account_id': donation_line.product_id.property_account_income.id,
-            'analytic_account_id': donation_line.analytic_account_id.id or False,
+            'stock_account_id':
+            donation_line.product_id.property_account_income.id,
+            'analytic_account_id':
+            donation_line.analytic_account_id.id or False,
             'quantity': donation_line.quantity,
             'intention': donation_line.intention,
             'donation_line_id': donation_line.id,
@@ -86,14 +88,18 @@ class donation_donation(orm.Model):
         donation = self.browse(cr, uid, ids[0], context=context)
         mass_request_ids = []
         for line in donation.line_ids:
-            if line.mass_request_ids and line.mass_request_ids[0].state != 'waiting':
-                raise orm.except_orm(
-                    _('Error:'),
-                    _('Cannot set back to draft the donation with number %s because it is linked to a mass request in %s state.')
-                    % (donation.number, line.mass_request_ids[0].state))
-# TODO : readable state
-            else:
-                mass_request_ids.append(line.mass_request_ids[0].id)
-        self.pool['mass.request'].unlink(cr, uid, mass_request_ids, context=context)
+            if line.mass_request_ids:
+                if line.mass_request_ids[0].state != 'waiting':
+                    raise orm.except_orm(
+                        _('Error:'),
+                        _('Cannot set back to draft the donation with number '
+                            '%s because it is linked to a mass request in '
+                            '%s state.')
+                        % (donation.number, line.mass_request_ids[0].state))
+                # TODO : readable state
+                else:
+                    mass_request_ids.append(line.mass_request_ids[0].id)
+        self.pool['mass.request'].unlink(
+            cr, uid, mass_request_ids, context=context)
         return super(donation_donation, self).back_to_draft(
             cr, uid, ids, context=context)

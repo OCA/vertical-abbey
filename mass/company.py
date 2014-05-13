@@ -31,7 +31,7 @@ class res_company(orm.Model):
     _columns = {
         'mass_validation_account_id': fields.many2one(
             'account.account', 'Mass Validation Account',
-            domain=[('type', '<>', 'view') , ('type', '<>', 'closed')]),
+            domain=[('type', '<>', 'view'), ('type', '<>', 'closed')]),
         'mass_validation_journal_id': fields.many2one(
             'account.journal', 'Mass Validation Journal'),
         }
