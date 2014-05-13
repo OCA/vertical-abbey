@@ -270,9 +270,11 @@
         <form string="Mass Request Transfer" version="7.0">
             <header>
                 <button name="validate" type="object" string="Validate" class="oe_highlight" states="draft"/>
+                <button name="back_to_draft" type="object" string="Back to Draft" states="done"/>
                 <field name="state" widget="statusbar"/>
             </header>
             <group name="main">
+                <field name="number"/>
                 <field name="celebrant_id"/>
                 <field name="transfer_date"/>
                 <field name="company_id" groups="base.group_multi_company"/>
@@ -299,6 +301,7 @@
     <field name="model">mass.request.transfer</field>
     <field name="arch"  type="xml">
         <tree string="Masses Requests Transfer" colors="blue:state=='draft'">
+            <field name="number"/>
             <field name="celebrant_id"/>
             <field name="transfer_date"/>
             <field name="amount_total"/>

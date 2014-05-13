@@ -63,7 +63,7 @@ class religious_community(orm.Model):
     _description = "Religious Community"
 
     _columns = {
-        'name' : fields.char('Community Code', size=12, required=True),
+        'name': fields.char('Community Code', size=12, required=True),
         'long_name': fields.char('Community Name', size=128),
         'active': fields.boolean('Active'),
         }
@@ -150,10 +150,11 @@ class mass_request(orm.Model):
             _compute_request_properties, type="float",
             string='Offering per Mass', multi='mass_req',
             digits_compute=dp.get_precision('Account'),
-            help="This field is the offering amount per mass in company currency."),
+            help="This field is the offering amount per mass in company "
+            "currency."),
         'stock_account_id': fields.many2one(
             'account.account', 'Stock Account',
-            domain=[('type', '<>', 'view'), ('type','<>','closed')]),
+            domain=[('type', '<>', 'view'), ('type', '<>', 'closed')]),
         'analytic_account_id': fields.many2one(
             'account.analytic.account', 'Analytic Account',
             domain=[('type', 'not in', ('view', 'template'))]),
@@ -266,7 +267,8 @@ class mass_line(orm.Model):
             if mass.state == 'done':
                 raise orm.except_orm(
                     _('Error:'),
-                    _('Cannot delete mass line dated %s for %s because it is in Done state.')
+                    _('Cannot delete mass line dated %s for %s because '
+                        'it is in Done state.')
                     % (mass.date, mass.donor_id.name))
         return super(mass_line, self).unlink(cr, uid, ids, context=context)
 
@@ -296,6 +298,8 @@ class mass_request_transfer(orm.Model):
         return res
 
     _columns = {
+        'number': fields.char(
+            'Transfer Number', size=32, readonly=True),
         'celebrant_id': fields.many2one(
             'res.partner', 'Celebrant', required=True,
             domain=[('celebrant', '=', True), ('supplier', '=', True)],
@@ -334,6 +338,61 @@ class mass_request_transfer(orm.Model):
             cr, uid, 'mass.request.transfer', context=context),
         }
 
+    def _prepare_mass_transfer_move(
+            self, cr, uid, transfer, number, context=None):
+        if context is None:
+            context = {}
+        ctx_period = context.copy()
+        ctx_period['account_period_prefer_normal'] = True
+        period_search = self.pool['account.period'].find(
+            cr, uid, transfer.transfer_date, context=ctx_period)
+        assert len(period_search) == 1, 'We should get one period'
+        period_id = period_search[0]
+
+        movelines = []
+        stock_aml = {}  # key = account_id, value = amount
+        for request in transfer.mass_request_ids:
+            stock_account_id = request.stock_account_id.id or False
+            if stock_account_id:
+                if stock_account_id in stock_aml:
+                    stock_aml[stock_account_id] += request.offering
+                else:
+                    stock_aml[stock_account_id] = request.offering
+
+        print "stock_aml=", stock_aml
+        name = _('Masses transfer %s') % number
+        # TODO : move partner to parent ?
+        partner_id = transfer.celebrant_id.id
+        for stock_account_id, stock_amount in stock_aml.iteritems():
+            movelines.append((0, 0, {
+                'name': name,
+                'credit': 0,
+                'debit': stock_amount,
+                'account_id': stock_account_id,
+                'partner_id': partner_id,
+                }))
+
+        # counter-part
+        movelines.append(
+            (0, 0, {
+                'debit': 0,
+                'credit': transfer.amount_total,
+                'name': name,
+                'account_id':
+                transfer.celebrant_id.property_account_payable.id,
+                'partner_id': partner_id,
+                }))
+
+        vals = {
+            'journal_id': transfer.company_id.mass_validation_journal_id.id,
+            # TODO Same journal as validation journal ?
+            'date': transfer.transfer_date,
+            'period_id': period_id,
+            'ref': name,
+            'line_id': movelines,
+            }
+        return vals
+
     def validate(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'Only 1 ID for transfer validation'
         transfer = self.browse(cr, uid, ids[0], context=context)
@@ -341,8 +400,32 @@ class mass_request_transfer(orm.Model):
             raise orm.except_orm(
                 _('Error:'),
                 _('Cannot validate a Mass Request Transfer without '
-                    'Mass Requests.')
-                )
-        transfer.write({'state': 'done'}, context=context)
-        # TODO : generate account move
+                    'Mass Requests.'))
+        transfer_vals = {'state': 'done'}
+        number = transfer.number
+        if not number:
+            number = self.pool['ir.sequence'].next_by_code(
+                cr, uid, 'mass.request.transfer', context=context)
+            transfer_vals['number'] = number
+
+        # Create and post account move
+        move_vals = self._prepare_mass_transfer_move(
+            cr, uid, transfer, number, context=context)
+        move_id = self.pool['account.move'].create(
+            cr, uid, move_vals, context=context)
+        self.pool['account.move'].post(cr, uid, [move_id], context=context)
+
+        transfer_vals['move_id'] = move_id
+        transfer.write(transfer_vals, context=context)
+        return
+
+    def back_to_draft(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, 'Only 1 ID accepted here'
+        transfer = self.browse(cr, uid, ids[0], context=context)
+        if transfer.move_id:
+            self.pool['account.move'].button_cancel(
+                cr, uid, [transfer.move_id.id], context=context)
+            self.pool['account.move'].unlink(
+                cr, uid, transfer.move_id.id, context=context)
+        transfer.write({'state': 'draft'}, context=context)
         return

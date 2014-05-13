@@ -21,9 +21,6 @@
 ##############################################################################
 
 from openerp.osv import orm, fields
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.translate import _
 
 
@@ -43,7 +40,8 @@ class mass_journal_validate(orm.TransientModel):
         if res:
             default_str = res[0].date
         else:
-            default_str = fields.date.context_today(self, cr, uid, context=context)
+            default_str = fields.date.context_today(
+                self, cr, uid, context=context)
         return default_str
 
     _defaults = {
@@ -64,12 +62,14 @@ class mass_journal_validate(orm.TransientModel):
 
         movelines = []
         stock_aml = {}  # key = account_id, value = amount
-        income_aml = {}  # key = (account_id, analytic_account_id) value = amount
+        income_aml = {}
+        # key = (account_id, analytic_account_id) value = amount
         income_account_id = company.mass_validation_account_id.id
         for line in self.pool['mass.line'].browse(
                 cr, uid, line_ids, context=context):
             stock_account_id = line.request_id.stock_account_id.id or False
-            analytic_account_id = line.request_id.analytic_account_id.id or False
+            analytic_account_id = \
+                line.request_id.analytic_account_id.id or False
 
             if stock_account_id:
                 if stock_account_id in stock_aml:
@@ -78,9 +78,11 @@ class mass_journal_validate(orm.TransientModel):
                     stock_aml[stock_account_id] = line.unit_offering
 
                 if (income_account_id, analytic_account_id) in income_aml:
-                    income_aml[(income_account_id, analytic_account_id)] += line.unit_offering
+                    income_aml[(income_account_id, analytic_account_id)] +=\
+                        line.unit_offering
                 else:
-                    income_aml[(income_account_id, analytic_account_id)] = line.unit_offering
+                    income_aml[(income_account_id, analytic_account_id)] =\
+                        line.unit_offering
 
         print "stock_aml=", stock_aml
         print "income_aml=", income_aml
@@ -94,7 +96,9 @@ class mass_journal_validate(orm.TransientModel):
                 }))
 
         # counter-part
-        for (income_account_id, analytic_account_id), income_amount in income_aml.iteritems():
+        for (income_account_id, analytic_account_id), income_amount in\
+                income_aml.iteritems():
+
             movelines.append(
                 (0, 0, {
                     'debit': 0,
@@ -102,7 +106,7 @@ class mass_journal_validate(orm.TransientModel):
                     'name': name,
                     'account_id': income_account_id,
                     'analytic_account_id': analytic_account_id,
-                }))
+                    }))
 
         vals = {
             'journal_id': company.mass_validation_journal_id.id,
@@ -125,10 +129,10 @@ class mass_journal_validate(orm.TransientModel):
         company_id = user.company_id.id
         # Search draft mass lines on the date of the wizard
         line_ids = self.pool['mass.line'].search(
-                cr, uid, [
-                    ('date', '=', date),
-                    ('company_id', '=', company_id)
-                    ], context=context)
+            cr, uid, [
+                ('date', '=', date),
+                ('company_id', '=', company_id)
+                ], context=context)
         print "line_ids=", line_ids
         move_id = False
         if company.mass_validation_account_id:
@@ -146,8 +150,7 @@ class mass_journal_validate(orm.TransientModel):
 
             self.pool['account.move'].post(cr, uid, [move_id], context=context)
 
-            # Update mass lines fields State = Done and Move_id = Ref account move
-
+        # Update mass lines
         self.pool['mass.line'].write(
             cr, uid, line_ids,
             {'state': 'done', 'move_id': move_id},
