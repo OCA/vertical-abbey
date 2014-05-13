@@ -114,8 +114,10 @@
                     <field name="request_date"/>
                     <field name="celebrant_id"/>
                     <field name="intention"/>
-                    <field name="offering"/>
-                    <field name="unit_offering"/>
+                    <field name="offering" widget="monetary"
+                        options="{'currency_field': 'company_currency_id'}"/>
+                    <field name="unit_offering" widget="monetary"
+                        options="{'currency_field': 'company_currency_id'}"/>
                     <field name="stock_account_id"/>
                     <field name="analytic_account_id"
                         groups="analytic.group_analytic_accounting"/>
@@ -127,6 +129,7 @@
                     <field name="mass_quantity"/>
                     <field name="mass_remaining_quantity"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_currency_id" invisible="1"/>
                     <field name="transfer_id" states="transfered"/>
                 </group>
             </group>
@@ -191,13 +194,20 @@
             </header>
             <group name="main">
                 <field name="date"/>
-                <field name="request_id" invisible="not context.get('mass_line_main_view')"/>
-                <field name="company_id" groups="base.group_multi_company" invisible="not context.get('mass_line_main_view')"/>
-                <field name="request_date" invisible="not context.get('mass_line_main_view')"/>
-                <field name="donor_id" invisible="not context.get('mass_line_main_view')"/>
-                <field name="intention" invisible="not context.get('mass_line_main_view')"/>
+                <field name="request_id"
+                    invisible="not context.get('mass_line_main_view')"/>
+                <field name="company_id" groups="base.group_multi_company"
+                    invisible="not context.get('mass_line_main_view')"/>
+                <field name="company_currency_id" invisible="1"/>
+                <field name="request_date"
+                    invisible="not context.get('mass_line_main_view')"/>
+                <field name="donor_id"
+                    invisible="not context.get('mass_line_main_view')"/>
+                <field name="intention"
+                    invisible="not context.get('mass_line_main_view')"/>
                 <field name="type_id"/>
-                <field name="unit_offering"/>
+                <field name="unit_offering" widget="monetary"
+                     options="{'currency_field': 'company_currency_id'}"/>
                 <field name="celebrant_id"/>
                 <field name="conventual_id" widget="selection"/>
                 <field name="move_id"/>
@@ -259,7 +269,6 @@
     <field name="arch"  type="xml">
         <form string="Mass Request Transfer" version="7.0">
             <header>
-                <button type="action" name="%(mass_requests_to_transfer_action)d" string="Select Mass Requests to Transfer"/>
                 <button name="validate" type="object" string="Validate" class="oe_highlight" states="draft"/>
                 <field name="state" widget="statusbar"/>
             </header>
@@ -267,11 +276,17 @@
                 <field name="celebrant_id"/>
                 <field name="transfer_date"/>
                 <field name="company_id" groups="base.group_multi_company"/>
+                <field name="company_currency_id" invisible="1"/>
                 <field name="move_id"/>
-                <field name="amount_total"/>
+                <field name="amount_total" widget="monetary"
+                     options="{'currency_field': 'company_currency_id'}"/>
                 <field name="mass_total"/>
             </group>
             <group name="lines" string="Masses Requests">
+                <button type="action" name="%(mass_requests_to_transfer_action)d"
+                    string="Select Mass Requests to Transfer"
+                    attrs="{'invisible': [('state', '=', 'done')]}"/>
+                <newline/>
                 <field name="mass_request_ids" nolabel="1"/>
             </group>
         </form>
