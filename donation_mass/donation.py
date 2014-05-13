@@ -21,6 +21,7 @@
 ##############################################################################
 
 from openerp.osv import orm, fields
+from openerp.tools.translate import _
 
 
 class donation_line(orm.Model):
@@ -42,6 +43,8 @@ class donation_line(orm.Model):
             domain=[('celebrant', '=', True)]),
         'mass_request_date': fields.date('Mass Request Date'),
         'intention': fields.char('Intention', size=256),
+        'mass_request_ids': fields.one2many(
+            'mass.request', 'donation_line_id', 'Masses'),
         }
 
 
@@ -77,3 +80,20 @@ class donation_donation(orm.Model):
                 self.pool['mass.request'].create(
                     cr, uid, vals, context=context)
         return res
+
+    def back_to_draft(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, 'only one ID for back2draft'
+        donation = self.browse(cr, uid, ids[0], context=context)
+        mass_request_ids = []
+        for line in donation.line_ids:
+            if line.mass_request_ids and line.mass_request_ids[0].state != 'waiting':
+                raise orm.except_orm(
+                    _('Error:'),
+                    _('Cannot set back to draft the donation with number %s because it is linked to a mass request in %s state.')
+                    % (donation.number, line.mass_request_ids[0].state))
+# TODO : readable state
+            else:
+                mass_request_ids.append(line.mass_request_ids[0].id)
+        self.pool['mass.request'].unlink(cr, uid, mass_request_ids, context=context)
+        return super(donation_donation, self).back_to_draft(
+            cr, uid, ids, context=context)
