@@ -159,6 +159,9 @@ class mass_request(orm.Model):
             domain=[('type', 'not in', ('view', 'template'))]),
         'company_id': fields.many2one(
             'res.company', 'Company', required=True),
+        'company_currency_id': fields.related(
+            'company_id', 'currency_id', type="many2one",
+            relation='res.currency', string="Company Currency"),
         'quantity': fields.integer('Quantity'),
         # quantity = quantity in the donation line
         'mass_quantity': fields.function(
@@ -222,6 +225,9 @@ class mass_line(orm.Model):
         'company_id': fields.related(
             'request_id', 'company_id', type="many2one",
             relation="res.company", string="Company", readonly=True),
+        'company_currency_id': fields.related(
+            'company_id', 'currency_id', type="many2one",
+            relation='res.currency', string="Company Currency"),
         'request_date': fields.related(
             'request_id', 'request_date', type="date",
             string="Mass Request Date", readonly=True),
@@ -297,6 +303,9 @@ class mass_request_transfer(orm.Model):
         'company_id': fields.many2one(
             'res.company', 'Company', required=True,
             states={'done': [('readonly', True)]}),
+        'company_currency_id': fields.related(
+            'company_id', 'currency_id', type="many2one",
+            relation='res.currency', string="Company Currency"),
         'transfer_date': fields.date(
             'Transfer Date', required=True,
             states={'done': [('readonly', True)]}),
