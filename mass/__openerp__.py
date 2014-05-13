@@ -43,6 +43,7 @@ It has been developped by brother Bernard and brother Irénée from Barroux Abbe
         'wizard/select_mass_requests_to_transfer_view.xml',
         'wizard/generate_mass_journal_view.xml',
         'wizard/validate_mass_journal_view.xml',
+        'wizard/swap_celebrant_view.xml',
         'mass_view.xml',
         'mass_data.xml',
         'partner_view.xml',
