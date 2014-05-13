@@ -21,18 +21,5 @@
     </field>
 </record>
 
-<!-- Mass Lines -->
-<record id="mass_line_form" model="ir.ui.view">
-    <field name="name">donation.mass.line.form</field>
-    <field name="model">mass.line</field>
-    <field name="inherit_id" ref="mass.mass_line_form"/>
-    <field name="arch"  type="xml">
-        <field name="celebrant_id" position="after">
-            <field name="move_id"/>
-        </field>
-    </field>
-</record>
-
-
 </data>
 </openerp>

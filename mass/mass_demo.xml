@@ -26,7 +26,10 @@
     <field name="customer" eval="False"/>
 </record>
 
-
+<record id="sainte_madeleine_community" model="religious.community">
+    <field name="name">ASM</field>
+    <field name="long_name">Abbaye Sainte Madeleine</field>
+</record>
 
 </data>
 </openerp>

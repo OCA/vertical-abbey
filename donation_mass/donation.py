@@ -56,8 +56,9 @@ class donation_donation(orm.Model):
             'donation_date': donation.donation_date,
             'request_date': donation_line.mass_request_date or False,
             'type_id': donation_line.product_id.mass_request_type_id.id,
-            'offering': donation_line.amount,
-            # TODO : convert to company currency
+            'offering': donation_line.amount_company_currency,
+            'stock_account_id': donation_line.product_id.property_account_income.id,
+            'analytic_account_id': donation_line.analytic_account_id.id or False,
             'quantity': donation_line.quantity,
             'intention': donation_line.intention,
             'donation_line_id': donation_line.id,

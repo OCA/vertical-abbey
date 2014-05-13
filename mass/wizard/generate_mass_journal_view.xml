@@ -10,13 +10,14 @@
 <data>
 
 
-<record id="mass_journal_form" model="ir.ui.view">
-    <field name="name">mass.journal.form</field>
-    <field name="model">mass.journal</field>
+<record id="mass_journal_generate_form" model="ir.ui.view">
+    <field name="name">mass.journal.generate.form</field>
+    <field name="model">mass.journal.generate</field>
     <field name="arch" type="xml">
         <form string="Masses Journal" version="7.0">
             <group name="main">
-                <field name="journal_date" on_change="journal_date_on_change(journal_date, context)"/>
+                <field name="journal_date"
+                    on_change="journal_date_on_change(journal_date, context)"/>
                 <field name="celebrant_ids"
                     domain="[('celebrant', '=', True), ('supplier', '=', False)]"/>
             </group>
@@ -30,9 +31,9 @@
 </record>
 
 
-<record id="mass_journal_action" model="ir.actions.act_window">
-    <field name="name">Masses Journal</field>
-    <field name="res_model">mass.journal</field>
+<record id="mass_journal_generate_action" model="ir.actions.act_window">
+    <field name="name">Generate Masses Journal</field>
+    <field name="res_model">mass.journal.generate</field>
     <field name="view_type">form</field>
     <field name="view_mode">form</field>
     <field name="target">new</field>

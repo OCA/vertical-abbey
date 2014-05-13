@@ -20,4 +20,5 @@
 ##############################################################################
 
 from . import mass
+from . import company
 from . import wizard
