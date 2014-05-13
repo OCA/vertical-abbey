@@ -148,12 +148,6 @@ class stay_line(orm.Model):
         'partner_name': fields.char('Guest Name', size=128, required=True),
         'refectory_id': fields.many2one('stay.refectory', 'Refectory'),
         'room_id': fields.many2one('stay.room', 'Room'),
-#        'arrival_date': fields.related(
-#            'stay_id', 'arrival_date', 'Arrival Date', readonly=True,
-#            type='date'),
-#        'departure_date': fields.related('stay_id', 'departure_date', 'Departure Date', readonly=True, type='date'),
-#        'arrival_time': fields.related('stay_id', 'arrival_time', 'Arrival Time', readonly=True, type='selection'),
-#        'departure_time': fields.related('stay_id', 'departure_time', 'Departure Time', readonly=True, type='selection'),
         }
 
     def default_refectory(self, cr, uid, context=None):
@@ -197,5 +191,3 @@ class stay_line(orm.Model):
     def partner_id_change(self, cr, uid, ids, partner_id, context=None):
         return self.pool['stay.stay'].partner_id_change(
             cr, uid, [], partner_id, context=context)
-        
-
