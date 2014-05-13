@@ -4,7 +4,8 @@
 #    Mass module for OpenERP
 #    Copyright (C) 2014 Artisanat Monastique de Provence
 #                       (http://www.barroux.org)
-#    @author
+#    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+#    @author: Brother Bernard <informatique@barroux.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,37 +22,16 @@
 #
 ##############################################################################
 
+from openerp.osv import orm, fields
 
-{
-    'name': 'Mass',
-    'version': '0.1',
-    'category': 'Christian Religion',
-    'license': 'AGPL-3',
-    'summary': 'Manage Mass',
-    'description': """
-Mass
-====
 
-This module manages planning of masses.
+class res_company(orm.Model):
+    _inherit = 'res.company'
 
-It has been developped by brother Bernard and brother Irénée from Barroux Abbey and by Alexis de Lattre from Akretion.
-    """,
-    'author': 'Barroux, Akretion',
-    'website': 'http://www.barroux.org',
-    'depends': ['product', 'report_webkit', 'account', 'base_headers_webkit'],
-    'data': [
-        'wizard/select_mass_requests_to_transfer_view.xml',
-        'wizard/generate_mass_journal_view.xml',
-        'wizard/validate_mass_journal_view.xml',
-        'mass_view.xml',
-        'mass_data.xml',
-        'partner_view.xml',
-        'product_view.xml',
-        'company_view.xml',
-        'security/mass_security.xml',
-        'security/ir.model.access.csv',
-        'report.xml',
-        ],
-    'demo': ['mass_demo.xml'],
-    'active': False,
-}
+    _columns = {
+        'mass_validation_account_id': fields.many2one(
+            'account.account', 'Mass Validation Account',
+            domain=[('type', '<>', 'view') , ('type', '<>', 'closed')]),
+        'mass_validation_journal_id': fields.many2one(
+            'account.journal', 'Mass Validation Journal'),
+        }

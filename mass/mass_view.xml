@@ -55,8 +55,48 @@
 <menuitem id="mass_request_type_menu" action="mass_request_type_action"
     parent="mass_config_menu" sequence="30"/>
 
-<menuitem id="mass_journal_menu" sequence="30" action="mass_journal_action"
-    parent="mass_title_menu"/>
+<menuitem id="mass_journal_generate_menu" sequence="30"
+    action="mass_journal_generate_action" parent="mass_title_menu"/>
+
+<menuitem id="mass_journal_validate_menu" sequence="40"
+    action="mass_journal_validate_action" parent="mass_title_menu"/>
+
+
+<!-- Religious Community -->
+<record id="religious_community_form" model="ir.ui.view">
+    <field name="name">religious.community.form</field>
+    <field name="model">religious.community</field>
+    <field name="arch"  type="xml">
+        <form string="Religious Community" version="7.0">
+            <group>
+                <field name="name"/>
+                <field name="long_name"/>
+                <field name="active"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="religious_community_tree" model="ir.ui.view">
+    <field name="name">religious.community.tree</field>
+    <field name="model">religious.community</field>
+    <field name="arch"  type="xml">
+        <tree string="Religious Communitys">
+            <field name="name"/>
+            <field name="long_name"/>
+        </tree>
+    </field>
+</record>
+
+<record id="religious_community_action" model="ir.actions.act_window">
+    <field name="name">Religious Communities</field>
+    <field name="res_model">religious.community</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem id="religious_community_menu" action="religious_community_action"
+    parent="mass_config_menu" sequence="40"/>
 
 <!-- Mass Requests -->
 <record id="mass_request_form" model="ir.ui.view">
@@ -72,10 +112,13 @@
                     <field name="donor_id"/>
                     <field name="donation_date"/>
                     <field name="request_date"/>
+                    <field name="celebrant_id"/>
                     <field name="intention"/>
                     <field name="offering"/>
                     <field name="unit_offering"/>
-                    <field name="celebrant_id"/>
+                    <field name="stock_account_id"/>
+                    <field name="analytic_account_id"
+                        groups="analytic.group_analytic_accounting"/>
                 </group>
                 <group name="mass">
                     <field name="type_id"/>
@@ -105,6 +148,7 @@
             <field name="celebrant_id"/>
             <field name="type_id"/>
             <field name="mass_quantity" sum="Total Mass Quantity"/>
+            <field name="offering" sum="Total Offering"/>
             <field name="mass_remaining_quantity"/>
             <field name="state"/>
         </tree>
@@ -146,14 +190,17 @@
                 <field name="state" widget="statusbar"/>
             </header>
             <group name="main">
-                <field name="request_id" invisible="not context.get('mass_line_main_view')"/>
                 <field name="date"/>
-                <field name="request_date"/>
-                <field name="donor_id"/>
-                <field name="intention"/>
+                <field name="request_id" invisible="not context.get('mass_line_main_view')"/>
+                <field name="company_id" groups="base.group_multi_company" invisible="not context.get('mass_line_main_view')"/>
+                <field name="request_date" invisible="not context.get('mass_line_main_view')"/>
+                <field name="donor_id" invisible="not context.get('mass_line_main_view')"/>
+                <field name="intention" invisible="not context.get('mass_line_main_view')"/>
                 <field name="type_id"/>
                 <field name="unit_offering"/>
                 <field name="celebrant_id"/>
+                <field name="conventual_id" widget="selection"/>
+                <field name="move_id"/>
             </group>
         </form>
     </field>
@@ -163,13 +210,16 @@
     <field name="name">mass.line.tree</field>
     <field name="model">mass.line</field>
     <field name="arch"  type="xml">
-        <tree string="Mass Lines" colors="blue:state=='draft'">
-            <field name="request_id" invisible="not context.get('mass_line_main_view')"/>
+        <tree string="Mass Lines" colors="blue:state=='draft'" editable="bottom">
             <field name="date"/>
-            <field name="request_date" invisible="not context.get('mass_line_main_view')"/>
-            <field name="donor_id" invisible="not context.get('mass_line_main_view')"/>
-            <field name="celebrant_id"/>
+            <field name="request_id" invisible="not context.get('mass_line_main_view')"/>
             <field name="type_id" invisible="not context.get('mass_line_main_view')"/>
+            <field name="company_id" groups="base.group_multi_company" invisible="not context.get('mass_line_main_view')"/>
+            <field name="request_date" invisible="not context.get('mass_line_main_view')"/>
+            <field name="celebrant_id"/>
+            <field name="donor_id" invisible="not context.get('mass_line_main_view')"/>
+            <field name="unit_offering" sum="Total Offering"/>
+            <field name="conventual_id" widget="selection"/>
             <field name="state"/>
         </tree>
     </field>
@@ -179,9 +229,10 @@
     <field name="name">mass.line.search</field>
     <field name="model">mass.line</field>
     <field name="arch"  type="xml">
-        <search string="Mass Requests">
+        <search string="Search Mass Lines">
             <field name="donor_id"/>
             <field name="celebrant_id"/>
+            <field name="date"/>
             <group string="Group By..." name="groupby">
                 <filter name="state_groupby" string="State" context="{'group_by': 'state'}"/>
             </group>
@@ -263,7 +314,8 @@
     <field name="view_mode">tree,form</field>
 </record>
 
-<menuitem id="mass_request_transfer_menu" sequence="40" action="mass_request_transfer_action" parent="mass_title_menu"/>
+<menuitem id="mass_request_transfer_menu" sequence="50"
+    action="mass_request_transfer_action" parent="mass_title_menu"/>
 
 </data>
 </openerp>
