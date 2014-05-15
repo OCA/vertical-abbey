@@ -388,7 +388,7 @@ class mass_request_transfer(orm.Model):
             # TODO Same journal as validation journal ?
             'date': transfer.transfer_date,
             'period_id': period_id,
-            'ref': name,
+            'ref': number,
             'line_id': movelines,
             }
         return vals
@@ -417,7 +417,7 @@ class mass_request_transfer(orm.Model):
 
         transfer_vals['move_id'] = move_id
         transfer.write(transfer_vals, context=context)
-        return
+        return True
 
     def back_to_draft(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'Only 1 ID accepted here'
@@ -428,4 +428,4 @@ class mass_request_transfer(orm.Model):
             self.pool['account.move'].unlink(
                 cr, uid, transfer.move_id.id, context=context)
         transfer.write({'state': 'draft'}, context=context)
-        return
+        return True
