@@ -31,3 +31,12 @@ class res_partner(orm.Model):
     _columns = {
         'stay_ids': fields.one2many('stay.stay', 'partner_id', 'Stays'),
         }
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default.update({
+            'stay_ids': False,
+        })
+        return super(res_partner, self).copy(
+            cr, uid, id, default=default, context=context)
