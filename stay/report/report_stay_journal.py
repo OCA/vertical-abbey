@@ -61,7 +61,6 @@ class stay_journal_report(report_sxw.rml_parse):
                     'bed_night_subtotal': line.bed_night_qty,
                     'lines': [line],
                 }
-        print "res=", res
         # TODO : order by date when there are multiple dates in the report
         return res
 
