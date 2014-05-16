@@ -124,7 +124,7 @@ class mass_request(orm.Model):
                 u'[%dx%s] %s' % (
                     request.quantity,
                     request.type_id.code,
-                    request.donor_id.name,
+                    request.partner_id.name,
                     )))
         return res
 
@@ -133,7 +133,7 @@ class mass_request(orm.Model):
             cr, uid, [('line_ids', 'in', ids)], context=context)
 
     _columns = {
-        'donor_id': fields.many2one('res.partner', 'Donor', required=True),
+        'partner_id': fields.many2one('res.partner', 'Donor', required=True),
         'celebrant_id': fields.many2one(
             'res.partner', 'Celebrant', domain=[('celebrant', '=', True)]),
         'donation_date': fields.date('Donation Date', required=True),
@@ -217,8 +217,8 @@ class mass_line(orm.Model):
     _columns = {
         'request_id': fields.many2one('mass.request', 'Mass Request'),
         'date': fields.date('Celebration Date', required=True),
-        'donor_id': fields.related(
-            'request_id', 'donor_id', string="Donor", readonly=True,
+        'partner_id': fields.related(
+            'request_id', 'partner_id', string="Donor", readonly=True,
             type="many2one", relation="res.partner"),
         'intention': fields.related(
             'request_id', 'intention', type="char", string="Intention",
@@ -263,13 +263,13 @@ class mass_line(orm.Model):
                     _('Error:'),
                     _("Cannot delete mass dated %s for %s because it is a %s "
                         "which is an uninterrupted mass.")
-                    % (mass.date, mass.donor_id.name, mass.type_id.name))
+                    % (mass.date, mass.partner_id.name, mass.type_id.name))
             if mass.state == 'done':
                 raise orm.except_orm(
                     _('Error:'),
                     _('Cannot delete mass line dated %s for %s because '
                         'it is in Done state.')
-                    % (mass.date, mass.donor_id.name))
+                    % (mass.date, mass.partner_id.name))
         return super(mass_line, self).unlink(cr, uid, ids, context=context)
 
 
