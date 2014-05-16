@@ -192,7 +192,7 @@ class mass_journal_generate(orm.TransientModel):
                            _('Error:'),
                             _('The celebrant %s has an assigned mass for %s, but he is '
                               'not available today.')
-                            % (line['request'].celebrant_id.name, line['request'].donor_id.name)                         
+                            % (line['request'].celebrant_id.name, line['request'].partner_id.name)
                             )
                 else:
                     raise orm.except_orm(

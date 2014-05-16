@@ -54,7 +54,7 @@ class donation_donation(orm.Model):
     def _prepare_mass_request(
             self, cr, uid, donation, donation_line, context=None):
         vals = {
-            'donor_id': donation.partner_id.id,
+            'partner_id': donation.partner_id.id,
             'celebrant_id': donation_line.celebrant_id.id or False,
             'donation_date': donation.donation_date,
             'request_date': donation_line.mass_request_date or False,
