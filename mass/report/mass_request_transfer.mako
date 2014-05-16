@@ -32,7 +32,7 @@
 % for req in trf.mass_request_ids:
 
     <tr>
-        <td>${req.donor_id and req.donor_id.name or ''}</td>
+        <td>${req.partner_id and req.partner_id.name or ''}</td>
         <td>${req.donation_date and formatLang(req.donation_date, date=True) or ''}</td>
         <td>${req.type_id.code}</td>
         <td>${req.quantity}</td>

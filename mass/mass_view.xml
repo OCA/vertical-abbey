@@ -109,7 +109,7 @@
             </header>
             <group name="main">
                 <group name="request">
-                    <field name="donor_id"/>
+                    <field name="partner_id"/>
                     <field name="donation_date"/>
                     <field name="request_date"/>
                     <field name="celebrant_id"/>
@@ -145,7 +145,7 @@
     <field name="model">mass.request</field>
     <field name="arch"  type="xml">
         <tree string="Mass Requests" colors="blue:state=='waiting';red:state=='started'">
-            <field name="donor_id"/>
+            <field name="partner_id"/>
             <field name="donation_date"/>
             <field name="request_date"/>
             <field name="celebrant_id"/>
@@ -163,7 +163,7 @@
     <field name="model">mass.request</field>
     <field name="arch"  type="xml">
         <search string="Mass Requests">
-            <field name="donor_id"/>
+            <field name="partner_id"/>
             <field name="celebrant_id"/>
             <group string="Group By..." name="groupby">
                 <filter name="state_groupby" string="State" context="{'group_by': 'state'}"/>
@@ -201,7 +201,7 @@
                 <field name="company_currency_id" invisible="1"/>
                 <field name="request_date"
                     invisible="not context.get('mass_line_main_view')"/>
-                <field name="donor_id"
+                <field name="partner_id"
                     invisible="not context.get('mass_line_main_view')"/>
                 <field name="intention"
                     invisible="not context.get('mass_line_main_view')"/>
@@ -227,7 +227,7 @@
             <field name="company_id" groups="base.group_multi_company" invisible="not context.get('mass_line_main_view')"/>
             <field name="request_date" invisible="not context.get('mass_line_main_view')"/>
             <field name="celebrant_id"/>
-            <field name="donor_id" invisible="not context.get('mass_line_main_view')"/>
+            <field name="partner_id" invisible="not context.get('mass_line_main_view')"/>
             <field name="unit_offering" sum="Total Offering"/>
             <field name="conventual_id" widget="selection"/>
             <field name="state"/>
@@ -240,7 +240,7 @@
     <field name="model">mass.line</field>
     <field name="arch"  type="xml">
         <search string="Search Mass Lines">
-            <field name="donor_id"/>
+            <field name="partner_id"/>
             <field name="celebrant_id"/>
             <field name="date"/>
             <group string="Group By..." name="groupby">
