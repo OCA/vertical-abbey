@@ -40,6 +40,8 @@ It has been developped by brother Bernard and brother Irénée from Barroux Abbe
     'website': 'http://www.barroux.org',
     'depends': ['product', 'report_webkit', 'account', 'base_headers_webkit'],
     'data': [
+        'security/mass_security.xml',
+        'security/ir.model.access.csv',
         'wizard/select_mass_requests_to_transfer_view.xml',
         'wizard/generate_mass_journal_view.xml',
         'wizard/validate_mass_journal_view.xml',
@@ -49,8 +51,6 @@ It has been developped by brother Bernard and brother Irénée from Barroux Abbe
         'partner_view.xml',
         'product_view.xml',
         'company_view.xml',
-        'security/mass_security.xml',
-        'security/ir.model.access.csv',
         'report.xml',
         ],
     'demo': ['mass_demo.xml'],
