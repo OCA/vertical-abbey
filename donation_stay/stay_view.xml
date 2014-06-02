@@ -16,13 +16,9 @@
     <field name="model">stay.stay</field>
     <field name="inherit_id" ref="stay.stay_form"/>
     <field name="arch"  type="xml">
-    	 
-        	<header position="inside">
-            	<button type="action" string="Create Donation" name="%(create_donation_stay_action)d" class="oe_highlight"/>
-        	</header> 
-            
-
-
+        <header position="inside">
+            <button type="action" string="Create Donation" name="%(create_donation_stay_action)d"/>
+        </header>
     </field>
 </record>
 
