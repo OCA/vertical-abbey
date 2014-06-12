@@ -30,7 +30,6 @@
 <record id="stay_journal_print_action" model="ir.actions.act_window">
     <field name="name">Print Journal</field>
     <field name="res_model">stay.journal.print</field>
-    <field name="view_type">form</field>
     <field name="view_mode">form</field>
     <field name="target">new</field>
 </record>
