@@ -24,31 +24,31 @@
 <record id="room_st_cure_ars" model="stay.room">
     <field name="name">St Curé d'Ars</field>
     <field name="code">211</field>
-    <field name="capacity">1</field>
+    <field name="bed_qty">1</field>
 </record>
 
 <record id="room_st_jean_eudes" model="stay.room">
     <field name="name">St Jean Eudes</field>
     <field name="code">213</field>
-    <field name="capacity">1</field>
+    <field name="bed_qty">1</field>
 </record>
 
 <record id="room_st_bruno" model="stay.room">
     <field name="name">St Bruno</field>
     <field name="code">214</field>
-    <field name="capacity">1</field>
+    <field name="bed_qty">1</field>
 </record>
 
 <record id="room_st_elie" model="stay.room">
     <field name="name">St Elie</field>
     <field name="code">215</field>
-    <field name="capacity">1</field>
+    <field name="bed_qty">1</field>
 </record>
 
 <record id="room_dortoir" model="stay.room">
     <field name="name">Dortoir</field>
     <field name="code">DOR</field>
-    <field name="capacity">12</field>
+    <field name="bed_qty">12</field>
 </record>
 
 <record id="stay1" model="stay.stay">
