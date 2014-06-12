@@ -31,7 +31,6 @@
 <record id="mass_journal_validate_action" model="ir.actions.act_window">
     <field name="name">Validate Masses Journal</field>
     <field name="res_model">mass.journal.validate</field>
-    <field name="view_type">form</field>
     <field name="view_mode">form</field>
     <field name="target">new</field>
 </record>
