@@ -58,7 +58,6 @@
             <field name="arrival_time"/>
             <field name="departure_date"/>
             <field name="departure_time"/>
-            
         </tree>
     </field>
 </record>
@@ -74,10 +73,10 @@
     </field>
 </record>
 
+
 <record id="stay_action" model="ir.actions.act_window">
     <field name="name">Stay</field>
     <field name="res_model">stay.stay</field>
-    <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
 </record>
 
@@ -117,7 +116,6 @@
 <record id="stay_refectory_action" model="ir.actions.act_window">
     <field name="name">Refectories</field>
     <field name="res_model">stay.refectory</field>
-    <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
 </record>
 
@@ -155,7 +153,6 @@
 <record id="stay_room_action" model="ir.actions.act_window">
     <field name="name">Room</field>
     <field name="res_model">stay.room</field>
-    <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
 </record>
 
@@ -207,16 +204,29 @@
             <field name="partner_name"/>
             <group string="Group By..." name="groupby">
                 <filter name="date_groupby" string="Date" context="{'group_by': 'date'}"/>
+                <filter name="refectory_id" string="Refectory" context="{'group_by': 'refectory_id'}"/>
+                <filter name="partner_name" string="Partner" context="{'group_by': 'partner_name'}"/>
             </group>
         </search>
+    </field>
+</record>
+
+<record id="stay_graph" model="ir.ui.view">
+    <field name="name">stay.line.graph</field>
+    <field name="model">stay.line</field>
+    <field name="arch"  type="xml">
+        <graph string="Stay Lines" type="pivot">
+            <field name="lunch_qty" type="measure"/>
+            <field name="dinner_qty" type="measure"/>
+            <field name="bed_night_qty" type="measure"/>
+        </graph>
     </field>
 </record>
 
 <record id="stay_line_action" model="ir.actions.act_window">
     <field name="name">Stay Lines</field>
     <field name="res_model">stay.line</field>
-    <field name="view_type">form</field>
-    <field name="view_mode">tree,form</field>
+    <field name="view_mode">tree,form,graph</field>
     <field name="context">{'stay_line_main_view': True}</field>
 </record>
 
