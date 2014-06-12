@@ -32,7 +32,6 @@
 <record id="create_donation_stay_action" model="ir.actions.act_window">
     <field name="name">Creation of Donation for a Guest Stay</field>
     <field name="res_model">donation.stay.create</field>
-    <field name="view_type">form</field>
     <field name="view_mode">form</field>
     <field name="target">new</field>
 </record>

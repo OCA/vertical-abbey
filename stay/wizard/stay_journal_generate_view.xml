@@ -30,7 +30,6 @@
 <record id="stay_journal_generate_action" model="ir.actions.act_window">
     <field name="name">Generate Journal</field>
     <field name="res_model">stay.journal.generate</field>
-    <field name="view_type">form</field>
     <field name="view_mode">form</field>
     <field name="target">new</field>
 </record>
