@@ -40,7 +40,6 @@
 <record id="mass_request_type_action" model="ir.actions.act_window">
     <field name="name">Mass Request Types</field>
     <field name="res_model">mass.request.type</field>
-    <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
 </record>
 
@@ -91,7 +90,6 @@
 <record id="religious_community_action" model="ir.actions.act_window">
     <field name="name">Religious Communities</field>
     <field name="res_model">religious.community</field>
-    <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
 </record>
 
@@ -177,7 +175,6 @@
 <record id="mass_request_action" model="ir.actions.act_window">
     <field name="name">Mass Requests</field>
     <field name="res_model">mass.request</field>
-    <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
 </record>
 
@@ -253,7 +250,6 @@
 <record id="mass_line_action" model="ir.actions.act_window">
     <field name="name">Masses</field>
     <field name="res_model">mass.line</field>
-    <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
     <field name="context">{'mass_line_main_view': True}</field>
 </record>
@@ -328,7 +324,6 @@
 <record id="mass_request_transfer_action" model="ir.actions.act_window">
     <field name="name">Masses Requests Transfer</field>
     <field name="res_model">mass.request.transfer</field>
-    <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
 </record>
 
