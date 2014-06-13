@@ -1,4 +1,12 @@
 <?xml version="1.0"?>
+
+<!--
+    Copyright (C) 2014 Artisanat Monastique de Provence
+                       (http://www.barroux.org)
+    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+    The licence is in the file __openerp__.py
+-->
+
 <openerp>
 <data>
 
@@ -9,7 +17,6 @@
     <field name="context">{'search_default_partner_id': active_id}</field>
 </record>
 
-
 <record id="view_partner_form" model="ir.ui.view">
     <field name="name">stay.button.res.partner.form</field>
     <field name="model">res.partner</field>
@@ -19,13 +26,12 @@
             <button class="oe_inline oe_stat_button" type="action"
                 name="%(stay.partner_stay_action)d"
                 attrs="{'invisible': [('customer', '=', False)]}"
-                icon="fa-lemon-o">
+                icon="fa-coffee">
                 <field string="Stays" name="stay_count" widget="statinfo"/>
             </button>
         </xpath>
     </field>
 </record>
-
 
 </data>
 </openerp>
