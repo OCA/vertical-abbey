@@ -73,7 +73,7 @@ class donation_stay_create(orm.TransientModel):
             'journal_id': wizard.journal_id.id,
             'check_total': wizard.amount,
             'donation_date': wizard.date_donation,
-            'donation_campaign_id': campaign_id,
+            'campaign_id': campaign_id,
             'line_ids': [
                 (0, 0, {
                     'product_id': stay_donation_product_id,
