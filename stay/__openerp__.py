@@ -48,6 +48,7 @@ It has been developped by brother Bernard and brother Irénée from Barroux Abbe
         'wizard/stay_journal_print_view.xml',
         'security/ir.model.access.csv',
         'report.xml',
+        'partner_view.xml',
         ],
     'demo': ['stay_demo.xml'],
     'active': False,
