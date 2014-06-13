@@ -166,6 +166,7 @@
         <form string="Stay Line" version="7.0">
             <group name="main">
                 <field name="stay_id" invisible="not context.get('stay_line_main_view')"/>
+                <field name="company_id" groups="base.group_multi_company"/>
                 <field name="date"/>
                 <field name="partner_id" on_change="partner_id_change(partner_id, context)"/>
                 <field name="partner_name"/>
