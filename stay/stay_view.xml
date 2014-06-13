@@ -69,13 +69,14 @@
     <field name="arch"  type="xml">
         <search string="Search Stays">
             <field name="partner_name"/>
+            <field name="partner_id"/>
         </search>
     </field>
 </record>
 
 
 <record id="stay_action" model="ir.actions.act_window">
-    <field name="name">Stay</field>
+    <field name="name">Stays</field>
     <field name="res_model">stay.stay</field>
     <field name="view_mode">tree,form</field>
 </record>

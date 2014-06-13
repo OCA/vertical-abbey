@@ -28,8 +28,20 @@ from openerp.osv import orm, fields
 class res_partner(orm.Model):
     _inherit = 'res.partner'
 
+    def _stay_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x, 0), ids))
+        # The current user may not have access rights for sale orders
+        try:
+            for partner in self.browse(cr, uid, ids, context):
+                res[partner.id] = len(partner.stay_ids)
+        except:
+            pass
+        return res
+
     _columns = {
         'stay_ids': fields.one2many('stay.stay', 'partner_id', 'Stays'),
+        'stay_count': fields.function(
+            _stay_count, string="# of Stays", type='integer'),
         }
 
     def copy(self, cr, uid, id, default=None, context=None):
