@@ -47,8 +47,12 @@ class stay_journal_print(orm.TransientModel):
 
     def print_journal(self, cr, uid, ids, context=None):
         date = self.browse(cr, uid, ids[0], context=context).date
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         line_ids = self.pool['stay.line'].search(
-            cr, uid, [('date', '=', date)], context=context)
+            cr, uid, [
+                ('date', '=', date),
+                ('company_id', '=', user.company_id.id),
+                ], context=context)
         if not line_ids:
             raise orm.except_orm(
                 _('Error:'),

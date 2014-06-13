@@ -21,4 +21,24 @@
 </record>
 
 </data>
+
+<data noupdate="1">
+
+<!-- Multi-company Rules -->
+<record id="stay_company_rule" model="ir.rule">
+    <field name="name">Stay Multi-company</field>
+    <field name="model_id" ref="model_stay_stay"/>
+    <field name="global" eval="True"/>
+    <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
+</record>
+
+<record id="stay_line_company_rule" model="ir.rule">
+    <field name="name">Stay Line Multi-company</field>
+    <field name="model_id" ref="model_stay_line"/>
+    <field name="global" eval="True"/>
+    <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
+</record>
+
+
+</data>
 </openerp>
