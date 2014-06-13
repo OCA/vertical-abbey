@@ -141,6 +141,7 @@ class stay_line(orm.Model):
 
     _columns = {
         'stay_id': fields.many2one('stay.stay', 'Stay'),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
         'date': fields.date('Date', required=True),
         'lunch_qty': fields.integer('Lunches'),
         'dinner_qty': fields.integer('Dinners'),
@@ -165,6 +166,9 @@ class stay_line(orm.Model):
     _defaults = {
         'refectory_id': default_refectory,
         'date': fields.date.context_today,
+        'company_id': lambda self, cr, uid, context:
+            self.pool['res.company']._company_default_get(
+                cr, uid, 'stay.line', context=context),
         }
 
     def _check_refectory(self, cr, uid, ids):

@@ -41,6 +41,71 @@ class stay_journal_generate(orm.TransientModel):
         tomorrow_str = tomorrow_dt.strftime(DEFAULT_SERVER_DATE_FORMAT)
         return tomorrow_str
 
+    def _prepare_stay_line(self, cr, uid, stay, date, context=None):
+        stay_vals = {}
+        eating_map = {
+            'morning': {
+                'arrival': {'lunch_multi': 1, 'dinner_multi': 1},
+                'departure': {'lunch_multi': 0, 'dinner_multi': 0}
+                },
+            'afternoon': {
+                'arrival': {'lunch_multi': 0, 'dinner_multi': 1},
+                'departure': {'lunch_multi': 1, 'dinner_multi': 0}
+                },
+            'evening': {
+                'arrival': {'lunch_multi': 0, 'dinner_multi': 0},
+                'departure': {'lunch_multi': 1, 'dinner_multi': 1}
+                },
+            }
+
+        if date == stay.arrival_date:
+            stay_vals = {
+                'lunch_qty':
+                    stay.guest_qty *
+                    eating_map[stay.arrival_time]
+                    ['arrival']['lunch_multi'],
+                'dinner_qty':
+                    stay.guest_qty *
+                    eating_map[stay.arrival_time]
+                    ['arrival']['dinner_multi'],
+                'bed_night_qty': stay.guest_qty,
+                }
+        elif date == stay.departure_date:
+            if stay.departure_time == 'morning':
+                return {}
+            stay_vals = {
+                'lunch_qty':
+                    stay.guest_qty *
+                    eating_map[stay.departure_time]
+                    ['departure']['lunch_multi'],
+                'dinner_qty':
+                    stay.guest_qty *
+                    eating_map[stay.departure_time]
+                    ['departure']['dinner_multi'],
+                'bed_night_qty': 0,
+                }
+        else:
+            stay_vals = {
+                'lunch_qty': stay.guest_qty,
+                'dinner_qty': stay.guest_qty,
+                'bed_night_qty': stay.guest_qty,
+            }
+        if not stay.company_id.default_refectory_id:
+            raise orm.except_orm(
+                _('Error:'),
+                _("Missing default refectory on the company '%s'.")
+                % stay.company_id.name)
+        stay_vals.update({
+            'date': date,
+            'stay_id': stay.id,
+            'partner_id': stay.partner_id.id,
+            'partner_name': stay.partner_name,
+            'refectory_id': stay.company_id.default_refectory_id.id,
+            'room_id': stay.room_id.id,
+            'company_id': stay.company_id.id,
+        })
+        return stay_vals
+
     def generate(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -56,69 +121,12 @@ class stay_journal_generate(orm.TransientModel):
             ('arrival_date', '<=', date),
             ('departure_date', '>=', date),
             ], context=context)
-        eating_map = {
-            'morning': {
-                'arrival': {'lunch_multi': 1, 'dinner_multi': 1},
-                'departure': {'lunch_multi': 0, 'dinner_multi': 0}
-                },
-            'afternoon': {
-                'arrival': {'lunch_multi': 0, 'dinner_multi': 1},
-                'departure': {'lunch_multi': 1, 'dinner_multi': 0}
-                },
-            'evening': {
-                'arrival': {'lunch_multi': 0, 'dinner_multi': 0},
-                'departure': {'lunch_multi': 1, 'dinner_multi': 1}
-                },
-            }
         for stay in self.pool['stay.stay'].browse(
                 cr, uid, stay_ids, context=context):
-            stay_vals = {}
-            if date == stay.arrival_date:
-                stay_vals = {
-                    'lunch_qty':
-                        stay.guest_qty *
-                        eating_map[stay.arrival_time]
-                        ['arrival']['lunch_multi'],
-                    'dinner_qty':
-                        stay.guest_qty *
-                        eating_map[stay.arrival_time]
-                        ['arrival']['dinner_multi'],
-                    'bed_night_qty': stay.guest_qty,
-                    }
-            elif date == stay.departure_date:
-                if stay.departure_time == 'morning':
-                    continue
-                stay_vals = {
-                    'lunch_qty':
-                        stay.guest_qty *
-                        eating_map[stay.departure_time]
-                        ['departure']['lunch_multi'],
-                    'dinner_qty':
-                        stay.guest_qty *
-                        eating_map[stay.departure_time]
-                        ['departure']['dinner_multi'],
-                    'bed_night_qty': 0,
-                    }
-            else:
-                stay_vals = {
-                    'lunch_qty': stay.guest_qty,
-                    'dinner_qty': stay.guest_qty,
-                    'bed_night_qty': stay.guest_qty,
-                }
-            if not stay.company_id.default_refectory_id:
-                raise orm.except_orm(
-                    _('Error:'),
-                    _("Missing default refectory on the company '%s'.")
-                    % stay.company_id.name)
-            stay_vals.update({
-                'date': date,
-                'stay_id': stay.id,
-                'partner_id': stay.partner_id.id,
-                'partner_name': stay.partner_name,
-                'refectory_id': stay.company_id.default_refectory_id.id,
-                'room_id': stay.room_id.id,
-            })
-            self.pool['stay.line'].create(cr, uid, stay_vals, context=context)
+            vals = self._prepare_stay_line(
+                cr, uid, stay, date, context=context)
+            if vals:
+                self.pool['stay.line'].create(cr, uid, vals, context=context)
 
         action_model, action_id =\
             self.pool['ir.model.data'].get_object_reference(
