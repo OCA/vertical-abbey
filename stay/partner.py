@@ -30,7 +30,7 @@ class res_partner(orm.Model):
 
     def _stay_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict(map(lambda x: (x, 0), ids))
-        # The current user may not have access rights for sale orders
+        # The current user may not have access rights for stays
         try:
             for partner in self.browse(cr, uid, ids, context):
                 res[partner.id] = len(partner.stay_ids)
