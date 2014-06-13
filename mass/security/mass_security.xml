@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--
+    Copyright (C) 2014 Artisanat Monastique de Provence
+                       (http://www.barroux.org)
+    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+    The licence is in the file __openerp__.py
+-->
+
 <openerp>
-<data noupdate="1">
+<data noupdate="0">
 
 <record id="module_category_mass" model="ir.module.category">
     <field name="name">Mass</field>
@@ -19,6 +26,32 @@
     <field name="category_id" ref="module_category_mass"/>
     <field name="implied_ids" eval="[(4, ref('group_mass_user'))]"/>
     <field name="users" eval="[(4, ref('base.user_root'))]"/>
+</record>
+
+</data>
+
+<data noupdate="1">
+
+<!-- Multi-company Rules -->
+<record id="mass_request_company_rule" model="ir.rule">
+    <field name="name">Mass Request Multi-company</field>
+    <field name="model_id" ref="model_mass_request"/>
+    <field name="global" eval="True"/>
+    <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
+</record>
+
+<record id="mass_request_transfer_company_rule" model="ir.rule">
+    <field name="name">Mass Request Transfer Multi-company</field>
+    <field name="model_id" ref="model_mass_request_transfer"/>
+    <field name="global" eval="True"/>
+    <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
+</record>
+
+<record id="mass_line_company_rule" model="ir.rule">
+    <field name="name">Mass Line Multi-company</field>
+    <field name="model_id" ref="model_mass_line"/>
+    <field name="global" eval="True"/>
+    <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
 </record>
 
 </data>
