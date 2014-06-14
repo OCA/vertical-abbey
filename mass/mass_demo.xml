@@ -31,5 +31,48 @@
     <field name="long_name">Abbaye Sainte Madeleine</field>
 </record>
 
+<record id="mass_req1" model="mass.request">
+    <field name="partner_id" ref="base.res_partner_address_20"/>
+    <field name="donation_date">2014-06-14</field>
+    <field name="type_id" ref="mass_type_simple"/>
+    <field name="offering">17.0</field>
+    <field name="company_id" ref="base.main_company"/>
+    <field name="quantity">1</field>
+    <field name="intention">for my childrens</field>
+</record>
+
+<record id="mass_req2" model="mass.request">
+    <field name="partner_id" ref="base.res_partner_address_34"/>
+    <field name="donation_date">2014-05-29</field>
+    <field name="type_id" ref="mass_type_novena"/>
+    <field name="offering">170.0</field>
+    <field name="company_id" ref="base.main_company"/>
+    <field name="quantity">1</field>
+    <field name="intention">for my Grand-Father</field>
+</record>
+
+<record id="mass_req3" model="mass.request">
+    <field name="partner_id" ref="base.res_partner_address_30"/>
+    <field name="donation_date">2014-06-10</field>
+    <field name="type_id" ref="mass_type_gregorian"/>
+    <field name="offering">540.0</field>
+    <field name="company_id" ref="base.main_company"/>
+    <field name="quantity">1</field>
+    <field name="intention">for my Grand-Mother</field>
+</record>
+
+<record id="mass_req4" model="mass.request">
+    <field name="partner_id" ref="base.res_partner_address_30"/>
+    <field name="donation_date">2014-06-12</field>
+    <field name="type_id" ref="mass_type_simple"/>
+    <field name="offering">51.0</field>
+    <field name="company_id" ref="base.main_company"/>
+    <field name="quantity">3</field>
+    <field name="intention">for my success at the certification</field>
+</record>
+
+
+
+
 </data>
 </openerp>
