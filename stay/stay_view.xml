@@ -204,7 +204,7 @@
         <search string="Search Stay Lines">
             <field name="date"/>
             <field name="partner_name"/>
-            <group string="Group By..." name="groupby">
+            <group string="Group By" name="groupby">
                 <filter name="date_groupby" string="Date" context="{'group_by': 'date'}"/>
                 <filter name="refectory_id" string="Refectory" context="{'group_by': 'refectory_id'}"/>
                 <filter name="partner_name" string="Partner" context="{'group_by': 'partner_name'}"/>
