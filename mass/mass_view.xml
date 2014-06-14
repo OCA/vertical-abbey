@@ -338,17 +338,31 @@
         <search string="Masses Requests Transfer">
             <field name="transfer_date"/>
             <field name="celebrant_id"/>
+            <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+            <filter name="done" string="Done" domain="[('state', '=', 'done')]"/>
             <group string="Group By" name="groupby">
-                <filter name="state_groupby" string="State" context="{'group_by': 'state'}"/>
+                <filter name="celebrant_groupby" string="Celebrant" context="{'group_by': 'celebrant_id'}"/>
+                <filter name="date_groupby" string="Transfer Date" context="{'group_by': 'transfer_date'}"/>
             </group>
         </search>
+    </field>
+</record>
+
+<record id="mass_request_transfer_graph" model="ir.ui.view">
+    <field name="name">mass.request.transfer.graph</field>
+    <field name="model">mass.request.transfer</field>
+    <field name="arch"  type="xml">
+        <graph string="Masses Requests Transfer" type="pivot">
+            <field name="mass_total" type="measure"/>
+            <field name="amount_total" type="measure"/>
+        </graph>
     </field>
 </record>
 
 <record id="mass_request_transfer_action" model="ir.actions.act_window">
     <field name="name">Masses Requests Transfer</field>
     <field name="res_model">mass.request.transfer</field>
-    <field name="view_mode">tree,form</field>
+    <field name="view_mode">tree,form,graph</field>
 </record>
 
 <menuitem id="mass_request_transfer_menu" sequence="50"

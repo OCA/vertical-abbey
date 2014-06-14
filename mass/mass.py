@@ -297,6 +297,10 @@ class mass_request_transfer(orm.Model):
                 res[transfer.id]['mass_total'] += request.mass_quantity
         return res
 
+    def _get_transfers_from_requests(self, cr, uid, ids, context=None):
+        return self.pool['mass.request.transfer'].search(
+            cr, uid, [('mass_request_ids', 'in', ids)], context=context)
+
     _columns = {
         'number': fields.char(
             'Transfer Number', size=32, readonly=True),
@@ -320,10 +324,19 @@ class mass_request_transfer(orm.Model):
             'account.move', 'Account Move', readonly=True),
         'amount_total': fields.function(
             _compute_transfer_totals, type="float", string="Amount Total",
-            digits_compute=dp.get_precision('Account'), multi="transfer"),
+            digits_compute=dp.get_precision('Account'), multi="transfer",
+            store={
+                'mass.request': (
+                    _get_transfers_from_requests,
+                    ['transfer_id', 'mass_quantity', 'offering'], 10),
+                }),
         'mass_total': fields.function(
             _compute_transfer_totals, type="integer",
-            string="Total Mass Quantity", multi="transfer"),
+            string="Total Mass Quantity", multi="transfer", store={
+                'mass.request': (
+                    _get_transfers_from_requests,
+                    ['transfer_id', 'mass_quantity', 'offering'], 10),
+                }),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('done', 'Done'),
@@ -401,6 +414,12 @@ class mass_request_transfer(orm.Model):
                 _('Error:'),
                 _('Cannot validate a Mass Request Transfer without '
                     'Mass Requests.'))
+        if not transfer.company_id.mass_validation_journal_id:
+            raise orm.except_orm(
+                _('Error:'),
+                _("The 'Mass Validation Journal' is not set on company '%s'")
+                % transfer.company_id.name)
+
         transfer_vals = {'state': 'done'}
         number = transfer.number
         if not number:
