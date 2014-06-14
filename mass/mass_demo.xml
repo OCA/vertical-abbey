@@ -71,7 +71,9 @@
     <field name="intention">for my success at the certification</field>
 </record>
 
-
+<record id="base.main_company" model="res.company">
+    <field name="mass_validation_journal_id" ref="account.expenses_journal"/>
+</record>
 
 
 </data>
