@@ -163,12 +163,30 @@
     <field name="model">mass.request</field>
     <field name="arch"  type="xml">
         <search string="Mass Requests">
+            <filter name="waiting" string="Waiting" domain="[('state', '=', 'waiting')]"/>
+            <filter name="started" string="Started" domain="[('state', '=', 'started')]"/>
+            <filter name="transfered" string="Transfered" domain="[('state', '=', 'transfered')]"/>
+            <filter name="done" string="Done" domain="[('state', '=', 'done')]"/>
             <field name="partner_id"/>
             <field name="celebrant_id"/>
-            <group string="Group By..." name="groupby">
+            <group string="Group By" name="groupby">
                 <filter name="state_groupby" string="State" context="{'group_by': 'state'}"/>
+                <filter name="celebrant_groupby" string="Celebrant" context="{'group_by': 'celebrant_id'}"/>
+                <filter name="type_groupby" string="Mass Request Type" context="{'group_by': 'type_id'}"/>
+                <filter name="donation_date_groupby" string="Donation Date" context="{'group_by': 'donation_date'}"/>
+                <filter name="partner_groupby" string="Donor" context="{'group_by': 'partner_id'}"/>
             </group>
         </search>
+    </field>
+</record>
+
+<record id="mass_request_graph" model="ir.ui.view">
+    <field name="name">mass.request.graph</field>
+    <field name="model">mass.request</field>
+    <field name="arch"  type="xml">
+        <graph string="Mass Requests" type="pivot">
+            <field name="quantity" type="measure"/>
+        </graph>
     </field>
 </record>
 
@@ -177,7 +195,7 @@
 <record id="mass_request_action" model="ir.actions.act_window">
     <field name="name">Mass Requests</field>
     <field name="res_model">mass.request</field>
-    <field name="view_mode">tree,form</field>
+    <field name="view_mode">tree,form,graph</field>
 </record>
 
 <menuitem id="mass_request_menu" sequence="17" action="mass_request_action" parent="mass_title_menu"/>
@@ -244,7 +262,7 @@
             <field name="partner_id"/>
             <field name="celebrant_id"/>
             <field name="date"/>
-            <group string="Group By..." name="groupby">
+            <group string="Group By" name="groupby">
                 <filter name="state_groupby" string="State" context="{'group_by': 'state'}"/>
             </group>
         </search>
@@ -320,7 +338,7 @@
         <search string="Masses Requests Transfer">
             <field name="transfer_date"/>
             <field name="celebrant_id"/>
-            <group string="Group By..." name="groupby">
+            <group string="Group By" name="groupby">
                 <filter name="state_groupby" string="State" context="{'group_by': 'state'}"/>
             </group>
         </search>

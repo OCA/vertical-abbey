@@ -35,7 +35,7 @@
     <field name="sale_ok">0</field>
     <field name="mass">1</field>
     <field name="mass_request_type_id" ref="mass_type_gregorian"/>
-    <field name="list_price">510</field>
+    <field name="list_price">540</field>
     <field name="type">service</field>
     <field name="uom_id" ref="product.product_uom_unit"/>
     <field name="uom_po_id" ref="product.product_uom_unit"/>
@@ -51,7 +51,7 @@
     <field name="sale_ok">0</field>
     <field name="mass">1</field>
     <field name="mass_request_type_id" ref="mass_type_novena"/>
-    <field name="list_price">160</field>
+    <field name="list_price">170</field>
     <field name="type">service</field>
     <field name="uom_id" ref="product.product_uom_unit"/>
     <field name="uom_po_id" ref="product.product_uom_unit"/>
@@ -68,7 +68,7 @@
     <field name="sale_ok">0</field>
     <field name="mass">1</field>
     <field name="mass_request_type_id" ref="mass_type_simple"/>
-    <field name="list_price">16</field>
+    <field name="list_price">17</field>
     <field name="type">service</field>
     <field name="uom_id" ref="product.product_uom_unit"/>
     <field name="uom_po_id" ref="product.product_uom_unit"/>
