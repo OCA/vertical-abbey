@@ -32,7 +32,7 @@ class stay_stay(orm.Model):
     _order = 'arrival_date desc'
 
     _columns = {
-        'name': fields.char('Stay Number', size=32),
+        'name': fields.char('Stay Number', size=32, readonly=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'partner_id': fields.many2one(
             'res.partner', 'Guest',
@@ -62,10 +62,14 @@ class stay_stay(orm.Model):
         'company_id': lambda self, cr, uid, context:
             self.pool['res.company']._company_default_get(
                 cr, uid, 'stay.stay', context=context),
-        'name': lambda self, cr, uid, context:
-            self.pool['ir.sequence'].next_by_code(
-                cr, uid, 'stay.stay', context=context),
+        'name': '/',
         }
+
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('name', '/') == '/':
+            vals['name'] = self.pool['ir.sequence'].next_by_code(
+                cr, uid, 'stay.stay', context=context)
+        return super(stay_stay, self).create(cr, uid, vals, context=context)
 
     # constraint date arrival < date departure
     def _check_stay_date(self, cr, uid, ids):
