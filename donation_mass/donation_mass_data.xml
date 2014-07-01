@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <openerp>
-<data noupdate="0"> <!-- TODO : put to 0 when finished -->
+<data noupdate="1">
 
 <record id="mass.product_template_mass_gregorian" model="product.template">
     <field name="donation">1</field>
