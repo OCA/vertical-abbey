@@ -3,8 +3,9 @@
 <openerp>
 <data noupdate="1">
 
-<record id="product_template_stay_donation" model="product.template">
+<record id="product_product_stay_donation" model="product.product">
     <field name="name">Stay Donation</field>
+    <field name="default_code">STAYDON</field>
     <field name="categ_id" ref="product.product_category_all"/>
     <field name="sale_ok">0</field>
     <field name="donation">1</field>
@@ -13,11 +14,6 @@
     <field name="uom_id" ref="product.product_uom_unit"/>
     <field name="uom_po_id" ref="product.product_uom_unit"/>
     <field name="description">This is the donation product for stays.</field>
-</record>
-
-<record id="product_product_stay_donation" model="product.product">
-    <field name="product_tmpl_id" ref="product_template_stay_donation"/>
-    <field name="default_code">STAYDON</field>
 </record>
 
 <record id="stay_campaign" model="donation.campaign">
