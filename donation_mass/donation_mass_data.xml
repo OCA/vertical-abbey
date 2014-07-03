@@ -3,15 +3,15 @@
 <openerp>
 <data noupdate="1">
 
-<record id="mass.product_template_mass_gregorian" model="product.template">
+<record id="mass.product_product_mass_gregorian" model="product.product">
     <field name="donation">1</field>
 </record>
 
-<record id="mass.product_template_mass_novena" model="product.template">
+<record id="mass.product_product_mass_novena" model="product.product">
     <field name="donation">1</field>
 </record>
 
-<record id="mass.product_template_mass_simple" model="product.template">
+<record id="mass.product_product_mass_simple" model="product.product">
     <field name="donation">1</field>
 </record>
 
