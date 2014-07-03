@@ -53,11 +53,12 @@
         <tree string="Stay">
             <field name="name"/>
             <field name="partner_name" invisible="context.get('partner_view')"/>
-            <field name="guest_qty"/>
+            <field name="guest_qty"/>  
             <field name="arrival_date"/>
             <field name="arrival_time"/>
             <field name="departure_date"/>
             <field name="departure_time"/>
+            <field name="room_id"/>
         </tree>
     </field>
 </record>
@@ -70,6 +71,7 @@
         <search string="Search Stays">
             <field name="partner_name"/>
             <field name="partner_id"/>
+            <field name="room_id"/>
             <group string="Group By" name="groupby">
                 <filter name="partner_groupby" string="Guest Name" context="{'group_by': 'partner_name'}"/>
                 <filter name="arrival_date_groupby" string="Arrival Date" context="{'group_by': 'arrival_date'}"/>

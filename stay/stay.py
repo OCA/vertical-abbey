@@ -175,19 +175,30 @@ class stay_line(orm.Model):
                 cr, uid, 'stay.line', context=context),
         }
 
-    def _check_refectory(self, cr, uid, ids):
+    def _check_room_refectory(self, cr, uid, ids):
         for line in self.browse(cr, uid, ids):
             if (line.lunch_qty or line.dinner_qty) and not line.refectory_id:
                 raise orm.except_orm(
                     _('Error:'),
                     _("Missing refectory for guest '%s' on %s.")
                     % (line.partner_name, line.date))
+            if line.room_id and line.bed_night_qty:   
+                same_room_same_day_line_ids = self.search(cr, uid, [('date', '=', line.date), ('room_id', '=', line.room_id.id), ('bed_night_qty', '<>', False)])
+                guests_in_room_qty = 0
+                for same_room in self.browse(cr, uid, same_room_same_day_line_ids):
+                    guests_in_room_qty += same_room.bed_night_qty
+                if guests_in_room_qty > line.room_id.bed_qty:
+                    raise orm.except_orm(
+                        _('Error:'),
+                        _("The room '%s' is booked or all beds of the room are booked")
+                            % line.room_id.name)
+                    return False
         return True
 
     _constraints = [(
-        _check_refectory,
+        _check_room_refectory,
         "Error msg in raise",
-        ['refectory_id', 'lunch_qty', 'dinner_qty']
+        ['refectory_id', 'lunch_qty', 'dinner_qty', 'date', 'room_id']
     )]
 
     _sql_constraints = [
