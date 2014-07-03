@@ -15,8 +15,10 @@
     <field name="inherit_id" ref="product.product_normal_form_view"/>
     <field name="arch"  type="xml">
         <div name="options" position="inside">
-            <field name="mass" on_change="mass_change(mass, context)"/>
-            <label for="mass"/>
+            <div name="mass">
+                <field name="mass" on_change="mass_change(mass, context)"/>
+                <label for="mass"/>
+            </div>
         </div>
         <field name="type" position="after">
             <field name="mass_request_type_id" attrs="{'invisible': [('mass', '=', False)], 'required': [('mass', '=', True)]}"/>

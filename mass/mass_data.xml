@@ -29,10 +29,11 @@
     <field name="parent_id" ref="product.product_category_all"/>
 </record>
 
-<record id="product_template_mass_gregorian" model="product.template">
+<record id="product_product_mass_gregorian" model="product.product">
     <field name="name">Gregorian Mass</field>
+    <field name="default_code">MT</field>
     <field name="categ_id" ref="product_category_mass"/>
-    <field name="sale_ok">0</field>
+    <field name="sale_ok" eval="False"/>
     <field name="mass">1</field>
     <field name="mass_request_type_id" ref="mass_type_gregorian"/>
     <field name="list_price">540</field>
@@ -40,15 +41,12 @@
     <field name="uom_id" ref="product.product_uom_unit"/>
     <field name="uom_po_id" ref="product.product_uom_unit"/>
 </record>
-<record id="product_product_mass_gregorian" model="product.product">
-    <field name="product_tmpl_id" ref="product_template_mass_gregorian"/>
-    <field name="default_code">MT</field>
-</record>
 
-<record id="product_template_mass_novena" model="product.template">
+<record id="product_product_mass_novena" model="product.product">
     <field name="name">Novena Mass</field>
+    <field name="default_code">MN</field>
     <field name="categ_id" ref="product_category_mass"/>
-    <field name="sale_ok">0</field>
+    <field name="sale_ok" eval="False"/>
     <field name="mass">1</field>
     <field name="mass_request_type_id" ref="mass_type_novena"/>
     <field name="list_price">170</field>
@@ -57,26 +55,17 @@
     <field name="uom_po_id" ref="product.product_uom_unit"/>
 </record>
 
-<record id="product_product_mass_novena" model="product.product">
-    <field name="product_tmpl_id" ref="product_template_mass_novena"/>
-    <field name="default_code">MN</field>
-</record>
-
-<record id="product_template_mass_simple" model="product.template">
+<record id="product_product_mass_simple" model="product.product">
     <field name="name">Simple Mass</field>
+    <field name="default_code">MO</field>
     <field name="categ_id" ref="product_category_mass"/>
-    <field name="sale_ok">0</field>
+    <field name="sale_ok" eval="False"/>
     <field name="mass">1</field>
     <field name="mass_request_type_id" ref="mass_type_simple"/>
     <field name="list_price">17</field>
     <field name="type">service</field>
     <field name="uom_id" ref="product.product_uom_unit"/>
     <field name="uom_po_id" ref="product.product_uom_unit"/>
-</record>
-
-<record id="product_product_mass_simple" model="product.product">
-    <field name="product_tmpl_id" ref="product_template_mass_simple"/>
-    <field name="default_code">MO</field>
 </record>
 
 
