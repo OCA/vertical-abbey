@@ -6,14 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 8.0alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-29 07:00+0000\n"
-"PO-Revision-Date: 2014-06-29 07:00+0000\n"
+"POT-Creation-Date: 2014-07-04 15:17+0000\n"
+"PO-Revision-Date: 2014-07-04 15:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: stay
+#: field:res.partner,stay_count:0
+msgid "# of Stays"
+msgstr ""
 
 #. module: stay
 #: sql_constraint:stay.refectory:0
@@ -262,8 +267,6 @@ msgid "Refectory"
 msgstr ""
 
 #. module: stay
-#: model:ir.actions.act_window,name:stay.stay_room_action
-#: model:ir.ui.menu,name:stay.stay_room_menu
 #: field:stay.line,room_id:0
 #: view:stay.room:0
 #: field:stay.stay,room_id:0
@@ -271,6 +274,8 @@ msgid "Room"
 msgstr ""
 
 #. module: stay
+#: model:ir.actions.act_window,name:stay.stay_room_action
+#: model:ir.ui.menu,name:stay.stay_room_menu
 #: view:stay.room:0
 msgid "Rooms"
 msgstr ""
