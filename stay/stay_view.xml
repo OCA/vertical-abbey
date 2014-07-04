@@ -167,7 +167,7 @@
 </record>
 
 <record id="stay_room_action" model="ir.actions.act_window">
-    <field name="name">Room</field>
+    <field name="name">Rooms</field>
     <field name="res_model">stay.room</field>
     <field name="view_mode">tree,form</field>
 </record>
