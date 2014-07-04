@@ -119,7 +119,7 @@ class stay_refectory(orm.Model):
 
 class stay_room(orm.Model):
     _name = 'stay.room'
-    _description = 'room'
+    _description = 'Room'
 
     _columns = {
         'code': fields.char('Code', size=10),
