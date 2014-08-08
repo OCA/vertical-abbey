@@ -179,15 +179,13 @@ class mass_journal_generate(orm.TransientModel):
 
         # Record journal
         # Assign a celebrant for each mass
-        print "***** Liste des célébrants = ", celebrant_ids
         celebrant_ids_origin = list(celebrant_ids)
-        for line in mass_lines:
+        for line in mass_lines:         # First loop to assign resquested celebrants
             celebrant_id = line['celebrant_id']
             if celebrant_id:
                 if celebrant_id in celebrant_ids:
                     celebrant_ids.remove(celebrant_id)         
                 elif celebrant_id not in celebrant_ids_origin:
-                        print "***** Célébrant = ", request.celebrant_id
                         raise orm.except_orm(
                            _('Error:'),
                             _('The celebrant %s has an assigned mass for %s, but he is '
@@ -200,12 +198,18 @@ class mass_journal_generate(orm.TransientModel):
                         _('More than one mass are assigned '
                           'to the same celebrant %s. Please, modify requests.')
                         % line['request'].celebrant_id.name
-                        ) 
-            else:
+                        )
+        for line in mass_lines:          # Second loop to assign a celebrant for the rest of mass lines
+            celebrant_id = line['celebrant_id']
+            if not celebrant_id:
                 celebrant_id = celebrant_ids[0]
                 line['celebrant_id'] = celebrant_id
                 celebrant_ids.remove(celebrant_id)
-        print "***** Reste célébrants = ", wiz['celebrant_ids']
+        if len(celebrant_ids) != 0:
+            raise orm.except_orm(
+                _('Error:'),
+                _('%s celebrants were not assigned') % len(celebrant_ids)
+                )
         # Create mass lines
         new_line_ids = []
         for line in mass_lines:
@@ -213,7 +217,6 @@ class mass_journal_generate(orm.TransientModel):
             new_line_id = self.pool['mass.line'].create(
                 cr, uid, line, context=context)
             new_line_ids.append(new_line_id)
-        print "new_line_ids=", new_line_ids
 
         action = {
             'name': _('Mass Lines'),
@@ -226,5 +229,4 @@ class mass_journal_generate(orm.TransientModel):
             'target': 'current',
             'context': {'mass_line_main_view': True},
             }
-        print "action=", action
         return action

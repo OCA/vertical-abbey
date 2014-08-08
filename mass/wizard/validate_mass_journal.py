@@ -84,8 +84,6 @@ class mass_journal_validate(orm.TransientModel):
                     income_aml[(income_account_id, analytic_account_id)] =\
                         line.unit_offering
 
-        print "stock_aml=", stock_aml
-        print "income_aml=", income_aml
         name = _('Masses celebrated on %s') % date
         for stock_account_id, stock_amount in stock_aml.iteritems():
             movelines.append((0, 0, {
@@ -133,7 +131,6 @@ class mass_journal_validate(orm.TransientModel):
                 ('date', '=', date),
                 ('company_id', '=', company_id)
                 ], context=context)
-        print "line_ids=", line_ids
         move_id = False
         if company.mass_validation_account_id:
             # Loop on result to compute the total amount
