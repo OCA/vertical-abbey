@@ -92,11 +92,8 @@ class stay_stay(orm.Model):
     def partner_id_change(self, cr, uid, ids, partner_id, context=None):
         res = {'value': {'partner_name': False}}
         if partner_id:
-            partner = self.pool['res.partner'].browse(
-                cr, uid, partner_id, context=context)
-            name = partner.name
-            if partner.title and partner.title.shortcut:
-                name = u'%s %s' % (partner.title.shortcut, name)
+            name = self.pool['res.partner'].name_get(
+                cr, uid, [partner_id], context=context)[0][1]
             res['value']['partner_name'] = name
         return res
 
