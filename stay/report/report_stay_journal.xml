@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Copyright (C) 2014 Artisanat Monastique de Provence (www.barroux.org)
+    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+    The licence is in the file __openerp__.py
+-->
+
+
+<openerp>
+<data>
+
+<template id="report_stay_journal">
+
+<t t-call="report.html_container">
+
+<t t-call="report.internal_layout">
+
+<!--<% setLang(user.lang) %> -->
+<div class="page">
+
+<h1>Guest List <t t-esc="formatLang(data['form']['date'], date=True)"/></h1>
+
+<t t-foreach="report_by_refectory(data['form']['date'])" t-as="k">
+
+<div>
+    <h3><t t-esc="k[0].name"/></h3>
+
+    <table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>Stay Nr</th>
+            <th>Arrival Date</th>
+            <th>Departure Date</th>
+            <th>Guest</th>
+            <th>Room</th>
+            <th>Lunch</th>
+            <th>Dinner</th>
+            <th>Night</th>
+        </tr>
+    </thead>
+    <tbody>
+    <t t-foreach="k[1]['lines']" t-as="line">
+        <tr>
+            <td><t t-esc="line.stay_id and line.stay_id.name or ''"/></td>
+            <td><t t-esc="line.stay_id and line.stay_id.arrival_date or ''"/> <t t-esc="line.stay_id and line.stay_id.arrival_time or ''"/></td>
+            <td><t t-esc="line.stay_id and line.stay_id.departure_date or ''"/> <t t-esc="line.stay_id and line.stay_id.departure_time or ''"/></td>
+            <td><t t-esc="line.partner_name or ''"/></td>
+            <td><t t-esc="line.room_id and line.room_id.code or ''"/></td>
+            <td><t t-esc="line.lunch_qty"/></td>
+            <td><t t-esc="line.dinner_qty"/></td>
+            <td><t t-esc="line.bed_night_qty"/></td>
+        </tr>
+    </t>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td colspan="2"><b>Sub-totals:</b></td>
+            <td><t t-esc="k[1]['lunch_subtotal']"/></td>
+            <td><t t-esc="k[1]['dinner_subtotal']"/></td>
+            <td><t t-esc="k[1]['bed_night_subtotal']"/></td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+</t>
+</div>
+
+</t>
+</t>
+
+</template>
+
+</data>
+</openerp>

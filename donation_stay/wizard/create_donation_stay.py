@@ -77,7 +77,8 @@ class donation_stay_create(orm.TransientModel):
             'line_ids': [
                 (0, 0, {
                     'product_id': stay_donation_product_id,
-                    'amount': wizard.amount,
+                    'quantity': 1,
+                    'unit_price': wizard.amount,
                     'tax_receipt_ok': product.tax_receipt_ok,
                     })],
         }
@@ -112,7 +113,6 @@ class donation_stay_create(orm.TransientModel):
             'type': 'ir.actions.act_window',
             'res_model': 'donation.donation',
             'view_mode': 'form,tree',
-            'view_type': 'form',
             'nodestroy': False,
             'target': 'current',
             'res_id': donation_id,

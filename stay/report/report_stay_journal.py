@@ -21,52 +21,55 @@
 ##############################################################################
 
 from openerp.report import report_sxw
+from openerp.osv import orm
 
 
-class stay_journal_report(report_sxw.rml_parse):
+class stay_journal(report_sxw.rml_parse):
 
-    def __init__(self, cr, uid, name, context):
-        super(stay_journal_report, self).__init__(
+    def __init__(self, cr, uid, name, context=None):
+        super(stay_journal, self).__init__(
             cr, uid, name, context=context)
         self.localcontext.update({
             'report_by_refectory': self._get_report_by_refectory,
         })
 
-    def _get_report_by_refectory(self, lines, context=None):
+    def _get_report_by_refectory(self, date):
+        user = self.pool['res.users'].browse(
+            self.cr, self.uid, self.uid)
+        line_ids = self.pool['stay.line'].search(
+            self.cr, self.uid, [
+                ('date', '=', date),
+                ('company_id', '=', user.company_id.id),
+                ])
         res = {}
-        # {date1: {
-        #    refectory_obj1 : {
+        # {refectory_obj1 : {
         #       'lunch_subtotal': 2,
-        #        'dinner_subtotal': 4,
+        #       'dinner_subtotal': 4,
         #       'bed_night_subtotal': 5,
-        #        'lines': [line1, line2, line3],
+        #       'lines': [line1, line2, line3],
         #       }
-        #    }
         # }
-        for line in lines:
-            date = line.date
-            if date not in res:
-                res[date] = {}
+        for line in self.pool['stay.line'].browse(self.cr, self.uid, line_ids):
             refectory = line.refectory_id
-            if refectory in res[date]:
-                res[date][refectory]['lunch_subtotal'] += line.lunch_qty
-                res[date][refectory]['dinner_subtotal'] += line.dinner_qty
-                res[date][refectory]['bed_night_subtotal']\
+            if refectory in res:
+                res[refectory]['lunch_subtotal'] += line.lunch_qty
+                res[refectory]['dinner_subtotal'] += line.dinner_qty
+                res[refectory]['bed_night_subtotal']\
                     += line.bed_night_qty
-                res[date][refectory]['lines'].append(line)
+                res[refectory]['lines'].append(line)
             else:
-                res[date][refectory] = {
+                res[refectory] = {
                     'lunch_subtotal': line.lunch_qty,
                     'dinner_subtotal': line.dinner_qty,
                     'bed_night_subtotal': line.bed_night_qty,
                     'lines': [line],
                 }
-        # TODO : order by date when there are multiple dates in the report
-        return res
+        # print "res=", res
+        return res.items()
 
 
-# the 1st arg MUST be "report.%s" % name of the report !
-report_sxw.report_sxw('report.stay.journal.webkit',
-                      'stay.line',
-                      'addons/stay/report/report_stay_journal.mako',
-                      parser=stay_journal_report)
+class report_stay_journal(orm.AbstractModel):
+    _name = 'report.stay.report_stay_journal'
+    _inherit = 'report.abstract_report'
+    _template = 'stay.report_stay_journal'
+    _wrapped_report_class = stay_journal

@@ -6,6 +6,7 @@
 #                       (http://www.barroux.org)
 #    @author: Alexis de Lattre <alexis.delattre@akretion.com>
 #    @author: Brother Bernard <informatique@barroux.org>
+#    @author: Brother Irénée
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -179,16 +180,23 @@ class stay_line(orm.Model):
                     _('Error:'),
                     _("Missing refectory for guest '%s' on %s.")
                     % (line.partner_name, line.date))
-            if line.room_id and line.bed_night_qty:   
-                same_room_same_day_line_ids = self.search(cr, uid, [('date', '=', line.date), ('room_id', '=', line.room_id.id), ('bed_night_qty', '<>', False)])
+            if line.room_id and line.bed_night_qty:
+                same_room_same_day_line_ids = self.search(
+                    cr, uid,
+                    [
+                        ('date', '=', line.date),
+                        ('room_id', '=', line.room_id.id),
+                        ('bed_night_qty', '<>', False)])
                 guests_in_room_qty = 0
-                for same_room in self.browse(cr, uid, same_room_same_day_line_ids):
+                for same_room in self.browse(
+                        cr, uid, same_room_same_day_line_ids):
                     guests_in_room_qty += same_room.bed_night_qty
                 if guests_in_room_qty > line.room_id.bed_qty:
                     raise orm.except_orm(
                         _('Error:'),
-                        _("The room '%s' is booked or all beds of the room are booked")
-                            % line.room_id.name)
+                        _("The room '%s' is booked or all beds of the "
+                            "room are booked")
+                        % line.room_id.name)
                     return False
         return True
 
