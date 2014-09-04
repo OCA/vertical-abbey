@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-04 22:24+0000\n"
-"PO-Revision-Date: 2014-09-04 22:24+0000\n"
+"POT-Creation-Date: 2014-09-04 22:33+0000\n"
+"PO-Revision-Date: 2014-09-04 22:33+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -61,7 +61,7 @@ msgstr "La date d'arrivée doit être antérieure à la date de départ."
 #. module: stay
 #: field:stay.line,bed_night_qty:0
 msgid "Bed Nights"
-msgstr "Nuits"
+msgstr "Nuités"
 
 #. module: stay
 #: view:stay.journal.generate:stay.stay_journal_generate_form
@@ -192,7 +192,7 @@ msgstr "Générer les lignes de séjour"
 #: view:stay.line:stay.stay_line_search
 #: view:stay.stay:stay.stay_search
 msgid "Group By"
-msgstr "Grouper par"
+msgstr "Group By"
 
 #. module: stay
 #: field:stay.line,partner_id:0
@@ -269,7 +269,7 @@ msgstr "Déjeuners"
 #. module: stay
 #: model:ir.module.category,description:stay.module_category_stay
 msgid "Manage stays (lunch, diner, night, etc...)"
-msgstr "Gestion des séjours (déjeuners, dîners, nuits, etc...)"
+msgstr "Gestion des séjours (déjeuners, dîners, nuités, etc...)"
 
 #. module: stay
 #: model:res.groups,name:stay.group_stay_manager
@@ -444,7 +444,7 @@ msgstr "Sous-totaux :"
 #. module: stay
 #: sql_constraint:stay.line:0
 msgid "The number of bed nights must be positive or null"
-msgstr "Le nombre de nuits doit être positif ou nul"
+msgstr "Le nombre de nuités doit être positif ou nul"
 
 #. module: stay
 #: sql_constraint:stay.line:0
@@ -465,17 +465,17 @@ msgstr "The room '%s' is booked or all beds of the room are booked"
 #. module: stay
 #: view:stay.line:stay.stay_line_tree
 msgid "Total Bed Nights"
-msgstr "Total Bed Nights"
+msgstr "Total nuités"
 
 #. module: stay
 #: view:stay.line:stay.stay_line_tree
-msgid "Total Dinner"
-msgstr "Total Dinner"
+msgid "Total Dinners"
+msgstr "Total dîners"
 
 #. module: stay
 #: view:stay.line:stay.stay_line_tree
-msgid "Total Lunch"
-msgstr "Total Lunch"
+msgid "Total Lunches"
+msgstr "Total déjeuners"
 
 #. module: stay
 #: model:res.groups,name:stay.group_stay_user
