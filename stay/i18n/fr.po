@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-04 19:57+0000\n"
-"PO-Revision-Date: 2014-09-04 19:57+0000\n"
+"POT-Creation-Date: 2014-09-04 22:24+0000\n"
+"PO-Revision-Date: 2014-09-04 22:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -42,7 +42,9 @@ msgid "Afternoon"
 msgstr "Après-midi"
 
 #. module: stay
+#: view:stay.stay:stay.stay_search
 #: field:stay.stay,arrival_date:0
+#: view:website:stay.report_stay_journal
 msgid "Arrival Date"
 msgstr "Date d'arrivée"
 
@@ -60,6 +62,12 @@ msgstr "La date d'arrivée doit être antérieure à la date de départ."
 #: field:stay.line,bed_night_qty:0
 msgid "Bed Nights"
 msgstr "Nuits"
+
+#. module: stay
+#: view:stay.journal.generate:stay.stay_journal_generate_form
+#: view:stay.journal.print:stay.stay_journal_print_form
+msgid "Cancel"
+msgstr "Annuler"
 
 #. module: stay
 #: field:stay.refectory,capacity:0
@@ -116,6 +124,7 @@ msgstr "Créé le"
 #. module: stay
 #: field:stay.journal.generate,date:0
 #: field:stay.journal.print,date:0
+#: view:stay.line:stay.stay_line_search
 #: field:stay.line,date:0
 msgid "Date"
 msgstr "Date"
@@ -127,6 +136,7 @@ msgstr "Réfectoire par défaut"
 
 #. module: stay
 #: field:stay.stay,departure_date:0
+#: view:website:stay.report_stay_journal
 msgid "Departure Date"
 msgstr "Date de départ"
 
@@ -137,6 +147,7 @@ msgstr "Heure de départ"
 
 #. module: stay
 #: field:stay.line,dinner_qty:0
+#: view:website:stay.report_stay_journal
 msgid "Dinners"
 msgstr "Dîners"
 
@@ -144,6 +155,15 @@ msgstr "Dîners"
 #: constraint:stay.line:0
 msgid "Error msg in raise"
 msgstr "Error msg in raise"
+
+#. module: stay
+#: code:addons/stay/stay.py:180
+#: code:addons/stay/stay.py:196
+#: code:addons/stay/wizard/stay_journal_generate.py:95
+#: code:addons/stay/wizard/stay_journal_print.py:61
+#, python-format
+msgid "Error:"
+msgstr "Error:"
 
 #. module: stay
 #: selection:stay.stay,arrival_time:0
@@ -154,8 +174,14 @@ msgstr "Soir"
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_journal_generate_action
 #: model:ir.ui.menu,name:stay.stay_journal_generate_menu
+#: view:stay.journal.generate:stay.stay_journal_generate_form
 msgid "Generate Journal"
 msgstr "Générer le journal"
+
+#. module: stay
+#: view:stay.journal.generate:stay.stay_journal_generate_form
+msgid "Generate Stay Journal"
+msgstr "Générer le journal des séjours"
 
 #. module: stay
 #: model:ir.model,name:stay.model_stay_journal_generate
@@ -163,13 +189,26 @@ msgid "Generate the Stay Lines"
 msgstr "Générer les lignes de séjour"
 
 #. module: stay
+#: view:stay.line:stay.stay_line_search
+#: view:stay.stay:stay.stay_search
+msgid "Group By"
+msgstr "Grouper par"
+
+#. module: stay
 #: field:stay.line,partner_id:0
 #: field:stay.stay,partner_id:0
+#: view:website:stay.report_stay_journal
 msgid "Guest"
 msgstr "Hôte"
 
 #. module: stay
+#: view:website:stay.report_stay_journal
+msgid "Guest List"
+msgstr "Liste des hôtes"
+
+#. module: stay
 #: field:stay.line,partner_name:0
+#: view:stay.stay:stay.stay_search
 #: field:stay.stay,partner_name:0
 msgid "Guest Name"
 msgstr "Nom de l'hôte"
@@ -223,6 +262,7 @@ msgstr "Dernière modification le"
 
 #. module: stay
 #: field:stay.line,lunch_qty:0
+#: view:website:stay.report_stay_journal
 msgid "Lunches"
 msgstr "Déjeuners"
 
@@ -237,6 +277,18 @@ msgid "Manager"
 msgstr "Responsable"
 
 #. module: stay
+#: code:addons/stay/wizard/stay_journal_generate.py:96
+#, python-format
+msgid "Missing default refectory on the company '%s'."
+msgstr "Réfectoire par défaut manquant pour la société '%s'."
+
+#. module: stay
+#: code:addons/stay/stay.py:181
+#, python-format
+msgid "Missing refectory for guest '%s' on %s."
+msgstr "Réfectoire manquant pour l'hôte '%s' le %s."
+
+#. module: stay
 #: selection:stay.stay,arrival_time:0
 #: selection:stay.stay,departure_time:0
 msgid "Morning"
@@ -247,6 +299,17 @@ msgstr "Matin"
 #: field:stay.room,name:0
 msgid "Name"
 msgstr "Nom"
+
+#. module: stay
+#: view:website:stay.report_stay_journal
+msgid "Nights"
+msgstr "Nuités"
+
+#. module: stay
+#: code:addons/stay/wizard/stay_journal_print.py:62
+#, python-format
+msgid "No record for this date."
+msgstr "No record for this date."
 
 #. module: stay
 #: field:stay.stay,note:0
@@ -260,14 +323,21 @@ msgstr "Nombre de lits"
 
 #. module: stay
 #: model:ir.model,name:stay.model_res_partner
+#: view:stay.line:stay.stay_line_search
 msgid "Partner"
 msgstr "Partenaire"
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_journal_print_action
 #: model:ir.ui.menu,name:stay.stay_journal_print_menu
+#: view:stay.journal.print:stay.stay_journal_print_form
 msgid "Print Journal"
 msgstr "Impression du journal"
+
+#. module: stay
+#: view:stay.journal.print:stay.stay_journal_print_form
+msgid "Print Stay Journal"
+msgstr "Imprimer le journal des séjours"
 
 #. module: stay
 #: model:ir.model,name:stay.model_stay_journal_print
@@ -277,31 +347,50 @@ msgstr "Impression des lignes de séjour"
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_refectory_action
 #: model:ir.ui.menu,name:stay.stay_refectory_menu
+#: view:stay.refectory:stay.stay_refectory_tree
 msgid "Refectories"
 msgstr "Réfectoires"
 
 #. module: stay
 #: model:ir.model,name:stay.model_stay_refectory
+#: view:stay.line:stay.stay_line_search
 #: field:stay.line,refectory_id:0
+#: view:stay.refectory:stay.stay_refectory_form
 msgid "Refectory"
 msgstr "Réfectoire"
 
 #. module: stay
 #: model:ir.model,name:stay.model_stay_room
 #: field:stay.line,room_id:0
+#: view:stay.room:stay.stay_room_form
 #: field:stay.stay,room_id:0
+#: view:website:stay.report_stay_journal
 msgid "Room"
 msgstr "Chambre"
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_room_action
 #: model:ir.ui.menu,name:stay.stay_room_menu
+#: view:stay.room:stay.stay_room_tree
 msgid "Rooms"
 msgstr "Chambres"
 
 #. module: stay
+#: view:stay.line:stay.stay_line_search
+msgid "Search Stay Lines"
+msgstr "Search Stay Lines"
+
+#. module: stay
+#: view:stay.stay:stay.stay_search
+msgid "Search Stays"
+msgstr "Search Stays"
+
+#. module: stay
 #: model:ir.module.category,name:stay.module_category_stay
+#: view:res.company:stay.view_company_form
 #: field:stay.line,stay_id:0
+#: view:stay.stay:stay.stay_form
+#: view:stay.stay:stay.stay_tree
 msgid "Stay"
 msgstr "Séjour"
 
@@ -312,11 +401,23 @@ msgid "Stay Journal"
 msgstr "Journal des séjours"
 
 #. module: stay
+#: view:stay.line:stay.stay_line_form
+msgid "Stay Line"
+msgstr "Ligne de séjour"
+
+#. module: stay
 #: model:ir.actions.act_window,name:stay.stay_line_action
 #: model:ir.ui.menu,name:stay.stay_line_menu
+#: view:stay.line:stay.stay_line_graph
+#: view:stay.line:stay.stay_line_tree
 #: field:stay.stay,line_ids:0
 msgid "Stay Lines"
 msgstr "Lignes de séjour"
+
+#. module: stay
+#: view:website:stay.report_stay_journal
+msgid "Stay Nr"
+msgstr "N° du séjour"
 
 #. module: stay
 #: field:stay.stay,name:0
@@ -329,9 +430,16 @@ msgstr "Numéro de séjour"
 #: model:ir.ui.menu,name:stay.stay_menu
 #: model:ir.ui.menu,name:stay.stay_sub_menu
 #: model:ir.ui.menu,name:stay.stay_top_menu
+#: view:res.partner:stay.view_partner_form
 #: field:res.partner,stay_ids:0
+#: view:stay.stay:stay.stay_graph
 msgid "Stays"
 msgstr "Séjours"
+
+#. module: stay
+#: view:website:stay.report_stay_journal
+msgid "Sub-totals:"
+msgstr "Sous-totaux :"
 
 #. module: stay
 #: sql_constraint:stay.line:0
@@ -349,12 +457,28 @@ msgid "The number of lunches must be positive or null"
 msgstr "Le nombre de déjeuners doit être positif ou nul"
 
 #. module: stay
+#: code:addons/stay/stay.py:197
+#, python-format
+msgid "The room '%s' is booked or all beds of the room are booked"
+msgstr "The room '%s' is booked or all beds of the room are booked"
+
+#. module: stay
+#: view:stay.line:stay.stay_line_tree
+msgid "Total Bed Nights"
+msgstr "Total Bed Nights"
+
+#. module: stay
+#: view:stay.line:stay.stay_line_tree
+msgid "Total Dinner"
+msgstr "Total Dinner"
+
+#. module: stay
+#: view:stay.line:stay.stay_line_tree
+msgid "Total Lunch"
+msgstr "Total Lunch"
+
+#. module: stay
 #: model:res.groups,name:stay.group_stay_user
 msgid "User"
 msgstr "Utilisateur"
-
-#. module: stay
-#: model:ir.model,name:stay.model_report_stay_report_stay_journal
-msgid "report.stay.report_stay_journal"
-msgstr "report.stay.report_stay_journal"
 
