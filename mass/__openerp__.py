@@ -53,6 +53,7 @@ It has been developped by brother Bernard and brother Irénée from Barroux Abbe
         'company_view.xml',
         'report.xml',
         'views/report_massrequesttransfer.xml',
+        'views/report_massline.xml',
         ],
     'demo': ['mass_demo.xml'],
     'active': False,
