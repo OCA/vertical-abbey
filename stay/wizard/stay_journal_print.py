@@ -4,6 +4,9 @@
 #    Stay module for OpenERP
 #    Copyright (C) 2014 Artisanat Monastique de Provence
 #                  (http://www.barroux.org)
+#    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+#    @author: Brother Bernard <informatique@barroux.org>
+#    @author: Brother Irénée
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -57,13 +60,7 @@ class stay_journal_print(orm.TransientModel):
             raise orm.except_orm(
                 _('Error:'),
                 _('No record for this date.'))
-        datas = {
-            'model': 'stay.line',
-            'ids': line_ids,
-        }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'stay.journal.webkit',
-            'datas': datas,
-            'context': context,
-        }
+        data = {'form': {'date': date}}
+        return self.pool['report'].get_action(
+            cr, uid, [], 'stay.report_stay_journal', data=data,
+            context=context)

@@ -53,12 +53,13 @@
         <tree string="Stay">
             <field name="name"/>
             <field name="partner_name" invisible="context.get('partner_view')"/>
-            <field name="guest_qty"/>  
+            <field name="guest_qty"/>
             <field name="arrival_date"/>
             <field name="arrival_time"/>
             <field name="departure_date"/>
             <field name="departure_time"/>
             <field name="room_id"/>
+            <field name="company_id" groups="base.group_multi_company"/>
         </tree>
     </field>
 </record>
@@ -208,6 +209,7 @@
             <field name="bed_night_qty" sum="Total Bed Nights"/>
             <field name="refectory_id"/>
             <field name="room_id"/>
+            <field name="company_id" groups="base.group_multi_company"/>
         </tree>
     </field>
 </record>
@@ -247,7 +249,9 @@
     <field name="context">{'stay_line_main_view': True}</field>
 </record>
 
-<menuitem id="stay_line_menu" action="stay_line_action" parent="stay_sub_menu" />
+<menuitem id="stay_line_menu" action="stay_line_action" parent="stay_sub_menu" sequence="20"/>
+
+<menuitem id="partners" action="base.action_partner_form" parent="stay_sub_menu" sequence="50" name="Contacts" />
 
 
 </data>
