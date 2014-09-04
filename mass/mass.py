@@ -276,6 +276,7 @@ class mass_line(orm.Model):
 class mass_request_transfer(orm.Model):
     _name = 'mass.request.transfer'
     _description = 'Transfered Mass Requests'
+    _rec_name = 'number'
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
@@ -435,7 +436,7 @@ class mass_request_transfer(orm.Model):
         self.pool['account.move'].post(cr, uid, [move_id], context=context)
 
         transfer_vals['move_id'] = move_id
-        transfer.write(transfer_vals, context=context)
+        transfer.write(transfer_vals)
         return True
 
     def back_to_draft(self, cr, uid, ids, context=None):
