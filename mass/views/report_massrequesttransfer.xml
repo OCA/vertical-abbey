@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Copyright (C) 2014 Artisanat Monastique de Provence (www.barroux.org)
+    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+    The licence is in the file __openerp__.py
+-->
+
+<openerp>
+<data>
+
+<template id="report_massrequesttransfer">
+
+<t t-call="report.html_container">
+<t t-foreach="docs" t-as="o">
+<t t-call="report.internal_layout">
+
+<div class="page">
+
+<h1>Mass Transfer</h1>
+
+<h2>Transfer Date: <span t-field="o.transfer_date"/></h2>
+
+<h3>Amount Total: <span t-field="o.amount_total" t-field-options='{"widget": "monetary", "display_currency": "o.company_currency_id"}'/></h3>
+
+<h3>Total Number of Masses: <span t-field="o.mass_total"/></h3>
+
+    <table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>Donor</th>
+            <th>Donation Date</th>
+            <th>Mass Request Code</th>
+            <th>Quantity</th>
+            <th>Offering</th>
+            <th>Intention</th>
+        </tr>
+    </thead>
+    <tbody>
+
+    <t t-foreach="o.mass_request_ids" t-as="req">
+
+        <tr>
+            <td><span t-field="req.partner_id.name"/></td>
+            <td><span t-field="req.donation_date"/></td>
+            <td><span t-field="req.type_id.code"/></td>
+            <td><span t-field="req.quantity"/></td>
+            <td><span t-field="req.offering" t-field-options='{"widget": "monetary", "display_currency": "o.company_currency_id"}'/></td>
+            <td><span t-field="req.intention"/></td>
+        </tr>
+
+    </t>
+
+    </tbody>
+    </table>
+
+</div>
+
+</t>
+</t>
+</t>
+
+</template>
+
+</data>
+</openerp>

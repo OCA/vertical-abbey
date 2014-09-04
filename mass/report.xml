@@ -2,14 +2,12 @@
 <openerp>
 <data>
 
-<report id="mass_request_transfer_report"
-    auto="False"
+<report id="report_mass_request_transfer"
     model="mass.request.transfer"
-    name="mass.request.transfer.webkit"
-    file="mass/report/mass_request_transfer.mako"
     string="Mass Request Transfer"
-    report_type="webkit"
-    webkit_header="base_headers_webkit.base_minimum_reports_portrait_header"
+    report_type="qweb-pdf"
+    name="mass.report_massrequesttransfer"
+    file="mass.report_massrequesttransfer"
     />
 
 </data>
