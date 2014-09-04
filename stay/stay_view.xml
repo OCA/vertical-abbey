@@ -204,8 +204,8 @@
             <field name="stay_id" invisible="not context.get('stay_line_main_view')"/>
             <field name="date"/>
             <field name="partner_name"/>
-            <field name="lunch_qty" sum="Total Lunch"/>
-            <field name="dinner_qty" sum="Total Dinner"/>
+            <field name="lunch_qty" sum="Total Lunches"/>
+            <field name="dinner_qty" sum="Total Dinners"/>
             <field name="bed_night_qty" sum="Total Bed Nights"/>
             <field name="refectory_id"/>
             <field name="room_id"/>

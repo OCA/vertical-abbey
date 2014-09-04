@@ -34,9 +34,9 @@
             <th>Departure Date</th>
             <th>Guest</th>
             <th>Room</th>
-            <th>Lunch</th>
-            <th>Dinner</th>
-            <th>Night</th>
+            <th>Lunches</th>
+            <th>Dinners</th>
+            <th>Nights</th>
         </tr>
     </thead>
     <tbody>
