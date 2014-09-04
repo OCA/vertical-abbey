@@ -10,5 +10,14 @@
     file="mass.report_massrequesttransfer"
     />
 
+<report id="report_mass_line"
+    model="mass.line"
+    string="Masses Journal"
+    report_type="qweb-pdf"
+    name="mass.report_massline"
+    file="mass.report_massline"
+    />
+
+
 </data>
 </openerp>

@@ -80,7 +80,7 @@
     <field name="name">religious.community.tree</field>
     <field name="model">religious.community</field>
     <field name="arch"  type="xml">
-        <tree string="Religious Communitys">
+        <tree string="Religious Communities">
             <field name="name"/>
             <field name="long_name"/>
         </tree>

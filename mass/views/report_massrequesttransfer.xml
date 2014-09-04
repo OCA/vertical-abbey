@@ -17,7 +17,7 @@
 
 <div class="page">
 
-<h1>Mass Transfer</h1>
+<h1>Masses Transfer</h1>
 
 <h2>Transfer Date: <span t-field="o.transfer_date"/></h2>
 
