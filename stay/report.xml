@@ -2,14 +2,13 @@
 <openerp>
 <data>
 
-<report id="report_stay_journal"
-    auto="False"
+<report id="action_report_stay_journal"
     model="stay.line"
-    name="stay.journal.webkit"
-    file="stay/report/report_stay_journal.mako"
     string="Stay Journal"
-    report_type="webkit"
-    webkit_header="base_headers_webkit.base_minimum_reports_portrait_header"
+    report_type="qweb-pdf"
+    name="stay.report_stay_journal"
+    file="stay.report_stay_journal"
+    menu="False"
     />
 
 </data>
