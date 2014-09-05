@@ -6,8 +6,8 @@
     model="stay.line"
     string="Stay Journal"
     report_type="qweb-pdf"
-    name="stay.report_stay_journal"
-    file="stay.report_stay_journal"
+    name="stay.report_stayjournal"
+    file="stay.report_stayjournal"
     menu="False"
     />
 
