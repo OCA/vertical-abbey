@@ -38,7 +38,7 @@ It has been developped by brother Bernard and brother Irénée from Barroux Abbe
     """,
     'author': 'Barroux, Akretion',
     'website': 'http://www.barroux.org',
-    'depends': ['web'],
+    'depends': ['web', 'report'],
     'data': [
         'security/stay_security.xml',
         'stay_view.xml',

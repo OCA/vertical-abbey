@@ -33,6 +33,7 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 class stay_journal_print(orm.TransientModel):
     _name = 'stay.journal.print'
     _description = 'Print the Stay Lines'
+    _rec_name = 'date'
 
     _columns = {
         'date': fields.date('Date', required=True),
@@ -61,6 +62,7 @@ class stay_journal_print(orm.TransientModel):
                 _('Error:'),
                 _('No record for this date.'))
         data = {'form': {'date': date}}
-        return self.pool['report'].get_action(
+        res = self.pool['report'].get_action(
             cr, uid, [], 'stay.report_stay_journal', data=data,
             context=context)
+        return res
