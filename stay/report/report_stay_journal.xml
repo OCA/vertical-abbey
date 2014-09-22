@@ -10,7 +10,7 @@
 <openerp>
 <data>
 
-<template id="report_stayjournal">
+<template id="report_stay_journal">
 
 <t t-call="report.html_container">
 
