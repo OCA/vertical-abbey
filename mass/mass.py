@@ -257,8 +257,18 @@ class mass_line(orm.Model):
         }
 
     def unlink(self, cr, uid, ids, context=None):
+        # Get the last journal date
+        line_id = self.search(
+            cr, uid, [], limit=1, order='date desc', context=context)
+        res = self.browse(cr, uid, line_id, context=context)
+        if res:
+            last_date = res[0].date
+        else:
+            raise orm.except_orm(
+                _('Error:'),
+                _("Empty journal."))                                     
         for mass in self.browse(cr, uid, ids, context=context):
-            if mass.type_id.uninterrupted:
+            if mass.type_id.uninterrupted and mass.date < last_date:
                 raise orm.except_orm(
                     _('Error:'),
                     _("Cannot delete mass dated %s for %s because it is a %s "
