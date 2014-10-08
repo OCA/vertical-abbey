@@ -14,7 +14,7 @@
     <field name="name">mass.journal.validate.form</field>
     <field name="model">mass.journal.validate</field>
     <field name="arch" type="xml">
-        <form string="Validate Masses Journal" version="7.0">
+        <form string="Validate Masses Journal">
             <group name="main">
                 <field name="journal_date"/>
             </group>

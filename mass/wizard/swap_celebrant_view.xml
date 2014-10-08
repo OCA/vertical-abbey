@@ -13,7 +13,7 @@
     <field name="name">swap.celebrant.form</field>
     <field name="model">swap.celebrant</field>
     <field name="arch" type="xml">
-        <form string="Swap Celebrants" version="7.0">
+        <form string="Swap Celebrants">
             <group name="main">
                 <label string="Are you sure you want to swap the celebrants of the two selected masses?"
                     colspan="2"/>

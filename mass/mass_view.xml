@@ -13,7 +13,7 @@
     <field name="name">mass.request.type.form</field>
     <field name="model">mass.request.type</field>
     <field name="arch"  type="xml">
-        <form string="Mass Request Type" version="7.0">
+        <form string="Mass Request Type">
             <group name="main">
                 <field name="name"/>
                 <field name="code"/>
@@ -66,7 +66,7 @@
     <field name="name">religious.community.form</field>
     <field name="model">religious.community</field>
     <field name="arch"  type="xml">
-        <form string="Religious Community" version="7.0">
+        <form string="Religious Community">
             <group>
                 <field name="name"/>
                 <field name="long_name"/>
@@ -101,7 +101,7 @@
     <field name="name">mass.request.form</field>
     <field name="model">mass.request</field>
     <field name="arch"  type="xml">
-        <form string="Mass Request" version="7.0">
+        <form string="Mass Request">
             <header>
                 <field name="state" widget="statusbar"/>
             </header>
@@ -205,7 +205,7 @@
     <field name="name">mass.line.form</field>
     <field name="model">mass.line</field>
     <field name="arch"  type="xml">
-        <form string="Mass Line" version="7.0">
+        <form string="Mass Line">
             <header>
                 <field name="state" widget="statusbar"/>
             </header>
@@ -285,7 +285,7 @@
     <field name="name">mass.request.transfer.form</field>
     <field name="model">mass.request.transfer</field>
     <field name="arch"  type="xml">
-        <form string="Mass Request Transfer" version="7.0">
+        <form string="Mass Request Transfer">
             <header>
                 <button name="validate" type="object" string="Validate" class="oe_highlight" states="draft"/>
                 <button name="back_to_draft" type="object" string="Back to Draft" states="done"/>
