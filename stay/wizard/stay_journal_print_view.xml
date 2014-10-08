@@ -15,7 +15,7 @@
     <field name="name">stay_journal_print.form</field>
     <field name="model">stay.journal.print</field>
     <field name="arch"  type="xml">
-        <form string="Print Stay Journal" version="7.0">
+        <form string="Print Stay Journal">
             <group name="main">
                 <field name="date"/>
             </group>

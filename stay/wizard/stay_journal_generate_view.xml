@@ -15,7 +15,7 @@
     <field name="name">stay_journal_generate.form</field>
     <field name="model">stay.journal.generate</field>
     <field name="arch"  type="xml">
-        <form string="Generate Stay Journal" version="7.0">
+        <form string="Generate Stay Journal">
             <group name="main">
                 <field name="date"/>
             </group>
