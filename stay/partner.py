@@ -39,16 +39,8 @@ class res_partner(orm.Model):
         return res
 
     _columns = {
-        'stay_ids': fields.one2many('stay.stay', 'partner_id', 'Stays'),
+        'stay_ids': fields.one2many(
+            'stay.stay', 'partner_id', 'Stays', copy=False),
         'stay_count': fields.function(
             _stay_count, string="# of Stays", type='integer'),
         }
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default.update({
-            'stay_ids': False,
-        })
-        return super(res_partner, self).copy(
-            cr, uid, id, default=default, context=context)
