@@ -15,7 +15,7 @@
     <field name="name">stay.form</field>
     <field name="model">stay.stay</field>
     <field name="arch"  type="xml">
-        <form string="Stay" version="7.0">
+        <form string="Stay">
             <header>
             </header>
             <group name="main">
@@ -108,7 +108,7 @@
     <field name="name">stay.refectory.form</field>
     <field name="model">stay.refectory</field>
     <field name="arch"  type="xml">
-        <form string="Refectory" version="7.0">
+        <form string="Refectory">
             <group name="main">
                 <field name="name"/>
                 <field name="code"/>
@@ -145,7 +145,7 @@
     <field name="name">stay.room.form</field>
     <field name="model">stay.room</field>
     <field name="arch"  type="xml">
-        <form string="Room" version="7.0">
+        <form string="Room">
             <group name="main">
                 <field name="name"/>
                 <field name="code"/>
@@ -179,7 +179,7 @@
     <field name="name">stay.line.form</field>
     <field name="model">stay.line</field>
     <field name="arch"  type="xml">
-        <form string="Stay Line" version="7.0">
+        <form string="Stay Line">
             <group name="main">
                 <field name="stay_id" invisible="not context.get('stay_line_main_view')"/>
                 <field name="company_id" groups="base.group_multi_company"/>
