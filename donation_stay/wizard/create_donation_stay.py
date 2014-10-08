@@ -33,14 +33,24 @@ class donation_stay_create(orm.TransientModel):
     _columns = {
         'journal_id': fields.many2one(
             'account.journal', 'Payment Method', required=True,
-            domain=[('type', '=', 'donation')]),
+            domain=[
+                ('type', 'in', ('bank', 'cash')),
+                ('allow_donation', '=', True)]),
+        'currency_id': fields.many2one(
+            'res.currency', 'Currency', required=True),
         'amount': fields.float(
             'Donation Amount', digits_compute=dp.get_precision('Account')),
         'date_donation': fields.date('Donation Date', required=True),
+        'payment_ref': fields.char('Payment Reference', size=32),
         }
+
+    def _get_default_currency(self, cr, uid, context=None):
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        return user.company_id.currency_id.id
 
     _defaults = {
         'date_donation': fields.date.context_today,  # default date: today
+        'currency_id': _get_default_currency,
         }
 
     # 1. create object "donation.donation" (in database !),
@@ -71,6 +81,8 @@ class donation_stay_create(orm.TransientModel):
             'partner_id': stay.partner_id.id,
             'tax_receipt_option': stay.partner_id.tax_receipt_option,
             'journal_id': wizard.journal_id.id,
+            'currency_id': wizard.currency_id.id,
+            'payment_ref': wizard.payment_ref,
             'check_total': wizard.amount,
             'donation_date': wizard.date_donation,
             'campaign_id': campaign_id,
@@ -112,7 +124,7 @@ class donation_stay_create(orm.TransientModel):
             'name': _('Donations'),
             'type': 'ir.actions.act_window',
             'res_model': 'donation.donation',
-            'view_mode': 'form,tree',
+            'view_mode': 'form,tree,graph',
             'nodestroy': False,
             'target': 'current',
             'res_id': donation_id,

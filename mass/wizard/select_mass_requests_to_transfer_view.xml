@@ -14,7 +14,7 @@
     <field name="name">mass.requests.to.transfer.form</field>
     <field name="model">mass.requests.to.transfer</field>
     <field name="arch" type="xml">
-        <form string="Select Mass Requests to Transfer" version="7.0">
+        <form string="Select Mass Requests to Transfer">
             <group name="main">
                 <field name="mass_request_ids"
                     domain="[('state', '=', 'waiting'), ('celebrant_id', '=', False), ('request_date', '=', False)]"
