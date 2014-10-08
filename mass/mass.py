@@ -457,5 +457,5 @@ class mass_request_transfer(orm.Model):
                 cr, uid, [transfer.move_id.id], context=context)
             self.pool['account.move'].unlink(
                 cr, uid, transfer.move_id.id, context=context)
-        transfer.write({'state': 'draft'}, context=context)
+        transfer.write({'state': 'draft'})
         return True
