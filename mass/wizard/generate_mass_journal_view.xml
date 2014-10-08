@@ -14,7 +14,7 @@
     <field name="name">mass.journal.generate.form</field>
     <field name="model">mass.journal.generate</field>
     <field name="arch" type="xml">
-        <form string="Masses Journal" version="7.0">
+        <form string="Masses Journal">
             <group name="main">
                 <field name="journal_date"
                     on_change="journal_date_on_change(journal_date, context)"/>
