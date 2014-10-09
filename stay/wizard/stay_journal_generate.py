@@ -41,6 +41,10 @@ class stay_journal_generate(orm.TransientModel):
         tomorrow_str = tomorrow_dt.strftime(DEFAULT_SERVER_DATE_FORMAT)
         return tomorrow_str
 
+    _defaults = {
+        'date': _get_default_journal_date,
+        }
+
     def _prepare_stay_line(self, cr, uid, stay, date, context=None):
         stay_vals = {}
         eating_map = {
@@ -140,6 +144,3 @@ class stay_journal_generate(orm.TransientModel):
             })
         return action
 
-    _defaults = {
-        'date': _get_default_journal_date
-        }
