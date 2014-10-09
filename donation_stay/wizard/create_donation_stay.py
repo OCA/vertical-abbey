@@ -74,26 +74,32 @@ class donation_stay_create(orm.TransientModel):
         # check model, assign default value
         assert product_model == 'product.product', 'Wrong model'
 
-        product = self.pool['product.product'].browse(
-            cr, uid, stay_donation_product_id, context=context)
-
-        vals = {
+        product_change = self.pool['donation.line'].product_id_change(
+            cr, uid, [], stay_donation_product_id, context=context)
+        line_vals = product_change['value']
+        line_vals.update({
+            'product_id': stay_donation_product_id,
+            'quantity': 1,
+            'unit_price': wizard.amount,
+            })
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        partner_change = self.pool['donation.donation'].partner_id_change(
+            cr, uid, [], stay.partner_id.id, user.company_id.id,
+            context=context)
+        if partner_change and partner_change.get('value'):
+            vals = partner_change['value']
+        else:
+            vals = {}
+        vals.update({
             'partner_id': stay.partner_id.id,
-            'tax_receipt_option': stay.partner_id.tax_receipt_option,
             'journal_id': wizard.journal_id.id,
             'currency_id': wizard.currency_id.id,
             'payment_ref': wizard.payment_ref,
             'check_total': wizard.amount,
             'donation_date': wizard.date_donation,
             'campaign_id': campaign_id,
-            'line_ids': [
-                (0, 0, {
-                    'product_id': stay_donation_product_id,
-                    'quantity': 1,
-                    'unit_price': wizard.amount,
-                    'tax_receipt_ok': product.tax_receipt_ok,
-                    })],
-        }
+            'line_ids': [(0, 0, line_vals)],
+        })
         return vals
 
     def create_donation(self, cr, uid, ids, context=None):
