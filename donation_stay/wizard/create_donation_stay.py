@@ -63,16 +63,9 @@ class donation_stay_create(orm.TransientModel):
                 cr, uid, 'donation_stay', 'stay_campaign')
         assert campaign_model == 'donation.campaign'
 
-        # here we obtain in a tupple (model,res_id) values memorized
-        # in the table "ir.model.data" (stay origin: xml object)
-        product_model, stay_donation_product_id = \
-            self.pool['ir.model.data'].get_object_reference(
-                cr, uid, 'donation_stay', 'product_product_stay_donation')
-        # "product_product_stay_donation":
-        # it's the xml name for object "product_data"
-
-        # check model, assign default value
-        assert product_model == 'product.product', 'Wrong model'
+        stay_donation_product_id = self.pool['ir.model.data'].xmlid_to_res_id(
+            cr, uid, 'donation_stay.product_product_stay_donation',
+            raise_if_not_found=True)
 
         product_change = self.pool['donation.line'].product_id_change(
             cr, uid, [], stay_donation_product_id, context=context)
@@ -99,6 +92,7 @@ class donation_stay_create(orm.TransientModel):
             'donation_date': wizard.date_donation,
             'campaign_id': campaign_id,
             'line_ids': [(0, 0, line_vals)],
+            'company_id': stay.company_id.id,
         })
         return vals
 
