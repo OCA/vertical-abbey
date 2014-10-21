@@ -57,6 +57,20 @@ class product_template(orm.Model):
             'mass.request.type', 'Mass Request Type'),
         }
 
+    def mass_change(self, cr, uid, ids, mass, context=None):
+        res = {'value': {}}
+        if mass:
+            res['value'] = {'type': 'service', 'sale_ok': False}
+        return res
+
+
+class product_product(orm.Model):
+    _inherit = 'product.product'
+
+    def mass_change(self, cr, uid, ids, mass, context=None):
+        return self.pool['product.template'].mass_change(
+            cr, uid, [], mass, context=context)
+
 
 class religious_community(orm.Model):
     _name = "religious.community"
@@ -71,16 +85,6 @@ class religious_community(orm.Model):
     _defaults = {
         'active': True,
     }
-
-
-class product_product(orm.Model):
-    _inherit = 'product.product'
-
-    def mass_change(self, cr, uid, ids, mass, context=None):
-        res = {}
-        if mass:
-            res['value'] = {'type': 'service', 'sale_ok': False}
-        return res
 
 
 class mass_request(orm.Model):

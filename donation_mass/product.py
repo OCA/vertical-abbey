@@ -23,12 +23,12 @@
 from openerp.osv import orm
 
 
-class product_product(orm.Model):
-    _inherit = 'product.product'
+class product_template(orm.Model):
+    _inherit = 'product.template'
 
     def mass_change(self, cr, uid, ids, mass, context=None):
-        res = super(product_product, self).mass_change(
+        res = super(product_template, self).mass_change(
             cr, uid, ids, mass, context=context)
-        if mass:
+        if mass and 'value' in res:
             res['value']['donation'] = True
         return res
