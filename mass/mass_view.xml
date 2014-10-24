@@ -113,13 +113,6 @@
                         <field name="request_date"/>
                         <field name="celebrant_id"/>
                         <field name="intention"/>
-                        <field name="offering" widget="monetary"
-                            options="{'currency_field': 'company_currency_id'}"/>
-                        <field name="unit_offering" widget="monetary"
-                            options="{'currency_field': 'company_currency_id'}"/>
-                        <field name="stock_account_id"/>
-                        <field name="analytic_account_id"
-                            groups="analytic.group_analytic_accounting"/>
                     </group>
                     <group name="mass">
                         <field name="type_id"/>
@@ -127,14 +120,27 @@
                         <field name="quantity"/>
                         <field name="mass_quantity"/>
                         <field name="mass_remaining_quantity"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
-                        <field name="company_currency_id" invisible="1"/>
                         <field name="transfer_id" states="transfered"/>
                     </group>
                 </group>
-                <group name="lines" string="Mass">
-                    <field name="line_ids" nolabel="1"/>
-                </group>
+                <notebook>
+                    <page name="lines" string="Masses">
+                        <field name="line_ids" nolabel="1"/>
+                    </page>
+                    <page name="other" string="Other Infos">
+                        <group name="other">
+                            <field name="company_currency_id" invisible="1"/>
+                            <field name="offering" widget="monetary"
+                                options="{'currency_field': 'company_currency_id'}"/>
+                            <field name="unit_offering" widget="monetary"
+                                options="{'currency_field': 'company_currency_id'}"/>
+                            <field name="stock_account_id"/>
+                            <field name="analytic_account_id"
+                                groups="analytic.group_analytic_accounting"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </page>
+                </notebook>
             </sheet>
         </form>
     </field>
