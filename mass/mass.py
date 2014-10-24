@@ -90,6 +90,7 @@ class religious_community(orm.Model):
 class mass_request(orm.Model):
     _name = 'mass.request'
     _description = 'Mass Request'
+    _order = 'id desc'
 
     def _compute_request_properties(
             self, cr, uid, ids, name, arg, context=None):
