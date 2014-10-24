@@ -53,6 +53,12 @@ class donation_donation(orm.Model):
 
     def _prepare_mass_request(
             self, cr, uid, donation, donation_line, context=None):
+        account_id = (
+            donation_line.product_id.property_account_income.id or False)
+        if not account_id:
+            account_id = (
+                donation_line.product_id.categ_id.\
+                property_account_income_categ.id or False)
         vals = {
             'partner_id': donation.partner_id.id,
             'celebrant_id': donation_line.celebrant_id.id or False,
@@ -60,8 +66,7 @@ class donation_donation(orm.Model):
             'request_date': donation_line.mass_request_date or False,
             'type_id': donation_line.product_id.mass_request_type_id.id,
             'offering': donation_line.amount_company_currency,
-            'stock_account_id':
-            donation_line.product_id.property_account_income.id,
+            'stock_account_id': account_id,
             'analytic_account_id':
             donation_line.analytic_account_id.id or False,
             'quantity': donation_line.quantity,
