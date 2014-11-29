@@ -16,32 +16,33 @@
     <field name="model">stay.stay</field>
     <field name="arch"  type="xml">
         <form string="Stay">
-            <header>
-            </header>
-            <group name="main">
-                <group name="left">
-                    <field name="name"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="partner_id" on_change="partner_id_change(partner_id, context)"/>
-                    <field name="partner_name"/>
-                    <field name="guest_qty"/>
-                     <field name="create_uid" readonly="1"/>
+            <header></header> <!-- used by module donation_stay -->
+            <sheet>
+                <group name="main">
+                    <group name="left">
+                        <field name="name"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="partner_id"/>
+                        <field name="partner_name"/>
+                        <field name="guest_qty"/>
+                        <!-- <field name="create_uid" readonly="1"/> -->
+                    </group>
+                    <group name="right">
+                        <field name="arrival_date"/>
+                        <field name="arrival_time"/>
+                        <field name="departure_date"/>
+                        <field name="departure_time"/>
+                        <field name="room_id"/>
+                    </group>
                 </group>
-                <group name="right">
-                    <field name="arrival_date"/>
-                    <field name="arrival_time"/>
-                    <field name="departure_date"/>
-                    <field name="departure_time"/>
-                    <field name="room_id"/>
-<!--                    <field name="create_uid"/> -->
+                <group name="lines">
+                    <field name="line_ids" nolabel="1"/>
                 </group>
-            </group>
-            <group name="lines">
-                <field name="line_ids" nolabel="1"/>
-            </group>
-            <group name="note">
-                <field name="note"/>
-            </group>
+            </sheet>
+            <div class="oe_chatter">
+                <field name="message_follower_ids" widget="mail_followers"/>
+                <field name="message_ids" widget="mail_thread"/>
+            </div>
         </form>
     </field>
 </record>
@@ -113,6 +114,7 @@
                 <field name="name"/>
                 <field name="code"/>
                 <field name="capacity"/>
+                <field name="active"/>
             </group>
         </form>
     </field>
@@ -127,6 +129,17 @@
             <field name="code"/>
             <field name="capacity"/>
         </tree>
+    </field>
+</record>
+
+<record id="stay_refectory_search" model="ir.ui.view">
+    <field name="name">stay.refectory.search</field>
+    <field name="model">stay.refectory</field>
+    <field name="arch"  type="xml">
+        <search string="Search Refectories">
+            <field name="name"
+                filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+        </search>
     </field>
 </record>
 
@@ -150,6 +163,7 @@
                 <field name="name"/>
                 <field name="code"/>
                 <field name="bed_qty"/>
+                <field name="active"/>
             </group>
         </form>
     </field>
@@ -164,6 +178,17 @@
             <field name="code"/>
             <field name="bed_qty"/>
         </tree>
+    </field>
+</record>
+
+<record id="stay_room_search" model="ir.ui.view">
+    <field name="name">stay.room.search</field>
+    <field name="model">stay.room</field>
+    <field name="arch"  type="xml">
+        <search string="Search Rooms">
+            <field name="name"
+                filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+        </search>
     </field>
 </record>
 
@@ -184,7 +209,7 @@
                 <field name="stay_id" invisible="not context.get('stay_line_main_view')"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="date"/>
-                <field name="partner_id" on_change="partner_id_change(partner_id, context)"/>
+                <field name="partner_id"/>
                 <field name="partner_name"/>
                 <field name="lunch_qty"/>
                 <field name="dinner_qty"/>
