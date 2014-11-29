@@ -1,10 +1,11 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Stay module for OpenERP
+#    Stay module for Odoo
 #    Copyright (C) 2014 Artisanat Monastique de Provence
 #                       (http://www.barroux.org)
-#    @author
+#    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+#    @author: Brother Bernard <informatique@barroux.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -34,11 +35,12 @@ Stay
 
 This module manages stays ; it handles lunches, dinners and bed nights.
 
-It has been developped by brother Bernard and brother Irénée from Barroux Abbey and by Alexis de Lattre from Akretion.
+It has been developped by brother Bernard and brother Irénée from
+Barroux Abbey and by Alexis de Lattre from Akretion.
     """,
     'author': 'Barroux, Akretion',
     'website': 'http://www.barroux.org',
-    'depends': ['web', 'report'],
+    'depends': ['web', 'report', 'mail'],
     'data': [
         'security/stay_security.xml',
         'stay_view.xml',
@@ -52,5 +54,5 @@ It has been developped by brother Bernard and brother Irénée from Barroux Abbe
         'partner_view.xml',
         ],
     'demo': ['stay_demo.xml'],
-    'active': False,
+    'installable': True,
 }
