@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Stay module for OpenERP
+#    Stay module for Odoo
 #    Copyright (C) 2014 Artisanat Monastique de Provence
 #                       (http://www.barroux.org)
 #    @author: Alexis de Lattre <alexis.delattre@akretion.com>
@@ -23,188 +23,204 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
-from openerp.tools.translate import _
+from openerp import models, fields, api, _
+from openerp.exceptions import Warning
 
 
-class stay_stay(orm.Model):
+class StayStay(models.Model):
     _name = 'stay.stay'
     _description = 'Guest Stay'
     _order = 'arrival_date desc'
+    _inherit = ['mail.thread']
 
-    _columns = {
-        'name': fields.char('Stay Number', size=32, readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
-        'partner_id': fields.many2one(
-            'res.partner', 'Guest',
-            help="If guest is anonymous, leave this field empty."),
-        'partner_name': fields.char('Guest Name', size=128, required=True),
-        'guest_qty': fields.integer('Guest Quantity'),
-        'arrival_date': fields.date('Arrival Date', required=True),
-        'arrival_time': fields.selection([
-            ('morning', 'Morning'),
-            ('afternoon', 'Afternoon'),
-            ('evening', 'Evening'),
-            ], 'Arrival Time', required=True),
-        'departure_date': fields.date('Departure Date', required=True),
-        'departure_time': fields.selection([
-            ('morning', 'Morning'),
-            ('afternoon', 'Afternoon'),
-            ('evening', 'Evening'),
-            ], 'Departure Time', required=True),
-        'room_id': fields.many2one('stay.room', 'Room'),
-        'line_ids': fields.one2many('stay.line', 'stay_id', 'Stay Lines'),
-        'note': fields.text('Notes'),
-        'create_uid': fields.many2one('res.users', 'Created by'),
-        }
+    name = fields.Char(
+        string='Stay Number', readonly=True, default='/', copy='/')
+    company_id = fields.Many2one(
+        'res.company', string='Company', required=True,
+        default=lambda self: self.env['res.company']._company_default_get(
+            'stay.stay'))
+    partner_id = fields.Many2one(
+        'res.partner', string='Guest',
+        help="If guest is anonymous, leave this field empty.")
+    partner_name = fields.Char(
+        'Guest Name', required=True, track_visibility='onchange')
+    guest_qty = fields.Integer(
+        string='Guest Quantity', default=1, track_visibility='onchange')
+    arrival_date = fields.Date(
+        string='Arrival Date', required=True, track_visibility='onchange')
+    arrival_time = fields.Selection([
+        ('morning', 'Morning'),
+        ('afternoon', 'Afternoon'),
+        ('evening', 'Evening'),
+        ], string='Arrival Time', required=True, track_visibility='onchange')
+    departure_date = fields.Date(
+        string='Departure Date', required=True, track_visibility='onchange')
+    departure_time = fields.Selection([
+        ('morning', 'Morning'),
+        ('afternoon', 'Afternoon'),
+        ('evening', 'Evening'),
+        ], string='Departure Time', required=True, track_visibility='onchange')
+    room_id = fields.Many2one(
+        'stay.room', string='Room', track_visibility='onchange')
+    line_ids = fields.One2many(
+        'stay.line', 'stay_id', string='Stay Lines')
 
-    _defaults = {
-        'guest_qty': 1,
-        'company_id': lambda self, cr, uid, context:
-            self.pool['res.company']._company_default_get(
-                cr, uid, 'stay.stay', context=context),
-        'name': '/',
-        }
-
-    def create(self, cr, uid, vals, context=None):
+    @api.model
+    def create(self, vals=None):
+        if vals is None:
+            vals = {}
         if vals.get('name', '/') == '/':
-            vals['name'] = self.pool['ir.sequence'].next_by_code(
-                cr, uid, 'stay.stay', context=context)
-        return super(stay_stay, self).create(cr, uid, vals, context=context)
+            vals['name'] = self.env['ir.sequence'].next_by_code('stay.stay')
+        return super(StayStay, self).create(vals)
 
-    # constraint date arrival < date departure
-    def _check_stay_date(self, cr, uid, ids):
-        for stay in self.browse(cr, uid, ids):
-            if stay.arrival_date >= stay.departure_date:
-                return False
-        return True
+    @api.one
+    def copy(self, default=None):
+        default = dict(default or {})
+        default['name'] = self.env['ir.sequence'].next_by_code('stay.stay')
+        return super(StayStay, self).copy(default)
 
-    _constraints = [(
-        _check_stay_date,
-        'Arrival date must be earlier than departure date',
-        ['arrival_date', 'departure_date'])
-        ]
+    @api.one
+    @api.constrains('departure_date', 'arrival_date')
+    def _check_stay_date(self):
+        if self.arrival_date >= self.departure_date:
+            raise Warning(
+                _('Arrival date (%s) must be earlier than departure date (%s)')
+                % (self.arrival_date, self.departure_date))
 
-    _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id)',
-         'A stay with this number already exists for this company.'),
-        ]
+    _sql_constraints = [(
+        'name_company_uniq', 'unique(name, company_id)',
+        'A stay with this number already exists for this company.')]
 
-    def partner_id_change(self, cr, uid, ids, partner_id, context=None):
-        res = {'value': {'partner_name': False}}
-        if partner_id:
-            name = self.pool['res.partner'].name_get(
-                cr, uid, [partner_id], context=context)[0][1]
-            res['value']['partner_name'] = name
-        return res
+    @api.onchange('partner_id')
+    def _partner_id_change(self):
+        if self.partner_id:
+            self.partner_name = self.partner_id.name_get()[0][1]
 
 
-class stay_refectory(orm.Model):
+class StayRefectory(models.Model):
     _name = 'stay.refectory'
     _description = 'Refectory'
 
-    _columns = {
-        'code': fields.char('Code', size=10),
-        'name': fields.char('Name', size=64, required=True),
-        'capacity': fields.integer('Capacity'),
-    }
+    code = fields.Char(string='Code', size=10)
+    name = fields.Char(string='Name', required=True)
+    capacity = fields.Integer(string='Capacity')
+    active = fields.Boolean(default=True)
 
-    _sql_constraints = [
-        ('code_uniq', 'unique(code)',
-         'A refectory with this code already exists.'),
-        ]
+    _sql_constraints = [(
+        'code_uniq', 'unique(code)',
+        'A refectory with this code already exists.')]
+
+    @api.multi
+    @api.depends('name', 'code')
+    def name_get(self):
+        res = []
+        for record in self:
+            name = record.name
+            if record.code:
+                name = u'[%s] %s' % (record.code, name)
+            res.append((record.id, name))
+        return res
+
+    @api.model
+    def name_search(
+            self, name='', args=None, operator='ilike', limit=80):
+        if name:
+            refs = self.search(
+                [('code', '=', name)] + args, limit=limit)
+            if refs:
+                return refs.name_get()
+        return super(StayRefectory, self).name_search(
+            name=name, args=args, operator=operator, limit=limit)
 
 
-class stay_room(orm.Model):
+class StayRoom(models.Model):
     _name = 'stay.room'
     _description = 'Room'
 
-    _columns = {
-        'code': fields.char('Code', size=10),
-        'name': fields.char('Name', size=64, required=True),
-        'bed_qty': fields.integer('Number of beds'),
-        }
+    code = fields.Char(string='Code', size=10, copy=False)
+    name = fields.Char(string='Name', required=True, copy=False)
+    bed_qty = fields.Integer(string='Number of beds', default='1')
+    active = fields.Boolean(default=True)
 
-    _defaults = {
-        'bed_qty': 1,
-    }
+    _sql_constraints = [(
+        'code_uniq', 'unique(code)',
+        'A room with this code already exists.')]
 
-    _sql_constraints = [
-        ('code_uniq', 'unique(code)',
-         'A room with this code already exists.'),
-        ]
+    @api.multi
+    @api.depends('name', 'code')
+    def name_get(self):
+        res = []
+        for record in self:
+            name = record.name
+            if record.code:
+                name = u'[%s] %s' % (record.code, name)
+            res.append((record.id, name))
+        return res
+
+    @api.model
+    def name_search(
+            self, name='', args=None, operator='ilike', limit=80):
+        if name:
+            rooms = self.search(
+                [('code', '=', name)] + args, limit=limit)
+            if rooms:
+                return rooms.name_get()
+        return super(StayRoom, self).name_search(
+            name=name, args=args, operator=operator, limit=limit)
 
 
-class stay_line(orm.Model):
+class StayLine(models.Model):
     _name = 'stay.line'
     _description = 'Stay Journal'
     _rec_name = 'partner_name'
     _order = 'date desc'
 
-    _columns = {
-        'stay_id': fields.many2one('stay.stay', 'Stay'),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
-        'date': fields.date('Date', required=True),
-        'lunch_qty': fields.integer('Lunches'),
-        'dinner_qty': fields.integer('Dinners'),
-        'bed_night_qty': fields.integer('Bed Nights'),
-        'partner_id': fields.many2one(
-            'res.partner', 'Guest',
-            help="If guest is anonymous, leave this field empty."),
-        'partner_name': fields.char('Guest Name', size=128, required=True),
-        'refectory_id': fields.many2one('stay.refectory', 'Refectory'),
-        'room_id': fields.many2one('stay.room', 'Room'),
-        }
+    @api.model
+    def _default_refectory(self):
+        company_id = self.env['res.company']._company_default_get(
+            'stay.stay')
+        company = self.env['res.company'].browse(company_id)
+        return company.default_refectory_id
 
-    def default_refectory(self, cr, uid, context=None):
-        company_id = self.pool['res.company']._company_default_get(
-            cr, uid, 'stay.stay', context=context)
-        company = self.pool['res.company'].browse(
-            cr, uid, company_id, context=context)
-        refectory_id = company.default_refectory_id \
-            and company.default_refectory_id.id or False
-        return refectory_id
+    stay_id = fields.Many2one('stay.stay', string='Stay')
+    company_id = fields.Many2one(
+        'res.company', string='Company', required=True,
+        default=lambda self:
+        self.env['res.company']._company_default_get('stay.line'))
+    date = fields.Date(
+        string='Date', required=True, default=fields.Date.context_today)
+    lunch_qty = fields.Integer(string='Lunches')
+    dinner_qty = fields.Integer(string='Dinners')
+    bed_night_qty = fields.Integer(string='Bed Nights')
+    partner_id = fields.Many2one(
+        'res.partner', string='Guest',
+        help="If guest is anonymous, leave this field empty.")
+    partner_name = fields.Char('Guest Name', required=True)
+    refectory_id = fields.Many2one(
+        'stay.refectory', string='Refectory', default=_default_refectory)
+    room_id = fields.Many2one('stay.room', string='Room')
 
-    _defaults = {
-        'refectory_id': default_refectory,
-        'date': fields.date.context_today,
-        'company_id': lambda self, cr, uid, context:
-            self.pool['res.company']._company_default_get(
-                cr, uid, 'stay.line', context=context),
-        }
-
-    def _check_room_refectory(self, cr, uid, ids):
-        for line in self.browse(cr, uid, ids):
-            if (line.lunch_qty or line.dinner_qty) and not line.refectory_id:
-                raise orm.except_orm(
-                    _('Error:'),
-                    _("Missing refectory for guest '%s' on %s.")
-                    % (line.partner_name, line.date))
-            if line.room_id and line.bed_night_qty:
-                same_room_same_day_line_ids = self.search(
-                    cr, uid,
-                    [
-                        ('date', '=', line.date),
-                        ('room_id', '=', line.room_id.id),
-                        ('bed_night_qty', '<>', False)])
-                guests_in_room_qty = 0
-                for same_room in self.browse(
-                        cr, uid, same_room_same_day_line_ids):
-                    guests_in_room_qty += same_room.bed_night_qty
-                if guests_in_room_qty > line.room_id.bed_qty:
-                    raise orm.except_orm(
-                        _('Error:'),
-                        _("The room '%s' is booked or all beds of the "
-                            "room are booked")
-                        % line.room_id.name)
-                    return False
-        return True
-
-    _constraints = [(
-        _check_room_refectory,
-        "Error msg in raise",
-        ['refectory_id', 'lunch_qty', 'dinner_qty', 'date', 'room_id']
-    )]
+    @api.one
+    @api.constrains(
+        'refectory_id', 'lunch_qty', 'dinner_qty', 'date', 'room_id')
+    def _check_room_refectory(self):
+        if (self.lunch_qty or self.dinner_qty) and not self.refectory_id:
+            raise Warning(
+                _("Missing refectory for guest '%s' on %s.")
+                % (self.partner_name, self.date))
+        if self.room_id and self.bed_night_qty:
+            same_room_same_day_line = self.search([
+                ('date', '=', self.date),
+                ('room_id', '=', self.room_id.id),
+                ('bed_night_qty', '!=', False)])
+            guests_in_room_qty = 0
+            for same_room in same_room_same_day_line:
+                guests_in_room_qty += same_room.bed_night_qty
+            if guests_in_room_qty > self.room_id.bed_qty:
+                raise Warning(
+                    _("The room '%s' is booked or all beds of the "
+                        "room are booked")
+                    % self.room_id.name)
 
     _sql_constraints = [
         ('lunch_qty_positive', 'CHECK (lunch_qty >= 0)',
@@ -215,6 +231,7 @@ class stay_line(orm.Model):
             'The number of bed nights must be positive or null'),
     ]
 
-    def partner_id_change(self, cr, uid, ids, partner_id, context=None):
-        return self.pool['stay.stay'].partner_id_change(
-            cr, uid, [], partner_id, context=context)
+    @api.onchange('partner_id')
+    def _partner_id_change(self):
+        if self.partner_id:
+            self.partner_name = self.partner_id.name_get()[0][1]
