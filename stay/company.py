@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Stay module for OpenERP
+#    Stay module for Odoo
 #    Copyright (C) 2014 Artisanat Monastique de Provence
 #                       (http://www.barroux.org)
 #    @author: Alexis de Lattre <alexis.delattre@akretion.com>
@@ -22,13 +22,11 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from openerp import models, fields
 
 
-class res_company(orm.Model):
+class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    _columns = {
-        'default_refectory_id': fields.many2one(
-            'stay.refectory', 'Default Refectory'),
-        }
+    default_refectory_id = fields.Many2one(
+        'stay.refectory', string='Default Refectory')

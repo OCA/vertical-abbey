@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Stay module for OpenERP
+#    Stay module for Odoo
 #    Copyright (C) 2014 Artisanat Monastique de Provence
 #                       (http://www.barroux.org)
 #    @author: Alexis de Lattre <alexis.delattre@akretion.com>
@@ -22,25 +22,22 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from openerp import models, fields, api
 
 
-class res_partner(orm.Model):
+class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    def _stay_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x, 0), ids))
+    @api.one
+    @api.depends('stay_ids')
+    def _stay_count(self):
         # The current user may not have access rights for stays
         try:
-            for partner in self.browse(cr, uid, ids, context):
-                res[partner.id] = len(partner.stay_ids)
+            self.stay_count = len(self.stay_ids)
         except:
-            pass
-        return res
+            self.stay_count = 0
 
-    _columns = {
-        'stay_ids': fields.one2many(
-            'stay.stay', 'partner_id', 'Stays', copy=False),
-        'stay_count': fields.function(
-            _stay_count, string="# of Stays", type='integer'),
-        }
+    stay_ids = fields.One2many(
+        'stay.stay', 'partner_id', string='Stays', copy=False)
+    stay_count = fields.Integer(
+        compute='_stay_count', string="# of Stays", readonly=True)

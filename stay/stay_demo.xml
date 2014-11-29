@@ -54,9 +54,9 @@
 <record id="stay1" model="stay.stay">
     <field name="partner_name">Martin Payet</field>
     <field name="guest_qty">1</field>
-    <field name="arrival_date">2014-03-31</field>
+    <field name="arrival_date" eval="time.strftime('%Y-%m-8')"/>
     <field name="arrival_time">afternoon</field>
-    <field name="departure_date">2014-04-04</field>
+    <field name="departure_date" eval="time.strftime('%Y-%m-25')"/>
     <field name="departure_time">morning</field>
     <field name="room_id" ref="room_st_elie"/>
 </record>
@@ -65,11 +65,22 @@
     <field name="partner_id" ref="base.res_partner_address_4"/>
     <field name="partner_name">Michel Fletcher</field>
     <field name="guest_qty">1</field>
-    <field name="arrival_date">2014-04-01</field>
+    <field name="arrival_date" eval="time.strftime('%Y-%m-01')"/>
     <field name="arrival_time">morning</field>
-    <field name="departure_date">2014-04-08</field>
+    <field name="departure_date" eval="time.strftime('%Y-%m-20')"/>
     <field name="departure_time">evening</field>
     <field name="room_id" ref="room_st_cure_ars"/>
+</record>
+
+<record id="stay3" model="stay.stay">
+    <field name="partner_id" ref="base.res_partner_address_21"/>
+    <field name="partner_name">Luc Maurer</field>
+    <field name="guest_qty">1</field>
+    <field name="arrival_date" eval="time.strftime('%Y-%m-03')"/>
+    <field name="arrival_time">morning</field>
+    <field name="departure_date" eval="time.strftime('%Y-%m-12')"/>
+    <field name="departure_time">evening</field>
+    <field name="room_id" ref="room_st_jean_eudes"/>
 </record>
 
 <record id="base.main_company" model="res.company">

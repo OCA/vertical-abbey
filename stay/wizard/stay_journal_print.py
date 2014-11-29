@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Stay module for OpenERP
+#    Stay module for Odoo
 #    Copyright (C) 2014 Artisanat Monastique de Provence
 #                  (http://www.barroux.org)
 #    @author: Alexis de Lattre <alexis.delattre@akretion.com>
@@ -23,46 +23,39 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from openerp import models, fields, api
+from openerp.exceptions import Warning
 from datetime import datetime
 from openerp.tools.translate import _
 from dateutil.relativedelta import relativedelta
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
-class stay_journal_print(orm.TransientModel):
+class StayJournalPrint(models.TransientModel):
     _name = 'stay.journal.print'
     _description = 'Print the Stay Lines'
     _rec_name = 'date'
 
-    _columns = {
-        'date': fields.date('Date', required=True),
-    }
+    @api.model
+    def _default_date(self):
+        today_str = fields.Date.context_today(self)
+        today_dt = datetime.strptime(today_str, DEFAULT_SERVER_DATE_FORMAT)
+        return today_dt + relativedelta(days=1)
 
-    def _get_default_journal_date(self, cr, uid, context=None):
-        today_dt = datetime.today()
-        tomorrow_dt = today_dt + relativedelta(days=1)
-        tomorrow_str = tomorrow_dt.strftime(DEFAULT_SERVER_DATE_FORMAT)
-        return tomorrow_str
+    date = fields.Date(string='Date', required=True, default=_default_date)
 
-    _defaults = {
-        'date': _get_default_journal_date,
-        }
-
-    def print_journal(self, cr, uid, ids, context=None):
-        date = self.browse(cr, uid, ids[0], context=context).date
-        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
-        line_ids = self.pool['stay.line'].search(
-            cr, uid, [
-                ('date', '=', date),
-                ('company_id', '=', user.company_id.id),
-                ], context=context)
-        if not line_ids:
-            raise orm.except_orm(
-                _('Error:'),
-                _('No record for this date.'))
-        data = {'form': {'date': date}}
-        res = self.pool['report'].get_action(
-            cr, uid, [], 'stay.report_stay_journal', data=data,
-            context=context)
+    @api.multi
+    def print_journal(self):
+        assert len(self) == 1, 'Only one recordset allowed'
+        self = self[0]
+        lines = self.env['stay.line'].search([
+            ('date', '=', self.date),
+            ('company_id', '=', self.env.user.company_id.id),
+            ])
+        if not lines:
+            raise Warning(_('No stay for this date.'))
+        data = {'form': {'date': self.date}}
+        res = self.env['report'].get_action(
+            self.env['report'].browse(False), 'stay.report_stay_journal',
+            data=data)
         return res
