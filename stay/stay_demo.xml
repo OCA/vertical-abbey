@@ -51,6 +51,13 @@
     <field name="bed_qty">12</field>
 </record>
 
+<record id="st_benoit_house" model="stay.room">
+    <field name="name">Maison St Benoît</field>
+    <field name="code">BEN</field>
+    <field name="bed_qty">5</field>
+    <field name="no_meals" eval="True"/>
+</record>
+
 <record id="stay1" model="stay.stay">
     <field name="partner_name">Martin Payet</field>
     <field name="guest_qty">1</field>
