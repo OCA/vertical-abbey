@@ -40,7 +40,7 @@ class StayStay(models.Model):
         default=lambda self: self.env['res.company']._company_default_get(
             'stay.stay'))
     partner_id = fields.Many2one(
-        'res.partner', string='Guest',
+        'res.partner', string='Guest', copy=False,
         help="If guest is anonymous, leave this field empty.")
     partner_name = fields.Char(
         'Guest Name', required=True, track_visibility='onchange')
@@ -61,7 +61,7 @@ class StayStay(models.Model):
         ('evening', 'Evening'),
         ], string='Departure Time', required=True, track_visibility='onchange')
     room_id = fields.Many2one(
-        'stay.room', string='Room', track_visibility='onchange')
+        'stay.room', string='Room', track_visibility='onchange', copy=False)
     line_ids = fields.One2many(
         'stay.line', 'stay_id', string='Stay Lines')
 
@@ -77,6 +77,7 @@ class StayStay(models.Model):
     def copy(self, default=None):
         default = dict(default or {})
         default['name'] = self.env['ir.sequence'].next_by_code('stay.stay')
+        default['partner_name'] = _('TO WRITE')
         return super(StayStay, self).copy(default)
 
     @api.one
