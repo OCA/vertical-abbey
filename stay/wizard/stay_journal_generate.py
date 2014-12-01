@@ -85,7 +85,7 @@ class StayJournalGenerate(models.TransientModel):
                 'lunch_qty': stay.guest_qty,
                 'dinner_qty': stay.guest_qty,
                 'bed_night_qty': stay.guest_qty,
-            }
+                }
         if not stay.company_id.default_refectory_id:
             msg = _("Missing default refectory on the company '%s'.") % (
                 stay.company_id.name)
@@ -100,7 +100,9 @@ class StayJournalGenerate(models.TransientModel):
             'refectory_id': stay.company_id.default_refectory_id.id,
             'room_id': stay.room_id.id,
             'company_id': stay.company_id.id,
-        })
+            })
+        if stay.no_meals:
+            stay_vals.update({'lunch_qty': 0, 'dinner_qty': 0})
         return stay_vals
 
     @api.multi
