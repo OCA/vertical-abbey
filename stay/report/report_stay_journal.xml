@@ -46,7 +46,7 @@
             <td><t t-esc="line.stay_id and line.stay_id.arrival_date or ''"/> <t t-esc="line.stay_id and line.stay_id.arrival_time or ''"/></td>
             <td><t t-esc="line.stay_id and line.stay_id.departure_date or ''"/> <t t-esc="line.stay_id and line.stay_id.departure_time or ''"/></td>
             <td><t t-esc="line.partner_name or ''"/></td>
-            <td><t t-esc="line.room_id and line.room_id.code or ''"/></td>
+            <td><t t-esc="line.room_id and line.room_id.name or ''"/></td>
             <td><t t-esc="line.lunch_qty"/></td>
             <td><t t-esc="line.dinner_qty"/></td>
             <td><t t-esc="line.bed_night_qty"/></td>
