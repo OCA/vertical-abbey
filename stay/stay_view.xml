@@ -33,6 +33,7 @@
                         <field name="departure_date"/>
                         <field name="departure_time"/>
                         <field name="room_id"/>
+                        <field name="no_meals"/>
                     </group>
                 </group>
                 <group name="lines">
@@ -163,6 +164,7 @@
                 <field name="name"/>
                 <field name="code"/>
                 <field name="bed_qty"/>
+                <field name="no_meals"/>
                 <field name="active"/>
             </group>
         </form>
@@ -177,6 +179,7 @@
             <field name="name"/>
             <field name="code"/>
             <field name="bed_qty"/>
+            <field name="no_meals"/>
         </tree>
     </field>
 </record>

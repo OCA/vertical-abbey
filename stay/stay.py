@@ -64,6 +64,10 @@ class StayStay(models.Model):
         'stay.room', string='Room', track_visibility='onchange', copy=False)
     line_ids = fields.One2many(
         'stay.line', 'stay_id', string='Stay Lines')
+    no_meals = fields.Boolean(
+        string="No Meals",
+        help="The stay lines generated from this stay will not have "
+        "lunchs nor dinners by default.")
 
     @api.model
     def create(self, vals=None):
@@ -96,6 +100,11 @@ class StayStay(models.Model):
     def _partner_id_change(self):
         if self.partner_id:
             self.partner_name = self.partner_id.name_get()[0][1]
+
+    @api.onchange('room_id')
+    def _room_id_change(self):
+        if self.room_id:
+            self.no_meals = self.room_id.no_meals
 
 
 class StayRefectory(models.Model):
@@ -142,6 +151,10 @@ class StayRoom(models.Model):
     name = fields.Char(string='Name', required=True, copy=False)
     bed_qty = fields.Integer(string='Number of beds', default='1')
     active = fields.Boolean(default=True)
+    no_meals = fields.Boolean(
+        string="No Meals",
+        help="If active, the stays linked to this room will have the "
+        "same option active by default.")
 
     _sql_constraints = [(
         'code_uniq', 'unique(code)',
