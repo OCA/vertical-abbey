@@ -110,6 +110,7 @@ class StayStay(models.Model):
 class StayRefectory(models.Model):
     _name = 'stay.refectory'
     _description = 'Refectory'
+    _order = 'code, name'
 
     code = fields.Char(string='Code', size=10)
     name = fields.Char(string='Name', required=True)
@@ -146,6 +147,7 @@ class StayRefectory(models.Model):
 class StayRoom(models.Model):
     _name = 'stay.room'
     _description = 'Room'
+    _order = 'code, name'
 
     code = fields.Char(string='Code', size=10, copy=False)
     name = fields.Char(string='Name', required=True, copy=False)
