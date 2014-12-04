@@ -54,7 +54,7 @@ class StayJournalPrint(models.TransientModel):
             ])
         if not lines:
             raise Warning(_('No stay for this date.'))
-        data = {'form': {'date': self.date}}
+        data = {'date': self.date}
         res = self.env['report'].get_action(
             self.env['report'].browse(False), 'stay.report_stay_journal',
             data=data)
