@@ -58,4 +58,5 @@ class StayJournalPrint(models.TransientModel):
         res = self.env['report'].get_action(
             self.env['report'].browse(False), 'stay.report_stay_journal',
             data=data)
+        res['datas'] = data  # To be compatible with aeroo v8
         return res
