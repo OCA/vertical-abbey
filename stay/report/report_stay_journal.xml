@@ -19,9 +19,9 @@
 <!--<% setLang(user.lang) %> -->
 <div class="page">
 
-<h1>Guest List <t t-esc="formatLang(data['form']['date'], date=True)"/></h1>
+<h1>Guest List <t t-esc="formatLang(data['date'], date=True)"/></h1>
 
-<t t-foreach="report_by_refectory(data['form']['date'])" t-as="k">
+<t t-foreach="report_by_refectory(data['date'])" t-as="k">
 
 <div>
     <h3><t t-esc="k[0].name"/></h3>
