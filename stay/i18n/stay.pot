@@ -4,21 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0rc1\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-04 22:32+0000\n"
-"PO-Revision-Date: 2014-09-04 22:32+0000\n"
+"POT-Creation-Date: 2014-12-04 19:52+0000\n"
+"PO-Revision-Date: 2014-12-04 19:52+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-
-#. module: stay
-#: field:res.partner,stay_count:0
-msgid "# of Stays"
-msgstr ""
 
 #. module: stay
 #: sql_constraint:stay.refectory:0
@@ -33,6 +28,12 @@ msgstr ""
 #. module: stay
 #: sql_constraint:stay.stay:0
 msgid "A stay with this number already exists for this company."
+msgstr ""
+
+#. module: stay
+#: field:stay.refectory,active:0
+#: field:stay.room,active:0
+msgid "Active"
 msgstr ""
 
 #. module: stay
@@ -54,8 +55,9 @@ msgid "Arrival Time"
 msgstr ""
 
 #. module: stay
-#: constraint:stay.stay:0
-msgid "Arrival date must be earlier than departure date"
+#: code:addons/stay/stay.py:92
+#, python-format
+msgid "Arrival date (%s) must be earlier than departure date (%s)"
 msgstr ""
 
 #. module: stay
@@ -130,6 +132,11 @@ msgid "Date"
 msgstr ""
 
 #. module: stay
+#: help:stay.stay,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr ""
+
+#. module: stay
 #: field:res.company,default_refectory_id:0
 msgid "Default Refectory"
 msgstr ""
@@ -152,23 +159,14 @@ msgid "Dinners"
 msgstr ""
 
 #. module: stay
-#: constraint:stay.line:0
-msgid "Error msg in raise"
-msgstr ""
-
-#. module: stay
-#: code:addons/stay/stay.py:180
-#: code:addons/stay/stay.py:196
-#: code:addons/stay/wizard/stay_journal_generate.py:95
-#: code:addons/stay/wizard/stay_journal_print.py:61
-#, python-format
-msgid "Error:"
-msgstr ""
-
-#. module: stay
 #: selection:stay.stay,arrival_time:0
 #: selection:stay.stay,departure_time:0
 msgid "Evening"
+msgstr ""
+
+#. module: stay
+#: field:stay.stay,message_follower_ids:0
+msgid "Followers"
 msgstr ""
 
 #. module: stay
@@ -224,6 +222,11 @@ msgid "Guest Stay"
 msgstr ""
 
 #. module: stay
+#: help:stay.stay,message_summary:0
+msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+msgstr ""
+
+#. module: stay
 #: field:report.stay.report_stay_journal,id:0
 #: field:stay.journal.generate,id:0
 #: field:stay.journal.print,id:0
@@ -235,9 +238,29 @@ msgid "ID"
 msgstr ""
 
 #. module: stay
+#: help:stay.room,no_meals:0
+msgid "If active, the stays linked to this room will have the same option active by default."
+msgstr ""
+
+#. module: stay
+#: help:stay.stay,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: stay
 #: help:stay.line,partner_id:0
 #: help:stay.stay,partner_id:0
 msgid "If guest is anonymous, leave this field empty."
+msgstr ""
+
+#. module: stay
+#: field:stay.stay,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
+
+#. module: stay
+#: field:stay.stay,message_last_post:0
+msgid "Last Message Date"
 msgstr ""
 
 #. module: stay
@@ -277,13 +300,23 @@ msgid "Manager"
 msgstr ""
 
 #. module: stay
-#: code:addons/stay/wizard/stay_journal_generate.py:96
+#: field:stay.stay,message_ids:0
+msgid "Messages"
+msgstr ""
+
+#. module: stay
+#: help:stay.stay,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: stay
+#: code:addons/stay/wizard/stay_journal_generate.py:90
 #, python-format
 msgid "Missing default refectory on the company '%s'."
 msgstr ""
 
 #. module: stay
-#: code:addons/stay/stay.py:181
+#: code:addons/stay/stay.py:223
 #, python-format
 msgid "Missing refectory for guest '%s' on %s."
 msgstr ""
@@ -306,14 +339,16 @@ msgid "Nights"
 msgstr ""
 
 #. module: stay
-#: code:addons/stay/wizard/stay_journal_print.py:62
-#, python-format
-msgid "No record for this date."
+#: field:stay.room,no_meals:0
+#: field:stay.stay,no_meals:0
+msgid "No Meals"
 msgstr ""
 
 #. module: stay
-#: field:stay.stay,note:0
-msgid "Notes"
+#: code:addons/stay/wizard/stay_journal_generate.py:121
+#: code:addons/stay/wizard/stay_journal_print.py:56
+#, python-format
+msgid "No stay for this date."
 msgstr ""
 
 #. module: stay
@@ -373,6 +408,16 @@ msgstr ""
 #: model:ir.ui.menu,name:stay.stay_room_menu
 #: view:stay.room:stay.stay_room_tree
 msgid "Rooms"
+msgstr ""
+
+#. module: stay
+#: view:stay.refectory:stay.stay_refectory_search
+msgid "Search Refectories"
+msgstr ""
+
+#. module: stay
+#: view:stay.room:stay.stay_room_search
+msgid "Search Rooms"
 msgstr ""
 
 #. module: stay
@@ -442,6 +487,17 @@ msgid "Sub-totals:"
 msgstr ""
 
 #. module: stay
+#: field:stay.stay,message_summary:0
+msgid "Summary"
+msgstr ""
+
+#. module: stay
+#: code:addons/stay/stay.py:84
+#, python-format
+msgid "TO WRITE"
+msgstr ""
+
+#. module: stay
 #: sql_constraint:stay.line:0
 msgid "The number of bed nights must be positive or null"
 msgstr ""
@@ -457,9 +513,14 @@ msgid "The number of lunches must be positive or null"
 msgstr ""
 
 #. module: stay
-#: code:addons/stay/stay.py:197
+#: code:addons/stay/stay.py:235
 #, python-format
 msgid "The room '%s' is booked or all beds of the room are booked"
+msgstr ""
+
+#. module: stay
+#: help:stay.stay,no_meals:0
+msgid "The stay lines generated from this stay will not have lunchs nor dinners by default."
 msgstr ""
 
 #. module: stay
@@ -475,6 +536,11 @@ msgstr ""
 #. module: stay
 #: view:stay.line:stay.stay_line_tree
 msgid "Total Lunches"
+msgstr ""
+
+#. module: stay
+#: field:stay.stay,message_unread:0
+msgid "Unread Messages"
 msgstr ""
 
 #. module: stay
