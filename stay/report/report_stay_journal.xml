@@ -34,32 +34,33 @@
             <th>Departure Date</th>
             <th>Guest</th>
             <th>Room</th>
-            <th>Lunches</th>
-            <th>Dinners</th>
-            <th>Nights</th>
+            <th class="text-center">Lunches</th>
+            <th class="text-center">Dinners</th>
+            <th class="text-center">Nights</th>
         </tr>
     </thead>
     <tbody>
     <t t-foreach="k[1]['lines']" t-as="line">
         <tr>
-            <td><t t-esc="line.stay_id and line.stay_id.name or ''"/></td>
-            <td><t t-esc="line.stay_id and line.stay_id.arrival_date or ''"/> <t t-esc="line.stay_id and line.stay_id.arrival_time or ''"/></td>
-            <td><t t-esc="line.stay_id and line.stay_id.departure_date or ''"/> <t t-esc="line.stay_id and line.stay_id.departure_time or ''"/></td>
-            <td><t t-esc="line.partner_name or ''"/></td>
-            <td><t t-esc="line.room_id and line.room_id.name or ''"/></td>
-            <td><t t-esc="line.lunch_qty"/></td>
-            <td><t t-esc="line.dinner_qty"/></td>
-            <td><t t-esc="line.bed_night_qty"/></td>
+            <td><span t-field="line.stay_id.name"/></td>
+            <td><span t-field="line.stay_id.arrival_date"/> <span t-field="line.stay_id.arrival_time"/></td>
+            <td><span t-field="line.stay_id.departure_date"/> <span t-field="line.stay_id.departure_time"/></td>
+            <td><span t-field="line.partner_name"/></td>
+            <td><span t-field="line.room_id"/></td>
+            <td class="text-center"><span t-field="line.lunch_qty"/></td>
+            <td class="text-center"><span t-field="line.dinner_qty"/></td>
+            <td class="text-center"><span t-field="line.bed_night_qty"/></td>
         </tr>
     </t>
         <tr>
             <td></td>
             <td></td>
             <td></td>
-            <td colspan="2"><b>Sub-totals:</b></td>
-            <td><t t-esc="k[1]['lunch_subtotal']"/></td>
-            <td><t t-esc="k[1]['dinner_subtotal']"/></td>
-            <td><t t-esc="k[1]['bed_night_subtotal']"/></td>
+            <td></td>
+            <td><b>Sub-totals:</b></td>
+            <td class="text-center"><t t-esc="k[1]['lunch_subtotal']"/></td>
+            <td class="text-center"><t t-esc="k[1]['dinner_subtotal']"/></td>
+            <td class="text-center"><t t-esc="k[1]['bed_night_subtotal']"/></td>
         </tr>
     </tbody>
 </table>
