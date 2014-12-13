@@ -34,7 +34,7 @@ class StayStay(models.Model):
     _inherit = ['mail.thread']
 
     name = fields.Char(
-        string='Stay Number', readonly=True, default='/', copy='/')
+        string='Stay Number', default='/')
     company_id = fields.Many2one(
         'res.company', string='Company', required=True,
         default=lambda self: self.env['res.company']._company_default_get(
@@ -80,7 +80,7 @@ class StayStay(models.Model):
     @api.one
     def copy(self, default=None):
         default = dict(default or {})
-        default['name'] = self.env['ir.sequence'].next_by_code('stay.stay')
+        default['name'] = '/'
         default['partner_name'] = _('TO WRITE')
         return super(StayStay, self).copy(default)
 

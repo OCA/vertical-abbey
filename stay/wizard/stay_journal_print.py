@@ -46,8 +46,7 @@ class StayJournalPrint(models.TransientModel):
 
     @api.multi
     def print_journal(self):
-        assert len(self) == 1, 'Only one recordset allowed'
-        self = self[0]
+        self.ensure_one()
         lines = self.env['stay.line'].search([
             ('date', '=', self.date),
             ('company_id', '=', self.env.user.company_id.id),
