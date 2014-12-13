@@ -107,8 +107,7 @@ class StayJournalGenerate(models.TransientModel):
 
     @api.multi
     def generate(self):
-        assert len(self) == 1, 'Only 1 recordset'
-        self = self[0]
+        self.ensure_one()
         lines_to_delete = self.env['stay.line'].search(
             [('date', '=', self.date), ('stay_id', '!=', False)])
         if lines_to_delete:
