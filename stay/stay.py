@@ -40,7 +40,7 @@ class StayStay(models.Model):
         default=lambda self: self.env['res.company']._company_default_get(
             'stay.stay'))
     partner_id = fields.Many2one(
-        'res.partner', string='Guest', copy=False,
+        'res.partner', string='Guest', copy=False, ondelete='restrict',
         help="If guest is anonymous, leave this field empty.")
     partner_name = fields.Char(
         'Guest Name', required=True, track_visibility='onchange')
@@ -61,7 +61,8 @@ class StayStay(models.Model):
         ('evening', 'Evening'),
         ], string='Departure Time', required=True, track_visibility='onchange')
     room_id = fields.Many2one(
-        'stay.room', string='Room', track_visibility='onchange', copy=False)
+        'stay.room', string='Room', track_visibility='onchange', copy=False,
+        ondelete='restrict')
     line_ids = fields.One2many(
         'stay.line', 'stay_id', string='Stay Lines')
     no_meals = fields.Boolean(
@@ -99,7 +100,7 @@ class StayStay(models.Model):
     @api.onchange('partner_id')
     def _partner_id_change(self):
         if self.partner_id:
-            self.partner_name = self.partner_id.name_get()[0][1]
+            self.partner_name = self.partner_id.name
 
     @api.onchange('room_id')
     def _room_id_change(self):
@@ -214,7 +215,7 @@ class StayLine(models.Model):
     partner_name = fields.Char('Guest Name', required=True)
     refectory_id = fields.Many2one(
         'stay.refectory', string='Refectory', default=_default_refectory)
-    room_id = fields.Many2one('stay.room', string='Room')
+    room_id = fields.Many2one('stay.room', string='Room', ondelete='restrict')
 
     @api.one
     @api.constrains(
