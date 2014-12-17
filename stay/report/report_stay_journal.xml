@@ -16,7 +16,6 @@
 
 <t t-call="report.internal_layout">
 
-<!--<% setLang(user.lang) %> -->
 <div class="page">
 
 <h1>Guest List <t t-esc="formatLang(data['date'], date=True)"/></h1>
