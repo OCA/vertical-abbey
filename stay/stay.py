@@ -136,6 +136,8 @@ class StayRefectory(models.Model):
     @api.model
     def name_search(
             self, name='', args=None, operator='ilike', limit=80):
+        if args is None:
+            args = []
         if name:
             refs = self.search(
                 [('code', '=', name)] + args, limit=limit)
@@ -177,6 +179,8 @@ class StayRoom(models.Model):
     @api.model
     def name_search(
             self, name='', args=None, operator='ilike', limit=80):
+        if args is None:
+            args = []
         if name:
             rooms = self.search(
                 [('code', '=', name)] + args, limit=limit)
