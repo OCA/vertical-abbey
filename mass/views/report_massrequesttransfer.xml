@@ -19,11 +19,13 @@
 
 <h1>Masses Transfer</h1>
 
-<h2>Transfer Date: <span t-field="o.transfer_date"/></h2>
+<h3>Transfer To: <span t-field="o.celebrant_id.name"/></h3>
 
-<h3>Amount Total: <span t-field="o.amount_total" t-field-options='{"widget": "monetary", "display_currency": "o.company_currency_id"}'/></h3>
+<h3>Transfer Date: <span t-field="o.transfer_date"/></h3>
 
-<h3>Total Number of Masses: <span t-field="o.mass_total"/></h3>
+<p>Total Amount: <span t-field="o.amount_total" t-field-options='{"widget": "monetary", "display_currency": "o.company_currency_id"}'/></p>
+
+<p>Total Number of Masses: <span t-field="o.mass_total"/></p>
 
     <table class="table table-condensed">
     <thead>
