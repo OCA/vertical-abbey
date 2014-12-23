@@ -45,5 +45,4 @@ It has been developped by brother Bernard and brother Irénée from Barroux Abbe
         'donation_stay_data.xml',
         ],
     'demo': [],
-    'active': False,
 }
