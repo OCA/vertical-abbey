@@ -21,90 +21,65 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from openerp import models, fields, api, _
+from openerp.exceptions import Warning
 import openerp.addons.decimal_precision as dp
-from openerp.tools.translate import _
 
 
-class donation_stay_create(orm.TransientModel):
+class DonationStayCreate(models.TransientModel):
     _name = 'donation.stay.create'
     _description = 'Create Donation from a Stay'
+    _rec_name = 'journal_id'
 
-    _columns = {
-        'journal_id': fields.many2one(
-            'account.journal', 'Payment Method', required=True,
-            domain=[
-                ('type', 'in', ('bank', 'cash')),
-                ('allow_donation', '=', True)]),
-        'currency_id': fields.many2one(
-            'res.currency', 'Currency', required=True),
-        'amount': fields.float(
-            'Donation Amount', digits_compute=dp.get_precision('Account')),
-        'date_donation': fields.date('Donation Date', required=True),
-        'payment_ref': fields.char('Payment Reference', size=32),
-        }
-
-    def _get_default_currency(self, cr, uid, context=None):
-        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
-        return user.company_id.currency_id.id
-
-    _defaults = {
-        'date_donation': fields.date.context_today,  # default date: today
-        'currency_id': _get_default_currency,
-        }
+    journal_id = fields.Many2one(
+        'account.journal', string='Payment Method', required=True,
+        domain=[
+            ('type', 'in', ('bank', 'cash')),
+            ('allow_donation', '=', True)])
+    currency_id = fields.Many2one(
+        'res.currency', string='Currency', required=True,
+        default=lambda self: self.env.user.company_id.currency_id)
+    amount = fields.Float(
+        string='Donation Amount', digits_compute=dp.get_precision('Account'))
+    date_donation = fields.Date(
+        'Donation Date', required=True, default=fields.Date.context_today)
+    payment_ref = fields.Char('Payment Reference', size=32)
 
     # 1. create object "donation.donation" (in database !),
     # parameters are initialized in a "prepare function"
     # (only values which need values by default)
-    def _prepare_donation(self, cr, uid, stay, wizard, context=None):
-
-        campaign_model, campaign_id = \
-            self.pool['ir.model.data'].get_object_reference(
-                cr, uid, 'donation_stay', 'stay_campaign')
-        assert campaign_model == 'donation.campaign'
-
-        stay_donation_product_id = self.pool['ir.model.data'].xmlid_to_res_id(
-            cr, uid, 'donation_stay.product_product_stay_donation',
-            raise_if_not_found=True)
-
-        product_change = self.pool['donation.line'].product_id_change(
-            cr, uid, [], stay_donation_product_id, context=context)
-        line_vals = product_change['value']
-        line_vals.update({
-            'product_id': stay_donation_product_id,
+    @api.model
+    def _prepare_donation(self, stay):
+        campaign = self.env.ref('donation_stay.stay_campaign')
+        stay_donation_product = self.env.ref(
+            'donation_stay.product_product_stay_donation')
+        line_vals = {
+            'product_id': stay_donation_product.id,
             'quantity': 1,
-            'unit_price': wizard.amount,
-            })
-        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
-        partner_change = self.pool['donation.donation'].partner_id_change(
-            cr, uid, [], stay.partner_id.id, user.company_id.id,
-            context=context)
-        if partner_change and partner_change.get('value'):
-            vals = partner_change['value']
-        else:
-            vals = {}
-        vals.update({
+            'unit_price': self.amount,
+            }
+        vals = {
             'partner_id': stay.partner_id.id,
-            'journal_id': wizard.journal_id.id,
-            'currency_id': wizard.currency_id.id,
-            'payment_ref': wizard.payment_ref,
-            'check_total': wizard.amount,
-            'donation_date': wizard.date_donation,
-            'campaign_id': campaign_id,
+            'journal_id': self.journal_id.id,
+            'currency_id': self.currency_id.id,
+            'payment_ref': self.payment_ref,
+            'check_total': self.amount,
+            'donation_date': self.date_donation,
+            'campaign_id': campaign.id,
             'line_ids': [(0, 0, line_vals)],
             'company_id': stay.company_id.id,
-        })
+        }
         return vals
 
-    def create_donation(self, cr, uid, ids, context=None):
-        assert len(ids) == 1, 'Only 1 ID for this wizard fonction'
-        wizard = self.browse(cr, uid, ids[0], context=context)
-        stay_id = context['active_id']
-        stay = self.pool['stay.stay'].browse(cr, uid, stay_id, context=context)
+    @api.multi
+    def create_donation(self):
+        self.ensure_one()
+        assert self.env.context.get('active_model') == 'stay.stay',\
+            'Underlying model should be stay.stay'
+        stay = self.env['stay.stay'].browse(self.env.context['active_id'])
 
         if not stay.partner_id:
-            raise orm.except_orm(
-                _('Error:'),
+            raise Warning(
                 _("This Partner is anonymous. You must create a real "
                     "Partner."))
 
@@ -114,10 +89,10 @@ class donation_stay_create(orm.TransientModel):
         # values stocked in "receipt_vals"
         # create function used one time, but two objects are created :
         # donation object and donation_line object
-        donation_vals = self._prepare_donation(
-            cr, uid, stay, wizard, context=context)
-        donation_id = self.pool['donation.donation'].create(
-            cr, uid, donation_vals, context=context)
+        donation_vals = self._prepare_donation(stay)
+        donation = self.env['donation.donation'].create(donation_vals)
+        donation.partner_id_change()
+        donation.line_ids.product_id_change()
 
         # launch an action in order to open a view type "form" (donation form)
         action = {
@@ -127,7 +102,6 @@ class donation_stay_create(orm.TransientModel):
             'view_mode': 'form,tree,graph',
             'nodestroy': False,
             'target': 'current',
-            'res_id': donation_id,
-            'context': context,
+            'res_id': donation.id,
             }
         return action

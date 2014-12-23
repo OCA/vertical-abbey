@@ -20,44 +20,39 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
-from openerp.tools.translate import _
+from openerp import models, fields, api, _
+from openerp.exceptions import Warning
 
 
-class donation_line(orm.Model):
+class DonationLine(models.Model):
     _inherit = 'donation.line'
 
-    def product_id_change(self, cr, uid, ids, product_id, context):
-        res = super(donation_line, self).product_id_change(
-            cr, uid, ids, product_id, context=context)
-        if product_id:
-            product = self.pool['product.product'].browse(
-                cr, uid, product_id, context=context)
-            res['value']['mass'] = product.mass
-        return res
+    @api.onchange('product_id')
+    def product_id_change(self):
+        super(DonationLine, self).product_id_change()
+        self.mass = self.product_id and self.product_id.mass or False
 
-    _columns = {
-        'mass': fields.boolean('Is a Mass'),
-        'celebrant_id': fields.many2one(
-            'res.partner', 'Celebrant',
-            domain=[('celebrant', '=', True)]),
-        'mass_request_date': fields.date('Mass Request Date'),
-        'intention': fields.char('Intention', size=256),
-        'mass_request_ids': fields.one2many(
-            'mass.request', 'donation_line_id', 'Masses'),
-        }
+    mass = fields.Boolean(string='Is a Mass')
+    celebrant_id = fields.Many2one(
+        'res.partner', string='Celebrant', ondelete='restrict',
+        domain=[('celebrant', '=', True), ('supplier', '=', False)])
+    mass_request_date = fields.Date(string='Mass Request Date')
+    intention = fields.Char(string='Intention')
+    mass_request_ids = fields.One2many(
+        'mass.request', 'donation_line_id', string='Masses')
 
 
-class donation_donation(orm.Model):
+class DonationDonation(models.Model):
     _inherit = 'donation.donation'
 
-    def _prepare_mass_request(
-            self, cr, uid, donation, donation_line, context=None):
+    @api.model
+    def _prepare_mass_request(self, donation_line):
+        donation = donation_line.donation_id
         account_id = (
             donation_line.product_id.property_account_income.id or False)
         if not account_id:
             account_id = (
-                donation_line.product_id.categ_id.\
+                donation_line.product_id.categ_id.
                 property_account_income_categ.id or False)
         vals = {
             'partner_id': donation.partner_id.id,
@@ -76,35 +71,25 @@ class donation_donation(orm.Model):
         }
         return vals
 
-    def validate(self, cr, uid, ids, context=None):
-        res = super(donation_donation, self).validate(
-            cr, uid, ids, context=context)
-        donation = self.browse(cr, uid, ids[0], context=context)
-        for line in donation.line_ids:
+    @api.one
+    def validate(self):
+        res = super(DonationDonation, self).validate()
+        for line in self.line_ids:
             if line.product_id.mass:
-                vals = self._prepare_mass_request(
-                    cr, uid, donation, line, context=context)
-                self.pool['mass.request'].create(
-                    cr, uid, vals, context=context)
+                vals = self._prepare_mass_request(line)
+                self.env['mass.request'].create(vals)
         return res
 
-    def back_to_draft(self, cr, uid, ids, context=None):
-        assert len(ids) == 1, 'only one ID for back2draft'
-        donation = self.browse(cr, uid, ids[0], context=context)
-        mass_request_ids = []
-        for line in donation.line_ids:
-            if line.mass_request_ids:
-                if line.mass_request_ids[0].state != 'waiting':
-                    raise orm.except_orm(
-                        _('Error:'),
-                        _('Cannot set back to draft the donation with number '
-                            '%s because it is linked to a mass request in '
-                            '%s state.')
-                        % (donation.number, line.mass_request_ids[0].state))
-                # TODO : readable state
-                else:
-                    mass_request_ids.append(line.mass_request_ids[0].id)
-        self.pool['mass.request'].unlink(
-            cr, uid, mass_request_ids, context=context)
-        return super(donation_donation, self).back_to_draft(
-            cr, uid, ids, context=context)
+    @api.one
+    def back_to_draft(self):
+        mass_requests = self.env['mass.request'].search(
+            [('donation_id', '=', self.id)])
+        for mass_request in mass_requests:
+            if mass_request.state != 'waiting':
+                raise Warning(
+                    _('Cannot set back to draft the donation with number '
+                        '%s because it is linked to a mass request in '
+                        '%s state.')
+                    % (self.number, mass_request.state))
+        mass_requests.unlink()
+        return super(DonationDonation, self).back_to_draft()
