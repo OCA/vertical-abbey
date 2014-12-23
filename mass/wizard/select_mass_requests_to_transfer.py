@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Mass module for OpenERP
-#    Copyright (C) 2014 Artisanat Monastique de Provence
-#                  (http://www.barroux.org)
+#    Mass module for Odoo
+#    Copyright (C) 2014 Artisanat Monastique de Provence (www.barroux.org)
+#    @author Alexis de Lattre <alexis.delattre@akretion.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,32 +20,26 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from openerp import models, fields, api
 
 
-class mass_requests_to_transfer(orm.TransientModel):
+class MassRequestsToTransfer(models.TransientModel):
     _name = 'mass.requests.to.transfer'
     _description = "Select Mass Requests to Transfer"
 
-    _columns = {
-        'mass_request_ids': fields.many2many(
-            'mass.request', id1='mass_request_id', id2='wizard_id',
-            string="Mass Requests to Transfer"),
-        }
+    mass_request_ids = fields.Many2many(
+        'mass.request', column1='mass_request_id', column2='wizard_id',
+        string="Mass Requests to Transfer")
 
-    def add_to_transfer(self, cr, uid, ids, context=None):
-        assert len(ids) == 1, 'Only 1 ID in this wizard'
-        assert context['active_model'] == 'mass.request.transfer', \
+    @api.multi
+    def add_to_transfer(self):
+        self.ensure_one()
+        assert self._context['active_model'] == 'mass.request.transfer', \
             'active_model must be mass.request.transfer'
-        if context is None:
-            context = {}
-        wiz = self.read(cr, uid, ids[0], context=context)
-        if wiz['mass_request_ids']:
-            mass_request_transfer_id = context['active_id']
+        if self.mass_request_ids:
+            mass_request_transfer = self.env['mass.request.transfer'].browse(
+                self._context['active_id'])
             mass_request_ids = \
-                [(4, req_id) for req_id in wiz['mass_request_ids']]
-            self.pool['mass.request.transfer'].write(
-                cr, uid, mass_request_transfer_id,
-                {'mass_request_ids': mass_request_ids},
-                context=context)
-        return True
+                [(4, request.id) for request in self.mass_request_ids]
+            mass_request_transfer.mass_request_ids = mass_request_ids
+        return

@@ -1,9 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Mass module for OpenERP
-#    Copyright (C) 2014 Artisanat Monastique de Provence
-#                  (http://www.barroux.org)
+#    Mass module for Odoo
+#    Copyright (C) 2014 Artisanat Monastique de Provence (www.barroux.org)
 #    @author: Alexis de Lattre <alexis.delattre@akretion.com>
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -21,51 +20,46 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
-from openerp.tools.translate import _
+from openerp import models, fields, api, _
+from openerp.exceptions import Warning
 
 
-class swap_celebrant(orm.TransientModel):
+class SwapCelebrant(models.TransientModel):
     _name = 'swap.celebrant'
     _description = "Swap Celebrant"
 
-    _columns = {
-        'pass_in_default_get': fields.boolean('No'),
-        # This field is here just to pass in default_get()
-        # It is not visible in the view
-        }
-
-    def default_get(self, cr, uid, fields_list, context=None):
-        line_ids = context['active_ids']
+    @api.model
+    def _check_good(self):
+        line_ids = self._context['active_ids']
         if len(line_ids) != 2:
-            raise orm.except_orm(
-                _('Error:'),
+            raise Warning(
                 _('You should only select 2 mass lines (%d were selected).')
                 % len(line_ids))
-        lines = self.pool['mass.line'].browse(
-            cr, uid, line_ids, context=context)
+        lines = self.env['mass.line'].browse(line_ids)
         if lines[0].date != lines[1].date:
-            raise orm.except_orm(
-                _('Error:'),
+            raise Warning(
                 _('The 2 mass lines that you selected have different dates '
                     '(%s and %s). You can swap celebrants only between 2 '
                     'masses of the same date.')
                 % (lines[0].date, lines[1].date))
-        return {}
-
-    def swap_celebrant(self, cr, uid, ids, context=None):
-        line_ids = context['active_ids']
-        assert len(line_ids) == 2, "Must have 2 mass IDs"
-        assert context['active_model'] == 'mass.line', \
-            'active_model should be mass.line'
-        lines = self.pool['mass.line'].browse(
-            cr, uid, line_ids, context=context)
-        swapped = {
-            line_ids[0]: lines[1].celebrant_id.id,
-            line_ids[1]: lines[0].celebrant_id.id,
-            }
-        for line_id, celebrant_id in swapped.iteritems():
-            self.pool['mass.line'].write(
-                cr, uid, line_id, {'celebrant_id': celebrant_id},
-                context=context)
         return True
+
+    pass_in_default_get = fields.Boolean(string='No', default=_check_good)
+    # This field is here just to execute a default function
+    # It is not visible in the view
+
+    @api.multi
+    def swap_celebrant(self):
+        self.ensure_one()
+        line_ids = self._context['active_ids']
+        assert len(line_ids) == 2, "Must have 2 mass IDs"
+        assert self._context['active_model'] == 'mass.line', \
+            'active_model should be mass.line'
+        lines = self.env['mass.line'].browse(line_ids)
+        swapped = {
+            lines[0]: lines[1].celebrant_id,
+            lines[1]: lines[0].celebrant_id,
+            }
+        for line, celebrant in swapped.iteritems():
+            line.celebrant_id = celebrant.id
+        return

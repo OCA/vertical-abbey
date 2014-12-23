@@ -22,16 +22,14 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from openerp import models, fields
 
 
-class res_company(orm.Model):
+class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    _columns = {
-        'mass_validation_account_id': fields.many2one(
-            'account.account', 'Mass Validation Account',
-            domain=[('type', '<>', 'view'), ('type', '<>', 'closed')]),
-        'mass_validation_journal_id': fields.many2one(
-            'account.journal', 'Mass Validation Journal'),
-        }
+    mass_validation_account_id = fields.Many2one(
+        'account.account', string='Mass Validation Account',
+        domain=[('type', '<>', 'view'), ('type', '<>', 'closed')])
+    mass_validation_journal_id = fields.Many2one(
+        'account.journal', string='Mass Validation Journal')

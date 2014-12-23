@@ -1,9 +1,10 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Donation Mass module for OpenERP
+#    Donation Mass module for Odoo
 #    Copyright (C) 2014 Artisanat Monastique de Provence
 #                       (http://www.barroux.org)
+#    @author Alexis de Lattre <alexis.delattre@akretion.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -31,9 +32,11 @@
 Donation Mass
 =============
 
-This module adds the ability to create mass requests from donation lines. It also adds accounting entries when mass lines are validated.
+This module adds the ability to create mass requests from donation
+lines. It also adds accounting entries when mass lines are validated.
 
-It has been developped by brother Bernard and brother Irénée from Barroux Abbey and by Alexis de Lattre from Akretion.
+It has been developped by brother Bernard and brother Irénée from
+Barroux Abbey and by Alexis de Lattre from Akretion.
     """,
     'author': 'Barroux, Akretion',
     'website': 'http://www.barroux.org',
@@ -44,5 +47,4 @@ It has been developped by brother Bernard and brother Irénée from Barroux Abbe
         'donation_mass_data.xml',
         ],
     'demo': [],
-    'active': False,
 }

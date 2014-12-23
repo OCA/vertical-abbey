@@ -1,10 +1,9 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Mass module for OpenERP
-#    Copyright (C) 2014 Artisanat Monastique de Provence
-#                       (http://www.barroux.org)
-#    @author
+#    Mass module for Odoo
+#    Copyright (C) 2014 Artisanat Monastique de Provence (www.barroux.org)
+#    @author Alexis de Lattre <alexis.delattre@akretion.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -56,5 +55,4 @@ It has been developped by brother Bernard and brother Irénée from Barroux Abbe
         'views/report_massline.xml',
         ],
     'demo': ['mass_demo.xml'],
-    'active': False,
 }

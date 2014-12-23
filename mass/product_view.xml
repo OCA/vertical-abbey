@@ -16,12 +16,14 @@
     <field name="arch"  type="xml">
         <div name="options" position="inside">
             <div name="mass">
-                <field name="mass" on_change="mass_change(mass, context)"/>
+                <field name="mass"/>
                 <label for="mass"/>
             </div>
         </div>
         <field name="type" position="after">
-            <field name="mass_request_type_id" attrs="{'invisible': [('mass', '=', False)], 'required': [('mass', '=', True)]}"/>
+            <field name="mass_request_type_id"
+                attrs="{'invisible': [('mass', '=', False)], 'required': [('mass', '=', True)]}"
+                widget="selection"/>
         </field>
     </field>
 </record>
@@ -44,7 +46,8 @@
     <field name="context">{'search_default_filter_mass': 1}</field>
 </record>
 
-<menuitem id="mass_products_menu" action="mass_product_action" parent="mass_config_menu" sequence="20"/>
+<menuitem id="mass_products_menu" action="mass_product_action"
+    parent="mass_config_menu" sequence="20"/>
 
 
 </data>

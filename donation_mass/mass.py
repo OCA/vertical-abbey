@@ -20,17 +20,14 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from openerp import models, fields
 
 
-class mass_request(orm.Model):
+class mass_request(models.Model):
     _inherit = "mass.request"
 
-    _columns = {
-        'donation_line_id': fields.many2one(
-            'donation.line', 'Related Donation Line', readonly=True),
-        'donation_id': fields.related(
-            'donation_line_id', 'donation_id', type='many2one',
-            relation='donation.donation', string="Related Donation",
-            readonly=True),
-        }
+    donation_line_id = fields.Many2one(
+        'donation.line', string='Related Donation Line', readonly=True)
+    donation_id = fields.Many2one(
+        'donation.donation', related='donation_line_id.donation_id',
+        string="Related Donation", readonly=True, store=True)
