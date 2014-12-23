@@ -2,8 +2,8 @@
 ##############################################################################
 #
 #    Donation Mass module for OpenERP
-#    Copyright (C) 2014 Artisanat Monastique de Provence
-#                  (http://www.barroux.org)
+#    Copyright (C) 2014 Artisanat Monastique de Provence (www.barroux.org)
+#    @author: Alexis de Lattre <alexis.delattre@akretion.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,15 +20,24 @@
 #
 ##############################################################################
 
-from openerp.osv import orm
+from openerp import models, api
 
 
-class product_template(orm.Model):
+class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    def mass_change(self, cr, uid, ids, mass, context=None):
-        res = super(product_template, self).mass_change(
-            cr, uid, ids, mass, context=context)
-        if mass and 'value' in res:
-            res['value']['donation'] = True
-        return res
+    @api.onchange('mass')
+    def mass_change(self):
+        super(ProductTemplate, self).mass_change()
+        if self.mass:
+            self.donation = True
+
+
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    @api.onchange('mass')
+    def mass_change(self):
+        super(ProductProduct, self).mass_change()
+        if self.mass:
+            self.donation = True

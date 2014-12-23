@@ -113,6 +113,8 @@
                         <field name="request_date"/>
                         <field name="celebrant_id"/>
                         <field name="intention"/>
+                        <field name="offering" widget="monetary"
+                            options="{'currency_field': 'company_currency_id'}"/>
                     </group>
                     <group name="mass">
                         <field name="type_id"/>
@@ -130,8 +132,6 @@
                     <page name="other" string="Other Infos">
                         <group name="other">
                             <field name="company_currency_id" invisible="1"/>
-                            <field name="offering" widget="monetary"
-                                options="{'currency_field': 'company_currency_id'}"/>
                             <field name="unit_offering" widget="monetary"
                                 options="{'currency_field': 'company_currency_id'}"/>
                             <field name="stock_account_id"/>
@@ -156,9 +156,9 @@
             <field name="request_date"/>
             <field name="celebrant_id"/>
             <field name="type_id"/>
-            <field name="mass_quantity" sum="Total Mass Quantity"/>
             <field name="offering" sum="Total Offering"/>
-            <field name="mass_remaining_quantity"/>
+            <field name="mass_quantity" sum="Total Mass Quantity"/>
+            <field name="mass_remaining_quantity" sum="Total Remaining Quantity"/>
             <field name="state"/>
         </tree>
     </field>
@@ -304,10 +304,10 @@
                     <field name="transfer_date"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="company_currency_id" invisible="1"/>
-                    <field name="move_id"/>
                     <field name="amount_total" widget="monetary"
                          options="{'currency_field': 'company_currency_id'}"/>
                     <field name="mass_total"/>
+                    <field name="move_id"/>
                 </group>
                 <group name="lines" string="Masses Requests">
                     <button type="action" name="%(mass_requests_to_transfer_action)d"
@@ -342,7 +342,6 @@
     <field name="model">mass.request.transfer</field>
     <field name="arch"  type="xml">
         <search string="Masses Requests Transfer">
-            <field name="transfer_date"/>
             <field name="celebrant_id"/>
             <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
             <filter name="done" string="Done" domain="[('state', '=', 'done')]"/>
