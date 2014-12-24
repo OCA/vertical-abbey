@@ -1,7 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_mass_request_user,Full access on mass.request to Mass User,model_mass_request,group_mass_user,1,1,1,1
 access_mass_request_type_manager,Full access on mass.request.type to Mass Manager,model_mass_request_type,group_mass_manager,1,1,1,1
-access_mass_request_type_user,Read access on mass.request.type to Mass User,model_mass_request_type,group_mass_user,1,0,0,0
+access_mass_request_type_user,Read access on mass.request.type to everybody,model_mass_request_type,,1,0,0,0
 access_mass_line_user,Full access on mass.line to Mass User,model_mass_line,group_mass_user,1,1,1,1
 access_mass_account_move,Full access on account.move,account.model_account_move,group_mass_user,1,1,1,1
 access_mass_account_move_line,Full access on account.move.line,account.model_account_move_line,group_mass_user,1,1,1,1
