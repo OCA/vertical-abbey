@@ -163,7 +163,7 @@ class MassRequest(models.Model):
             'mass.request'))
     company_currency_id = fields.Many2one(
         'res.currency', related='company_id.currency_id',
-        string="Company Currency")
+        string="Company Currency", readonly=True)
     quantity = fields.Integer(
         'Quantity', default=1,
         readonly=True, states={'waiting': [('readonly', False)]})
@@ -219,7 +219,7 @@ class MassLine(models.Model):
         string="Company", readonly=True, store=True)
     company_currency_id = fields.Many2one(
         'res.currency', related='request_id.company_id.currency_id',
-        string="Company Currency")
+        string="Company Currency", readonly=True)
     request_date = fields.Date(
         related='request_id.request_date', store=True,
         string="Mass Request Date", readonly=True)
@@ -305,7 +305,7 @@ class MassRequestTransfer(models.Model):
             'mass.request.transfer'))
     company_currency_id = fields.Many2one(
         'res.currency', related='company_id.currency_id',
-        string="Company Currency")
+        string="Company Currency", readonly=True)
     transfer_date = fields.Date(
         string='Transfer Date', required=True,
         states={'done': [('readonly', True)]},
