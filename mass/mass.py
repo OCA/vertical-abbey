@@ -84,7 +84,8 @@ class MassRequest(models.Model):
 
     @api.one
     @api.depends(
-        'type_id', 'type_id.quantity', 'quantity', 'line_ids', 'transfer_id')
+        'type_id', 'type_id.quantity', 'quantity',
+        'line_ids.request_id', 'transfer_id')
     def _compute_state_mass_remaining_quantity(self):
         total_qty = self.type_id.quantity * self.quantity
         remaining_qty = total_qty
