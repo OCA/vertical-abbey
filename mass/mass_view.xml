@@ -265,9 +265,9 @@
     <field name="model">mass.line</field>
     <field name="arch"  type="xml">
         <search string="Search Mass Lines">
+            <field name="date"/>
             <field name="partner_id"/>
             <field name="celebrant_id"/>
-            <field name="date"/>
             <group string="Group By" name="groupby">
                 <filter name="state_groupby" string="State" context="{'group_by': 'state'}"/>
             </group>
