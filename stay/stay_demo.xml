@@ -94,5 +94,9 @@
     <field name="default_refectory_id" ref="refectory_monastique"/>
 </record>
 
+<record id="base.user_demo" model="res.users">
+    <field name="groups_id" eval="[(4, ref('group_stay_user'))]"/>
+</record>
+
 </data>
 </openerp>
