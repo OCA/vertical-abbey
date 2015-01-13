@@ -75,6 +75,9 @@
     <field name="mass_validation_journal_id" ref="account.expenses_journal"/>
 </record>
 
+<record id="base.user_demo" model="res.users">
+    <field name="groups_id" eval="[(4, ref('group_mass_user'))]"/>
+</record>
 
 </data>
 </openerp>
