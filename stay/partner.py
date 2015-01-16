@@ -29,7 +29,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     @api.one
-    @api.depends('stay_ids')
+    @api.depends('stay_ids.partner_id')
     def _stay_count(self):
         # The current user may not have access rights for stays
         try:
@@ -38,6 +38,6 @@ class ResPartner(models.Model):
             self.stay_count = 0
 
     stay_ids = fields.One2many(
-        'stay.stay', 'partner_id', string='Stays', copy=False)
+        'stay.stay', 'partner_id', string='Stays')
     stay_count = fields.Integer(
         compute='_stay_count', string="# of Stays", readonly=True)
