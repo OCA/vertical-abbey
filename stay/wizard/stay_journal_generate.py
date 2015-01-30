@@ -102,7 +102,8 @@ class StayJournalGenerate(models.TransientModel):
             'company_id': stay.company_id.id,
             })
         if stay.no_meals:
-            stay_vals.update({'lunch_qty': 0, 'dinner_qty': 0})
+            stay_vals.update(
+                {'lunch_qty': 0, 'dinner_qty': 0, 'refectory_id': False})
         return stay_vals
 
     @api.multi
