@@ -61,9 +61,9 @@
 <record id="stay1" model="stay.stay">
     <field name="partner_name">Martin Payet</field>
     <field name="guest_qty">1</field>
-    <field name="arrival_date" eval="time.strftime('%Y-%m-8')"/>
+    <field name="arrival_date" eval="time.strftime('%Y-%m-01')"/>
     <field name="arrival_time">afternoon</field>
-    <field name="departure_date" eval="time.strftime('%Y-%m-25')"/>
+    <field name="departure_date" eval="time.strftime('%Y-%m-05')"/>
     <field name="departure_time">morning</field>
     <field name="room_id" ref="room_st_elie"/>
 </record>
@@ -74,7 +74,7 @@
     <field name="guest_qty">1</field>
     <field name="arrival_date" eval="time.strftime('%Y-%m-01')"/>
     <field name="arrival_time">morning</field>
-    <field name="departure_date" eval="time.strftime('%Y-%m-20')"/>
+    <field name="departure_date" eval="time.strftime('%Y-%m-06')"/>
     <field name="departure_time">evening</field>
     <field name="room_id" ref="room_st_cure_ars"/>
 </record>
@@ -89,6 +89,19 @@
     <field name="departure_time">evening</field>
     <field name="room_id" ref="room_st_jean_eudes"/>
 </record>
+
+<record id="stay4" model="stay.stay">
+    <field name="partner_name">Famille Martin</field>
+    <field name="guest_qty">5</field>
+    <field name="arrival_date" eval="time.strftime('%Y-%m-01')"/>
+    <field name="arrival_time">afternoon</field>
+    <field name="departure_date" eval="time.strftime('%Y-%m-05')"/>
+    <field name="departure_time">morning</field>
+    <field name="room_id" ref="st_benoit_house"/>
+    <field name="no_meals" eval="True"/>
+</record>
+
+
 
 <record id="base.main_company" model="res.company">
     <field name="default_refectory_id" ref="refectory_monastique"/>
