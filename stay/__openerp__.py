@@ -54,5 +54,6 @@ Barroux Abbey and by Alexis de Lattre from Akretion.
         'partner_view.xml',
         ],
     'demo': ['stay_demo.xml'],
+    'test': ['test/generate_journal.yml'],
     'installable': True,
 }
