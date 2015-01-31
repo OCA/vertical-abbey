@@ -46,5 +46,6 @@ Barroux Abbey and by Alexis de Lattre from Akretion.
         'donation_view.xml',
         'donation_mass_data.xml',
         ],
-    'demo': [],
+    'demo': ['donation_mass_demo.xml'],
+    'test': ['test/donation_mass.yml'],
 }

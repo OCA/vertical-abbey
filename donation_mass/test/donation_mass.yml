@@ -1,0 +1,24 @@
+-
+  Validate demo donations with mass and check mass requests
+-
+  !python {model: donation.donation}: |
+    self.validate(cr, uid, [ref('donation_mass1'), ref('donation_mass2'), ref('donation_mass3')], context=context)
+    for donation in self.browse(cr, uid, [ref('donation_mass1'), ref('donation_mass2'), ref('donation_mass3')], context=context):
+        assert len(donation.line_ids[0].mass_request_ids) == 1, 'No mass request created'
+        mass_req = donation.line_ids[0].mass_request_ids
+        dline = donation.line_ids[0]
+        assert mass_req.intention == dline.intention, 'Wrong intention'
+        assert mass_req.celebrant_id == dline.celebrant_id, 'Wrong celebrant'
+        assert mass_req.state == 'waiting', 'Wrong status on mass request'
+        assert mass_req.quantity == dline.quantity, 'Wrong qty on mass request'
+        assert mass_req.type_id.id == dline.product_id.mass_request_type_id.id, 'Wrong type_id on mass request'
+        assert mass_req.offering == dline.amount, 'Wrong offering on mass request'
+        assert mass_req.partner_id.id == donation.partner_id.id, 'Wrong partner on mass request'
+        assert mass_req.donation_date == donation.donation_date, 'Wrong donation_date on mass request'
+        if dline.product_id.id == ref('mass.product_product_mass_novena'):
+            assert mass_req.mass_quantity == 9 * dline.quantity, 'Wrong qty of mass for novena'
+        elif dline.product_id.id == ref('mass.product_product_mass_gregorian'):
+            assert mass_req.mass_quantity == 30 * dline.quantity, 'Wrong qty of mass for gregorian'
+        elif dline.product_id.id == ref('mass.product_product_mass_simple'):
+            assert mass_req.mass_quantity == 1 * dline.quantity, 'Wrong qty of mass for simple mass'
+        assert mass_req.mass_quantity == mass_req.mass_remaining_quantity, 'Wrong mass remaining qty'
