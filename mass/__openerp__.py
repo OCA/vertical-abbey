@@ -55,4 +55,5 @@ It has been developped by brother Bernard and brother Irénée from Barroux Abbe
         'views/report_massline.xml',
         ],
     'demo': ['mass_demo.xml'],
+    'test': ['test/generate_mass_journal.yml'],
 }
