@@ -1,0 +1,22 @@
+-
+  Generate and validate the mass journal
+-
+  !python {model: mass.request}: |
+    import time
+    wiz_gen_id = self.pool['mass.journal.generate'].create(cr, uid, {'journal_date': time.strftime('%Y-%m-%d')}, context=context)
+    action_gen = self.pool['mass.journal.generate'].generate_journal(cr, uid, [wiz_gen_id], context=context)
+    mass_line_ids = action_gen['domain'][0][2]
+    assert mass_line_ids, 'No mass lines generated'
+    mass_lines = self.pool['mass.line'].browse(cr, uid, mass_line_ids, context=context)
+    for mass_line in mass_lines:
+        assert mass_line.date == time.strftime('%Y-%m-%d'), 'Wrong date on mass line'
+        assert mass_line.state == 'draft', 'Wrong state on mass line'
+    wiz_val_id = self.pool['mass.journal.validate'].create(cr, uid, {'journal_date': time.strftime('%Y-%m-%d')}, context=context)
+    action_val = self.pool['mass.journal.validate'].validate_journal(cr, uid, [wiz_val_id], context=context)
+    val_mass_line_ids = action_val['domain'][0][2]
+    val_mass_line_ids.sort()
+    mass_line_ids.sort()
+    assert val_mass_line_ids == mass_line_ids, 'Wrong list of validated mass lines'
+    for mass_line in mass_lines:
+        assert mass_line.state == 'done', 'Wrong state on validated mass line'
+

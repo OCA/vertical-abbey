@@ -105,7 +105,6 @@ class MassJournalGenerate(models.TransientModel):
         if not self.celebrant_ids:
             raise Warning(_('No celebrants were selected !'))
         number_of_celebrants = len(self.celebrant_ids)
-        print "number_of_celebrants=", number_of_celebrants
         mass_lines = []
         # Retreive mass requests
         # First, requests with request date = journal date and state = started
@@ -171,7 +170,6 @@ class MassJournalGenerate(models.TransientModel):
         # Assign a celebrant for each mass
         celebrant_ids = self.celebrant_ids.ids
         origin_celebrant_ids = list(celebrant_ids)  # copy
-        print "origin_celebrant_ids=", origin_celebrant_ids
         # First loop to assign resquested celebrants
         for line in mass_lines:
             celebrant_id = line['celebrant_id']
