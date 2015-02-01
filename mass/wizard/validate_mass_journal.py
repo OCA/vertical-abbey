@@ -99,9 +99,7 @@ class mass_journal_validate(models.TransientModel):
 
     @api.multi
     def validate_journal(self):
-        print "validate_journal self=", self
         self.ensure_one()
-        print "after"
         date = self.journal_date
         company = self.env.user.company_id
         # Search draft mass lines on the date of the wizard
