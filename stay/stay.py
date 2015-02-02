@@ -112,9 +112,13 @@ class StayRefectory(models.Model):
     _name = 'stay.refectory'
     _description = 'Refectory'
     _order = 'code, name'
+    _rec_name = 'display_name'
 
     code = fields.Char(string='Code', size=10)
     name = fields.Char(string='Name', required=True)
+    display_name = fields.Char(
+        string='Display Name', compute='_compute_display_name',
+        readonly=True, store=True)
     capacity = fields.Integer(string='Capacity')
     active = fields.Boolean(default=True)
 
@@ -122,38 +126,26 @@ class StayRefectory(models.Model):
         'code_uniq', 'unique(code)',
         'A refectory with this code already exists.')]
 
-    @api.multi
+    @api.one
     @api.depends('name', 'code')
-    def name_get(self):
-        res = []
-        for record in self:
-            name = record.name
-            if record.code:
-                name = u'[%s] %s' % (record.code, name)
-            res.append((record.id, name))
-        return res
-
-    @api.model
-    def name_search(
-            self, name='', args=None, operator='ilike', limit=80):
-        if args is None:
-            args = []
-        if name:
-            refs = self.search(
-                [('code', '=', name)] + args, limit=limit)
-            if refs:
-                return refs.name_get()
-        return super(StayRefectory, self).name_search(
-            name=name, args=args, operator=operator, limit=limit)
+    def _compute_display_name(self):
+        name = self.name
+        if self.code:
+            name = u'[%s] %s' % (self.code, name)
+        self.display_name = name
 
 
 class StayRoom(models.Model):
     _name = 'stay.room'
     _description = 'Room'
     _order = 'code, name'
+    _rec_name = 'display_name'
 
     code = fields.Char(string='Code', size=10, copy=False)
     name = fields.Char(string='Name', required=True, copy=False)
+    display_name = fields.Char(
+        string='Display Name', compute='_compute_display_name',
+        readonly=True, store=True)
     bed_qty = fields.Integer(string='Number of beds', default='1')
     active = fields.Boolean(default=True)
     no_meals = fields.Boolean(
@@ -165,29 +157,13 @@ class StayRoom(models.Model):
         'code_uniq', 'unique(code)',
         'A room with this code already exists.')]
 
-    @api.multi
+    @api.one
     @api.depends('name', 'code')
-    def name_get(self):
-        res = []
-        for record in self:
-            name = record.name
-            if record.code:
-                name = u'[%s] %s' % (record.code, name)
-            res.append((record.id, name))
-        return res
-
-    @api.model
-    def name_search(
-            self, name='', args=None, operator='ilike', limit=80):
-        if args is None:
-            args = []
-        if name:
-            rooms = self.search(
-                [('code', '=', name)] + args, limit=limit)
-            if rooms:
-                return rooms.name_get()
-        return super(StayRoom, self).name_search(
-            name=name, args=args, operator=operator, limit=limit)
+    def _compute_display_name(self):
+        name = self.name
+        if self.code:
+            name = u'[%s] %s' % (self.code, name)
+        self.display_name = name
 
 
 class StayLine(models.Model):
