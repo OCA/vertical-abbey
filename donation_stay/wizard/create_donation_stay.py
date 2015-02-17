@@ -40,7 +40,7 @@ class DonationStayCreate(models.TransientModel):
         'res.currency', string='Currency', required=True,
         default=lambda self: self.env.user.company_id.currency_id)
     amount = fields.Float(
-        string='Donation Amount', digits_compute=dp.get_precision('Account'))
+        string='Donation Amount', digits=dp.get_precision('Account'))
     date_donation = fields.Date(
         'Donation Date', required=True, default=fields.Date.context_today)
     payment_ref = fields.Char('Payment Reference', size=32)
