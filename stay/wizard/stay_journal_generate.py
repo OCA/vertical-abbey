@@ -22,9 +22,7 @@
 
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning, RedirectWarning
-from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 class StayJournalGenerate(models.TransientModel):
@@ -35,7 +33,7 @@ class StayJournalGenerate(models.TransientModel):
     @api.model
     def _default_date(self):
         today_str = fields.Date.context_today(self)
-        today_dt = datetime.strptime(today_str, DEFAULT_SERVER_DATE_FORMAT)
+        today_dt = fields.Date.from_string(today_str)
         return today_dt + relativedelta(days=1)
 
     date = fields.Date(string='Date', required=True, default=_default_date)
