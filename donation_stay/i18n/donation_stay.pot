@@ -1,13 +1,13 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 #	* donation_stay
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 8.0alpha1\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-19 16:33+0000\n"
-"PO-Revision-Date: 2014-06-19 16:33+0000\n"
+"POT-Creation-Date: 2015-02-17 22:38+0000\n"
+"PO-Revision-Date: 2015-02-17 22:38+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,13 +16,13 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: donation_stay
-#: view:donation.stay.create:0
+#: view:donation.stay.create:donation_stay.create_donation_stay_form
 msgid "Cancel"
 msgstr ""
 
 #. module: donation_stay
-#: view:donation.stay.create:0
-#: view:stay.stay:0
+#: view:donation.stay.create:donation_stay.create_donation_stay_form
+#: view:stay.stay:donation_stay.stay_add_donation_form
 msgid "Create Donation"
 msgstr ""
 
@@ -32,13 +32,28 @@ msgid "Create Donation from a Stay"
 msgstr ""
 
 #. module: donation_stay
+#: field:donation.stay.create,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: donation_stay
+#: field:donation.stay.create,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: donation_stay
 #: model:ir.actions.act_window,name:donation_stay.create_donation_stay_action
 msgid "Creation of Donation for a Guest Stay"
 msgstr ""
 
 #. module: donation_stay
-#: view:donation.stay.create:0
+#: view:donation.stay.create:donation_stay.create_donation_stay_form
 msgid "Creation of a Donation for a Guest Stay"
+msgstr ""
+
+#. module: donation_stay
+#: field:donation.stay.create,currency_id:0
+msgid "Currency"
 msgstr ""
 
 #. module: donation_stay
@@ -52,19 +67,49 @@ msgid "Donation Date"
 msgstr ""
 
 #. module: donation_stay
+#: code:addons/donation_stay/wizard/create_donation_stay.py:99
+#, python-format
+msgid "Donations"
+msgstr ""
+
+#. module: donation_stay
+#: field:donation.stay.create,id:0
+msgid "ID"
+msgstr ""
+
+#. module: donation_stay
+#: field:donation.stay.create,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: donation_stay
+#: field:donation.stay.create,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: donation_stay
 #: field:donation.stay.create,journal_id:0
 msgid "Payment Method"
 msgstr ""
 
 #. module: donation_stay
+#: field:donation.stay.create,payment_ref:0
+msgid "Payment Reference"
+msgstr ""
+
+#. module: donation_stay
 #: model:product.template,name:donation_stay.product_product_stay_donation_product_template
-#: model:product.template,name:donation_stay.product_template_stay_donation
 msgid "Stay Donation"
 msgstr ""
 
 #. module: donation_stay
+#: code:addons/donation_stay/wizard/create_donation_stay.py:83
+#, python-format
+msgid "This Partner is anonymous. You must create a real Partner."
+msgstr ""
+
+#. module: donation_stay
 #: model:product.template,description:donation_stay.product_product_stay_donation_product_template
-#: model:product.template,description:donation_stay.product_template_stay_donation
 msgid "This is the donation product for stays."
 msgstr ""
 
