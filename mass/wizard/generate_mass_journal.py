@@ -23,7 +23,6 @@
 
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
@@ -38,14 +37,12 @@ class MassJournalGenerate(models.TransientModel):
             [], limit=1, order='date desc')
         if lines:
             default_dt = (
-                datetime.strptime(lines[0].date, DEFAULT_SERVER_DATE_FORMAT)
-                + relativedelta(days=1))
+                fields.Date.from_string(lines[0].date) + relativedelta(days=1))
         else:
-            today_dt = datetime.strptime(
-                fields.Date.context_today(self), DEFAULT_SERVER_DATE_FORMAT)
+            today_dt = fields.Date.from_string(
+                fields.Date.context_today(self))
             default_dt = today_dt + relativedelta(days=1)
-        default_str = default_dt.strftime(DEFAULT_SERVER_DATE_FORMAT)
-        return default_str
+        return default_dt
 
     @api.model
     def _all_celebrant_ids(self):
