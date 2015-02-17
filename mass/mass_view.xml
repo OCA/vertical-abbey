@@ -134,6 +134,8 @@
                             <field name="company_currency_id" invisible="1"/>
                             <field name="unit_offering" widget="monetary"
                                 options="{'currency_field': 'company_currency_id'}"/>
+                            <field name="remaining_offering" widget="monetary"
+                                options="{'currency_field': 'company_currency_id'}"/>
                             <field name="stock_account_id"/>
                             <field name="analytic_account_id"
                                 groups="analytic.group_analytic_accounting"/>
