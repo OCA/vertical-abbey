@@ -102,6 +102,7 @@ class MassRequest(models.Model):
                 state = 'started'
         self.state = state
         self.mass_remaining_quantity = remaining_qty
+        self.remaining_offering = remaining_qty * self.unit_offering
 
     @api.one
     @api.depends('type_id', 'type_id.quantity', 'quantity', 'offering')
@@ -144,12 +145,12 @@ class MassRequest(models.Model):
     uninterrupted = fields.Boolean(
         related='type_id.uninterrupted', string="Uninterrupted", readonly=True)
     offering = fields.Float(
-        string='Offering', digits_compute=dp.get_precision('Account'),
+        string='Offering', digits=dp.get_precision('Account'),
         readonly=True, states={'waiting': [('readonly', False)]},
         help="The total offering amount in company currency.")
     unit_offering = fields.Float(
         compute='_compute_unit_offering', store=True,
-        string='Offering per Mass', digits_compute=dp.get_precision('Account'),
+        string='Offering per Mass', digits=dp.get_precision('Account'),
         help="This field is the offering amount per mass in company "
         "currency.")
     stock_account_id = fields.Many2one(
@@ -184,6 +185,10 @@ class MassRequest(models.Model):
     mass_remaining_quantity = fields.Integer(
         compute='_compute_state_mass_remaining_quantity',
         string="Mass Remaining Quantity", store=True)
+    remaining_offering = fields.Float(
+        compute='_compute_state_mass_remaining_quantity',
+        string="Remaining Offering", store=True,
+        digits=dp.get_precision('Account'))
     transfer_id = fields.Many2one(
         'mass.request.transfer', string='Transfer Operation', readonly=True)
 
@@ -228,7 +233,7 @@ class MassLine(models.Model):
         'mass.request.type', related='request_id.type_id',
         string="Mass Request Type", readonly=True, store=True)
     unit_offering = fields.Float(
-        string='Offering', digits_compute=dp.get_precision('Account'),
+        string='Offering', digits=dp.get_precision('Account'),
         help="The offering amount is in company currency.",
         states={'done': [('readonly', True)]})
     celebrant_id = fields.Many2one(
@@ -318,7 +323,7 @@ class MassRequestTransfer(models.Model):
         'account.move', string='Account Move', readonly=True)
     amount_total = fields.Float(
         compute='_compute_transfer_totals', type="float",
-        string="Amount Total", digits_compute=dp.get_precision('Account'),
+        string="Amount Total", digits=dp.get_precision('Account'),
         store=True)
     mass_total = fields.Integer(
         compute='_compute_transfer_totals', string="Total Mass Quantity",
