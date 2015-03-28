@@ -1,10 +1,9 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Donation Stay module for OpenERP
-#    Copyright (C) 2014 Artisanat Monastique de Provence
-#                       (http://www.barroux.org)
-#    @author
+#    Donation Stay module for Odoo
+#    Copyright (C) 2014-2015 Barroux Abbey (www.barroux.org)
+#    Copyright (C) 2014-2015 Akretion France (www.akretion.com)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -28,15 +27,7 @@
     'category': 'Lodging',
     'license': 'AGPL-3',
     'summary': 'Create donations from a stay',
-    'description': """
-Donation Stay
-=============
-
-This module adds a wizard to create a donation from the form view of a stay.
-
-It has been developped by brother Bernard and brother Irénée from Barroux Abbey and by Alexis de Lattre from Akretion.
-    """,
-    'author': 'Barroux, Akretion',
+    'author': 'Barroux Abbey, Akretion, Odoo Community Association (OCA)',
     'website': 'http://www.barroux.org',
     'depends': ['donation', 'stay'],
     'data': [
