@@ -252,7 +252,7 @@
             <group string="Group By" name="groupby">
                 <filter name="date_groupby" string="Date" context="{'group_by': 'date'}"/>
                 <filter name="refectory_id" string="Refectory" context="{'group_by': 'refectory_id'}"/>
-                <filter name="partner_name" string="Partner" context="{'group_by': 'partner_name'}"/>
+                <filter name="partner_name" string="Guest" context="{'group_by': 'partner_name'}"/>
             </group>
         </search>
     </field>

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-17 22:46+0000\n"
-"PO-Revision-Date: 2015-02-17 22:46+0000\n"
+"POT-Creation-Date: 2015-03-28 12:33+0000\n"
+"PO-Revision-Date: 2015-03-28 12:33+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -97,11 +97,6 @@ msgstr "Société"
 #: model:ir.ui.menu,name:stay.stay_configuration
 msgid "Configuration"
 msgstr "Configuration"
-
-#. module: stay
-#: model:ir.ui.menu,name:stay.partners
-msgid "Contacts"
-msgstr "Contacts"
 
 #. module: stay
 #: field:stay.journal.generate,create_uid:0
@@ -228,6 +223,11 @@ msgid "Guest Stay"
 msgstr "Séjour de l'hôte"
 
 #. module: stay
+#: model:ir.ui.menu,name:stay.partners
+msgid "Guests"
+msgstr "Hôtes"
+
+#. module: stay
 #: help:stay.stay,message_summary:0
 msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
 msgstr "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
@@ -267,7 +267,7 @@ msgstr "Is a Follower"
 #. module: stay
 #: field:stay.stay,message_last_post:0
 msgid "Last Message Date"
-msgstr "Last Message Date"
+msgstr "Date du dernier message"
 
 #. module: stay
 #: field:stay.journal.generate,write_uid:0
