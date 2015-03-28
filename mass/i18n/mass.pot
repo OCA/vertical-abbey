@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-17 22:40+0000\n"
-"PO-Revision-Date: 2015-02-17 22:40+0000\n"
+"POT-Creation-Date: 2015-03-28 12:41+0000\n"
+"PO-Revision-Date: 2015-03-28 12:41+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: mass
-#: code:addons/mass/wizard/generate_mass_journal.py:197
+#: code:addons/mass/wizard/generate_mass_journal.py:198
 #, python-format
 msgid "%s celebrants were not assigned"
 msgstr ""
@@ -66,31 +66,31 @@ msgid "Cancel"
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/mass.py:268
+#: code:addons/mass/mass.py:273
 #, python-format
 msgid "Cannot delete mass dated %s for %s because it is a %s which is an uninterrupted mass."
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/mass.py:263
+#: code:addons/mass/mass.py:268
 #, python-format
 msgid "Cannot delete mass line dated %s for %s because it is in Done state."
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/mass.py:200
+#: code:addons/mass/mass.py:205
 #, python-format
 msgid "Cannot delete mass request dated %s for %s because it is not in Waiting state."
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/mass.py:425
+#: code:addons/mass/mass.py:430
 #, python-format
 msgid "Cannot delete mass request transfer dated %s for %s because it is Done state."
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/mass.py:389
+#: code:addons/mass/mass.py:394
 #, python-format
 msgid "Cannot validate a Mass Request Transfer without Mass Requests."
 msgstr ""
@@ -118,6 +118,11 @@ msgstr ""
 #: field:mass.line,date:0
 #: view:website:mass.report_massline
 msgid "Celebration Date"
+msgstr ""
+
+#. module: mass
+#: field:mass.request,request_date:0
+msgid "Celebration Requested Date"
 msgstr ""
 
 #. module: mass
@@ -256,6 +261,17 @@ msgid "ID"
 msgstr ""
 
 #. module: mass
+#: help:mass.line,request_date:0
+#: help:mass.request,request_date:0
+msgid "If the donor want the mass to be celebrated at a particular date, select it here. Otherwise, leave empty."
+msgstr ""
+
+#. module: mass
+#: help:mass.request,celebrant_id:0
+msgid "If the donor want the mass to be celebrated by a particular celebrant, select it here. Otherwise, leave empty."
+msgstr ""
+
+#. module: mass
 #: field:mass.request,intention:0
 #: view:website:mass.report_massline
 #: view:website:mass.report_massrequesttransfer
@@ -334,8 +350,8 @@ msgid "Mass Line"
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/wizard/generate_mass_journal.py:208
-#: code:addons/mass/wizard/validate_mass_journal.py:126
+#: code:addons/mass/wizard/generate_mass_journal.py:209
+#: code:addons/mass/wizard/validate_mass_journal.py:127
 #: model:ir.model,name:mass.model_mass_line
 #: view:mass.line:mass.mass_line_graph
 #: view:mass.line:mass.mass_line_tree
@@ -364,7 +380,6 @@ msgstr ""
 
 #. module: mass
 #: field:mass.line,request_date:0
-#: field:mass.request,request_date:0
 msgid "Mass Request Date"
 msgstr ""
 
@@ -419,7 +434,7 @@ msgid "Mass Validation Journal"
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/wizard/validate_mass_journal.py:95
+#: code:addons/mass/wizard/validate_mass_journal.py:96
 #: model:ir.actions.act_window,name:mass.mass_line_action
 #: model:ir.ui.menu,name:mass.mass_line_menu
 #: view:mass.request:mass.mass_request_form
@@ -454,31 +469,31 @@ msgid "Masses Transfer"
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/wizard/validate_mass_journal.py:69
+#: code:addons/mass/wizard/validate_mass_journal.py:70
 #, python-format
 msgid "Masses celebrated on %s"
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/mass.py:352
+#: code:addons/mass/mass.py:357
 #, python-format
 msgid "Masses transfer %s"
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/wizard/validate_mass_journal.py:113
+#: code:addons/mass/wizard/validate_mass_journal.py:114
 #, python-format
 msgid "Missing Mass Validation Journal on company '%s'."
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/mass.py:344
+#: code:addons/mass/mass.py:349
 #, python-format
 msgid "Missing stock account on mass request of %s"
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/wizard/generate_mass_journal.py:185
+#: code:addons/mass/wizard/generate_mass_journal.py:186
 #, python-format
 msgid "More than one mass are assigned to the same celebrant %s. Please, modify requests."
 msgstr ""
@@ -489,7 +504,7 @@ msgid "No"
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/wizard/generate_mass_journal.py:103
+#: code:addons/mass/wizard/generate_mass_journal.py:104
 #, python-format
 msgid "No celebrants were selected !"
 msgstr ""
@@ -618,25 +633,25 @@ msgid "Swap Celebrants"
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/mass.py:393
+#: code:addons/mass/mass.py:398
 #, python-format
 msgid "The 'Mass Validation Journal' is not set on company '%s'"
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/wizard/swap_celebrant.py:41
+#: code:addons/mass/wizard/swap_celebrant.py:42
 #, python-format
 msgid "The 2 mass lines that you selected have different dates (%s and %s). You can swap celebrants only between 2 masses of the same date."
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/wizard/generate_mass_journal.py:178
+#: code:addons/mass/wizard/generate_mass_journal.py:179
 #, python-format
 msgid "The celebrant %s has an assigned mass for %s, but he is not available today."
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/wizard/generate_mass_journal.py:132
+#: code:addons/mass/wizard/generate_mass_journal.py:133
 #, python-format
 msgid "The number of requests for this day exceeds the number of celebrants. Please, modify requests."
 msgstr ""
@@ -652,7 +667,7 @@ msgid "The total offering amount in company currency."
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/wizard/generate_mass_journal.py:79
+#: code:addons/mass/wizard/generate_mass_journal.py:80
 #, python-format
 msgid "There is already a journal for %s. You cannot generate another journal for that date. Odoo has reverted to the default date"
 msgstr ""
@@ -767,19 +782,19 @@ msgid "Waiting"
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/wizard/generate_mass_journal.py:72
+#: code:addons/mass/wizard/generate_mass_journal.py:73
 #, python-format
 msgid "Warning"
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/wizard/generate_mass_journal.py:73
+#: code:addons/mass/wizard/generate_mass_journal.py:74
 #, python-format
 msgid "You are about to generate another journal for %s : it is allowed for that date."
 msgstr ""
 
 #. module: mass
-#: code:addons/mass/wizard/swap_celebrant.py:36
+#: code:addons/mass/wizard/swap_celebrant.py:37
 #, python-format
 msgid "You should only select 2 mass lines (%d were selected)."
 msgstr ""

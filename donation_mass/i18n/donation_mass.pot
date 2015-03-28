@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-17 22:36+0000\n"
-"PO-Revision-Date: 2015-02-17 22:36+0000\n"
+"POT-Creation-Date: 2015-03-28 12:49+0000\n"
+"PO-Revision-Date: 2015-03-28 12:49+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,13 +27,18 @@ msgid "Celebrant"
 msgstr ""
 
 #. module: donation_mass
-#: model:ir.model,name:donation_mass.model_donation_line
-msgid "Donation Lines"
+#: field:donation.line,mass_request_date:0
+msgid "Celebration Requested Date"
 msgstr ""
 
 #. module: donation_mass
 #: model:ir.model,name:donation_mass.model_donation_donation
-msgid "Donations"
+msgid "Donation"
+msgstr ""
+
+#. module: donation_mass
+#: model:ir.model,name:donation_mass.model_donation_line
+msgid "Donation Lines"
 msgstr ""
 
 #. module: donation_mass
@@ -49,11 +54,6 @@ msgstr ""
 #. module: donation_mass
 #: model:ir.model,name:donation_mass.model_mass_request
 msgid "Mass Request"
-msgstr ""
-
-#. module: donation_mass
-#: field:donation.line,mass_request_date:0
-msgid "Mass Request Date"
 msgstr ""
 
 #. module: donation_mass
