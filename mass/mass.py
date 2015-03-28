@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Mass module for OpenERP
-#    Copyright (C) 2014 Artisanat Monastique de Provence
-#                  (http://www.barroux.org)
+#    Mass module for Odoo
+#    Copyright (C) 2014-2015 Barroux Abbey (www.barroux.org)
+#    Copyright (C) 2014-2015 Akretion France (www.akretion.com)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -135,9 +135,14 @@ class MassRequest(models.Model):
         'res.partner', string='Donor', required=True, ondelete='restrict')
     celebrant_id = fields.Many2one(
         'res.partner', string='Celebrant', domain=[('celebrant', '=', True)],
-        ondelete='restrict')
+        ondelete='restrict',
+        help="If the donor want the mass to be celebrated by a particular "
+        "celebrant, select it here. Otherwise, leave empty.")
     donation_date = fields.Date(string='Donation Date', required=True)
-    request_date = fields.Date(string='Mass Request Date')
+    request_date = fields.Date(
+        string='Celebration Requested Date',
+        help="If the donor want the mass to be celebrated at a particular "
+        "date, select it here. Otherwise, leave empty.")
     type_id = fields.Many2one(
         'mass.request.type', string='Mass Request Type', required=True,
         ondelete='restrict', readonly=True,
