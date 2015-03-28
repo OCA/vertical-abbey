@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) 2014-2015 Barroux Abbey (www.barroux.org)
+    Copyright (C) 2014-2015 Akretion France (www.akretion.com)
+    The licence is in the file __openerp__.py
+-->
 
 <openerp>
 <data>
@@ -9,7 +14,7 @@
     <field name="inherit_id" ref="donation.donation_line_tree"/>
     <field name="arch"  type="xml">
         <field name="amount" position="after">
-        	<field name="mass" invisible="1"/>
+            <field name="mass" invisible="1"/>
             <field name="celebrant_id" attrs="{'readonly': [('mass', '=', False)]}"/>
             <field name="mass_request_date" attrs="{'readonly': [('mass', '=', False)]}"/>
             <field name="intention" attrs="{'readonly': [('mass', '=', False)]}"/>
@@ -23,7 +28,7 @@
     <field name="inherit_id" ref="donation.donation_line_form"/>
     <field name="arch"  type="xml">
         <field name="amount" position="after">
-        	<field name="mass" invisible="1"/>
+            <field name="mass" invisible="1"/>
             <field name="celebrant_id" attrs="{'readonly': [('mass', '=', False)]}"/>
             <field name="mass_request_date" attrs="{'readonly': [('mass', '=', False)]}"/>
             <field name="intention" attrs="{'readonly': [('mass', '=', False)]}"/>
