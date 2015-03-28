@@ -1,0 +1,83 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* donation_mass
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-03-28 12:50+0000\n"
+"PO-Revision-Date: 2015-03-28 12:50+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: donation_mass
+#: code:addons/donation_mass/donation.py:90
+#, python-format
+msgid "Cannot set back to draft the donation with number %s because it is linked to a mass request in %s state."
+msgstr "Cannot set back to draft the donation with number %s because it is linked to a mass request in %s state."
+
+#. module: donation_mass
+#: field:donation.line,celebrant_id:0
+msgid "Celebrant"
+msgstr "Célébrant"
+
+#. module: donation_mass
+#: field:donation.line,mass_request_date:0
+msgid "Celebration Requested Date"
+msgstr "Date de célébration demandée"
+
+#. module: donation_mass
+#: model:ir.model,name:donation_mass.model_donation_donation
+msgid "Donation"
+msgstr "Don"
+
+#. module: donation_mass
+#: model:ir.model,name:donation_mass.model_donation_line
+msgid "Donation Lines"
+msgstr "Lignes de don"
+
+#. module: donation_mass
+#: field:donation.line,intention:0
+msgid "Intention"
+msgstr "Intention"
+
+#. module: donation_mass
+#: field:donation.line,mass:0
+msgid "Is a Mass"
+msgstr "Messe"
+
+#. module: donation_mass
+#: model:ir.model,name:donation_mass.model_mass_request
+msgid "Mass Request"
+msgstr "Demande de messe"
+
+#. module: donation_mass
+#: field:donation.line,mass_request_ids:0
+msgid "Masses"
+msgstr "Messes"
+
+#. module: donation_mass
+#: model:ir.model,name:donation_mass.model_product_product
+msgid "Product"
+msgstr "Article"
+
+#. module: donation_mass
+#: model:ir.model,name:donation_mass.model_product_template
+msgid "Product Template"
+msgstr "Product Template"
+
+#. module: donation_mass
+#: field:mass.request,donation_id:0
+msgid "Related Donation"
+msgstr "Don associé"
+
+#. module: donation_mass
+#: field:mass.request,donation_line_id:0
+msgid "Related Donation Line"
+msgstr "Ligne de don associée"
+

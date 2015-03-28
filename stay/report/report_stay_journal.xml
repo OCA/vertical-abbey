@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Copyright (C) 2014-2015 Barroux Abbey (www.barroux.org)
+    Copyright (C) 2014-2015 Akretion France (www.akretion.com)
+    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+    The licence is in the file __openerp__.py
+-->
+
+
+<openerp>
+<data>
+
+<template id="report_stay_journal">
+
+<t t-call="report.html_container">
+
+<t t-call="report.internal_layout">
+
+<div class="page">
+
+<h1>Guest List <t t-esc="formatLang(data['date'], date=True)"/></h1>
+
+<t t-foreach="report_by_refectory(data['date'])" t-as="k">
+
+<div>
+    <h3><t t-esc="k[0].name"/></h3>
+
+    <table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>Stay Nr</th>
+            <th>Arrival Date</th>
+            <th>Departure Date</th>
+            <th>Guest</th>
+            <th>Room</th>
+            <th class="text-center">Lunches</th>
+            <th class="text-center">Dinners</th>
+            <th class="text-center">Nights</th>
+        </tr>
+    </thead>
+    <tbody>
+    <t t-foreach="k[1]['lines']" t-as="line">
+        <tr>
+            <td><span t-field="line.stay_id.name"/></td>
+            <td><span t-field="line.stay_id.arrival_date"/> <span t-field="line.stay_id.arrival_time"/></td>
+            <td><span t-field="line.stay_id.departure_date"/> <span t-field="line.stay_id.departure_time"/></td>
+            <td><span t-field="line.partner_name"/></td>
+            <td><span t-field="line.room_id"/></td>
+            <td class="text-center"><span t-field="line.lunch_qty"/></td>
+            <td class="text-center"><span t-field="line.dinner_qty"/></td>
+            <td class="text-center"><span t-field="line.bed_night_qty"/></td>
+        </tr>
+    </t>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><b>Sub-totals:</b></td>
+            <td class="text-center"><t t-esc="k[1]['lunch_subtotal']"/></td>
+            <td class="text-center"><t t-esc="k[1]['dinner_subtotal']"/></td>
+            <td class="text-center"><t t-esc="k[1]['bed_night_subtotal']"/></td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+</t>
+</div>
+
+</t>
+</t>
+
+</template>
+
+</data>
+</openerp>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) 2014-2015 Barroux Abbey (www.barroux.org)
+    Copyright (C) 2014-2015 Akretion France (www.akretion.com)
+    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+    The licence is in the file __openerp__.py
+-->
+
+<openerp>
+<data>
+
+<!-- Mass Requests -->
+<record id="mass_request_form" model="ir.ui.view">
+    <field name="name">donation.mass.request.form</field>
+    <field name="model">mass.request</field>
+    <field name="inherit_id" ref="mass.mass_request_form"/>
+    <field name="arch"  type="xml">
+        <group name="other" position="inside">
+            <field name="donation_id"/>
+            <field name="donation_line_id"/>
+        </group>
+    </field>
+</record>
+
+</data>
+</openerp>

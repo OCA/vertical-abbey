@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) 2014-2015 Barroux Abbey (www.barroux.org)
+    Copyright (C) 2014-2015 Akretion France (www.akretion.com)
+    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+    The licence is in the file __openerp__.py
+-->
+
+<openerp>
+<data>
+
+<report id="action_report_stay_journal"
+    model="stay.line"
+    string="Stay Journal"
+    report_type="qweb-pdf"
+    name="stay.report_stay_journal"
+    file="stay.report_stay_journal"
+    menu="False"
+    />
+
+</data>
+</openerp>

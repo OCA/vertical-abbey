@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) 2014-2015 Barroux Abbey (www.barroux.org)
+    Copyright (C) 2014-2015 Akretion France (www.akretion.com)
+    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+    The licence is in the file __openerp__.py
+-->
+
+<openerp>
+<data>
+
+
+<record id="mass_requests_to_transfer_form" model="ir.ui.view">
+    <field name="name">mass.requests.to.transfer.form</field>
+    <field name="model">mass.requests.to.transfer</field>
+    <field name="arch" type="xml">
+        <form string="Select Mass Requests to Transfer">
+            <group name="main">
+                <field name="mass_request_ids"
+                    domain="[('state', '=', 'waiting'), ('celebrant_id', '=', False), ('request_date', '=', False)]"
+                    nolabel="1"/>
+            </group>
+            <footer>
+                <button name="add_to_transfer"
+                    type="object" string="Add" class="oe_highlight"/>
+                <button special="cancel" string="Cancel" class="oe_link"/>
+            </footer>
+        </form>
+    </field>
+</record>
+
+
+<record id="mass_requests_to_transfer_action" model="ir.actions.act_window">
+    <field name="name">Select Mass Requests to Transfer</field>
+    <field name="res_model">mass.requests.to.transfer</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+</record>
+
+</data>
+</openerp>

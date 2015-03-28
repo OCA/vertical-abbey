@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+<data noupdate="1">
+
+<record id="product_product_stay_donation" model="product.product">
+    <field name="name">Stay Donation</field>
+    <field name="default_code">STAYDON</field>
+    <field name="categ_id" ref="product.product_category_all"/>
+    <field name="sale_ok">0</field>
+    <field name="donation">1</field>
+    <field name="list_price">0</field>
+    <field name="type">service</field>
+    <field name="uom_id" ref="product.product_uom_unit"/>
+    <field name="uom_po_id" ref="product.product_uom_unit"/>
+    <field name="description">This is the donation product for stays.</field>
+</record>
+
+<record id="stay_campaign" model="donation.campaign">
+    <field name="name">Stay</field>
+</record>
+
+</data>
+</openerp>

@@ -1,0 +1,46 @@
+-
+  Generate the stay journal for the 1st day of the month
+-
+  !record {model: stay.journal.generate, id: stay_journal_generate1}:
+    date: !eval time.strftime('%Y-%m-01')
+-
+  Validate the wizard
+-
+  !function {model: stay.journal.generate, name: generate}:
+    - eval: "[obj(ref('stay_journal_generate1')).id]"
+-
+  Check the result of stay1
+-
+  !assert {model: stay.stay, id: stay1, string: The stay line of stay1 was not correctly generated}:
+    - line_ids[0].date == time.strftime('%Y-%m-01')
+    - line_ids[0].partner_name == 'Martin Payet'
+    - not line_ids[0].partner_id
+    - line_ids[0].lunch_qty == 0
+    - line_ids[0].dinner_qty == 1
+    - line_ids[0].bed_night_qty == 1
+    - line_ids[0].room_id.id == ref('room_st_elie')
+    - line_ids[0].refectory_id.id == ref('refectory_monastique')
+-
+  Check the result of stay2
+-
+  !assert {model: stay.stay, id: stay2, string: The stay line of stay2 was not correctly generated}:
+    - line_ids[0].date == time.strftime('%Y-%m-01')
+    - line_ids[0].partner_name == 'Michel Fletcher'
+    - line_ids[0].partner_id.id == ref('base.res_partner_address_4')
+    - line_ids[0].lunch_qty == 1
+    - line_ids[0].dinner_qty == 1
+    - line_ids[0].bed_night_qty == 1
+    - line_ids[0].room_id.id == ref('room_st_cure_ars')
+    - line_ids[0].refectory_id.id == ref('refectory_monastique')
+-
+  Check the result of stay4 (no meals)
+-
+  !assert {model: stay.stay, id: stay4, string: The no meals stay line was not correctly generated}:
+    - line_ids[0].date == time.strftime('%Y-%m-01')
+    - line_ids[0].partner_name == 'Famille Martin'
+    - not line_ids[0].partner_id
+    - line_ids[0].lunch_qty == 0
+    - line_ids[0].dinner_qty == 0
+    - line_ids[0].bed_night_qty == 5
+    - line_ids[0].room_id.id == ref('st_benoit_house')
+    - not line_ids[0].refectory_id
