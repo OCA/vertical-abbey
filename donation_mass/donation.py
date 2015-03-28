@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Donation Mass module for OpenERP
-#    Copyright (C) 2014 Artisanat Monastique de Provence
-#                  (http://www.barroux.org)
+#    Donation Mass module for Odoo
+#    Copyright (C) 2014-2015 Barroux Abbey (www.barroux.org)
+#    Copyright (C) 2014-2015 Akretion France (www.akretion.com)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -36,7 +36,7 @@ class DonationLine(models.Model):
     celebrant_id = fields.Many2one(
         'res.partner', string='Celebrant', ondelete='restrict',
         domain=[('celebrant', '=', True), ('supplier', '=', False)])
-    mass_request_date = fields.Date(string='Mass Request Date')
+    mass_request_date = fields.Date(string='Celebration Requested Date')
     intention = fields.Char(string='Intention')
     mass_request_ids = fields.One2many(
         'mass.request', 'donation_line_id', string='Masses')
