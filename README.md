@@ -8,8 +8,8 @@
 The Philemon project develops Odoo modules for Abbeys.
 
 The two main modules of the Philemon project are:
-* stay: manage the stay of guests at the Abbey. Handles lunches, dinners and bed nights.
-* mass: manages mass requests and the planning of masses.
+* *stay*: manage the stay of guests at the Abbey. Handles lunches, dinners and bed nights.
+* *mass*: manages mass requests and the planning of masses.
 
 Two other modules *donation_stay* and *donation_mass* connect the management of stay and masses to donations. The Odoo modules for donations are available in the [Donation OCA project](https://github.com/OCA/donation).
 
