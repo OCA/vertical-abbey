@@ -174,7 +174,7 @@ class MassRequest(models.Model):
     quantity = fields.Integer(
         'Quantity', default=1,
         readonly=True, states={'waiting': [('readonly', False)]})
-        # quantity = quantity in the donation line
+    # quantity = quantity in the donation line
     mass_quantity = fields.Integer(
         compute='_compute_total_qty', string="Total Mass Quantity", store=True)
     intention = fields.Char(string='Intention')
