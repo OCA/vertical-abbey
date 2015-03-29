@@ -2,7 +2,8 @@
   Create a donation from stay2 and validate the donation
 -
   !python {model: donation.stay.create}: |
-    import time
+    from openerp.osv import fields
+    today = fields.date.context_today(self, cr, uid, context=context)
     ctx = context.copy()
     ctx.update({'active_id': ref('stay.stay2'), 'active_ids': [ref('stay.stay2')], 'active_model': 'stay.stay'})
     wiz_id = self.create(cr, uid, {'journal_id': ref('account.check_journal'), 'amount': 200, 'payment_ref': 'CHQ LBP 421242'})
@@ -15,7 +16,7 @@
     donation.validate()
     assert donation.partner_id.id == ref('base.res_partner_address_4'), 'Wrong partner'
     assert donation.move_id.state == 'posted', 'No account move generated'
-    assert donation.move_id.date == time.strftime('%Y-%m-%d'), 'Wrong date on move'
+    assert donation.move_id.date == today, 'Wrong date on move'
     assert donation.move_id.journal_id.id == ref('account.check_journal'), 'Wrong journal on move'
     assert donation.move_id.ref == 'CHQ LBP 421242', 'Wrong ref on move'
     assert donation.move_id.amount == 200, 'Wrong amount on move'
