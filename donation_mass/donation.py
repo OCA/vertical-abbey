@@ -81,15 +81,18 @@ class DonationDonation(models.Model):
         return res
 
     @api.one
-    def back_to_draft(self):
+    def done2cancel(self):
         mass_requests = self.env['mass.request'].search(
             [('donation_id', '=', self.id)])
-        for mass_request in mass_requests:
-            if mass_request.state != 'waiting':
-                raise Warning(
-                    _('Cannot set back to draft the donation with number '
-                        '%s because it is linked to a mass request in '
-                        '%s state.')
-                    % (self.number, mass_request.state))
-        mass_requests.unlink()
-        return super(DonationDonation, self).back_to_draft()
+        if mass_requests:
+            for mass_request in mass_requests:
+                if mass_request.state != 'waiting':
+                    raise Warning(
+                        _('Cannot cancel the donation with number '
+                            '%s because it is linked to a mass request in '
+                            '%s state.')
+                        % (self.number, mass_request.state))
+            self.message_post(_('%d related mass request(s) in waiting state '
+                                'have been deleted.') % len(mass_requests))
+            mass_requests.unlink()
+        return super(DonationDonation, self).done2cancel()
