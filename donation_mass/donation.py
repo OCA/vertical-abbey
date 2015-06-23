@@ -93,6 +93,6 @@ class DonationDonation(models.Model):
                             '%s state.')
                         % (self.number, mass_request.state))
             self.message_post(_('%d related mass request(s) in waiting state '
-                                'has been deleted.') % len(mass_requests))
+                                'have been deleted.') % len(mass_requests))
             mass_requests.unlink()
         return super(DonationDonation, self).done2cancel()
