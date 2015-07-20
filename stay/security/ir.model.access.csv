@@ -1,8 +1,10 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_stay_refectory_manager,Full access on stay.refectory to Stay Manager,model_stay_refectory,group_stay_manager,1,1,1,1
-access_stay_refectory_user,Read access on stay.refectory to Stay User,model_stay_refectory,group_stay_user,1,0,0,0
+access_stay_refectory_user,Read access on stay.refectory to Stay Viewer,model_stay_refectory,group_stay_viewer,1,0,0,0
 access_stay_room_manager,Full access on stay.room to Stay Manager,model_stay_room,group_stay_manager,1,1,1,1
-access_stay_room_user,Read access on stay.room to Stay User,model_stay_room,group_stay_user,1,0,0,0
+access_stay_room_user,Read access on stay.room to Stay Viewer,model_stay_room,group_stay_viewer,1,0,0,0
 access_stay_stay_user,Full access on stay.stay to Stay User,model_stay_stay,group_stay_user,1,1,1,1
 access_stay_stay_employee,Read access on stay.stay to Employee,model_stay_stay,base.group_user,1,0,0,0
+access_stay_stay_viewer,Read access on stay.stay to Stay Viewer,model_stay_stay,group_stay_viewer,1,0,0,0
 access_stay_line_user,Full access on stay.line to Stay User,model_stay_line,group_stay_user,1,1,1,1
+access_stay_line_viewer,Read access on stay.line to Stay Viewer,model_stay_line,group_stay_viewer,1,0,0,0

@@ -100,7 +100,7 @@
 </record>
 
 
-<menuitem id="stay_top_menu" sequence="15" name="Stays" groups="group_stay_user"/>
+<menuitem id="stay_top_menu" sequence="15" name="Stays" groups="group_stay_viewer"/>
 
 <menuitem id="stay_sub_menu" sequence="10" name="Stays" parent="stay_top_menu"/>
 
@@ -150,7 +150,7 @@
     <field name="view_mode">tree,form</field>
 </record>
 
-<menuitem id="stay_configuration" sequence="50" name="Configuration" parent="stay_top_menu"/>
+<menuitem id="stay_configuration" sequence="50" name="Configuration" parent="stay_top_menu" groups="group_stay_manager"/>
 
 <menuitem id="stay_refectory_menu" action="stay_refectory_action" parent="stay_configuration" />
 
