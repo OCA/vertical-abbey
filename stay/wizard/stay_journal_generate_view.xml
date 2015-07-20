@@ -34,7 +34,9 @@
     <field name="target">new</field>
 </record>
 
-<menuitem id="stay_journal_generate_menu" sequence="30" action="stay_journal_generate_action" parent="stay_sub_menu"/>
+<menuitem id="stay_journal_generate_menu" sequence="30"
+    action="stay_journal_generate_action" parent="stay_sub_menu"
+    groups="group_stay_user"/>
 
 
 </data>
