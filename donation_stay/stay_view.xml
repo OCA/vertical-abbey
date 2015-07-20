@@ -17,7 +17,9 @@
     <field name="inherit_id" ref="stay.stay_form"/>
     <field name="arch"  type="xml">
         <header position="inside">
-            <button type="action" string="Create Donation" name="%(create_donation_stay_action)d"/>
+            <button type="action" string="Create Donation"
+                name="%(create_donation_stay_action)d"
+                groups="donation.group_donation_user"/>
         </header>
     </field>
 </record>
