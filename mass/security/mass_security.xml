@@ -16,9 +16,15 @@
     <field name="sequence">46</field>
 </record>
 
+<record id="group_mass_viewer" model="res.groups">
+    <field name="name">Viewer</field>
+    <field name="category_id" ref="module_category_mass"/>
+</record>
+
 <record id="group_mass_user" model="res.groups">
     <field name="name">User</field>
     <field name="category_id" ref="module_category_mass"/>
+    <field name="implied_ids" eval="[(4, ref('group_mass_viewer'))]"/>
 </record>
 
 <record id="group_mass_manager" model="res.groups">
@@ -36,21 +42,18 @@
 <record id="mass_request_company_rule" model="ir.rule">
     <field name="name">Mass Request Multi-company</field>
     <field name="model_id" ref="model_mass_request"/>
-    <field name="global" eval="True"/>
     <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
 </record>
 
 <record id="mass_request_transfer_company_rule" model="ir.rule">
     <field name="name">Mass Request Transfer Multi-company</field>
     <field name="model_id" ref="model_mass_request_transfer"/>
-    <field name="global" eval="True"/>
     <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
 </record>
 
 <record id="mass_line_company_rule" model="ir.rule">
     <field name="name">Mass Line Multi-company</field>
     <field name="model_id" ref="model_mass_line"/>
-    <field name="global" eval="True"/>
     <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
 </record>
 

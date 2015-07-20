@@ -35,6 +35,7 @@
         'mass_view.xml',
         'donation_view.xml',
         'donation_mass_data.xml',
+        'security/ir.model.access.csv',
         ],
     'demo': ['donation_mass_demo.xml'],
     'test': ['test/donation_mass.yml'],
