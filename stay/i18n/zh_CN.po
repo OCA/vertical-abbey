@@ -1,0 +1,519 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stay
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-03-28 12:33+0000\n"
+"PO-Revision-Date: 2015-08-11 21:07+0800\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: zh_CN\n"
+"X-Generator: Poedit 1.7.6\n"
+
+#. module: stay
+#: sql_constraint:stay.refectory:0
+msgid "A refectory with this code already exists."
+msgstr "此餐厅编号已存在。"
+
+#. module: stay
+#: sql_constraint:stay.room:0
+msgid "A room with this code already exists."
+msgstr "此房号已存在。"
+
+#. module: stay
+#: sql_constraint:stay.stay:0
+msgid "A stay with this number already exists for this company."
+msgstr "系统中存在对应该公司的住宿编号。"
+
+#. module: stay
+#: field:stay.refectory,active:0 field:stay.room,active:0
+msgid "Active"
+msgstr "可用"
+
+#. module: stay
+#: selection:stay.stay,arrival_time:0 selection:stay.stay,departure_time:0
+msgid "Afternoon"
+msgstr "下午"
+
+#. module: stay
+#: view:stay.stay:stay.stay_search field:stay.stay,arrival_date:0
+#: view:website:stay.report_stay_journal
+msgid "Arrival Date"
+msgstr "到达日期"
+
+#. module: stay
+#: field:stay.stay,arrival_time:0
+msgid "Arrival Time"
+msgstr "到达时间"
+
+#. module: stay
+#: code:addons/stay/stay.py:93
+#, python-format
+msgid "Arrival date (%s) must be earlier than departure date (%s)"
+msgstr "到达日期 (%s) 必须早于离开日期 (%s)"
+
+#. module: stay
+#: field:stay.line,bed_night_qty:0
+msgid "Bed Nights"
+msgstr "夜宿"
+
+#. module: stay
+#: view:stay.journal.generate:stay.stay_journal_generate_form
+#: view:stay.journal.print:stay.stay_journal_print_form
+msgid "Cancel"
+msgstr "取消"
+
+#. module: stay
+#: field:stay.refectory,capacity:0
+msgid "Capacity"
+msgstr "桌数"
+
+#. module: stay
+#: field:stay.refectory,code:0 field:stay.room,code:0
+msgid "Code"
+msgstr "编号"
+
+#. module: stay
+#: model:ir.model,name:stay.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: stay
+#: field:stay.line,company_id:0 field:stay.stay,company_id:0
+msgid "Company"
+msgstr "单位"
+
+#. module: stay
+#: model:ir.ui.menu,name:stay.stay_configuration
+msgid "Configuration"
+msgstr "配置"
+
+#. module: stay
+#: field:stay.journal.generate,create_uid:0
+#: field:stay.journal.print,create_uid:0 field:stay.line,create_uid:0
+#: field:stay.refectory,create_uid:0 field:stay.room,create_uid:0
+#: field:stay.stay,create_uid:0
+msgid "Created by"
+msgstr "创建者"
+
+#. module: stay
+#: field:stay.journal.generate,create_date:0
+#: field:stay.journal.print,create_date:0 field:stay.line,create_date:0
+#: field:stay.refectory,create_date:0 field:stay.room,create_date:0
+#: field:stay.stay,create_date:0
+msgid "Created on"
+msgstr "创建于"
+
+#. module: stay
+#: field:stay.journal.generate,date:0 field:stay.journal.print,date:0
+#: view:stay.line:stay.stay_line_search field:stay.line,date:0
+msgid "Date"
+msgstr "日期"
+
+#. module: stay
+#: help:stay.stay,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "记录上最后一条消息的日期。"
+
+#. module: stay
+#: field:res.company,default_refectory_id:0
+msgid "Default Refectory"
+msgstr "默认餐厅"
+
+#. module: stay
+#: field:stay.stay,departure_date:0 view:website:stay.report_stay_journal
+msgid "Departure Date"
+msgstr "离开日期"
+
+#. module: stay
+#: field:stay.stay,departure_time:0
+msgid "Departure Time"
+msgstr "离开时间"
+
+#. module: stay
+#: field:stay.line,dinner_qty:0 view:website:stay.report_stay_journal
+msgid "Dinners"
+msgstr "晚餐"
+
+#. module: stay
+#: field:stay.refectory,display_name:0 field:stay.room,display_name:0
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: stay
+#: selection:stay.stay,arrival_time:0 selection:stay.stay,departure_time:0
+msgid "Evening"
+msgstr "晚上"
+
+#. module: stay
+#: field:stay.stay,message_follower_ids:0
+msgid "Followers"
+msgstr "随行人员"
+
+#. module: stay
+#: model:ir.actions.act_window,name:stay.stay_journal_generate_action
+#: model:ir.ui.menu,name:stay.stay_journal_generate_menu
+#: view:stay.journal.generate:stay.stay_journal_generate_form
+msgid "Generate Journal"
+msgstr "生成账本"
+
+#. module: stay
+#: view:stay.journal.generate:stay.stay_journal_generate_form
+msgid "Generate Stay Journal"
+msgstr "生成住宿账本"
+
+#. module: stay
+#: model:ir.model,name:stay.model_stay_journal_generate
+msgid "Generate the Stay Lines"
+msgstr "生成住宿明细"
+
+#. module: stay
+#: view:stay.line:stay.stay_line_search view:stay.stay:stay.stay_search
+msgid "Group By"
+msgstr "按分组"
+
+#. module: stay
+#: field:stay.line,partner_id:0 field:stay.stay,partner_id:0
+#: view:website:stay.report_stay_journal
+msgid "Guest"
+msgstr "客户"
+
+#. module: stay
+#: view:website:stay.report_stay_journal
+msgid "Guest List"
+msgstr "客户列表"
+
+#. module: stay
+#: field:stay.line,partner_name:0 view:stay.stay:stay.stay_search
+#: field:stay.stay,partner_name:0
+msgid "Guest Name"
+msgstr "客户姓名"
+
+#. module: stay
+#: field:stay.stay,guest_qty:0
+msgid "Guest Quantity"
+msgstr "客户数量"
+
+#. module: stay
+#: model:ir.model,name:stay.model_stay_stay
+msgid "Guest Stay"
+msgstr "客户住宿"
+
+#. module: stay
+#: model:ir.ui.menu,name:stay.partners
+msgid "Guests"
+msgstr "客户"
+
+#. module: stay
+#: help:stay.stay,message_summary:0
+msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+msgstr "总结：唠叨几句吧（此处省略若干字数...）这里可用HTML的格式直插到看板视图里。"
+
+#. module: stay
+#: field:report.stay.report_stay_journal,id:0 field:stay.journal.generate,id:0
+#: field:stay.journal.print,id:0 field:stay.line,id:0
+#: field:stay.refectory,id:0 field:stay.room,id:0 field:stay.stay,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: stay
+#: help:stay.room,no_meals:0
+msgid "If active, the stays linked to this room will have the same option active by default."
+msgstr "如果激活的话，默认情况下，该房间将有相同的选项。"
+
+#. module: stay
+#: help:stay.stay,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "如您需要实时反馈新消息您得关注它。"
+
+#. module: stay
+#: help:stay.line,partner_id:0 help:stay.stay,partner_id:0
+msgid "If guest is anonymous, leave this field empty."
+msgstr "若客户匿名，则留空此栏位。"
+
+#. module: stay
+#: field:stay.stay,message_is_follower:0
+msgid "Is a Follower"
+msgstr "该员为随行人员"
+
+#. module: stay
+#: field:stay.stay,message_last_post:0
+msgid "Last Message Date"
+msgstr "末条消息日期"
+
+#. module: stay
+#: field:stay.journal.generate,write_uid:0
+#: field:stay.journal.print,write_uid:0 field:stay.line,write_uid:0
+#: field:stay.refectory,write_uid:0 field:stay.room,write_uid:0
+#: field:stay.stay,write_uid:0
+msgid "Last Updated by"
+msgstr "最后更新于"
+
+#. module: stay
+#: field:stay.journal.generate,write_date:0
+#: field:stay.journal.print,write_date:0 field:stay.line,write_date:0
+#: field:stay.refectory,write_date:0 field:stay.room,write_date:0
+#: field:stay.stay,write_date:0
+msgid "Last Updated on"
+msgstr "最后更新于"
+
+#. module: stay
+#: field:stay.line,lunch_qty:0 view:website:stay.report_stay_journal
+msgid "Lunches"
+msgstr "午餐"
+
+#. module: stay
+#: model:ir.module.category,description:stay.module_category_stay
+msgid "Manage stays (lunch, diner, night, etc...)"
+msgstr "客栈管理(午餐, 晚餐, 夜宿, 等...)"
+
+#. module: stay
+#: model:res.groups,name:stay.group_stay_manager
+msgid "Manager"
+msgstr "经理"
+
+#. module: stay
+#: field:stay.stay,message_ids:0
+msgid "Messages"
+msgstr "消息"
+
+#. module: stay
+#: help:stay.stay,message_ids:0
+msgid "Messages and communication history"
+msgstr "通信历史记录"
+
+#. module: stay
+#: code:addons/stay/wizard/stay_journal_generate.py:88
+#, python-format
+msgid "Missing default refectory on the company '%s'."
+msgstr "未发现此公司默认设定的餐厅 '%s'。"
+
+#. module: stay
+#: code:addons/stay/stay.py:206
+#, python-format
+msgid "Missing refectory for guest '%s' on %s."
+msgstr "未发现客人'%s' 在 %s 的餐厅。"
+
+#. module: stay
+#: selection:stay.stay,arrival_time:0 selection:stay.stay,departure_time:0
+msgid "Morning"
+msgstr "早上"
+
+#. module: stay
+#: field:stay.refectory,name:0 field:stay.room,name:0
+msgid "Name"
+msgstr "名称"
+
+#. module: stay
+#: view:website:stay.report_stay_journal
+msgid "Nights"
+msgstr "晚上"
+
+#. module: stay
+#: field:stay.room,no_meals:0 field:stay.stay,no_meals:0
+msgid "No Meals"
+msgstr "无餐"
+
+#. module: stay
+#: code:addons/stay/wizard/stay_journal_generate.py:119
+#: code:addons/stay/wizard/stay_journal_print.py:53
+#, python-format
+msgid "No stay for this date."
+msgstr "当日无住宿。"
+
+#. module: stay
+#: field:stay.room,bed_qty:0
+msgid "Number of beds"
+msgstr "床数"
+
+#. module: stay
+#: model:ir.model,name:stay.model_res_partner
+#: view:stay.line:stay.stay_line_search
+msgid "Partner"
+msgstr "合作伙伴"
+
+#. module: stay
+#: model:ir.actions.act_window,name:stay.stay_journal_print_action
+#: model:ir.ui.menu,name:stay.stay_journal_print_menu
+#: view:stay.journal.print:stay.stay_journal_print_form
+msgid "Print Journal"
+msgstr "打印账本"
+
+#. module: stay
+#: view:stay.journal.print:stay.stay_journal_print_form
+msgid "Print Stay Journal"
+msgstr "打印住宿账本"
+
+#. module: stay
+#: model:ir.model,name:stay.model_stay_journal_print
+msgid "Print the Stay Lines"
+msgstr "打印住宿明细"
+
+#. module: stay
+#: model:ir.actions.act_window,name:stay.stay_refectory_action
+#: model:ir.ui.menu,name:stay.stay_refectory_menu
+#: view:stay.refectory:stay.stay_refectory_tree
+msgid "Refectories"
+msgstr "餐厅"
+
+#. module: stay
+#: model:ir.model,name:stay.model_stay_refectory
+#: view:stay.line:stay.stay_line_search field:stay.line,refectory_id:0
+#: view:stay.refectory:stay.stay_refectory_form
+msgid "Refectory"
+msgstr "餐厅"
+
+#. module: stay
+#: model:ir.model,name:stay.model_stay_room field:stay.line,room_id:0
+#: view:stay.room:stay.stay_room_form field:stay.stay,room_id:0
+#: view:website:stay.report_stay_journal
+msgid "Room"
+msgstr "房间"
+
+#. module: stay
+#: model:ir.actions.act_window,name:stay.stay_room_action
+#: model:ir.ui.menu,name:stay.stay_room_menu
+#: view:stay.room:stay.stay_room_tree
+msgid "Rooms"
+msgstr "房间"
+
+#. module: stay
+#: view:stay.refectory:stay.stay_refectory_search
+msgid "Search Refectories"
+msgstr "搜索餐厅"
+
+#. module: stay
+#: view:stay.room:stay.stay_room_search
+msgid "Search Rooms"
+msgstr "搜索房间"
+
+#. module: stay
+#: view:stay.line:stay.stay_line_search
+msgid "Search Stay Lines"
+msgstr "搜索住宿明细"
+
+#. module: stay
+#: view:stay.stay:stay.stay_search
+msgid "Search Stays"
+msgstr "搜索住宿"
+
+#. module: stay
+#: model:ir.module.category,name:stay.module_category_stay
+#: view:res.company:stay.view_company_form field:stay.line,stay_id:0
+#: view:stay.stay:stay.stay_form view:stay.stay:stay.stay_tree
+msgid "Stay"
+msgstr "住宿"
+
+#. module: stay
+#: model:ir.actions.report.xml,name:stay.action_report_stay_journal
+#: model:ir.model,name:stay.model_stay_line
+msgid "Stay Journal"
+msgstr "住宿账本"
+
+#. module: stay
+#: view:stay.line:stay.stay_line_form
+msgid "Stay Line"
+msgstr "住宿明细"
+
+#. module: stay
+#: model:ir.actions.act_window,name:stay.stay_line_action
+#: model:ir.ui.menu,name:stay.stay_line_menu
+#: view:stay.line:stay.stay_line_graph view:stay.line:stay.stay_line_tree
+#: field:stay.stay,line_ids:0
+msgid "Stay Lines"
+msgstr "住宿明细"
+
+#. module: stay
+#: view:website:stay.report_stay_journal
+msgid "Stay Nr"
+msgstr "住宿编号"
+
+#. module: stay
+#: field:stay.stay,name:0
+msgid "Stay Number"
+msgstr "住宿编号"
+
+#. module: stay
+#: model:ir.actions.act_window,name:stay.partner_stay_action
+#: model:ir.actions.act_window,name:stay.stay_action
+#: model:ir.ui.menu,name:stay.stay_menu
+#: model:ir.ui.menu,name:stay.stay_sub_menu
+#: model:ir.ui.menu,name:stay.stay_top_menu
+#: view:res.partner:stay.view_partner_form field:res.partner,stay_ids:0
+#: view:stay.stay:stay.stay_graph
+msgid "Stays"
+msgstr "住宿"
+
+#. module: stay
+#: view:website:stay.report_stay_journal
+msgid "Sub-totals:"
+msgstr "小计："
+
+#. module: stay
+#: field:stay.stay,message_summary:0
+msgid "Summary"
+msgstr "总结"
+
+#. module: stay
+#: code:addons/stay/stay.py:85
+#, python-format
+msgid "TO WRITE"
+msgstr "写入"
+
+#. module: stay
+#: sql_constraint:stay.line:0
+msgid "The number of bed nights must be positive or null"
+msgstr "夜宿数值必须为正数或null。"
+
+#. module: stay
+#: sql_constraint:stay.line:0
+msgid "The number of dinners must be positive or null"
+msgstr "晚餐数值必须为正数或null。"
+
+#. module: stay
+#: sql_constraint:stay.line:0
+msgid "The number of lunches must be positive or null"
+msgstr "午餐数值必须为正数或null。"
+
+#. module: stay
+#: code:addons/stay/stay.py:218
+#, python-format
+msgid "The room '%s' is booked or all beds of the room are booked"
+msgstr "此房间 '%s' 已预订或房间暂无床位。"
+
+#. module: stay
+#: help:stay.stay,no_meals:0
+msgid "The stay lines generated from this stay will not have lunchs nor dinners by default."
+msgstr "从这里生成的住宿清单明细默认不含午餐晚餐在内。"
+
+#. module: stay
+#: view:stay.line:stay.stay_line_tree
+msgid "Total Bed Nights"
+msgstr "夜宿总计"
+
+#. module: stay
+#: view:stay.line:stay.stay_line_tree
+msgid "Total Dinners"
+msgstr "晚餐总计"
+
+#. module: stay
+#: view:stay.line:stay.stay_line_tree
+msgid "Total Lunches"
+msgstr "午餐总计"
+
+#. module: stay
+#: field:stay.stay,message_unread:0
+msgid "Unread Messages"
+msgstr "未读信息"
+
+#. module: stay
+#: model:res.groups,name:stay.group_stay_user
+msgid "User"
+msgstr "用户"
