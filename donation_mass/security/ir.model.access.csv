@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mass_request_donation_user,Read/Create/Delete access on mass.request to Donation User,mass.model_mass_request,donation.group_donation_user,1,0,1,1
