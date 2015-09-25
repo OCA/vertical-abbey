@@ -27,3 +27,15 @@ The main developpers of the project are:
 
 Please refer to the README of each module to have more information about
 how to configure and use the modules.
+
+[//]: # (addons)
+Available addons
+----------------
+addon | version | summary
+--- | --- | ---
+[donation_mass](donation_mass/) | 0.1 | Ability to create mass from donation lines
+[donation_stay](donation_stay/) | 0.1 | Create donations from a stay
+[mass](mass/) | 0.1 | Manage Mass
+[stay](stay/) | 0.1 | Simple management of stays and meals
+
+[//]: # (end addons)
