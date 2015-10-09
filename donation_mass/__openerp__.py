@@ -24,7 +24,7 @@
 
 {
     'name': 'Donation Mass',
-    'version': '0.1',
+    'version': '8.0.0.1.0',
     'category': 'Religion',
     'license': 'AGPL-3',
     'summary': 'Ability to create mass from donation lines',
