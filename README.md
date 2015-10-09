@@ -33,9 +33,9 @@ Available addons
 ----------------
 addon | version | summary
 --- | --- | ---
-[donation_mass](donation_mass/) | 0.1 | Ability to create mass from donation lines
-[donation_stay](donation_stay/) | 0.1 | Create donations from a stay
-[mass](mass/) | 0.1 | Manage Mass
-[stay](stay/) | 0.1 | Simple management of stays and meals
+[donation_mass](donation_mass/) | 8.0.0.1.0 | Ability to create mass from donation lines
+[donation_stay](donation_stay/) | 8.0.0.1.0 | Create donations from a stay
+[mass](mass/) | 8.0.0.1.0 | Manage Mass
+[stay](stay/) | 8.0.0.1.0 | Simple management of stays and meals
 
 [//]: # (end addons)
