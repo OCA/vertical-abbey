@@ -23,7 +23,7 @@
 
 {
     'name': 'Donation Stay',
-    'version': '0.1',
+    'version': '8.0.0.1.0',
     'category': 'Lodging',
     'license': 'AGPL-3',
     'summary': 'Create donations from a stay',
