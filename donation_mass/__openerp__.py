@@ -39,4 +39,5 @@
         ],
     'demo': ['donation_mass_demo.xml'],
     'test': ['test/donation_mass.yml'],
+    'installable': False,
 }

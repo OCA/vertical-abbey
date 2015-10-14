@@ -49,4 +49,5 @@
         ],
     'demo': ['mass_demo.xml'],
     'test': ['test/generate_mass_journal.yml'],
+    'installable': False,
 }
