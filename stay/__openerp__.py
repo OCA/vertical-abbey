@@ -46,5 +46,5 @@
         ],
     'demo': ['stay_demo.xml'],
     'test': ['test/generate_journal.yml'],
-    'installable': True,
+    'installable': False,
 }

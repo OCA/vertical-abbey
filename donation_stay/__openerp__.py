@@ -37,4 +37,5 @@
         ],
     'demo': [],
     'test': ['test/donate_from_stay.yml'],
+    'installable': False,
 }
