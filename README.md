@@ -29,4 +29,13 @@ Please refer to the README of each module to have more information about
 how to configure and use the modules.
 
 [//]: # (addons)
+Unported addons
+---------------
+addon | version | summary
+--- | --- | ---
+[donation_mass](donation_mass/) | 8.0.0.1.0 (unported) | Ability to create mass from donation lines
+[donation_stay](donation_stay/) | 8.0.0.1.0 (unported) | Create donations from a stay
+[mass](mass/) | 8.0.0.1.0 (unported) | Manage Mass
+[stay](stay/) | 8.0.0.1.0 (unported) | Simple management of stays and meals
+
 [//]: # (end addons)
