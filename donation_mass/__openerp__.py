@@ -35,6 +35,7 @@
         'mass_view.xml',
         'donation_view.xml',
         'donation_mass_data.xml',
+        'wizard/select_mass_requests_to_transfer_view.xml',
         'security/ir.model.access.csv',
         ],
     'demo': ['donation_mass_demo.xml'],
