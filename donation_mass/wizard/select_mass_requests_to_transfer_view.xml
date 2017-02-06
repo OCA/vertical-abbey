@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  © 2017 Barroux Abbey (www.barroux.org)
+  © 2017 Akretion France (www.akretion.com)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+
+<openerp>
+<data>
+
+
+<record id="mass_requests_to_transfer_form" model="ir.ui.view">
+    <field name="name">only_donation_related.mass.requests.to.transfer.form</field>
+    <field name="model">mass.requests.to.transfer</field>
+    <field name="inherit_id" ref="mass.mass_requests_to_transfer_form"/>
+    <field name="arch" type="xml">
+        <field name="mass_request_ids" position="attributes">
+            <attribute name="domain">[('state', '=', 'waiting'), ('celebrant_id', '=', False), ('request_date', '=', False), ('donation_line_id', '!=', False)]</attribute>
+        </field>
+    </field>
+</record>
+
+
+</data>
+</openerp>
