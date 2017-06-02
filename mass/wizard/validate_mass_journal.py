@@ -1,31 +1,14 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    Mass module for Odoo
-#    Copyright (C) 2014-2015 Barroux Abbey (www.barroux.org)
-#    Copyright (C) 2014-2015 Akretion France (www.akretion.com)
-#    @author Alexis de Lattre <alexis.delattre@akretion.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+# © 2014-2017 Barroux Abbey (www.barroux.org)
+# © 2014-2017 Akretion France (www.akretion.com)
+# @author Alexis de Lattre <alexis.delattre@akretion.com>
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 
-class mass_journal_validate(models.TransientModel):
+class MassJournalValidate(models.TransientModel):
     _name = 'mass.journal.validate'
     _description = "Validate Masses Journal"
 
@@ -98,7 +81,6 @@ class mass_journal_validate(models.TransientModel):
             }
         return vals
 
-    @api.multi
     def validate_journal(self):
         self.ensure_one()
         date = self.journal_date
@@ -110,28 +92,21 @@ class mass_journal_validate(models.TransientModel):
         if company.mass_validation_account_id:
             # Loop on result to compute the total amount
             if not company.mass_validation_journal_id:
-                raise Warning(
-                    _("Missing Mass Validation Journal on company '%s'.")
+                raise UserError(_(
+                    "Missing Mass Validation Journal on company '%s'.")
                     % company.name)
             # Create account move
             move_vals = self._prepare_mass_validation_move(
                 company, date, lines)
             move = self.env['account.move'].create(move_vals)
-            move.post()
             move_id = move.id
 
         # Update mass lines
         lines.write({'state': 'done', 'move_id': move_id})
 
-        action = {
-            'name': _('Mass Lines'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'mass.line',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
+        action = self.env['ir.actions.act_window'].for_xml_id(
+            'mass', 'mass_line_action')
+        action.update({
             'domain': [('id', 'in', lines.ids)],
-            'nodestroy': False,
-            'target': 'current',
-            'context': {'mass_line_main_view': True},
-            }
+            })
         return action
