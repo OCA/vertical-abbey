@@ -1,29 +1,12 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    Mass module for Odoo
-#    Copyright (C) 2014-2015 Barroux Abbey (www.barroux.org)
-#    Copyright (C) 2014-2015 Akretion France (www.akretion.com)
-#    @author Brother Bernard <informatique _at_ barroux.org>
-#    @author Alexis de Lattre <alexis.delattre@akretion.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+# © 2014-2017 Barroux Abbey (www.barroux.org)
+# © 2014-2017 Akretion France (www.akretion.com)
+# @author Brother Bernard <informatique _at_ barroux.org>
+# @author Alexis de Lattre <alexis.delattre@akretion.com>
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
@@ -92,7 +75,6 @@ class MassJournalGenerate(models.TransientModel):
             }
         return vals
 
-    @api.multi
     def generate_journal(self):
         self.ensure_one()
         journal_date = self.journal_date
@@ -101,7 +83,7 @@ class MassJournalGenerate(models.TransientModel):
                 [('date', '=', journal_date)], limit=1, order='date desc'):
             first_journal = False
         if not self.celebrant_ids:
-            raise Warning(_('No celebrants were selected !'))
+            raise UserError(_('No celebrants were selected !'))
         number_of_celebrants = len(self.celebrant_ids)
         mass_lines = []
         # Retreive mass requests
@@ -129,10 +111,9 @@ class MassJournalGenerate(models.TransientModel):
                     })
         rest = number_of_celebrants - len(mass_lines)
         if rest < 0:
-            raise Warning(
-                _('The number of requests for this day exceeds '
-                    'the number of celebrants. Please, modify requests.')
-                )
+            raise UserError(_(
+                'The number of requests for this day exceeds '
+                'the number of celebrants. Please, modify requests.'))
         if rest > 0:
             # Last, requests with state = waiting (fifo rule)
             if first_journal:
@@ -175,18 +156,16 @@ class MassJournalGenerate(models.TransientModel):
                 if celebrant_id in celebrant_ids:
                     celebrant_ids.remove(celebrant_id)
                 elif celebrant_id not in origin_celebrant_ids:
-                        raise Warning(
-                            _('The celebrant %s has an assigned mass for %s, '
-                                'but he is not available today.') % (
+                        raise UserError(_(
+                            'The celebrant %s has an assigned mass for %s, '
+                            'but he is not available today.') % (
                                 line['request'].celebrant_id.name,
-                                line['request'].partner_id.name)
-                            )
+                                line['request'].partner_id.name))
                 else:
-                    raise Warning(
-                        _('More than one mass are assigned '
-                          'to the same celebrant %s. Please, modify requests.')
-                        % line['request'].celebrant_id.name
-                        )
+                    raise UserError(_(
+                        'More than one mass are assigned '
+                        'to the same celebrant %s. Please, modify requests.')
+                        % line['request'].celebrant_id.name)
         # Second loop to assign a celebrant for the rest of mass lines
         for line in mass_lines:
             celebrant_id = line['celebrant_id']
@@ -194,9 +173,8 @@ class MassJournalGenerate(models.TransientModel):
                 celebrant_id = celebrant_ids.pop(0)
                 line['celebrant_id'] = celebrant_id
         if len(celebrant_ids) != 0:
-            raise Warning(
-                _('%s celebrants were not assigned')
-                % len(celebrant_ids))
+            raise UserError(
+                _('%s celebrants were not assigned') % len(celebrant_ids))
 
         # Create mass lines
         new_line_ids = []
@@ -205,14 +183,9 @@ class MassJournalGenerate(models.TransientModel):
             new_line = self.env['mass.line'].create(vals)
             new_line_ids.append(new_line.id)
 
-        action = {
-            'name': _('Mass Lines'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'mass.line',
-            'view_mode': 'tree,form',
+        action = self.env['ir.actions.act_window'].for_xml_id(
+            'mass', 'mass_line_action')
+        action.update({
             'domain': [('id', 'in', new_line_ids)],
-            'nodestroy': False,
-            'target': 'current',
-            'context': {'mass_line_main_view': True},
-            }
+            })
         return action

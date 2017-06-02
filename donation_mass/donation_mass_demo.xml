@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
-<data noupdate="1">
+<odoo noupdate="1">
 
 
 <record id="donor_mass1" model="res.partner">
@@ -39,7 +38,7 @@
     <field name="check_total">17</field>
     <field name="partner_id" ref="donor_mass1"/>
     <field name="donation_date" eval="time.strftime('%Y-%m-01')"/>
-    <field name="journal_id" ref="account.check_journal"/>
+    <field name="journal_id" model="account.journal" search="[('type', '=', 'bank')]"/>
     <field name="payment_ref">CHQ CA 229026</field>
 </record>
 
@@ -56,7 +55,7 @@
     <field name="check_total">340</field>
     <field name="partner_id" ref="donor_mass2"/>
     <field name="donation_date" eval="time.strftime('%Y-%m-01')"/>
-    <field name="journal_id" ref="account.check_journal"/>
+    <field name="journal_id" model="account.journal" search="[('type', '=', 'bank')]"/>
     <field name="payment_ref">CHQ BP 9087123</field>
 </record>
 
@@ -73,7 +72,7 @@
     <field name="check_total">540</field>
     <field name="partner_id" ref="donor_mass3"/>
     <field name="donation_date" eval="time.strftime('%Y-%m-01')"/>
-    <field name="journal_id" ref="account.check_journal"/>
+    <field name="journal_id" model="account.journal" search="[('type', '=', 'bank')]"/>
     <field name="payment_ref">CHQ HSBC 98302217</field>
 </record>
 
@@ -87,5 +86,4 @@
 </record>
 
 
-</data>
-</openerp>
+</odoo>
