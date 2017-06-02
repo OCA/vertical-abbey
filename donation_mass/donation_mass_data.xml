@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
-<data noupdate="1">
+<odoo noupdate="1">
 
 <record id="mass.product_product_mass_gregorian" model="product.product">
     <field name="donation">1</field>
@@ -15,5 +14,4 @@
     <field name="donation">1</field>
 </record>
 
-</data>
-</openerp>
+</odoo>

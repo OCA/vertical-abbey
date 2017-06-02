@@ -1,30 +1,11 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    Mass module for Odoo
-#    Copyright (C) 2014-2015 Barroux Abbey (www.barroux.org)
-#    Copyright (C) 2014-2015 Akretion France (www.akretion.com)
-#    @author Alexis de Lattre <alexis.delattre@akretion.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
-
+# -*- coding: utf-8 -*-
+# © 2014-2017 Barroux Abbey (www.barroux.org)
+# © 2014-2017 Akretion France (www.akretion.com)
+# @author Alexis de Lattre <alexis.delattre@akretion.com>
 
 {
     'name': 'Mass',
-    'version': '8.0.0.1.0',
+    'version': '10.0.1.0.0',
     'category': 'Christian Religion',
     'license': 'AGPL-3',
     'summary': 'Manage Mass',
@@ -42,12 +23,11 @@
         'mass_data.xml',
         'partner_view.xml',
         'product_view.xml',
-        'company_view.xml',
         'report.xml',
         'views/report_massrequesttransfer.xml',
         'views/report_massline.xml',
+        'base_config_settings_view.xml',
         ],
     'demo': ['mass_demo.xml'],
-    'test': ['test/generate_mass_journal.yml'],
-    'installable': False,
+    'installable': True,
 }
