@@ -8,11 +8,8 @@
 from odoo import models, fields
 
 
-class ResCompany(models.Model):
-    _inherit = 'res.company'
+class BaseConfigSettings(models.TransientModel):
+    _inherit = 'base.config.settings'
 
-    mass_validation_account_id = fields.Many2one(
-        'account.account', string='Mass Validation Account',
-        domain=[('deprecated', '!=', True)])
-    mass_validation_journal_id = fields.Many2one(
-        'account.journal', string='Mass Validation Journal')
+    default_refectory_id = fields.Many2one(
+        related='company_id.default_refectory_id', string='Default Refectory')
