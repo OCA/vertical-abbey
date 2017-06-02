@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
-    Copyright (C) 2014-2015 Barroux Abbey (www.barroux.org)
-    Copyright (C) 2014-2015 Akretion France (www.akretion.com)
-    @author: Alexis de Lattre <alexis.delattre@akretion.com>
-    @author: Brother Bernard <informatique@barroux.org>
-    The licence is in the file __openerp__.py
+  © 2014-2017 Barroux Abbey (www.barroux.org)
+  © 2014-2017 Akretion France (www.akretion.com)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  @author: Brother Bernard <informatique@barroux.org>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 -->
 
-<openerp>
-<data>
+<odoo>
 
 <record id="stay_form" model="ir.ui.view">
     <field name="name">stay.form</field>
@@ -87,16 +85,27 @@
     <field name="name">stay.graph</field>
     <field name="model">stay.stay</field>
     <field name="arch"  type="xml">
-        <graph string="Stays" type="pivot">
+        <graph string="Stays">
             <field name="guest_qty" type="measure"/>
         </graph>
+    </field>
+</record>
+
+<record id="stay_pivot" model="ir.ui.view">
+    <field name="name">stay.graph</field>
+    <field name="model">stay.stay</field>
+    <field name="arch"  type="xml">
+        <pivot string="Stays" type="pivot">
+            <field name="arrival_date" interval="month" type="col"/>
+            <field name="guest_qty" type="measure"/>
+        </pivot>
     </field>
 </record>
 
 <record id="stay_action" model="ir.actions.act_window">
     <field name="name">Stays</field>
     <field name="res_model">stay.stay</field>
-    <field name="view_mode">tree,form,graph</field>
+    <field name="view_mode">tree,form,pivot,graph</field>
 </record>
 
 
@@ -111,11 +120,17 @@
     <field name="model">stay.refectory</field>
     <field name="arch"  type="xml">
         <form string="Refectory">
+            <div class="oe_button_box" name="button_box">
+                <button name="toggle_active" type="object"
+                    class="oe_stat_button" icon="fa-archive">
+                    <field name="active" widget="boolean_button"
+                        options='{"terminology": "archive"}'/>
+                </button>
+            </div>
             <group name="main">
                 <field name="name"/>
                 <field name="code"/>
                 <field name="capacity"/>
-                <field name="active"/>
             </group>
         </form>
     </field>
@@ -140,6 +155,7 @@
         <search string="Search Refectories">
             <field name="name"
                 filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+            <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
         </search>
     </field>
 </record>
@@ -160,12 +176,18 @@
     <field name="model">stay.room</field>
     <field name="arch"  type="xml">
         <form string="Room">
+            <div class="oe_button_box" name="button_box">
+                <button name="toggle_active" type="object"
+                    class="oe_stat_button" icon="fa-archive">
+                    <field name="active" widget="boolean_button"
+                        options='{"terminology": "archive"}'/>
+                </button>
+            </div>
             <group name="main">
                 <field name="name"/>
                 <field name="code"/>
                 <field name="bed_qty"/>
                 <field name="no_meals"/>
-                <field name="active"/>
             </group>
         </form>
     </field>
@@ -191,6 +213,7 @@
         <search string="Search Rooms">
             <field name="name"
                 filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+            <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
         </search>
     </field>
 </record>
@@ -262,7 +285,7 @@
     <field name="name">stay.line.graph</field>
     <field name="model">stay.line</field>
     <field name="arch"  type="xml">
-        <graph string="Stay Lines" type="pivot">
+        <graph string="Stay Lines">
             <field name="lunch_qty" type="measure"/>
             <field name="dinner_qty" type="measure"/>
             <field name="bed_night_qty" type="measure"/>
@@ -270,10 +293,23 @@
     </field>
 </record>
 
+<record id="stay_line_pivot" model="ir.ui.view">
+    <field name="name">stay.line.pivot</field>
+    <field name="model">stay.line</field>
+    <field name="arch"  type="xml">
+        <pivot string="Stay Lines" type="pivot">
+            <field name="lunch_qty" type="measure"/>
+            <field name="dinner_qty" type="measure"/>
+            <field name="bed_night_qty" type="measure"/>
+        </pivot>
+    </field>
+</record>
+
+
 <record id="stay_line_action" model="ir.actions.act_window">
     <field name="name">Stay Lines</field>
     <field name="res_model">stay.line</field>
-    <field name="view_mode">tree,form,graph</field>
+    <field name="view_mode">tree,form,graph,pivot</field>
     <field name="context">{'stay_line_main_view': True}</field>
 </record>
 
@@ -282,5 +318,4 @@
 <menuitem id="partners" action="base.action_partner_form" parent="stay_sub_menu" sequence="50" name="Guests" />
 
 
-</data>
-</openerp>
+</odoo>

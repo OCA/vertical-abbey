@@ -8,8 +8,8 @@
 from odoo import models, fields
 
 
-class ResCompany(models.Model):
-    _inherit = 'res.company'
+class BaseConfigSettings(models.TransientModel):
+    _inherit = 'base.config.settings'
 
     default_refectory_id = fields.Many2one(
-        'stay.refectory', string='Default Refectory')
+        related='company_id.default_refectory_id', string='Default Refectory')

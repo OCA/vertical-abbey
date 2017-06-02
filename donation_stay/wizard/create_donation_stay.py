@@ -1,30 +1,12 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    Donation Stay module for Odoo
-#    Copyright (C) 2014-2015 Barroux Abbey (www.barroux.org)
-#    Copyright (C) 2014-2015 Akretion France (www.akretion.com)
-#    @author: Brother Irénée
-#    @author: Alexis de Lattre <alexis.delattre@akretion.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+#  © 2014-2017 Barroux Abbey (www.barroux.org)
+#  © 2014-2017 Akretion France (www.akretion.com)
+#  @author: Brother Irénée
+#  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+#  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields, api, _
-from openerp.exceptions import Warning
-import openerp.addons.decimal_precision as dp
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 
 class DonationStayCreate(models.TransientModel):
@@ -40,8 +22,8 @@ class DonationStayCreate(models.TransientModel):
     currency_id = fields.Many2one(
         'res.currency', string='Currency', required=True,
         default=lambda self: self.env.user.company_id.currency_id)
-    amount = fields.Float(
-        string='Donation Amount', digits=dp.get_precision('Account'))
+    amount = fields.Monetary(
+        string='Donation Amount', currency_field='currency_id')
     date_donation = fields.Date(
         'Donation Date', required=True, default=fields.Date.context_today)
     payment_ref = fields.Char('Payment Reference', size=32)
@@ -72,7 +54,6 @@ class DonationStayCreate(models.TransientModel):
         }
         return vals
 
-    @api.multi
     def create_donation(self):
         self.ensure_one()
         assert self.env.context.get('active_model') == 'stay.stay',\
@@ -80,9 +61,8 @@ class DonationStayCreate(models.TransientModel):
         stay = self.env['stay.stay'].browse(self.env.context['active_id'])
 
         if not stay.partner_id:
-            raise Warning(
-                _("This Partner is anonymous. You must create a real "
-                    "Partner."))
+            raise UserError(_(
+                "This Partner is anonymous. You must create a real Partner."))
 
         # 1. create object "donation.donation" (in database !),
         # parameters are initialized in a "prepare fonction"

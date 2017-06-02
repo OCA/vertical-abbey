@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
-    Copyright (C) 2014-2015 Barroux Abbey (www.barroux.org)
-    Copyright (C) 2014-2015 Akretion France (www.akretion.com)
-    @author: Alexis de Lattre <alexis.delattre@akretion.com>
-    The licence is in the file __openerp__.py
+  © 2014-2017 Barroux Abbey (www.barroux.org)
+  © 2014-2017 Akretion France (www.akretion.com)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 -->
 
 
-<openerp>
-<data>
+<odoo>
 
-<template id="report_stay_journal">
-
-<t t-call="report.html_container">
+<template id="stay.report_stayjournalprint_document">
 
 <t t-call="report.internal_layout">
+<t t-set="doc" t-value="doc.with_context({'lang':user.partner_id.lang})" />
 
 <div class="page">
 
-<h1>Guest List <t t-esc="formatLang(data['date'], date=True)"/></h1>
+<h1>Guest List <span t-field="doc.date"/></h1>
 
-<t t-foreach="report_by_refectory(data['date'])" t-as="k">
+<t t-foreach="doc.get_report_by_refectory()" t-as="k">
 
 <div>
     <h3><t t-esc="k[0].name"/></h3>
@@ -70,9 +67,15 @@
 </div>
 
 </t>
-</t>
 
 </template>
 
-</data>
-</openerp>
+<template id="report_stayjournalprint">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="stay.report_stayjournalprint_document" t-lang="user.partner_id.lang"/>
+        </t>
+    </t>
+</template>
+
+</odoo>
