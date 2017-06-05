@@ -29,5 +29,6 @@
         'base_config_settings_view.xml',
         ],
     'demo': ['mass_demo.xml'],
+    'application': True,
     'installable': True,
 }
