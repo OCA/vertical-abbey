@@ -27,5 +27,6 @@
         'partner_view.xml',
         ],
     'demo': ['stay_demo.xml'],
+    'application': True,
     'installable': True,
 }
