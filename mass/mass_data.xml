@@ -29,15 +29,10 @@
     <field name="uninterrupted" eval="False"/>
 </record>
 
-<record id="product_category_mass" model="product.category">
-    <field name="name">Masses</field>
-    <field name="parent_id" ref="product.product_category_all"/>
-</record>
-
 <record id="product_product_mass_gregorian" model="product.product">
     <field name="name">Gregorian Mass</field>
     <field name="default_code">MT</field>
-    <field name="categ_id" ref="product_category_mass"/>
+    <field name="categ_id" ref="product.product_category_all"/>
     <field name="sale_ok" eval="False"/>
     <field name="mass">1</field>
     <field name="mass_request_type_id" ref="mass_type_gregorian"/>
@@ -52,7 +47,7 @@
 <record id="product_product_mass_novena" model="product.product">
     <field name="name">Novena Mass</field>
     <field name="default_code">MN</field>
-    <field name="categ_id" ref="product_category_mass"/>
+    <field name="categ_id" ref="product.product_category_all"/>
     <field name="sale_ok" eval="False"/>
     <field name="mass">1</field>
     <field name="mass_request_type_id" ref="mass_type_novena"/>
@@ -67,7 +62,7 @@
 <record id="product_product_mass_simple" model="product.product">
     <field name="name">Simple Mass</field>
     <field name="default_code">MO</field>
-    <field name="categ_id" ref="product_category_mass"/>
+    <field name="categ_id" ref="product.product_category_all"/>
     <field name="sale_ok" eval="False"/>
     <field name="mass">1</field>
     <field name="mass_request_type_id" ref="mass_type_simple"/>
