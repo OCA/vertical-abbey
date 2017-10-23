@@ -1,28 +1,10 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    Mass module for Odoo
-#    Copyright (C) 2014-2015 Barroux Abbey (www.barroux.org)
-#    Copyright (C) 2014-2015 Akretion France (www.akretion.com)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+# © 2014-2017 Barroux Abbey (www.barroux.org)
+# © 2014-2017 Akretion France (www.akretion.com)
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields, api, _
-import openerp.addons.decimal_precision as dp
-from openerp.exceptions import Warning
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 
 class ResPartner(models.Model):
@@ -118,7 +100,6 @@ class MassRequest(models.Model):
     def _compute_total_qty(self):
         self.mass_quantity = self.type_id.quantity * self.quantity
 
-    @api.multi
     def name_get(self):
         res = []
         for request in self:
@@ -132,10 +113,11 @@ class MassRequest(models.Model):
         return res
 
     partner_id = fields.Many2one(
-        'res.partner', string='Donor', required=True, ondelete='restrict')
+        'res.partner', string='Donor', required=True, ondelete='restrict',
+        index=True)
     celebrant_id = fields.Many2one(
         'res.partner', string='Celebrant', domain=[('celebrant', '=', True)],
-        ondelete='restrict',
+        ondelete='restrict', index=True,
         help="If the donor want the mass to be celebrated by a particular "
         "celebrant, select it here. Otherwise, leave empty.")
     donation_date = fields.Date(string='Donation Date', required=True)
@@ -149,18 +131,18 @@ class MassRequest(models.Model):
         states={'waiting': [('readonly', False)]})
     uninterrupted = fields.Boolean(
         related='type_id.uninterrupted', string="Uninterrupted", readonly=True)
-    offering = fields.Float(
-        string='Offering', digits=dp.get_precision('Account'),
+    offering = fields.Monetary(
+        string='Offering', currency_field='company_currency_id',
         readonly=True, states={'waiting': [('readonly', False)]},
         help="The total offering amount in company currency.")
-    unit_offering = fields.Float(
+    unit_offering = fields.Monetary(
         compute='_compute_unit_offering', store=True,
-        string='Offering per Mass', digits=dp.get_precision('Account'),
+        string='Offering per Mass', currency_field='company_currency_id',
         help="This field is the offering amount per mass in company "
         "currency.")
     stock_account_id = fields.Many2one(
         'account.account', string='Stock Account',
-        domain=[('type', '<>', 'view'), ('type', '<>', 'closed')])
+        domain=[('deprecated', '!=', True)])
     analytic_account_id = fields.Many2one(
         'account.analytic.account', string='Analytic Account',
         domain=[('type', 'not in', ('view', 'template'))])
@@ -190,20 +172,19 @@ class MassRequest(models.Model):
     mass_remaining_quantity = fields.Integer(
         compute='_compute_state_mass_remaining_quantity',
         string="Mass Remaining Quantity", store=True)
-    remaining_offering = fields.Float(
+    remaining_offering = fields.Monetary(
         compute='_compute_state_mass_remaining_quantity',
         string="Remaining Offering", store=True,
-        digits=dp.get_precision('Account'))
+        currency_field='company_currency_id')
     transfer_id = fields.Many2one(
         'mass.request.transfer', string='Transfer Operation', readonly=True)
 
-    @api.multi
     def unlink(self):
         for request in self:
             if request.state != 'waiting':
-                raise Warning(
-                    _('Cannot delete mass request dated %s for %s because '
-                        'it is not in Waiting state.')
+                raise UserError(_(
+                    'Cannot delete mass request dated %s for %s because '
+                    'it is not in Waiting state.')
                     % (request.donation_date, request.partner_id.name))
         return super(MassRequest, self).unlink()
 
@@ -215,7 +196,7 @@ class MassLine(models.Model):
 
     request_id = fields.Many2one(
         'mass.request', string='Mass Request',
-        states={'done': [('readonly', True)]})
+        states={'done': [('readonly', True)]}, index=True)
     date = fields.Date(
         string='Celebration Date', required=True,
         states={'done': [('readonly', True)]})
@@ -237,17 +218,17 @@ class MassLine(models.Model):
     type_id = fields.Many2one(
         'mass.request.type', related='request_id.type_id',
         string="Mass Request Type", readonly=True, store=True)
-    unit_offering = fields.Float(
-        string='Offering', digits=dp.get_precision('Account'),
+    unit_offering = fields.Monetary(
+        string='Offering', currency_field='company_currency_id',
         help="The offering amount is in company currency.",
         states={'done': [('readonly', True)]})
     celebrant_id = fields.Many2one(
-        'res.partner', string='Celebrant', required=True,
+        'res.partner', string='Celebrant', required=True, index=True,
         domain=[('celebrant', '=', True), ('supplier', '=', False)],
         ondelete='restrict', states={'done': [('readonly', True)]})
     conventual_id = fields.Many2one(
         'religious.community', string='Conventual', ondelete='restrict',
-        states={'done': [('readonly', True)]})
+        index=True, states={'done': [('readonly', True)]})
     move_id = fields.Many2one(
         'account.move', string='Account Move', readonly=True)
     state = fields.Selection([
@@ -255,7 +236,6 @@ class MassLine(models.Model):
         ('done', 'Done'),
         ], string='State', default='draft', readonly=True)
 
-    @api.multi
     def unlink(self):
         # Get the last journal date
         mass_lines = self.search([], limit=1, order='date desc')
@@ -264,14 +244,14 @@ class MassLine(models.Model):
         last_date = mass_lines[0].date
         for mass in self:
             if mass.state == 'done':
-                raise Warning(
-                    _('Cannot delete mass line dated %s for %s because '
-                        'it is in Done state.')
+                raise UserError(_(
+                    'Cannot delete mass line dated %s for %s because '
+                    'it is in Done state.')
                     % (mass.date, mass.partner_id.name))
             if mass.type_id.uninterrupted and mass.date < last_date:
-                raise Warning(
-                    _("Cannot delete mass dated %s for %s because it is a %s "
-                        "which is an uninterrupted mass.")
+                raise UserError(_(
+                    "Cannot delete mass dated %s for %s because it is a %s "
+                    "which is an uninterrupted mass.")
                     % (mass.date, mass.partner_id.name, mass.type_id.name))
         return super(MassLine, self).unlink()
 
@@ -281,7 +261,6 @@ class MassRequestTransfer(models.Model):
     _description = 'Transfered Mass Requests'
     _rec_name = 'number'
 
-    @api.multi
     def name_get(self):
         res = []
         for trf in self:
@@ -306,7 +285,7 @@ class MassRequestTransfer(models.Model):
     number = fields.Char(
         string='Transfer Number', readonly=True)
     celebrant_id = fields.Many2one(
-        'res.partner', string='Celebrant', required=True,
+        'res.partner', string='Celebrant', required=True, index=True,
         domain=[('celebrant', '=', True), ('supplier', '=', True)],
         states={'done': [('readonly', True)]}, ondelete='restrict')
     company_id = fields.Many2one(
@@ -326,9 +305,9 @@ class MassRequestTransfer(models.Model):
         states={'done': [('readonly', True)]})
     move_id = fields.Many2one(
         'account.move', string='Account Move', readonly=True)
-    amount_total = fields.Float(
+    amount_total = fields.Monetary(
         compute='_compute_transfer_totals', type="float",
-        string="Amount Total", digits=dp.get_precision('Account'),
+        string="Amount Total", currency_field='company_currency_id',
         store=True)
     mass_total = fields.Integer(
         compute='_compute_transfer_totals', string="Total Mass Quantity",
@@ -345,8 +324,8 @@ class MassRequestTransfer(models.Model):
         for request in self.mass_request_ids:
             stock_account_id = request.stock_account_id.id or False
             if not stock_account_id:
-                raise Warning(
-                    _('Missing stock account on mass request of %s')
+                raise UserError(_(
+                    'Missing stock account on mass request of %s')
                     % request.partner_id.name)
             if stock_account_id:
                 if stock_account_id in stock_aml:
@@ -372,30 +351,28 @@ class MassRequestTransfer(models.Model):
                 'credit': self.amount_total,
                 'name': name,
                 'account_id':
-                self.celebrant_id.property_account_payable.id,
+                self.celebrant_id.property_account_payable_id.id,
                 'partner_id': partner_id,
                 }))
 
-        period = self.env['account.period'].find(dt=self.transfer_date)
         vals = {
             'journal_id': self.company_id.mass_validation_journal_id.id,
             # TODO Same journal as validation journal ?
             'date': self.transfer_date,
-            'period_id': period.id,
             'ref': number,
-            'line_id': movelines,
+            'line_ids': movelines,
             }
         return vals
 
     @api.one
     def validate(self):
         if not self.mass_request_ids:
-            raise Warning(
-                _('Cannot validate a Mass Request Transfer without '
-                    'Mass Requests.'))
+            raise UserError(_(
+                'Cannot validate a Mass Request Transfer without '
+                'Mass Requests.'))
         if not self.company_id.mass_validation_journal_id:
-            raise Warning(
-                _("The 'Mass Validation Journal' is not set on company '%s'")
+            raise UserError(_(
+                "The 'Mass Validation Journal' is not set on company '%s'")
                 % self.company_id.name)
 
         transfer_vals = {'state': 'done'}
@@ -405,10 +382,9 @@ class MassRequestTransfer(models.Model):
                 'mass.request.transfer')
             transfer_vals['number'] = number
 
-        # Create and post account move
+        # Create account move
         move_vals = self._prepare_mass_transfer_move(number)
         move = self.env['account.move'].create(move_vals)
-        move.post()
 
         transfer_vals['move_id'] = move.id
         self.write(transfer_vals)
@@ -422,12 +398,11 @@ class MassRequestTransfer(models.Model):
         self.state = 'draft'
         return
 
-    @api.multi
     def unlink(self):
         for trf in self:
             if trf.state == 'done':
-                raise Warning(
-                    _('Cannot delete mass request transfer dated %s for %s '
-                        'because it is Done state.')
+                raise UserError(_(
+                    'Cannot delete mass request transfer dated %s for %s '
+                    'because it is Done state.')
                     % (trf.transfer_date, trf.celebrant_id.name))
         return super(MassRequestTransfer, self).unlink()

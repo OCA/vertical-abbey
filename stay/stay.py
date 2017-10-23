@@ -1,30 +1,13 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    Stay module for Odoo
-#    Copyright (C) 2014-2015 Barroux Abbey (www.barroux.org)
-#    Copyright (C) 2014-2015 Akretion France (www.akretion.com)
-#    @author: Alexis de Lattre <alexis.delattre@akretion.com>
-#    @author: Brother Bernard <informatique@barroux.org>
-#    @author: Brother Irénée
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+# © 2014-2017 Barroux Abbey (www.barroux.org)
+# © 2014-2017 Akretion France (www.akretion.com)
+# @author: Alexis de Lattre <alexis.delattre@akretion.com>
+# @author: Brother Bernard <informatique@barroux.org>
+# @author: Brother Irénée
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
 
 
 class StayStay(models.Model):
@@ -85,13 +68,14 @@ class StayStay(models.Model):
         default['partner_name'] = _('TO WRITE')
         return super(StayStay, self).copy(default)
 
-    @api.one
     @api.constrains('departure_date', 'arrival_date')
     def _check_stay_date(self):
-        if self.arrival_date >= self.departure_date:
-            raise Warning(
-                _('Arrival date (%s) must be earlier than departure date (%s)')
-                % (self.arrival_date, self.departure_date))
+        for stay in self:
+            if stay.arrival_date >= stay.departure_date:
+                raise UserError(_(
+                    'Arrival date (%s) must be earlier than '
+                    'departure date (%s)')
+                    % (stay.arrival_date, stay.departure_date))
 
     _sql_constraints = [(
         'name_company_uniq', 'unique(name, company_id)',
@@ -117,7 +101,7 @@ class StayRefectory(models.Model):
     code = fields.Char(string='Code', size=10)
     name = fields.Char(string='Name', required=True)
     display_name = fields.Char(
-        string='Display Name', compute='_compute_display_name',
+        string='Display Name', compute='_compute_display_name_field',
         readonly=True, store=True)
     capacity = fields.Integer(string='Capacity')
     active = fields.Boolean(default=True)
@@ -126,13 +110,13 @@ class StayRefectory(models.Model):
         'code_uniq', 'unique(code)',
         'A refectory with this code already exists.')]
 
-    @api.one
     @api.depends('name', 'code')
-    def _compute_display_name(self):
-        name = self.name
-        if self.code:
-            name = u'[%s] %s' % (self.code, name)
-        self.display_name = name
+    def _compute_display_name_field(self):
+        for ref in self:
+            name = ref.name
+            if ref.code:
+                name = u'[%s] %s' % (ref.code, name)
+            ref.display_name = name
 
 
 class StayRoom(models.Model):
@@ -144,7 +128,7 @@ class StayRoom(models.Model):
     code = fields.Char(string='Code', size=10, copy=False)
     name = fields.Char(string='Name', required=True, copy=False)
     display_name = fields.Char(
-        string='Display Name', compute='_compute_display_name',
+        string='Display Name', compute='_compute_display_name_field',
         readonly=True, store=True)
     bed_qty = fields.Integer(string='Number of beds', default='1')
     active = fields.Boolean(default=True)
@@ -157,13 +141,13 @@ class StayRoom(models.Model):
         'code_uniq', 'unique(code)',
         'A room with this code already exists.')]
 
-    @api.one
     @api.depends('name', 'code')
-    def _compute_display_name(self):
-        name = self.name
-        if self.code:
-            name = u'[%s] %s' % (self.code, name)
-        self.display_name = name
+    def _compute_display_name_field(self):
+        for room in self:
+            name = room.name
+            if room.code:
+                name = u'[%s] %s' % (room.code, name)
+            room.display_name = name
 
 
 class StayLine(models.Model):
@@ -197,27 +181,27 @@ class StayLine(models.Model):
         'stay.refectory', string='Refectory', default=_default_refectory)
     room_id = fields.Many2one('stay.room', string='Room', ondelete='restrict')
 
-    @api.one
     @api.constrains(
         'refectory_id', 'lunch_qty', 'dinner_qty', 'date', 'room_id')
     def _check_room_refectory(self):
-        if (self.lunch_qty or self.dinner_qty) and not self.refectory_id:
-            raise Warning(
-                _("Missing refectory for guest '%s' on %s.")
-                % (self.partner_name, self.date))
-        if self.room_id and self.bed_night_qty:
-            same_room_same_day_line = self.search([
-                ('date', '=', self.date),
-                ('room_id', '=', self.room_id.id),
-                ('bed_night_qty', '!=', False)])
-            guests_in_room_qty = 0
-            for same_room in same_room_same_day_line:
-                guests_in_room_qty += same_room.bed_night_qty
-            if guests_in_room_qty > self.room_id.bed_qty:
-                raise Warning(
-                    _("The room '%s' is booked or all beds of the "
+        for line in self:
+            if (line.lunch_qty or line.dinner_qty) and not line.refectory_id:
+                raise ValidationError(
+                    _("Missing refectory for guest '%s' on %s.")
+                    % (line.partner_name, line.date))
+            if line.room_id and line.bed_night_qty:
+                same_room_same_day_line = self.search([
+                    ('date', '=', line.date),
+                    ('room_id', '=', line.room_id.id),
+                    ('bed_night_qty', '!=', False)])
+                guests_in_room_qty = 0
+                for same_room in same_room_same_day_line:
+                    guests_in_room_qty += same_room.bed_night_qty
+                if guests_in_room_qty > line.room_id.bed_qty:
+                    raise ValidationError(_(
+                        "The room '%s' is booked or all beds of the "
                         "room are booked")
-                    % self.room_id.name)
+                        % line.room_id.name)
 
     _sql_constraints = [
         ('lunch_qty_positive', 'CHECK (lunch_qty >= 0)',
@@ -231,4 +215,4 @@ class StayLine(models.Model):
     @api.onchange('partner_id')
     def _partner_id_change(self):
         if self.partner_id:
-            self.partner_name = self.partner_id.name_get()[0][1]
+            self.partner_name = self.partner_id.display_name

@@ -1,31 +1,13 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    Stay module for Odoo
-#    Copyright (C) 2014-2015 Barroux Abbey (www.barroux.org)
-#    Copyright (C) 2014-2015 Akretion France (www.akretion.com)
-#    @author: Alexis de Lattre <alexis.delattre@akretion.com>
-#    @author: Brother Bernard <informatique@barroux.org>
-#    @author: Brother Irénée
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+# © 2014-2017 Barroux Abbey (www.barroux.org)
+# © 2014-2017 Akretion France (www.akretion.com)
+# @author: Alexis de Lattre <alexis.delattre@akretion.com>
+# @author: Brother Bernard <informatique@barroux.org>
+# @author: Brother Irénée
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields, api
-from openerp.exceptions import Warning
-from openerp.tools.translate import _
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
 
 
@@ -42,7 +24,6 @@ class StayJournalPrint(models.TransientModel):
 
     date = fields.Date(string='Date', required=True, default=_default_date)
 
-    @api.multi
     def print_journal(self):
         self.ensure_one()
         lines = self.env['stay.line'].search([
@@ -50,10 +31,41 @@ class StayJournalPrint(models.TransientModel):
             ('company_id', '=', self.env.user.company_id.id),
             ])
         if not lines:
-            raise Warning(_('No stay for this date.'))
-        data = {'date': self.date}
+            raise UserError(_('No stay for this date.'))
         res = self.env['report'].get_action(
-            self.env['report'].browse(False), 'stay.report_stay_journal',
-            data=data)
-        res['datas'] = data  # To be compatible with aeroo v8
+            self,
+            'stay.report_stayjournalprint')
+        # res['datas'] = data  # To be compatible with aeroo v8
         return res
+
+    def get_report_by_refectory(self):
+        '''Method for the report (replace report parser)'''
+        lines = self.env['stay.line'].search([
+            ('date', '=', self.date),
+            ('company_id', '=', self.env.user.company_id.id),
+            ])
+        res = {}
+        # {refectory_obj1 : {
+        #       'lunch_subtotal': 2,
+        #       'dinner_subtotal': 4,
+        #       'bed_night_subtotal': 5,
+        #       'lines': [line1, line2, line3],
+        #       }
+        # }
+        for line in lines:
+            refectory = line.refectory_id
+            if refectory in res:
+                res[refectory]['lunch_subtotal'] += line.lunch_qty
+                res[refectory]['dinner_subtotal'] += line.dinner_qty
+                res[refectory]['bed_night_subtotal']\
+                    += line.bed_night_qty
+                res[refectory]['lines'].append(line)
+            else:
+                res[refectory] = {
+                    'lunch_subtotal': line.lunch_qty,
+                    'dinner_subtotal': line.dinner_qty,
+                    'bed_night_subtotal': line.bed_night_qty,
+                    'lines': [line],
+                }
+        # print "res=", res.items()
+        return res.items()
