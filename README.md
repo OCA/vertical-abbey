@@ -30,13 +30,13 @@ how to configure and use the modules.
 
 [//]: # (addons)
 
-Unported addons
----------------
+Available addons
+----------------
 addon | version | summary
 --- | --- | ---
-[donation_mass](donation_mass/) | 8.0.0.1.0 (unported) | Ability to create mass from donation lines
-[donation_stay](donation_stay/) | 8.0.0.1.0 (unported) | Create donations from a stay
-[mass](mass/) | 8.0.0.1.0 (unported) | Manage Mass
-[stay](stay/) | 8.0.0.1.0 (unported) | Simple management of stays and meals
+[donation_mass](donation_mass/) | 10.0.1.0.0 | Ability to create mass from donation lines
+[donation_stay](donation_stay/) | 10.0.1.0.0 | Create donations from a stay
+[mass](mass/) | 10.0.1.0.0 | Manage Mass
+[stay](stay/) | 10.0.1.0.0 | Simple management of stays and meals
 
 [//]: # (end addons)
