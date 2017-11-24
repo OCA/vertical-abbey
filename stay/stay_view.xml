@@ -102,10 +102,21 @@
     </field>
 </record>
 
+<record id="stay_calendar" model="ir.ui.view">
+    <field name="name">stay.calendar</field>
+    <field name="model">stay.stay</field>
+    <field name="arch"  type="xml">
+        <calendar string="Stays" color="partner_id" date_start="arrival_date" date_stop="departure_date" mode="month">
+            <field name="partner_name"/>
+            <field name="room_id"/>
+        </calendar>
+    </field>
+</record>
+
 <record id="stay_action" model="ir.actions.act_window">
     <field name="name">Stays</field>
     <field name="res_model">stay.stay</field>
-    <field name="view_mode">tree,form,pivot,graph</field>
+    <field name="view_mode">tree,form,calendar,pivot,graph</field>
 </record>
 
 
