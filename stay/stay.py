@@ -158,9 +158,8 @@ class StayLine(models.Model):
 
     @api.model
     def _default_refectory(self):
-        company_id = self.env['res.company']._company_default_get(
-            'stay.stay')
-        company = self.env['res.company'].browse(company_id)
+        company = self.env['res.company']._company_default_get(
+            'stay.line')
         return company.default_refectory_id
 
     stay_id = fields.Many2one('stay.stay', string='Stay')
