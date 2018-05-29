@@ -12,6 +12,7 @@ setuptools.setup(
         'odoo10-addon-donation_stay',
         'odoo10-addon-mass',
         'odoo10-addon-stay',
+        'odoo10-addon-stay_report_py3o',
     ],
     classifiers=[
         'Programming Language :: Python',
