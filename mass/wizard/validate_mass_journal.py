@@ -75,9 +75,8 @@ class MassJournalValidate(models.TransientModel):
         vals = {
             'journal_id': company.mass_validation_journal_id.id,
             'date': date,
-            'period_id': self.env['account.period'].find(dt=date).id,
             'ref': _('Masses'),
-            'line_id': movelines,
+            'line_ids': movelines,
             }
         return vals
 
