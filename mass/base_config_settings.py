@@ -12,7 +12,7 @@ class BaseConfigSettings(models.TransientModel):
 
     mass_validation_account_id = fields.Many2one(
         related='company_id.mass_validation_account_id',
-        string='Mass Validation Account', domain=[('deprecated', '!=', True)])
+        domain=[('deprecated', '!=', True)])
     mass_validation_journal_id = fields.Many2one(
-        related='company_id.mass_validation_journal_id',
-        string='Mass Validation Journal')
+        related='company_id.mass_validation_journal_id')
+    mass_post_move = fields.Boolean(related='company_id.mass_post_move')
