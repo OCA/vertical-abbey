@@ -385,6 +385,8 @@ class MassRequestTransfer(models.Model):
         # Create account move
         move_vals = self._prepare_mass_transfer_move(number)
         move = self.env['account.move'].create(move_vals)
+        if self.company_id.mass_post_move:
+            move.post()
 
         transfer_vals['move_id'] = move.id
         self.write(transfer_vals)
