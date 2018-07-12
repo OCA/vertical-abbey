@@ -99,13 +99,13 @@ class MassJournalValidate(models.TransientModel):
                 company, date, lines)
             move = self.env['account.move'].create(move_vals)
             move_id = move.id
+            if company.mass_post_move:
+                move.post()
 
         # Update mass lines
         lines.write({'state': 'done', 'move_id': move_id})
 
         action = self.env['ir.actions.act_window'].for_xml_id(
             'mass', 'mass_line_action')
-        action.update({
-            'domain': [('id', 'in', lines.ids)],
-            })
+        action['domain'] = [('id', 'in', lines.ids)]
         return action
