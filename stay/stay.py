@@ -17,13 +17,13 @@ class StayStay(models.Model):
     _inherit = ['mail.thread']
 
     name = fields.Char(
-        string='Stay Number', default='/')
+        string='Stay Number', default='/', copy=False)
     company_id = fields.Many2one(
         'res.company', string='Company', required=True,
         default=lambda self: self.env['res.company']._company_default_get(
             'stay.stay'))
     partner_id = fields.Many2one(
-        'res.partner', string='Guest', copy=False, ondelete='restrict',
+        'res.partner', string='Guest', ondelete='restrict',
         help="If guest is anonymous, leave this field empty.")
     partner_name = fields.Char(
         'Guest Name', required=True, track_visibility='onchange')
@@ -60,13 +60,6 @@ class StayStay(models.Model):
         if vals.get('name', '/') == '/':
             vals['name'] = self.env['ir.sequence'].next_by_code('stay.stay')
         return super(StayStay, self).create(vals)
-
-    @api.one
-    def copy(self, default=None):
-        default = dict(default or {})
-        default['name'] = '/'
-        default['partner_name'] = _('TO WRITE')
-        return super(StayStay, self).copy(default)
 
     @api.constrains('departure_date', 'arrival_date')
     def _check_stay_date(self):

@@ -16,6 +16,7 @@
             <group name="mass" string="Mass">
                 <field name="mass_validation_account_id"/>
                 <field name="mass_validation_journal_id"/>
+                <field name="mass_post_move"/>
             </group>
         </group>
     </field>

@@ -16,3 +16,4 @@ class ResCompany(models.Model):
         domain=[('deprecated', '!=', True)])
     mass_validation_journal_id = fields.Many2one(
         'account.journal', string='Mass Validation Journal')
+    mass_post_move = fields.Boolean(string='Post Move', default=True)
