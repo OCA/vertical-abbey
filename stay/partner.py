@@ -13,16 +13,12 @@ class ResPartner(models.Model):
 
     @api.depends('stay_ids.partner_id')
     def _compute_stay_count(self):
-        # The current user may not have access rights for stays
-        try:
-            res = self.env['stay.stay'].read_group(
-                [('partner_id', 'in', self.ids)],
-                ['partner_id'], ['partner_id'])
-            for re in res:
-                partner = self.browse(re['partner_id'][0])
-                partner.stay_count = re['partner_id_count']
-        except Exception:
-            pass
+        res = self.env['stay.stay'].read_group(
+            [('partner_id', 'in', self.ids)],
+            ['partner_id'], ['partner_id'])
+        for re in res:
+            partner = self.browse(re['partner_id'][0])
+            partner.stay_count = re['partner_id_count']
 
     stay_ids = fields.One2many(
         'stay.stay', 'partner_id', string='Stays')
