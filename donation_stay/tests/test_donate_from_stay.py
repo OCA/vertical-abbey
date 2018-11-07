@@ -9,7 +9,7 @@ from odoo import fields
 class TestDonationFromStay(TransactionCase):
 
     def test_donate_from_stay(self):
-        today = fields.date.context_today(self)
+        today = fields.Date.context_today(self)
         dsco = self.env['donation.stay.create']
         ctx = self._context.copy()
         ctx.update({
