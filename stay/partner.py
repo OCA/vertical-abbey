@@ -11,16 +11,16 @@ from odoo import models, fields, api
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    @api.one
     @api.depends('stay_ids.partner_id')
-    def _stay_count(self):
-        # The current user may not have access rights for stays
-        try:
-            self.stay_count = len(self.stay_ids)
-        except:
-            self.stay_count = 0
+    def _compute_stay_count(self):
+        res = self.env['stay.stay'].read_group(
+            [('partner_id', 'in', self.ids)],
+            ['partner_id'], ['partner_id'])
+        for re in res:
+            partner = self.browse(re['partner_id'][0])
+            partner.stay_count = re['partner_id_count']
 
     stay_ids = fields.One2many(
         'stay.stay', 'partner_id', string='Stays')
     stay_count = fields.Integer(
-        compute='_stay_count', string="# of Stays", readonly=True)
+        compute='_compute_stay_count', string="# of Stays", readonly=True)
