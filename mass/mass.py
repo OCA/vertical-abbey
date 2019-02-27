@@ -144,8 +144,7 @@ class MassRequest(models.Model):
         'account.account', string='Stock Account',
         domain=[('deprecated', '!=', True)])
     analytic_account_id = fields.Many2one(
-        'account.analytic.account', string='Analytic Account',
-        domain=[('type', 'not in', ('view', 'template'))])
+        'account.analytic.account', string='Stock Analytic Account')
     company_id = fields.Many2one(
         'res.company', string='Company', required=True, ondelete='restrict',
         default=lambda self: self.env['res.company']._company_default_get(

@@ -28,49 +28,44 @@ class MassJournalValidate(models.TransientModel):
     @api.model
     def _prepare_mass_validation_move(self, company, date, lines):
         movelines = []
-        stock_aml = {}  # key = account_id, value = amount
-        income_aml = {}
-        # key = (account_id, analytic_account_id) value = amount
-        income_account_id = company.mass_validation_account_id.id
+        stock_aml = {}  # key = (account_id, analytic_acc_id) ; value = amount
         for line in lines:
             stock_account_id = line.request_id.stock_account_id.id or False
-            analytic_account_id = \
+            stock_analytic_account_id = \
                 line.request_id.analytic_account_id.id or False
 
+            key = (stock_account_id, stock_analytic_account_id)
             if stock_account_id:
-                if stock_account_id in stock_aml:
-                    stock_aml[stock_account_id] += line.unit_offering
+                if key in stock_aml:
+                    stock_aml[key] += line.unit_offering
                 else:
-                    stock_aml[stock_account_id] = line.unit_offering
+                    stock_aml[key] = line.unit_offering
 
-                if (income_account_id, analytic_account_id) in income_aml:
-                    income_aml[(income_account_id, analytic_account_id)] +=\
-                        line.unit_offering
-                else:
-                    income_aml[(income_account_id, analytic_account_id)] =\
-                        line.unit_offering
-
+        income_total = 0.0
         name = _('Masses celebrated on %s') % date
-        for stock_account_id, stock_amount in stock_aml.iteritems():
+        for (stock_account_id, stock_analytic_account_id), stock_amount\
+                in stock_aml.iteritems():
             movelines.append((0, 0, {
                 'name': name,
                 'credit': 0,
                 'debit': stock_amount,
                 'account_id': stock_account_id,
+                'analytic_account_id': stock_analytic_account_id,
                 }))
+            income_total += stock_amount
 
         # counter-part
-        for (income_account_id, analytic_account_id), income_amount in\
-                income_aml.iteritems():
-
-            movelines.append(
-                (0, 0, {
-                    'debit': 0,
-                    'credit': income_amount,
-                    'name': name,
-                    'account_id': income_account_id,
-                    'analytic_account_id': analytic_account_id,
-                    }))
+        income_account_id = company.mass_validation_account_id.id
+        income_analytic_account_id =\
+            company.mass_validation_analytic_account_id.id or False
+        movelines.append(
+            (0, 0, {
+                'debit': 0,
+                'credit': income_total,
+                'name': name,
+                'account_id': income_account_id,
+                'analytic_account_id': income_analytic_account_id,
+                }))
 
         vals = {
             'journal_id': company.mass_validation_journal_id.id,
