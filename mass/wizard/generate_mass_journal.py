@@ -156,11 +156,11 @@ class MassJournalGenerate(models.TransientModel):
                 if celebrant_id in celebrant_ids:
                     celebrant_ids.remove(celebrant_id)
                 elif celebrant_id not in origin_celebrant_ids:
-                        raise UserError(_(
-                            'The celebrant %s has an assigned mass for %s, '
-                            'but he is not available today.') % (
-                                line['request'].celebrant_id.name,
-                                line['request'].partner_id.name))
+                    raise UserError(_(
+                        'The celebrant %s has an assigned mass for %s, '
+                        'but he is not available today.') % (
+                            line['request'].celebrant_id.name,
+                            line['request'].partner_id.name))
                 else:
                     raise UserError(_(
                         'More than one mass are assigned '
