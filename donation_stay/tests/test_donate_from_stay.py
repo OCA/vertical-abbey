@@ -25,7 +25,8 @@ class TestDonationFromStay(TransactionCase):
         donation_id = action['res_id']
         donation = self.env['donation.donation'].browse(donation_id)
         self.assertEquals(donation.state, 'draft')
-        self.assertEquals(donation.campaign_id, self.env.ref('stay_campaign'))
+        self.assertEquals(
+            donation.campaign_id, self.env.ref('donation_stay.stay_campaign'))
         self.assertEquals(donation.amount_total, 200)
         donation.validate()
         self.assertEquals(
