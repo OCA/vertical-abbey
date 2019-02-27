@@ -4,18 +4,16 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo.tests.common import TransactionCase
-from odoo import fields
 
 
 class TestDonationFromStay(TransactionCase):
 
     def test_donate_from_stay(self):
         dsco = self.env['donation.stay.create']
-        ctx = self._context.copy()
-        ctx.update({
+        ctx = {
             'active_id': self.env.ref('stay.stay2').id,
             'active_ids': [self.env.ref('stay.stay2').id],
-            'active_model': 'stay.stay'})
+            'active_model': 'stay.stay'}
         wiz = dsco.with_context(ctx).create({
             'journal_id': self.env.ref('account.check_journal').id,
             'amount': 200,
