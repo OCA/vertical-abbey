@@ -71,8 +71,10 @@ class MassRequest(models.Model):
     def _compute_state_mass_remaining_quantity(self):
         total_qty = self.type_id.quantity * self.quantity
         remaining_qty = total_qty
-        for line in self.line_ids:
-            remaining_qty -= 1
+        if self.line_ids:
+            remaining_qty -= len(self.line_ids)
+        if remaining_qty < 0:
+            remaining_qty = 0
         state = 'waiting'
         if self.transfer_id:
             state = 'transfered'
