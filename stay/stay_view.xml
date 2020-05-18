@@ -16,9 +16,13 @@
         <form string="Stay">
             <header></header> <!-- used by module donation_stay -->
             <sheet>
+                <div class="oe_title">
+                    <h1>
+                        <field name="name" readonly="1"/>
+                    </h1>
+                </div>
                 <group name="main">
                     <group name="left">
-                        <field name="name" readonly="1"/>
                         <field name="company_id" groups="base.group_multi_company"/>
                         <field name="partner_id"/>
                         <field name="partner_name"/>
@@ -31,6 +35,7 @@
                         <field name="departure_date"/>
                         <field name="departure_time"/>
                         <field name="room_id"/>
+                        <field name="group_id"/>
                         <field name="no_meals"/>
                     </group>
                 </group>
@@ -58,6 +63,7 @@
             <field name="arrival_time"/>
             <field name="departure_date"/>
             <field name="departure_time"/>
+            <field name="group_id"/>
             <field name="room_id"/>
             <field name="company_id" groups="base.group_multi_company"/>
         </tree>
@@ -72,8 +78,14 @@
         <search string="Search Stays">
             <field name="partner_name"/>
             <field name="partner_id"/>
+            <field name="group_id"/>
             <field name="room_id"/>
+            <separator/>
+            <filter string="My Rooms" domain="[('user_id', '=', uid)]"/>
+            <separator/>
             <group string="Group By" name="groupby">
+                <filter name="group_groupby" string="Group" context="{'group_by': 'group_id'}"/>
+                <filter name="user_groupby" string="In Charge" context="{'group_by': 'user_id'}"/>
                 <filter name="partner_groupby" string="Guest Name" context="{'group_by': 'partner_name'}"/>
                 <filter name="arrival_date_groupby" string="Arrival Date" context="{'group_by': 'arrival_date'}"/>
             </group>
@@ -106,9 +118,10 @@
     <field name="name">stay.calendar</field>
     <field name="model">stay.stay</field>
     <field name="arch"  type="xml">
-        <calendar string="Stays" color="partner_id" date_start="arrival_date" date_stop="departure_date" mode="month">
+        <calendar string="Stays" color="room_id" date_start="arrival_date" date_stop="departure_date" mode="month">
             <field name="partner_name"/>
             <field name="room_id"/>
+            <field name="guest_qty"/>
         </calendar>
     </field>
 </record>
@@ -179,7 +192,7 @@
 
 <menuitem id="stay_configuration" sequence="50" name="Configuration" parent="stay_top_menu" groups="group_stay_manager"/>
 
-<menuitem id="stay_refectory_menu" action="stay_refectory_action" parent="stay_configuration" />
+<menuitem id="stay_refectory_menu" action="stay_refectory_action" parent="stay_configuration" sequence="30"/>
 
 
 <record id="stay_room_form" model="ir.ui.view">
@@ -197,6 +210,7 @@
             <group name="main">
                 <field name="name"/>
                 <field name="code"/>
+                <field name="group_id"/>
                 <field name="bed_qty"/>
                 <field name="no_meals"/>
             </group>
@@ -211,6 +225,7 @@
         <tree string="Rooms">
             <field name="name"/>
             <field name="code"/>
+            <field name="group_id"/>
             <field name="bed_qty"/>
             <field name="no_meals"/>
         </tree>
@@ -223,8 +238,15 @@
     <field name="arch"  type="xml">
         <search string="Search Rooms">
             <field name="name"
-                filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                    filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+            <field name="group_id"/>
+            <filter string="My Rooms" domain="[('user_id', '=', uid)]"/>
+            <separator/>
             <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            <group name="groupby">
+                <filter name="group_groupby" string="Group" context="{'group_by': 'group_id'}"/>
+                <filter name="user_groupby" string="In Charge" context="{'group_by': 'user_id'}"/>
+            </group>
         </search>
     </field>
 </record>
@@ -235,7 +257,55 @@
     <field name="view_mode">tree,form</field>
 </record>
 
-<menuitem id="stay_room_menu" action="stay_room_action" parent="stay_configuration" />
+<menuitem id="stay_room_menu" action="stay_room_action" parent="stay_configuration" sequence="20"/>
+
+
+<record id="stay_group_form" model="ir.ui.view">
+    <field name="name">stay.group.form</field>
+    <field name="model">stay.group</field>
+    <field name="arch"  type="xml">
+        <form string="Group">
+            <group name="main">
+                <field name="name"/>
+                <field name="user_id"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="stay_group_tree" model="ir.ui.view">
+    <field name="name">stay.group.tree</field>
+    <field name="model">stay.group</field>
+    <field name="arch"  type="xml">
+        <tree string="Groups">
+            <field name="name"/>
+            <field name="user_id"/>
+        </tree>
+    </field>
+</record>
+
+<record id="stay_group_search" model="ir.ui.view">
+    <field name="name">stay.group.search</field>
+    <field name="model">stay.group</field>
+    <field name="arch"  type="xml">
+        <search string="Search Groups">
+            <field name="name"
+                filter_domain="['|', ('name', 'ilike', self), ('user_id', 'ilike', self)]"/>
+            <group name="groupby">
+                <filter name="user_groupby" string="Responsible" context="{'group_by': 'user_id'}"/>
+            </group>
+        </search>
+    </field>
+</record>
+
+<record id="stay_group_action" model="ir.actions.act_window">
+    <field name="name">Groups</field>
+    <field name="res_model">stay.group</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem id="stay_group_menu" action="stay_group_action" parent="stay_configuration" sequence="10"/>
+
 
 <record id="stay_line_form" model="ir.ui.view">
     <field name="name">stay.line.form</field>
@@ -253,6 +323,8 @@
                 <field name="bed_night_qty"/>
                 <field name="refectory_id"/>
                 <field name="room_id"/>
+                <field name="group_id"/>
+                <field name="user_id"/>
             </group>
         </form>
     </field>
@@ -283,7 +355,13 @@
         <search string="Search Stay Lines">
             <field name="date"/>
             <field name="partner_name"/>
+            <field name="group_id"/>
+            <separator/>
+            <filter string="My Rooms" domain="[('user_id', '=', uid)]"/>
+            <separator/>
             <group string="Group By" name="groupby">
+                <filter name="group_groupby" string="Group" context="{'group_by': 'group_id'}"/>
+                <filter name="user_groupby" string="In Charge" context="{'group_by': 'user_id'}"/>
                 <filter name="date_groupby" string="Date" context="{'group_by': 'date'}"/>
                 <filter name="refectory_id" string="Refectory" context="{'group_by': 'refectory_id'}"/>
                 <filter name="partner_name" string="Guest" context="{'group_by': 'partner_name'}"/>
@@ -327,6 +405,64 @@
 <menuitem id="stay_line_menu" action="stay_line_action" parent="stay_sub_menu" sequence="20"/>
 
 <menuitem id="partners" action="base.action_partner_form" parent="stay_sub_menu" sequence="50" name="Guests" />
+
+
+<record id="stay_date_label_form" model="ir.ui.view">
+    <field name="name">stay.date.label.form</field>
+    <field name="model">stay.date.label</field>
+    <field name="arch"  type="xml">
+        <form string="Date Label">
+            <group name="main">
+                <field name="date"/>
+                <field name="name"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="stay_date_label_tree" model="ir.ui.view">
+    <field name="name">stay.date.label.tree</field>
+    <field name="model">stay.date.label</field>
+    <field name="arch"  type="xml">
+        <tree string="Date Labels">
+            <field name="date"/>
+            <field name="name"/>
+        </tree>
+    </field>
+</record>
+
+<record id="stay_date_label_calendar" model="ir.ui.view">
+    <field name="name">stay.date.label.calendar</field>
+    <field name="model">stay.date.label</field>
+    <field name="arch"  type="xml">
+        <calendar string="Date Labels" date_start="date" date_stop="date" mode="month">
+            <field name="name"/>
+        </calendar>
+    </field>
+</record>
+
+<record id="stay_date_label_search" model="ir.ui.view">
+    <field name="name">stay.date.label.search</field>
+    <field name="model">stay.date.label</field>
+    <field name="arch"  type="xml">
+        <search string="Search Date Labels">
+            <field name="name"/>
+            <field name="date"/>
+            <group name="groupby">
+                <filter name="date_groupby" string="Date" context="{'group_by': 'date'}"/>
+            </group>
+        </search>
+    </field>
+</record>
+
+<record id="stay_date_label_action" model="ir.actions.act_window">
+    <field name="name">Date Labels</field>
+    <field name="res_model">stay.date.label</field>
+    <field name="view_mode">tree,form,calendar</field>
+</record>
+
+<menuitem id="stay_date_label_menu" action="stay_date_label_action" parent="stay_configuration" sequence="40"/>
+
 
 
 </odoo>
