@@ -26,34 +26,47 @@
     <field name="capacity">12</field>
 </record>
 
+<record id="group1" model="stay.group">
+    <field name="name">Hôtellerie monastère</field>
+</record>
+
+<record id="group2" model="stay.group">
+    <field name="name">Hôtellerie familles</field>
+</record>
+
 <record id="room_st_cure_ars" model="stay.room">
     <field name="name">St Curé d'Ars</field>
     <field name="code">211</field>
     <field name="bed_qty">1</field>
+    <field name="group_id" ref="group1"/>
 </record>
 
 <record id="room_st_jean_eudes" model="stay.room">
     <field name="name">St Jean Eudes</field>
     <field name="code">213</field>
     <field name="bed_qty">1</field>
+    <field name="group_id" ref="group1"/>
 </record>
 
 <record id="room_st_bruno" model="stay.room">
     <field name="name">St Bruno</field>
     <field name="code">214</field>
     <field name="bed_qty">1</field>
+    <field name="group_id" ref="group1"/>
 </record>
 
 <record id="room_st_elie" model="stay.room">
     <field name="name">St Elie</field>
     <field name="code">215</field>
     <field name="bed_qty">1</field>
+    <field name="group_id" ref="group1"/>
 </record>
 
 <record id="room_dortoir" model="stay.room">
     <field name="name">Dortoir</field>
     <field name="code">DOR</field>
     <field name="bed_qty">12</field>
+    <field name="group_id" ref="group1"/>
 </record>
 
 <record id="st_benoit_house" model="stay.room">
@@ -61,6 +74,7 @@
     <field name="code">BEN</field>
     <field name="bed_qty">5</field>
     <field name="no_meals" eval="True"/>
+    <field name="group_id" ref="group2"/>
 </record>
 
 <record id="stay1" model="stay.stay">
@@ -71,6 +85,7 @@
     <field name="departure_date" eval="time.strftime('%Y-%m-05')"/>
     <field name="departure_time">morning</field>
     <field name="room_id" ref="room_st_elie"/>
+    <field name="group_id" ref="group1"/>
 </record>
 
 <record id="stay2" model="stay.stay">
@@ -82,6 +97,7 @@
     <field name="departure_date" eval="time.strftime('%Y-%m-06')"/>
     <field name="departure_time">evening</field>
     <field name="room_id" ref="room_st_cure_ars"/>
+    <field name="group_id" ref="group1"/>
 </record>
 
 <record id="stay3" model="stay.stay">
@@ -93,6 +109,7 @@
     <field name="departure_date" eval="time.strftime('%Y-%m-12')"/>
     <field name="departure_time">evening</field>
     <field name="room_id" ref="room_st_jean_eudes"/>
+    <field name="group_id" ref="group1"/>
 </record>
 
 <record id="stay4" model="stay.stay">
@@ -104,6 +121,7 @@
     <field name="departure_time">morning</field>
     <field name="room_id" ref="st_benoit_house"/>
     <field name="no_meals" eval="True"/>
+    <field name="group_id" ref="group2"/>
 </record>
 
 

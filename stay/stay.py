@@ -46,12 +46,22 @@ class StayStay(models.Model):
     room_id = fields.Many2one(
         'stay.room', string='Room', track_visibility='onchange', copy=False,
         ondelete='restrict')
+    # Here, group_id is not a related of room, because we want to be able
+    # to first set the group and later set the room
+    group_id = fields.Many2one(
+        'stay.group', string='Group', track_visibility='onchange', copy=False)
+    user_id = fields.Many2one(
+        related='group_id.user_id', store=True, readonly=True)
     line_ids = fields.One2many(
         'stay.line', 'stay_id', string='Stay Lines')
     no_meals = fields.Boolean(
         string="No Meals",
         help="The stay lines generated from this stay will not have "
         "lunchs nor dinners by default.")
+
+    _sql_constraints = [(
+        'name_company_uniq', 'unique(name, company_id)',
+        'A stay with this number already exists for this company.')]
 
     @api.model
     def create(self, vals=None):
@@ -70,19 +80,39 @@ class StayStay(models.Model):
                     'departure date (%s)')
                     % (stay.arrival_date, stay.departure_date))
 
-    _sql_constraints = [(
-        'name_company_uniq', 'unique(name, company_id)',
-        'A stay with this number already exists for this company.')]
+    @api.constrains('room_id', 'group_id')
+    def _check_group_room(self):
+        for stay in self:
+            if (
+                    stay.room_id and
+                    stay.room_id.group_id and
+                    stay.group_id != stay.room_id.group_id):
+                raise ValidationError(_(
+                    "For stay '%s', the room '%s' is linked to "
+                    "group '%s', but the selected group is '%s'.") % (
+                        stay.display_name,
+                        stay.room_id.display_name,
+                        stay.room_id.group_id.display_name,
+                        stay.group_id.display_name))
 
     @api.onchange('partner_id')
-    def _partner_id_change(self):
+    def partner_id_change(self):
         if self.partner_id:
             self.partner_name = self.partner_id.name
 
     @api.onchange('room_id')
-    def _room_id_change(self):
+    def room_id_change(self):
         if self.room_id:
             self.no_meals = self.room_id.no_meals
+            if self.room_id.group_id:
+                self.group_id = self.room_id.group_id.id
+
+    @api.onchange('group_id')
+    def group_id_change(self):
+        res = {'domain': {'room_id': []}}
+        if self.group_id and not self.room_id:
+            res['domain']['room_id'] = [('group_id', '=', self.group_id.id)]
+        return res
 
 
 class StayRefectory(models.Model):
@@ -123,7 +153,10 @@ class StayRoom(models.Model):
     display_name = fields.Char(
         string='Display Name', compute='_compute_display_name_field',
         readonly=True, store=True)
-    bed_qty = fields.Integer(string='Number of beds', default='1')
+    group_id = fields.Many2one('stay.group', string='Group')
+    user_id = fields.Many2one(
+        related='group_id.user_id', store=True, readonly=True)
+    bed_qty = fields.Integer(string='Number of beds', default=1)
     active = fields.Boolean(default=True)
     no_meals = fields.Boolean(
         string="No Meals",
@@ -141,6 +174,18 @@ class StayRoom(models.Model):
             if room.code:
                 name = u'[%s] %s' % (room.code, name)
             room.display_name = name
+
+
+class StayGroup(models.Model):
+    _name = 'stay.group'
+    _description = 'Stay Group'
+
+    name = fields.Char(string='Group Name', required=True)
+    user_id = fields.Many2one('res.users', string='In Charge')
+
+    _sql_constraints = [(
+        'name_uniq', 'unique(name)',
+        'A group with this name already exists.')]
 
 
 class StayLine(models.Model):
@@ -172,6 +217,10 @@ class StayLine(models.Model):
     refectory_id = fields.Many2one(
         'stay.refectory', string='Refectory', default=_default_refectory)
     room_id = fields.Many2one('stay.room', string='Room', ondelete='restrict')
+    group_id = fields.Many2one(
+        related='room_id.group_id', store=True, readonly=True)
+    user_id = fields.Many2one(
+        related='room_id.group_id.user_id', store=True, readonly=True)
 
     @api.constrains(
         'refectory_id', 'lunch_qty', 'dinner_qty', 'date', 'room_id')
@@ -208,3 +257,12 @@ class StayLine(models.Model):
     def _partner_id_change(self):
         if self.partner_id:
             self.partner_name = self.partner_id.display_name
+
+
+class StayDateLabel(models.Model):
+    _name = 'stay.date.label'
+    _description = 'Stay Date Label'
+    _order = 'date desc'
+
+    date = fields.Date(required=True)
+    name = fields.Char(string='Label')
