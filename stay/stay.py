@@ -59,7 +59,8 @@ class StayStay(models.Model):
         help="The stay lines generated from this stay will not have "
         "lunchs nor dinners by default.")
     calendar_display_name = fields.Char(
-        compute='_compute_calendar_display_name', store=True)
+        compute='_compute_calendar_display_name', store=False)
+    # don't store because contains translation
 
     _sql_constraints = [(
         'name_company_uniq', 'unique(name, company_id)',
