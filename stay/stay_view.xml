@@ -119,9 +119,7 @@
     <field name="model">stay.stay</field>
     <field name="arch"  type="xml">
         <calendar string="Stays" color="room_id" date_start="arrival_date" date_stop="departure_date" mode="month">
-            <field name="partner_name"/>
-            <field name="room_id"/>
-            <field name="guest_qty"/>
+            <field name="calendar_display_name"/>
         </calendar>
     </field>
 </record>
@@ -223,6 +221,7 @@
     <field name="model">stay.room</field>
     <field name="arch"  type="xml">
         <tree string="Rooms">
+            <field name="sequence" widget="handle"/>
             <field name="name"/>
             <field name="code"/>
             <field name="group_id"/>
@@ -278,6 +277,7 @@
     <field name="model">stay.group</field>
     <field name="arch"  type="xml">
         <tree string="Groups">
+            <field name="sequence" widget="handle"/>
             <field name="name"/>
             <field name="user_id"/>
         </tree>
