@@ -14,6 +14,7 @@
     'author': 'Barroux Abbey, Akretion, Odoo Community Association (OCA)',
     'website': 'http://www.barroux.org',
     'depends': ['report', 'mail'],
+    'external_dependencies': {'python': ['xlsxwriter']},
     'data': [
         'security/stay_security.xml',
         'stay_view.xml',
@@ -21,6 +22,7 @@
         'base_config_settings_view.xml',
         'wizard/stay_journal_generate_view.xml',
         'wizard/stay_journal_print_view.xml',
+        'wizard/stay_stay_xlsx_view.xml',
         'security/ir.model.access.csv',
         'report.xml',
         'report/report_stay_journal.xml',

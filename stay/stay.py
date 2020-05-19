@@ -7,7 +7,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 
 
 class StayStay(models.Model):
@@ -75,7 +75,7 @@ class StayStay(models.Model):
     def _check_stay_date(self):
         for stay in self:
             if stay.arrival_date >= stay.departure_date:
-                raise UserError(_(
+                raise ValidationError(_(
                     'Arrival date (%s) must be earlier than '
                     'departure date (%s)')
                     % (stay.arrival_date, stay.departure_date))
@@ -182,6 +182,8 @@ class StayGroup(models.Model):
 
     name = fields.Char(string='Group Name', required=True)
     user_id = fields.Many2one('res.users', string='In Charge')
+    room_ids = fields.One2many(
+        'stay.room', 'group_id', string='Rooms')
 
     _sql_constraints = [(
         'name_uniq', 'unique(name)',
