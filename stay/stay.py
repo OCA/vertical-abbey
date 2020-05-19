@@ -315,3 +315,6 @@ class StayDateLabel(models.Model):
 
     date = fields.Date(required=True)
     name = fields.Char(string='Label')
+
+    _sql_constraints = [(
+        'date_uniq', 'unique(date)', 'This date already exists')]
