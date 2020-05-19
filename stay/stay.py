@@ -58,6 +58,8 @@ class StayStay(models.Model):
         string="No Meals",
         help="The stay lines generated from this stay will not have "
         "lunchs nor dinners by default.")
+    calendar_display_name = fields.Char(
+        compute='_compute_calendar_display_name', store=True)
 
     _sql_constraints = [(
         'name_company_uniq', 'unique(name, company_id)',
@@ -70,6 +72,25 @@ class StayStay(models.Model):
         if vals.get('name', '/') == '/':
             vals['name'] = self.env['ir.sequence'].next_by_code('stay.stay')
         return super(StayStay, self).create(vals)
+
+    @api.depends('partner_name', 'arrival_time', 'departure_time', 'room_id')
+    def _compute_calendar_display_name(self):
+        time2code = {
+            'morning': _('Mo'),
+            'afternoon': _('Af'),
+            'evening': _('Ev'),
+            }
+        for stay in self:
+            if stay.room_id:
+                room = stay.room_id.code or stay.room_id.name
+            else:
+                room = _('No Room')
+            stay.calendar_display_name = u'[%s] %s, %s, %d [%s]' % (
+                time2code[stay.arrival_time],
+                stay.partner_name,
+                room,
+                stay.guest_qty,
+                time2code[stay.departure_time])
 
     @api.constrains('departure_date', 'arrival_date')
     def _check_stay_date(self):
@@ -145,11 +166,12 @@ class StayRefectory(models.Model):
 class StayRoom(models.Model):
     _name = 'stay.room'
     _description = 'Room'
-    _order = 'code, name'
+    _order = 'sequence, code'
     _rec_name = 'display_name'
 
     code = fields.Char(string='Code', size=10, copy=False)
     name = fields.Char(string='Name', required=True, copy=False)
+    sequence = fields.Integer()
     display_name = fields.Char(
         string='Display Name', compute='_compute_display_name_field',
         readonly=True, store=True)
@@ -179,9 +201,11 @@ class StayRoom(models.Model):
 class StayGroup(models.Model):
     _name = 'stay.group'
     _description = 'Stay Group'
+    _order = 'sequence, id'
 
     name = fields.Char(string='Group Name', required=True)
     user_id = fields.Many2one('res.users', string='In Charge')
+    sequence = fields.Integer()
     room_ids = fields.One2many(
         'stay.room', 'group_id', string='Rooms')
 

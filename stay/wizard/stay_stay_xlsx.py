@@ -27,6 +27,8 @@ class StayStayXlsx(models.TransientModel):
         end_date_dt = today_dt + relativedelta(months=6, days=-1)
         groups = self.env['stay.group'].search(
             [('user_id', '=', self.env.user.id)])
+        if not groups:
+            groups = self.env['stay.group'].search([])
         res.update({
             'start_date': today_str,
             'end_date': fields.Date.to_string(end_date_dt),
