@@ -92,18 +92,14 @@ class StayStay(models.Model):
                 stay.guest_qty,
                 time2code[stay.departure_time])
 
-    @api.constrains('departure_date', 'arrival_date')
-    def _check_stay_date(self):
+    @api.constrains('departure_date', 'arrival_date', 'room_id', 'group_id')
+    def _check_stay(self):
         for stay in self:
             if stay.arrival_date >= stay.departure_date:
                 raise ValidationError(_(
                     'Arrival date (%s) must be earlier than '
                     'departure date (%s)')
                     % (stay.arrival_date, stay.departure_date))
-
-    @api.constrains('room_id', 'group_id')
-    def _check_group_room(self):
-        for stay in self:
             if (
                     stay.room_id and
                     stay.room_id.group_id and
@@ -115,6 +111,33 @@ class StayStay(models.Model):
                         stay.room_id.display_name,
                         stay.room_id.group_id.display_name,
                         stay.group_id.display_name))
+            if self.room_id:
+                stay._check_reservation_conflict()
+
+    def _check_reservation_conflict(self):
+        self.ensure_one()
+        assert self.room_id
+        # No conflict IF :
+        # leaves before my arrival (or same day)
+        # OR arrivers after my departure (or same day)
+        # CONTRARY :
+        # leaves after my arrival
+        # AND arrives before my departure
+        conflict_stay = self.search([
+            ('id', '!=', self.id),
+            ('room_id', '=', self.room_id.id),
+            ('departure_date', '>', self.arrival_date),
+            ('arrival_date', '<', self.departure_date),
+            ], limit=1)
+        if conflict_stay:
+            raise ValidationError(_(
+                "This stay conflicts with stay %s of '%s' "
+                "from %s to %s in room %s.") % (
+                    conflict_stay.name,
+                    conflict_stay.partner_name,
+                    conflict_stay.arrival_date,
+                    conflict_stay.departure_date,
+                    conflict_stay.room_id.display_name))
 
     @api.onchange('partner_id')
     def partner_id_change(self):
