@@ -111,10 +111,10 @@ class StayStay(models.Model):
                         stay.room_id.display_name,
                         stay.room_id.group_id.display_name,
                         stay.group_id.display_name))
-            if self.room_id:
-                stay._check_reservation_conflict()
+            if self.room_id and self.room_id.capacity == 1:
+                stay._check_reservation_conflict_single()
 
-    def _check_reservation_conflict(self):
+    def _check_reservation_conflict_single(self):
         self.ensure_one()
         assert self.room_id
         # No conflict IF :

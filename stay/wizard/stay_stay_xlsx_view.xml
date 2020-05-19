@@ -33,7 +33,7 @@
     <field name="target">new</field>
 </record>
 
-<menuitem id="stay_stay_xlsx_menu" sequence="15" action="stay_stay_xlsx_action" parent="stay_sub_menu"/>
+<menuitem id="stay_stay_xlsx_menu" sequence="10" action="stay_stay_xlsx_action" parent="stay_report_menu"/>
 
 
 </odoo>

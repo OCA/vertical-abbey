@@ -135,6 +135,8 @@
 
 <menuitem id="stay_sub_menu" sequence="10" name="Stays" parent="stay_top_menu"/>
 
+<menuitem id="stay_report_menu" sequence="20" name="Reports" parent="stay_top_menu"/>
+
 <menuitem id="stay_menu" action="stay_action" parent="stay_sub_menu" sequence="10"/>
 
 <record id="stay_refectory_form" model="ir.ui.view">
