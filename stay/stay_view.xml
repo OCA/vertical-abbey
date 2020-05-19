@@ -458,7 +458,7 @@
 </record>
 
 <record id="stay_date_label_action" model="ir.actions.act_window">
-    <field name="name">Date Labels</field>
+    <field name="name">Ordo</field>
     <field name="res_model">stay.date.label</field>
     <field name="view_mode">tree,form,calendar</field>
 </record>
