@@ -13,12 +13,12 @@ class ResPartner(models.Model):
 
     @api.depends('stay_ids.partner_id')
     def _compute_stay_count(self):
-        res = self.env['stay.stay'].read_group(
+        rg_res = self.env['stay.stay'].read_group(
             [('partner_id', 'in', self.ids)],
             ['partner_id'], ['partner_id'])
-        for re in res:
-            partner = self.browse(re['partner_id'][0])
-            partner.stay_count = re['partner_id_count']
+        mapped_data = dict([(x['partner_id'][0], x['partner_id_count']) for x in rg_res])
+        for partner in self:
+            partner.stay_count = mapped_data.get(partner.id, 0)
 
     stay_ids = fields.One2many(
         'stay.stay', 'partner_id', string='Stays')
