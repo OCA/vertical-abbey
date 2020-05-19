@@ -23,6 +23,14 @@ class StayJournalPrint(models.TransientModel):
         return today_dt + relativedelta(days=1)
 
     date = fields.Date(string='Date', required=True, default=_default_date)
+    date_label = fields.Char(compute='_compute_date_label', readonly=True)
+
+    @api.depends('date')
+    def _compute_date_label(self):
+        for wiz in self:
+            date_label = False
+            res = self.env['stay.date.label'].search([('date', '=', self.date)], limit=1)
+            wiz.date_label = res and res.name or False
 
     def print_journal(self):
         self.ensure_one()
