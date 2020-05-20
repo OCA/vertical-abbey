@@ -112,7 +112,7 @@ class StayStay(models.Model):
                         stay.room_id.display_name,
                         stay.room_id.group_id.display_name,
                         stay.group_id.display_name))
-            if self.room_id and self.room_id.capacity == 1:
+            if self.room_id and self.room_id.bed_qty == 1:
                 stay._check_reservation_conflict_single()
 
     def _check_reservation_conflict_single(self):
