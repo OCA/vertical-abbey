@@ -80,8 +80,12 @@
             <field name="partner_id"/>
             <field name="group_id"/>
             <field name="room_id"/>
+            <field name="departure_date" string="Arrivals and Departures on" filter_domain="['|', ('arrival_date', '=', self), ('departure_date', '=', self)]"/>
             <separator/>
-            <filter string="My Rooms" domain="[('user_id', '=', uid)]"/>
+            <filter string="My Rooms" name="my_rooms" domain="[('user_id', '=', uid)]"/>
+            <separator/>
+            <filter string="Arrivals/Departures Today" name="in_out_today" domain="['|', ('arrival_date', '=', context_today().strftime('%Y-%m-%d')), ('departure_date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+            <filter string="Arrivals/Departures Tomorrow" name="in_out_tomorrow" domain="['|', ('arrival_date', '=', (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')), ('departure_date', '=', (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
             <separator/>
             <group string="Group By" name="groupby">
                 <filter name="group_groupby" string="Group" context="{'group_by': 'group_id'}"/>
