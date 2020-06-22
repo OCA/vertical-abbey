@@ -97,7 +97,7 @@ class StayStayXlsx(models.TransientModel):
             regular_sunday = workbook.add_format({
                 'font_size': font_size, 'bg_color': sunday_color, 'align': 'left'})
             regular_stay = workbook.add_format({
-                'font_size': font_size, 'align': 'left', 'bg_color': '#4293f5'})
+                'font_size': font_size, 'align': 'left', 'bg_color': '#7eb7fc'})
             i = 0
             sheet.write(i, 0, _('Stays - %s') % self.env.user.company_id.name, title)
             i += 1
