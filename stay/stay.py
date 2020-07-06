@@ -143,7 +143,15 @@ class StayStay(models.Model):
     @api.onchange('partner_id')
     def partner_id_change(self):
         if self.partner_id:
-            self.partner_name = self.partner_id.name
+            partner = self.partner_id
+            partner_name = partner.name
+            if partner.title and not partner.is_company:
+                partner_lg = partner
+                if partner.lang:
+                    partner_lg = partner.with_context(lang=partner.lang)
+                title = partner_lg.title.shortcut or partner_lg.title.name
+                partner_name = u'%s %s' % (title, partner_name)
+            self.partner_name = partner_name
 
     @api.onchange('room_id')
     def room_id_change(self):
