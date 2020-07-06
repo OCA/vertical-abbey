@@ -16,7 +16,8 @@ class ResPartner(models.Model):
         rg_res = self.env['stay.stay'].read_group(
             [('partner_id', 'in', self.ids)],
             ['partner_id'], ['partner_id'])
-        mapped_data = dict([(x['partner_id'][0], x['partner_id_count']) for x in rg_res])
+        mapped_data = dict(
+            [(x['partner_id'][0], x['partner_id_count']) for x in rg_res])
         for partner in self:
             partner.stay_count = mapped_data.get(partner.id, 0)
 
