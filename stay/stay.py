@@ -30,14 +30,16 @@ class StayStay(models.Model):
     guest_qty = fields.Integer(
         string='Guest Quantity', default=1, track_visibility='onchange')
     arrival_date = fields.Date(
-        string='Arrival Date', required=True, track_visibility='onchange')
+        string='Arrival Date', required=True, track_visibility='onchange',
+        index=True)
     arrival_time = fields.Selection([
         ('morning', 'Morning'),
         ('afternoon', 'Afternoon'),
         ('evening', 'Evening'),
         ], string='Arrival Time', required=True, track_visibility='onchange')
     departure_date = fields.Date(
-        string='Departure Date', required=True, track_visibility='onchange')
+        string='Departure Date', required=True, track_visibility='onchange',
+        index=True)
     departure_time = fields.Selection([
         ('morning', 'Morning'),
         ('afternoon', 'Afternoon'),
@@ -45,7 +47,7 @@ class StayStay(models.Model):
         ], string='Departure Time', required=True, track_visibility='onchange')
     room_id = fields.Many2one(
         'stay.room', string='Room', track_visibility='onchange', copy=False,
-        ondelete='restrict')
+        ondelete='restrict', index=True)
     # Here, group_id is not a related of room, because we want to be able
     # to first set the group and later set the room
     group_id = fields.Many2one(
@@ -264,7 +266,8 @@ class StayLine(models.Model):
         default=lambda self:
         self.env['res.company']._company_default_get('stay.line'))
     date = fields.Date(
-        string='Date', required=True, default=fields.Date.context_today)
+        string='Date', required=True, default=fields.Date.context_today,
+        index=True)
     lunch_qty = fields.Integer(string='Lunches')
     dinner_qty = fields.Integer(string='Dinners')
     bed_night_qty = fields.Integer(string='Bed Nights')
@@ -274,7 +277,9 @@ class StayLine(models.Model):
     partner_name = fields.Char('Guest Name', required=True)
     refectory_id = fields.Many2one(
         'stay.refectory', string='Refectory', default=_default_refectory)
-    room_id = fields.Many2one('stay.room', string='Room', ondelete='restrict')
+    room_id = fields.Many2one(
+        'stay.room', string='Room', ondelete='restrict',
+        index=True)
     group_id = fields.Many2one(
         related='room_id.group_id', store=True, readonly=True)
     user_id = fields.Many2one(
@@ -322,7 +327,7 @@ class StayDateLabel(models.Model):
     _description = 'Stay Date Label'
     _order = 'date desc'
 
-    date = fields.Date(required=True)
+    date = fields.Date(required=True, index=True)
     name = fields.Char(string='Label')
 
     _sql_constraints = [(
