@@ -104,6 +104,7 @@
     <field name="model">stay.stay</field>
     <field name="arch"  type="xml">
         <graph string="Stays">
+            <field name="arrival_date" interval="month"/>
             <field name="guest_qty" type="measure"/>
         </graph>
     </field>
@@ -385,6 +386,7 @@
     <field name="model">stay.line</field>
     <field name="arch"  type="xml">
         <graph string="Stay Lines">
+            <field name="date" interval="month"/>
             <field name="lunch_qty" type="measure"/>
             <field name="dinner_qty" type="measure"/>
             <field name="bed_night_qty" type="measure"/>
