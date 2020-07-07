@@ -8,6 +8,7 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from dateutil.relativedelta import relativedelta
 
 
 class StayStay(models.Model):
@@ -64,9 +65,16 @@ class StayStay(models.Model):
         compute='_compute_calendar_display_name', store=False)
     # don't store because contains translation
 
-    _sql_constraints = [(
-        'name_company_uniq', 'unique(name, company_id)',
-        'A stay with this number already exists for this company.')]
+    _sql_constraints = [
+        (
+            'name_company_uniq',
+            'unique(name, company_id)',
+            'A stay with this number already exists for this company.'),
+        (
+            'guest_qty_positive',
+            'CHECK(guest_qty > 0)',
+            'The guest quantity must be positive.'),
+        ]
 
     @api.model
     def create(self, vals=None):
@@ -95,7 +103,9 @@ class StayStay(models.Model):
                 stay.guest_qty,
                 time2code[stay.departure_time])
 
-    @api.constrains('departure_date', 'arrival_date', 'room_id', 'group_id')
+    @api.constrains(
+        'departure_date', 'arrival_date', 'room_id', 'group_id',
+        'guest_qty')
     def _check_stay(self):
         for stay in self:
             if stay.arrival_date >= stay.departure_date:
@@ -103,19 +113,29 @@ class StayStay(models.Model):
                     'Arrival date (%s) must be earlier than '
                     'departure date (%s)')
                     % (stay.arrival_date, stay.departure_date))
-            if (
-                    stay.room_id and
-                    stay.room_id.group_id and
-                    stay.group_id != stay.room_id.group_id):
-                raise ValidationError(_(
-                    "For stay '%s', the room '%s' is linked to "
-                    "group '%s', but the selected group is '%s'.") % (
-                        stay.display_name,
-                        stay.room_id.display_name,
-                        stay.room_id.group_id.display_name,
-                        stay.group_id.display_name))
-            if self.room_id and self.room_id.bed_qty == 1:
-                stay._check_reservation_conflict_single()
+            if stay.room_id:
+                if (
+                        stay.room_id.group_id and
+                        stay.group_id != stay.room_id.group_id):
+                    raise ValidationError(_(
+                        "For stay '%s', the room '%s' is linked to "
+                        "group '%s', but the selected group is '%s'.") % (
+                            stay.display_name,
+                            stay.room_id.display_name,
+                            stay.room_id.group_id.display_name,
+                            stay.group_id.display_name))
+                if stay.guest_qty > stay.room_id.bed_qty:
+                    raise ValidationError(_(
+                        "Stay '%s' has %d guest(s), but the selected room "
+                        "'%s' only has %d bed(s).") % (
+                            stay.display_name,
+                            stay.guest_qty,
+                            stay.room_id.display_name,
+                            stay.room_id.bed_qty))
+                if self.room_id.bed_qty > 1 and self.room_id.allow_simultaneous:
+                    stay._check_reservation_conflict_multi()
+                else:
+                    stay._check_reservation_conflict_single()
 
     def _check_reservation_conflict_single(self):
         self.ensure_one()
@@ -141,6 +161,34 @@ class StayStay(models.Model):
                     conflict_stay.arrival_date,
                     conflict_stay.departure_date,
                     conflict_stay.room_id.display_name))
+
+    def _check_reservation_conflict_multi(self):
+        self.ensure_one()
+        assert self.room_id
+        guest_qty = self.guest_qty
+        bed_qty = self.room_id.bed_qty
+        assert bed_qty > 1
+        assert guest_qty <= bed_qty
+        assert self.arrival_date < self.departure_date
+        date = fields.Date.from_string(self.arrival_date)
+        departure_date = fields.Date.from_string(self.departure_date)
+        while date < departure_date:
+            date_str = fields.Date.to_string(date)
+            rg_res = self.read_group(
+                [
+                    ('room_id', '=', self.room_id.id),
+                    ('arrival_date', '<=', date_str),
+                    ('departure_date', '>', date_str)],
+                ['guest_qty'], [])
+            # The result includes the current stay
+            qty = rg_res and rg_res[0]['guest_qty'] or 0
+            if qty > bed_qty:
+                raise ValidationError(_(
+                    "With stay '%s' (%d guests), we would have a total of "
+                    "%d guest on %s whereas room '%s' only has %d beds.") % (
+                        self.display_name, guest_qty, qty, date_str,
+                        self.room_id.display_name, bed_qty))
+            date += relativedelta(days=1)
 
     @api.onchange('partner_id')
     def partner_id_change(self):
@@ -213,15 +261,27 @@ class StayRoom(models.Model):
     user_id = fields.Many2one(
         related='group_id.user_id', store=True, readonly=True)
     bed_qty = fields.Integer(string='Number of beds', default=1)
+    allow_simultaneous = fields.Boolean(
+        string='Allow simultaneous',
+        help="This option applies for rooms where bed quantity > 1. You "
+        "should enable this option if you allow to have several stays "
+        "at the same time in the room.")
     active = fields.Boolean(default=True)
     no_meals = fields.Boolean(
         string="No Meals",
         help="If active, the stays linked to this room will have the "
         "same option active by default.")
 
-    _sql_constraints = [(
-        'code_uniq', 'unique(code)',
-        'A room with this code already exists.')]
+    _sql_constraints = [
+        (
+            'code_uniq',
+            'unique(code)',
+            'A room with this code already exists.'),
+        (
+            'bed_qty_positive',
+            'CHECK(bed_qty > 0)',
+            'The number of beds must be positive.'),
+        ]
 
     @api.depends('name', 'code')
     def _compute_display_name_field(self):
