@@ -219,6 +219,7 @@
                 <field name="code"/>
                 <field name="group_id"/>
                 <field name="bed_qty"/>
+                <field name="allow_simultaneous" attrs="{'invisible': [('bed_qty', '=', 1)]}"/>
                 <field name="no_meals"/>
             </group>
         </form>
