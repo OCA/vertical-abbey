@@ -87,6 +87,8 @@
             <filter string="Arrivals/Departures Today" name="in_out_today" domain="['|', ('arrival_date', '=', context_today().strftime('%Y-%m-%d')), ('departure_date', '=', context_today().strftime('%Y-%m-%d'))]"/>
             <filter string="Arrivals/Departures Tomorrow" name="in_out_tomorrow" domain="['|', ('arrival_date', '=', (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')), ('departure_date', '=', (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
             <separator/>
+            <filter string="Last 12 months" name="last12months" domain="[('arrival_date', '&gt;=', (context_today() + relativedelta(day=1, months=-12)).strftime('%Y-%m-%d'))]"/>
+            <separator/>
             <group string="Group By" name="groupby">
                 <filter name="group_groupby" string="Group" context="{'group_by': 'group_id'}"/>
                 <filter name="user_groupby" string="In Charge" context="{'group_by': 'user_id'}"/>
@@ -112,7 +114,7 @@
     <field name="model">stay.stay</field>
     <field name="arch"  type="xml">
         <pivot string="Stays" type="pivot">
-            <field name="arrival_date" interval="month" type="col"/>
+            <field name="arrival_date" interval="month" type="row"/>
             <field name="guest_qty" type="measure"/>
         </pivot>
     </field>
@@ -131,7 +133,7 @@
 <record id="stay_action" model="ir.actions.act_window">
     <field name="name">Stays</field>
     <field name="res_model">stay.stay</field>
-    <field name="view_mode">tree,form,calendar,pivot,graph</field>
+    <field name="view_mode">tree,form,calendar,graph,pivot</field>
 </record>
 
 
@@ -365,6 +367,8 @@
             <separator/>
             <filter string="My Rooms" domain="[('user_id', '=', uid)]"/>
             <separator/>
+            <filter string="Last 12 months" name="last12months" domain="[('date', '&gt;=', (context_today() + relativedelta(day=1, months=-12)).strftime('%Y-%m-%d'))]"/>
+            <separator/>
             <group string="Group By" name="groupby">
                 <filter name="group_groupby" string="Group" context="{'group_by': 'group_id'}"/>
                 <filter name="user_groupby" string="In Charge" context="{'group_by': 'user_id'}"/>
@@ -393,6 +397,7 @@
     <field name="model">stay.line</field>
     <field name="arch"  type="xml">
         <pivot string="Stay Lines" type="pivot">
+            <field name="date" interval="month" type="row"/>
             <field name="lunch_qty" type="measure"/>
             <field name="dinner_qty" type="measure"/>
             <field name="bed_night_qty" type="measure"/>
