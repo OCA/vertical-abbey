@@ -27,6 +27,8 @@
         'report.xml',
         'report/report_stay_journal.xml',
         'partner_view.xml',
+        'data/cron.xml',
+        'data/mail_template.xml',
         ],
     'demo': ['stay_demo.xml'],
     'application': True,
