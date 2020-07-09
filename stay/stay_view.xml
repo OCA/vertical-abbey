@@ -277,6 +277,7 @@
             <group name="main">
                 <field name="name"/>
                 <field name="user_id"/>
+                <field name="notify_user_ids" widget="many2many_tags"/>
             </group>
         </form>
     </field>

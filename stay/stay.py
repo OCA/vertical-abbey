@@ -9,6 +9,9 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from dateutil.relativedelta import relativedelta
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class StayStay(models.Model):
@@ -302,10 +305,49 @@ class StayGroup(models.Model):
     sequence = fields.Integer()
     room_ids = fields.One2many(
         'stay.room', 'group_id', string='Rooms')
+    notify_user_ids = fields.Many2many(
+        'res.users', string='Users Notified by E-mail')
 
     _sql_constraints = [(
         'name_uniq', 'unique(name)',
         'A group with this name already exists.')]
+
+    @api.model
+    def _stay_notify(self):
+        logger.info('Start stay arrival notify cron')
+        today = fields.Date.context_today(self)
+        sso = self.env['stay.stay']
+        fields_get_time = dict(sso.fields_get(
+            'arrival_time', 'selection')['arrival_time']['selection'])
+        for group in self.search([('notify_user_ids', '!=', False)]):
+            stays = sso.search([
+                ('arrival_date', '=', today),
+                ('group_id', '=', group.id),
+                ], order='partner_name')
+            if stays:
+                stay_list = []
+                for stay in stays:
+                    stay_list.append({
+                        'partner_name': stay.partner_name,
+                        'guest_qty': stay.guest_qty,
+                        'arrival_time': fields_get_time[stay.arrival_time],
+                        'room': stay.room_id and stay.room_id.display_name or '',
+                        'departure_date': stay.departure_date,
+                        'departure_time': fields_get_time[stay.departure_time],
+                        })
+                email_to_list = ','.join(
+                    [u.email for u in group.notify_user_ids if u.email])
+                email_from = stays[0].company_id.email or self.env.user.email
+                self.env.ref('stay.stay_notify').with_context(
+                    stay_list=stay_list, date=today,
+                    email_to_list=email_to_list,
+                    email_from=email_from,
+                    ).send_mail(group.id)
+                logger.info(
+                    'Stay notification mail sent for group %s', group.display_name)
+            else:
+                logger.info('No arrivals on %s for group %s', today, group.display_name)
+        logger.info('End stay arrival notify cron')
 
 
 class StayLine(models.Model):
