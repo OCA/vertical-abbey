@@ -16,6 +16,7 @@
         <form string="Print Stay Journal">
             <group name="main">
                 <field name="date"/>
+                <field name="date_label"/>
             </group>
             <footer>
                 <button type="object" name="print_journal" string="Print Journal" class="oe_highlight"/>
@@ -32,7 +33,7 @@
     <field name="target">new</field>
 </record>
 
-<menuitem id="stay_journal_print_menu" sequence="40" action="stay_journal_print_action" parent="stay_sub_menu"/>
+<menuitem id="stay_journal_print_menu" sequence="20" action="stay_journal_print_action" parent="stay_report_menu"/>
 
 
 </odoo>
