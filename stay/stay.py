@@ -55,7 +55,8 @@ class StayStay(models.Model):
     # Here, group_id is not a related of room, because we want to be able
     # to first set the group and later set the room
     group_id = fields.Many2one(
-        'stay.group', string='Group', track_visibility='onchange', copy=False)
+        'stay.group', string='Group', track_visibility='onchange', copy=False,
+        ondelete='restrict')
     user_id = fields.Many2one(
         related='group_id.user_id', store=True, readonly=True)
     line_ids = fields.One2many(
