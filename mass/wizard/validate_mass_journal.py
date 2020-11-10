@@ -29,17 +29,19 @@ class MassJournalValidate(models.TransientModel):
     def _prepare_mass_validation_move(self, company, date, lines):
         movelines = []
         stock_aml = {}  # key = (account_id, analytic_acc_id) ; value = amount
+        comp_cur = company.currency_id
         for line in lines:
-            stock_account_id = line.request_id.stock_account_id.id or False
-            stock_analytic_account_id = \
-                line.request_id.analytic_account_id.id or False
+            if not comp_cur.is_zero(line.unit_offering):
+                stock_account_id = line.request_id.stock_account_id.id or False
+                stock_analytic_account_id = \
+                    line.request_id.analytic_account_id.id or False
 
-            key = (stock_account_id, stock_analytic_account_id)
-            if stock_account_id:
-                if key in stock_aml:
-                    stock_aml[key] += line.unit_offering
-                else:
-                    stock_aml[key] = line.unit_offering
+                key = (stock_account_id, stock_analytic_account_id)
+                if stock_account_id:
+                    if key in stock_aml:
+                        stock_aml[key] += line.unit_offering
+                    else:
+                        stock_aml[key] = line.unit_offering
 
         income_total = 0.0
         name = _('Masses celebrated on %s') % date
@@ -53,6 +55,9 @@ class MassJournalValidate(models.TransientModel):
                 'analytic_account_id': stock_analytic_account_id,
                 }))
             income_total += stock_amount
+
+        if not movelines:
+            return False
 
         # counter-part
         income_account_id = company.mass_validation_account_id.id
@@ -82,7 +87,7 @@ class MassJournalValidate(models.TransientModel):
         # Search draft mass lines on the date of the wizard
         lines = self.env['mass.line'].search(
             [('date', '=', date), ('company_id', '=', company.id)])
-        move_id = False
+        vals = {'state': 'done'}
         if company.mass_validation_account_id:
             # Loop on result to compute the total amount
             if not company.mass_validation_journal_id:
@@ -92,13 +97,14 @@ class MassJournalValidate(models.TransientModel):
             # Create account move
             move_vals = self._prepare_mass_validation_move(
                 company, date, lines)
-            move = self.env['account.move'].create(move_vals)
-            move_id = move.id
-            if company.mass_post_move:
-                move.post()
+            if move_vals:
+                move = self.env['account.move'].create(move_vals)
+                vals['move_id'] = move.id
+                if company.mass_post_move:
+                    move.post()
 
         # Update mass lines
-        lines.write({'state': 'done', 'move_id': move_id})
+        lines.write(vals)
 
         action = self.env['ir.actions.act_window'].for_xml_id(
             'mass', 'mass_line_action')
