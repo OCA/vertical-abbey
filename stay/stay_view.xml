@@ -86,6 +86,7 @@
             <separator/>
             <filter string="Arrivals/Departures Today" name="in_out_today" domain="['|', ('arrival_date', '=', context_today().strftime('%Y-%m-%d')), ('departure_date', '=', context_today().strftime('%Y-%m-%d'))]"/>
             <filter string="Arrivals/Departures Tomorrow" name="in_out_tomorrow" domain="['|', ('arrival_date', '=', (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')), ('departure_date', '=', (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+            <filter string="Current and Future Stays" name="current_and_future" domain="[('departure_date', '&gt;=', (context_today().strftime('%Y-%m-%d')))]"/>
             <separator/>
             <filter string="Last 12 months" name="last12months" domain="[('arrival_date', '&gt;=', (context_today() + relativedelta(day=1, months=-12)).strftime('%Y-%m-%d'))]"/>
             <separator/>
@@ -131,10 +132,26 @@
     </field>
 </record>
 
+<record id="stay_timeline" model="ir.ui.view">
+    <field name="name">stay.timeline</field>
+    <field name="model">stay.stay</field>
+    <field name="arch" type="xml">
+        <timeline date_start="arrival_date"
+            date_stop="departure_date"
+            string="Stays"
+            default_group_by="group_id"
+            event_open_popup="true"
+            mode="week"
+            zoomKey="ctrlKey">
+        </timeline>
+    </field>
+</record>
+
 <record id="stay_action" model="ir.actions.act_window">
     <field name="name">Stays</field>
     <field name="res_model">stay.stay</field>
-    <field name="view_mode">tree,form,calendar,graph,pivot</field>
+    <field name="view_mode">tree,form,calendar,graph,pivot,timeline</field>
+    <field name="context">{'search_default_current_and_future': True, 'stay_name_get_partner_name_qty_room': True}</field>
 </record>
 
 
@@ -371,6 +388,7 @@
             <filter string="My Rooms" domain="[('user_id', '=', uid)]"/>
             <separator/>
             <filter string="Last 12 months" name="last12months" domain="[('date', '&gt;=', (context_today() + relativedelta(day=1, months=-12)).strftime('%Y-%m-%d'))]"/>
+            <filter string="Current and Future Lines" name="current_and_future" domain="[('date', '&gt;=', (context_today().strftime('%Y-%m-%d')))]"/>
             <separator/>
             <group string="Group By" name="groupby">
                 <filter name="group_groupby" string="Group" context="{'group_by': 'group_id'}"/>
@@ -414,7 +432,7 @@
     <field name="name">Stay Lines</field>
     <field name="res_model">stay.line</field>
     <field name="view_mode">tree,form,graph,pivot</field>
-    <field name="context">{'stay_line_main_view': True}</field>
+    <field name="context">{'stay_line_main_view': True, 'search_default_current_and_future': True}</field>
 </record>
 
 <menuitem id="stay_line_menu" action="stay_line_action" parent="stay_sub_menu" sequence="20"/>

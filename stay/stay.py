@@ -194,6 +194,27 @@ class StayStay(models.Model):
                         self.room_id.display_name, bed_qty))
             date += relativedelta(days=1)
 
+    @api.depends('partner_name', 'name', 'room_id')
+    def name_get(self):
+        res = []
+        for stay in self:
+            if self._context.get('stay_name_get_partner_name'):
+                name = stay.partner_name
+            elif self._context.get('stay_name_get_partner_name_qty'):
+                name = stay.partner_name
+                if stay.guest_qty > 1:
+                    name += u' (%d)' % stay.guest_qty
+            elif self._context.get('stay_name_get_partner_name_qty_room'):
+                name = stay.partner_name
+                if stay.guest_qty > 1:
+                    name += u' (%d)' % stay.guest_qty
+                if stay.room_id:
+                    name += u' [%s]' % stay.room_id.code or stay.room_id.name
+            else:
+                name = stay.name
+            res.append((stay.id, name))
+        return res
+
     @api.onchange('partner_id')
     def partner_id_change(self):
         if self.partner_id:
