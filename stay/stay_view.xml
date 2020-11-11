@@ -139,9 +139,10 @@
         <timeline date_start="arrival_date"
             date_stop="departure_date"
             string="Stays"
-            default_group_by="group_id"
+            default_group_by="room_id"
             event_open_popup="true"
             mode="week"
+            colors="#ec7063:group_id == 1;#2ecb71:group_id == 2;#f34242:group_id == 3"
             zoomKey="ctrlKey">
         </timeline>
     </field>
@@ -151,7 +152,7 @@
     <field name="name">Stays</field>
     <field name="res_model">stay.stay</field>
     <field name="view_mode">tree,form,calendar,graph,pivot,timeline</field>
-    <field name="context">{'search_default_current_and_future': True, 'stay_name_get_partner_name_qty_room': True}</field>
+    <field name="context">{'search_default_current_and_future': True, 'stay_name_get_partner_name_qty': True}</field>
 </record>
 
 
