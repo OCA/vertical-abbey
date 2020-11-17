@@ -13,7 +13,7 @@
     'summary': 'Simple management of stays and meals',
     'author': 'Barroux Abbey, Akretion, Odoo Community Association (OCA)',
     'website': 'http://www.barroux.org',
-    'depends': ['report', 'mail'],
+    'depends': ['report', 'mail', 'web_timeline'],
     'external_dependencies': {'python': ['xlsxwriter']},
     'data': [
         'security/stay_security.xml',
