@@ -24,57 +24,7 @@ class StayJournalGenerate(models.TransientModel):
 
     @api.model
     def _prepare_stay_line(self, stay, date):
-        stay_vals = {}
-        eating_map = {
-            'morning': {
-                'arrival': {'lunch_multi': 1, 'dinner_multi': 1},
-                'departure': {'lunch_multi': 0, 'dinner_multi': 0}
-                },
-            'afternoon': {
-                'arrival': {'lunch_multi': 0, 'dinner_multi': 1},
-                'departure': {'lunch_multi': 1, 'dinner_multi': 0}
-                },
-            'evening': {
-                'arrival': {'lunch_multi': 0, 'dinner_multi': 0},
-                'departure': {'lunch_multi': 1, 'dinner_multi': 1}
-                },
-            }
-
-        if date == stay.arrival_date:
-            stay_vals = {
-                'lunch_qty':
-                stay.guest_qty * eating_map[stay.arrival_time]
-                ['arrival']['lunch_multi'],
-                'dinner_qty':
-                stay.guest_qty * eating_map[stay.arrival_time]
-                ['arrival']['dinner_multi'],
-                'bed_night_qty': stay.guest_qty,
-                }
-        elif date == stay.departure_date:
-            if stay.departure_time == 'morning':
-                return {}
-            stay_vals = {
-                'lunch_qty':
-                stay.guest_qty * eating_map[stay.departure_time]
-                ['departure']['lunch_multi'],
-                'dinner_qty':
-                stay.guest_qty * eating_map[stay.departure_time]
-                ['departure']['dinner_multi'],
-                'bed_night_qty': 0,
-                }
-        else:
-            stay_vals = {
-                'lunch_qty': stay.guest_qty,
-                'dinner_qty': stay.guest_qty,
-                'bed_night_qty': stay.guest_qty,
-                }
-        if not stay.company_id.default_refectory_id:
-            msg = _("Missing default refectory on the company '%s'.") % (
-                stay.company_id.name)
-            action = self.env.ref('base.action_res_company_form')
-            raise RedirectWarning(
-                msg, action.id, 'Go to the Company')
-        stay_vals.update({
+        vals = {
             'date': date,
             'stay_id': stay.id,
             'partner_id': stay.partner_id.id,
@@ -82,11 +32,50 @@ class StayJournalGenerate(models.TransientModel):
             'refectory_id': stay.company_id.default_refectory_id.id,
             'room_id': stay.room_id.id,
             'company_id': stay.company_id.id,
-            })
+            'lunch_qty': 0,
+            'dinner_qty': 0,
+            'bed_night_qty': 0,
+            }
+        if date == stay.arrival_date and date == stay.departure_date:
+            if stay.arrival_time == 'morning':
+                # then departure_time is afternoon or evening
+                vals['lunch_qty'] = stay.guest_qty
+                if stay.departure_time == 'evening':
+                    vals['dinner_qty'] = stay.guest_qty
+            elif stay.arrival_time == 'afternoon':
+                # then departure_time is evening
+                vals['dinner_qty'] = stay.guest_qty
+        elif date == stay.arrival_date:
+            vals['bed_night_qty'] = stay.guest_qty
+            if stay.arrival_time == 'morning':
+                vals['lunch_qty'] = stay.guest_qty
+                vals['dinner_qty'] = stay.guest_qty
+            elif stay.arrival_time == 'afternoon':
+                vals['dinner_qty'] = stay.guest_qty
+        elif date == stay.departure_date:
+            if stay.departure_time == 'morning':
+                return {}
+            elif stay.departure_time == 'afternoon':
+                vals['lunch_qty'] = stay.guest_qty
+            elif stay.departure_time == 'evening':
+                vals['lunch_qty'] = stay.guest_qty
+                vals['dinner_qty'] = stay.guest_qty
+        else:
+            vals.update({
+                'lunch_qty': stay.guest_qty,
+                'dinner_qty': stay.guest_qty,
+                'bed_night_qty': stay.guest_qty,
+                })
+        if not stay.company_id.default_refectory_id:
+            msg = _("Missing default refectory on the company '%s'.") % (
+                stay.company_id.name)
+            action = self.env.ref('base.action_res_company_form')
+            raise RedirectWarning(
+                msg, action.id, 'Go to the Company')
         if stay.no_meals:
-            stay_vals.update(
-                {'lunch_qty': 0, 'dinner_qty': 0, 'refectory_id': False})
-        return stay_vals
+            vals.update({
+                'lunch_qty': 0, 'dinner_qty': 0, 'refectory_id': False})
+        return vals
 
     def generate(self):
         self.ensure_one()
