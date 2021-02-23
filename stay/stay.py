@@ -6,12 +6,25 @@
 # @author: Brother Irénée
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api, SUPERUSER_ID, _
 from odoo.exceptions import ValidationError
+from datetime import datetime
+import pytz
 from dateutil.relativedelta import relativedelta
 import logging
 
 logger = logging.getLogger(__name__)
+
+TIMEDICT = {
+    'morning': '09:00',
+    'afternoon': '15:00',
+    'evening': '20:00',
+    }
+TIME2CODE = {
+    'morning': _('Mo'),
+    'afternoon': _('Af'),
+    'evening': _('Ev'),
+    }
 
 
 class StayStay(models.Model):
@@ -24,8 +37,7 @@ class StayStay(models.Model):
         string='Stay Number', default='/', copy=False)
     company_id = fields.Many2one(
         'res.company', string='Company', required=True,
-        default=lambda self: self.env['res.company']._company_default_get(
-            'stay.stay'))
+        default=lambda self: self.env['res.company']._company_default_get())
     partner_id = fields.Many2one(
         'res.partner', string='Guest', ondelete='restrict',
         help="If guest is anonymous, leave this field empty.")
@@ -41,6 +53,9 @@ class StayStay(models.Model):
         ('afternoon', 'Afternoon'),
         ('evening', 'Evening'),
         ], string='Arrival Time', required=True, track_visibility='onchange')
+    arrival_datetime = fields.Datetime(
+        compute='_compute_arrival_datetime', store=True, readonly=True,
+        string='Arrival Date and Time')
     departure_date = fields.Date(
         string='Departure Date', required=True, track_visibility='onchange',
         index=True)
@@ -49,6 +64,9 @@ class StayStay(models.Model):
         ('afternoon', 'Afternoon'),
         ('evening', 'Evening'),
         ], string='Departure Time', required=True, track_visibility='onchange')
+    departure_datetime = fields.Datetime(
+        compute='_compute_departure_datetime', store=True, readonly=True,
+        string='Departure Date and Time')
     room_id = fields.Many2one(
         'stay.room', string='Room', track_visibility='onchange', copy=False,
         ondelete='restrict', index=True)
@@ -57,6 +75,11 @@ class StayStay(models.Model):
     group_id = fields.Many2one(
         'stay.group', string='Group', track_visibility='onchange', copy=False,
         ondelete='restrict')
+    group_id_integer = fields.Integer(related='group_id.id', readonly=True)
+    # The field group_id_integer is used for colors in timeline view
+    # to workaround the bug https://github.com/OCA/web/issues/1446
+    # in v12+, if this PR is merged https://github.com/OCA/web/issues/1446
+    # the we could use color_field
     user_id = fields.Many2one(
         related='group_id.user_id', store=True, readonly=True)
     line_ids = fields.One2many(
@@ -88,35 +111,86 @@ class StayStay(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('stay.stay')
         return super(StayStay, self).create(vals)
 
+    @api.model
+    def _convert_to_datetime_naive_utc(self, date_str, time_sel):
+        # Convert from local time to datetime naive UTC
+        datetime_str = '%s %s' % (date_str, TIMEDICT[time_sel])
+        datetime_naive = datetime.strptime(datetime_str, '%Y-%m-%d %H:%M')
+        admin_user = self.env['res.users'].browse(SUPERUSER_ID)
+        if admin_user.tz:
+            logger.debug(
+                'The timezone of admin user (ID %d) is %s',
+                SUPERUSER_ID, admin_user.tz)
+            admin_tz = pytz.timezone(admin_user.tz)
+        else:
+            logger.warning(
+                'The timezone of admin user (ID %d) is empty!', SUPERUSER_ID)
+            admin_tz = pytz.utc
+        datetime_aware_admin_tz = admin_tz.localize(datetime_naive)
+        datetime_aware_utc = datetime_aware_admin_tz.astimezone(pytz.utc)
+        datetime_naive_utc = datetime_aware_utc.replace(tzinfo=None)
+        return datetime_naive_utc
+
+    @api.depends('arrival_date', 'arrival_time')
+    def _compute_arrival_datetime(self):
+        for stay in self:
+            datetime_naive_utc = False
+            if stay.arrival_date and stay.arrival_time:
+                datetime_naive_utc = self._convert_to_datetime_naive_utc(
+                    stay.arrival_date, stay.arrival_time)
+            stay.arrival_datetime = datetime_naive_utc
+
+    @api.depends('departure_date', 'departure_time')
+    def _compute_departure_datetime(self):
+        for stay in self:
+            datetime_naive_utc = False
+            if stay.departure_date and stay.departure_time:
+                datetime_naive_utc = self._convert_to_datetime_naive_utc(
+                    stay.departure_date, stay.departure_time)
+            stay.departure_datetime = datetime_naive_utc
+
     @api.depends('partner_name', 'arrival_time', 'departure_time', 'room_id')
     def _compute_calendar_display_name(self):
-        time2code = {
-            'morning': _('Mo'),
-            'afternoon': _('Af'),
-            'evening': _('Ev'),
-            }
         for stay in self:
             if stay.room_id:
                 room = stay.room_id.code or stay.room_id.name
             else:
                 room = _('No Room')
             stay.calendar_display_name = u'[%s] %s, %s, %d [%s]' % (
-                time2code[stay.arrival_time],
+                TIME2CODE[stay.arrival_time],
                 stay.partner_name,
                 room,
                 stay.guest_qty,
-                time2code[stay.departure_time])
+                TIME2CODE[stay.departure_time])
 
     @api.constrains(
-        'departure_date', 'arrival_date', 'room_id', 'group_id',
-        'guest_qty')
+        'departure_date', 'departure_time', 'arrival_date', 'arrival_time',
+        'room_id', 'group_id', 'guest_qty')
     def _check_stay(self):
         for stay in self:
-            if stay.arrival_date >= stay.departure_date:
+            if stay.arrival_date > stay.departure_date:
                 raise ValidationError(_(
-                    'Arrival date (%s) must be earlier than '
-                    'departure date (%s)')
+                    'Arrival date (%s) cannot be after '
+                    'departure date (%s)!')
                     % (stay.arrival_date, stay.departure_date))
+            if stay.arrival_date == stay.departure_date:
+                if stay.departure_time == 'morning':
+                    raise ValidationError(_(
+                        "For a stay without night, the departure time "
+                        "can only be afternoon or evening."))
+                elif (
+                        stay.departure_time == 'afternoon' and
+                        stay.arrival_time != 'morning'):
+                    raise ValidationError(_(
+                        "For a stay without night, when the departure time "
+                        "is afternoon, the arrival time must be morning."))
+                elif (
+                        stay.departure_time == 'evening' and
+                        stay.arrival_time not in ('morning', 'afternoon')):
+                    raise ValidationError(_(
+                        "For a stay without night, when the departure time "
+                        "is evening, the arrival time must be morning "
+                        "or afternoon."))
             if stay.room_id:
                 if (
                         stay.room_id.group_id and
@@ -153,17 +227,19 @@ class StayStay(models.Model):
         conflict_stay = self.search([
             ('id', '!=', self.id),
             ('room_id', '=', self.room_id.id),
-            ('departure_date', '>', self.arrival_date),
-            ('arrival_date', '<', self.departure_date),
+            ('departure_datetime', '>=', self.arrival_datetime),
+            ('arrival_datetime', '<=', self.departure_datetime),
             ], limit=1)
         if conflict_stay:
             raise ValidationError(_(
                 "This stay conflicts with stay %s of '%s' "
-                "from %s to %s in room %s.") % (
+                "from %s %s to %s %s in room %s.") % (
                     conflict_stay.name,
                     conflict_stay.partner_name,
                     conflict_stay.arrival_date,
+                    conflict_stay.arrival_time,
                     conflict_stay.departure_date,
+                    conflict_stay.departure_time,
                     conflict_stay.room_id.display_name))
 
     def _check_reservation_conflict_multi(self):
@@ -380,15 +456,14 @@ class StayLine(models.Model):
 
     @api.model
     def _default_refectory(self):
-        company = self.env['res.company']._company_default_get(
-            'stay.line')
+        company = self.env['res.company']._company_default_get()
         return company.default_refectory_id
 
     stay_id = fields.Many2one('stay.stay', string='Stay')
     company_id = fields.Many2one(
         'res.company', string='Company', required=True,
         default=lambda self:
-        self.env['res.company']._company_default_get('stay.line'))
+        self.env['res.company']._company_default_get())
     date = fields.Date(
         string='Date', required=True, default=fields.Date.context_today,
         index=True)
@@ -421,7 +496,7 @@ class StayLine(models.Model):
                 same_room_same_day_line = self.search([
                     ('date', '=', line.date),
                     ('room_id', '=', line.room_id.id),
-                    ('bed_night_qty', '!=', False)])
+                    ('bed_night_qty', '>', 0)])
                 guests_in_room_qty = 0
                 for same_room in same_room_same_day_line:
                     guests_in_room_qty += same_room.bed_night_qty
