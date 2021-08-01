@@ -126,7 +126,7 @@
     <field name="name">stay.calendar</field>
     <field name="model">stay.stay</field>
     <field name="arch"  type="xml">
-        <calendar string="Stays" color="room_id" date_start="arrival_date" date_stop="departure_date" mode="month">
+        <calendar string="Stays" color="room_id" date_start="arrival_datetime" date_stop="departure_datetime" mode="month">
             <field name="calendar_display_name"/>
         </calendar>
     </field>
@@ -136,13 +136,13 @@
     <field name="name">stay.timeline</field>
     <field name="model">stay.stay</field>
     <field name="arch" type="xml">
-        <timeline date_start="arrival_date"
-            date_stop="departure_date"
+        <timeline date_start="arrival_datetime"
+            date_stop="departure_datetime"
             string="Stays"
             default_group_by="room_id"
             event_open_popup="true"
             mode="week"
-            colors="#ec7063:group_id == 1;#2ecb71:group_id == 2;#f34242:group_id == 3"
+            colors="#ec7063:group_id_integer == 1;#2ecb71:group_id_integer == 2;#f34242:group_id_integer == 3"
             zoomKey="ctrlKey">
         </timeline>
     </field>
