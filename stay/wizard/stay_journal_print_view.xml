@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!--
   Copyright 2014-2021 Barroux Abbey (www.barroux.org)
   Copyright 2014-2021 Akretion France (www.akretion.com)
@@ -6,22 +6,26 @@
   @author: Brother Bernard <informatique@barroux.org>
   License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 -->
-
 <odoo>
 
 <record id="stay_journal_print_form" model="ir.ui.view">
     <field name="name">stay_journal_print.form</field>
     <field name="model">stay.journal.print</field>
-    <field name="arch"  type="xml">
+    <field name="arch" type="xml">
         <form string="Print Stay Journal">
             <group name="main">
-                <field name="date"/>
-                <field name="date_label"/>
-                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="date" />
+                <field name="date_label" />
+                <field name="company_id" groups="base.group_multi_company" />
             </group>
             <footer>
-                <button type="object" name="print_journal" string="Print Journal" class="btn-primary"/>
-                <button special="cancel" string="Cancel"/>
+                <button
+                        type="object"
+                        name="print_journal"
+                        string="Print Journal"
+                        class="btn-primary"
+                    />
+                <button special="cancel" string="Cancel" />
             </footer>
         </form>
     </field>
@@ -34,7 +38,12 @@
     <field name="target">new</field>
 </record>
 
-<menuitem id="stay_journal_print_menu" sequence="20" action="stay_journal_print_action" parent="stay_report_menu"/>
+<menuitem
+        id="stay_journal_print_menu"
+        sequence="20"
+        action="stay_journal_print_action"
+        parent="stay_report_menu"
+    />
 
 
 </odoo>

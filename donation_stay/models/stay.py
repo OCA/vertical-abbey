@@ -6,8 +6,8 @@ from odoo import fields, models
 
 
 class StayStay(models.Model):
-    _inherit = 'stay.stay'
+    _inherit = "stay.stay"
 
     donation_id = fields.Many2one(
-        'donation.donation', string='Donation',
-        readonly=True, copy=False, tracking=True)
+        "donation.donation", string="Donation", readonly=True, copy=False, tracking=True
+    )

@@ -10,19 +10,22 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="account.res_config_settings_view_form" />
         <field name="arch" type="xml">
-                <xpath expr="//div[@id='donation']//div[@id='donation_credit_transfer_product_id']" position="after">
+                <xpath
+                expr="//div[@id='donation']//div[@id='donation_credit_transfer_product_id']"
+                position="after"
+            >
                             <div class="row" id="donation_stay_product_id">
                                 <label
-                                    for="donation_stay_product_id"
-                                    class="col-md-3"
-                                />
+                        for="donation_stay_product_id"
+                        class="col-md-3"
+                    />
                                 <field name="donation_stay_product_id" />
                         </div>
                             <div class="row" id="donation_stay_campaign_id">
                                 <label
-                                    for="donation_stay_campaign_id"
-                                    class="col-md-3"
-                                />
+                        for="donation_stay_campaign_id"
+                        class="col-md-3"
+                    />
                                 <field name="donation_stay_campaign_id" />
                         </div>
             </xpath>
