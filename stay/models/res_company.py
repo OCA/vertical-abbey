@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
-# © 2014-2017 Barroux Abbey (www.barroux.org)
-# © 2014-2017 Akretion France (www.akretion.com)
+# Copyright 2014-2021 Barroux Abbey (www.barroux.org)
+# Copyright 2014-2021 Akretion France (www.akretion.com)
 # @author: Alexis de Lattre <alexis.delattre@akretion.com>
 # @author: Brother Bernard <informatique@barroux.org>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).

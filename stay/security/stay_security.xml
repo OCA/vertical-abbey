@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  © 2014-2017 Barroux Abbey (www.barroux.org)
-  © 2014-2017 Akretion France (www.akretion.com)
+  Copyright 2014-2021 Barroux Abbey (www.barroux.org)
+  Copyright 2014-2021 Akretion France (www.akretion.com)
   @author: Alexis de Lattre <alexis.delattre@akretion.com>
   License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 -->
@@ -38,6 +38,14 @@
 <data noupdate="1">
 
 <record id="base.default_user" model="res.users">
+    <field name="groups_id" eval="[(4, ref('group_stay_user'))]"/>
+</record>
+
+<record id="base.user_admin" model="res.users">
+    <field name="groups_id" eval="[(4, ref('group_stay_manager'))]"/>
+</record>
+
+<record id="base.user_root" model="res.users">
     <field name="groups_id" eval="[(4, ref('group_stay_manager'))]"/>
 </record>
 
@@ -45,14 +53,33 @@
 <record id="stay_company_rule" model="ir.rule">
     <field name="name">Stay Multi-company</field>
     <field name="model_id" ref="model_stay_stay"/>
-    <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
+    <field name="domain_force">[('company_id', 'in', company_ids)]</field>
 </record>
 
 <record id="stay_line_company_rule" model="ir.rule">
     <field name="name">Stay Line Multi-company</field>
     <field name="model_id" ref="model_stay_line"/>
-    <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
+    <field name="domain_force">[('company_id', 'in', company_ids)]</field>
 </record>
+
+<record id="stay_refectory_company_rule" model="ir.rule">
+    <field name="name">Stay Refectory Multi-company</field>
+    <field name="model_id" ref="model_stay_refectory"/>
+    <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+</record>
+
+<record id="stay_room_company_rule" model="ir.rule">
+    <field name="name">Stay Room Multi-company</field>
+    <field name="model_id" ref="model_stay_room"/>
+    <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+</record>
+
+<record id="stay_group_company_rule" model="ir.rule">
+    <field name="name">Stay Group Multi-company</field>
+    <field name="model_id" ref="model_stay_group"/>
+    <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+</record>
+
 
 
 </data>

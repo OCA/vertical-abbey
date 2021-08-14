@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  © 2014-2017 Barroux Abbey (www.barroux.org)
-  © 2014-2017 Akretion France (www.akretion.com)
+  Copyright 2014-2021 Barroux Abbey (www.barroux.org)
+  Copyright 2014-2021 Akretion France (www.akretion.com)
   @author: Alexis de Lattre <alexis.delattre@akretion.com>
   License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 -->
@@ -11,7 +11,7 @@
 
 <template id="stay.report_stayjournalprint_document">
 
-<t t-call="report.internal_layout">
+<t t-call="web.internal_layout">
 <t t-set="doc" t-value="doc.with_context({'lang':user.partner_id.lang})" />
 
 <div class="page">
@@ -26,10 +26,10 @@
     <table class="table table-condensed">
     <thead>
         <tr>
-            <th>Stay Nr</th>
-            <th>Arrival Date</th>
-            <th>Departure Date</th>
-            <th>Guest</th>
+            <th>Stay</th>
+            <th>Arrival</th>
+            <th>Departure</th>
+            <th>Guests</th>
             <th>Room</th>
             <th class="text-center">Lunches</th>
             <th class="text-center">Dinners</th>
@@ -42,7 +42,7 @@
             <td><span t-field="line.stay_id.name"/></td>
             <td><span t-field="line.stay_id.arrival_date"/> <span t-field="line.stay_id.arrival_time"/></td>
             <td><span t-field="line.stay_id.departure_date"/> <span t-field="line.stay_id.departure_time"/></td>
-            <td><span t-field="line.partner_name"/></td>
+            <td><p t-field="line.partner_name"/></td>
             <td><span t-field="line.room_id"/></td>
             <td class="text-center"><span t-field="line.lunch_qty"/></td>
             <td class="text-center"><span t-field="line.dinner_qty"/></td>
@@ -71,7 +71,7 @@
 </template>
 
 <template id="report_stayjournalprint">
-    <t t-call="report.html_container">
+    <t t-call="web.html_container">
         <t t-foreach="docs" t-as="doc">
             <t t-call="stay.report_stayjournalprint_document" t-lang="user.partner_id.lang"/>
         </t>

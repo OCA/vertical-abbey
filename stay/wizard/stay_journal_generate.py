@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
-# © 2014-2017 Barroux Abbey (www.barroux.org)
-# © 2014-2017 Akretion France (www.akretion.com)
+# Copyright 2014-2021 Barroux Abbey (www.barroux.org)
+# Copyright 2014-2021 Akretion France (www.akretion.com)
+# @author: Alexis de Lattre <alexis.delattre@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError, RedirectWarning
+from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
 
 
@@ -15,17 +15,19 @@ class StayJournalGenerate(models.TransientModel):
 
     @api.model
     def _default_date(self):
-        today_str = fields.Date.context_today(self)
-        today_dt = fields.Date.from_string(today_str)
+        today_dt = fields.Date.context_today(self)
         tomorrow_dt = today_dt + relativedelta(days=1)
         return tomorrow_dt
 
-    date = fields.Date(string='Date', required=True, default=_default_date)
+    date = fields.Date(
+        string='Date', required=True, default=lambda self: self._default_date())
+    company_id = fields.Many2one(
+        'res.company', string='Company', required=True,
+        default=lambda self: self.env.company)
 
-    @api.model
-    def _prepare_stay_line(self, stay, date):
+    def _prepare_stay_line(self, stay):
         vals = {
-            'date': date,
+            'date': self.date,
             'stay_id': stay.id,
             'partner_id': stay.partner_id.id,
             'partner_name': stay.partner_name,
@@ -36,7 +38,7 @@ class StayJournalGenerate(models.TransientModel):
             'dinner_qty': 0,
             'bed_night_qty': 0,
             }
-        if date == stay.arrival_date and date == stay.departure_date:
+        if self.date == stay.arrival_date and self.date == stay.departure_date:
             if stay.arrival_time == 'morning':
                 # then departure_time is afternoon or evening
                 vals['lunch_qty'] = stay.guest_qty
@@ -45,14 +47,14 @@ class StayJournalGenerate(models.TransientModel):
             elif stay.arrival_time == 'afternoon':
                 # then departure_time is evening
                 vals['dinner_qty'] = stay.guest_qty
-        elif date == stay.arrival_date:
+        elif self.date == stay.arrival_date:
             vals['bed_night_qty'] = stay.guest_qty
             if stay.arrival_time == 'morning':
                 vals['lunch_qty'] = stay.guest_qty
                 vals['dinner_qty'] = stay.guest_qty
             elif stay.arrival_time == 'afternoon':
                 vals['dinner_qty'] = stay.guest_qty
-        elif date == stay.departure_date:
+        elif self.date == stay.departure_date:
             if stay.departure_time == 'morning':
                 return {}
             elif stay.departure_time == 'afternoon':
@@ -67,11 +69,8 @@ class StayJournalGenerate(models.TransientModel):
                 'bed_night_qty': stay.guest_qty,
                 })
         if not stay.company_id.default_refectory_id:
-            msg = _("Missing default refectory on the company '%s'.") % (
-                stay.company_id.name)
-            action = self.env.ref('base.action_res_company_form')
-            raise RedirectWarning(
-                msg, action.id, 'Go to the Company')
+            raise UserError(_("Missing default refectory on the company '%s'.") % (
+                stay.company_id.display_name))
         if stay.no_meals:
             vals.update({
                 'lunch_qty': 0, 'dinner_qty': 0, 'refectory_id': False})
@@ -79,25 +78,25 @@ class StayJournalGenerate(models.TransientModel):
 
     def generate(self):
         self.ensure_one()
-        lines_to_delete = self.env['stay.line'].search(
-            [('date', '=', self.date), ('stay_id', '!=', False)])
+        lines_to_delete = self.env['stay.line'].search([
+            ('date', '=', self.date),
+            ('stay_id', '!=', False),
+            ('company_id', '=', self.company_id.id),
+            ])
         if lines_to_delete:
             lines_to_delete.unlink()
         stays = self.env['stay.stay'].search([
             ('arrival_date', '<=', self.date),
             ('departure_date', '>=', self.date),
+            ('company_id', '=', self.company_id.id),
             ])
         if not stays:
             raise UserError(_('No stay for this date.'))
         for stay in stays:
-            vals = self._prepare_stay_line(stay, self.date)
+            vals = self._prepare_stay_line(stay)
             if vals:
                 self.env['stay.line'].create(vals)
 
-        action = self.env['ir.actions.act_window'].for_xml_id(
-            'stay', 'stay_line_action')
-        action.update({
-            'view_mode': 'tree,form',
-            'domain': [('date', '=', self.date)],
-            })
+        action = self.env.ref('stay.stay_line_action').sudo().read([])[0]
+        action['domain'] = [('date', '=', self.date)]
         return action
