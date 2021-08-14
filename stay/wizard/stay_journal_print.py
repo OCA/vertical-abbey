@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
-# © 2014-2017 Barroux Abbey (www.barroux.org)
-# © 2014-2017 Akretion France (www.akretion.com)
+# Copyright 2014-2021 Barroux Abbey (www.barroux.org)
+# Copyright 2014-2021 Akretion France (www.akretion.com)
 # @author: Alexis de Lattre <alexis.delattre@akretion.com>
 # @author: Brother Bernard <informatique@barroux.org>
 # @author: Brother Irénée
@@ -9,6 +8,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
+from odoo.tools.misc import format_date
 
 
 class StayJournalPrint(models.TransientModel):
@@ -23,7 +23,10 @@ class StayJournalPrint(models.TransientModel):
         return today_dt + relativedelta(days=1)
 
     date = fields.Date(string='Date', required=True, default=_default_date)
-    date_label = fields.Char(compute='_compute_date_label', readonly=True)
+    date_label = fields.Char(compute='_compute_date_label')
+    company_id = fields.Many2one(
+        'res.company', string='Company', required=True,
+        default=lambda self: self.env.company)
 
     @api.depends('date')
     def _compute_date_label(self):
@@ -36,21 +39,19 @@ class StayJournalPrint(models.TransientModel):
         self.ensure_one()
         lines = self.env['stay.line'].search([
             ('date', '=', self.date),
-            ('company_id', '=', self.env.user.company_id.id),
+            ('company_id', '=', self.company_id.id),
             ])
         if not lines:
-            raise UserError(_('No stay for this date.'))
-        res = self.env['report'].get_action(
-            self,
-            'stay.report_stayjournalprint')
-        # res['datas'] = data  # To be compatible with aeroo v8
-        return res
+            raise UserError(_('No stay on %s in company %s.') % (format_date(self.env, self.date), self.company_id.display_name))
+        action = self.env.ref('stay.report_stay_journal_print')\
+            .with_context({'discard_logo_check': True}).report_action(self)
+        return action
 
     def get_report_by_refectory(self):
         '''Method for the report (replace report parser)'''
         lines = self.env['stay.line'].search([
             ('date', '=', self.date),
-            ('company_id', '=', self.env.user.company_id.id),
+            ('company_id', '=', self.company_id.id),
             ])
         res = {}
         # {refectory_obj1 : {

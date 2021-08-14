@@ -1,11 +1,11 @@
-# -*- coding: utf-8 -*-
-# Copyright 2020 Akretion France (https://www.akretion.com)
+# Copyright 2020-2021 Akretion France (https://www.akretion.com)
 # @author: Alexis de Lattre <alexis.delattre@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import models, fields, api, _
 from dateutil.relativedelta import relativedelta
-from cStringIO import StringIO
+from io import BytesIO
+import base64
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -21,24 +21,32 @@ class StayStayXlsx(models.TransientModel):
 
     @api.model
     def default_get(self, fields_list):
-        res = super(StayStayXlsx, self).default_get(fields_list)
-        today_str = fields.Date.context_today(self)
-        today_dt = fields.Date.from_string(today_str)
+        res = super().default_get(fields_list)
+        company_id = self.env.company.id
+        today_dt = fields.Date.context_today(self)
         end_date_dt = today_dt + relativedelta(months=6, days=-1)
-        groups = self.env['stay.group'].search(
-            [('user_id', '=', self.env.user.id)])
+        groups = self.env['stay.group'].search([
+            ('user_id', '=', self.env.user.id),
+            ('company_id', '=', company_id),
+            ])
         if not groups:
-            groups = self.env['stay.group'].search([])
+            groups = self.env['stay.group'].search(
+                [('company_id', '=', company_id)])
         res.update({
-            'start_date': today_str,
-            'end_date': fields.Date.to_string(end_date_dt),
+            'start_date': today_dt,
+            'end_date': end_date_dt,
             'group_ids': groups and groups.ids or [],
+            'company_id': company_id,
             })
         return res
 
+    company_id = fields.Many2one(
+        'res.company', string='Company', required=True)
     start_date = fields.Date(string='Start Date', required=True)
     end_date = fields.Date(string='End Date', required=True)
-    group_ids = fields.Many2many('stay.group', string='Groups')
+    group_ids = fields.Many2many(
+        'stay.group', string='Groups',
+        domain="[('company_id', '=', company_id)]")
     file_xlsx = fields.Binary(readonly=True)
     filename = fields.Char(readonly=True)
 
@@ -46,7 +54,8 @@ class StayStayXlsx(models.TransientModel):
         res = {}
         if not self.group_ids:
             # take everything
-            res[_('All')] = self.env['stay.room'].search([])
+            res[_('All')] = self.env['stay.room'].search(
+                [('company_id', '=', self.company_id.id)])
         else:
             for group in self.group_ids:
                 res[group.name] = group.room_ids
@@ -67,7 +76,7 @@ class StayStayXlsx(models.TransientModel):
         for date_label in date_labels:
             date_dt = fields.Date.from_string(date_label['date'])
             date2label[date_dt] = date_label['name']
-        file_data = StringIO()
+        file_data = BytesIO()
         workbook = xlsxwriter.Workbook(file_data)
         for group_name, rooms in self.prepare_tab().items():
             room2col = {}
@@ -99,7 +108,7 @@ class StayStayXlsx(models.TransientModel):
             regular_stay = workbook.add_format({
                 'font_size': font_size, 'align': 'left', 'bg_color': '#7eb7fc'})
             i = 0
-            sheet.write(i, 0, _('Stays - %s') % self.env.user.company_id.name, title)
+            sheet.write(i, 0, _('Stays - %s') % self.company_id.name, title)
             i += 1
             sheet.write(i, 0, _('Date'), header_other)
             sheet.write(i, 1, _('Celebration'), header_other)
@@ -152,7 +161,7 @@ class StayStayXlsx(models.TransientModel):
         workbook.close()
         file_data.seek(0)
         filename = 'Stay_%s.xlsx' % fields.Date.context_today(self)
-        export_file_b64 = file_data.read().encode('base64')
+        export_file_b64 = base64.encodebytes(file_data.read())
         self.write({
             'filename': filename,
             'file_xlsx': export_file_b64,

@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-#  © 2014-2017 Barroux Abbey (www.barroux.org)
-#  © 2014-2017 Akretion France (www.akretion.com)
-#  @author: Brother Irénée
-#  @author: Alexis de Lattre <alexis.delattre@akretion.com>
-#  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# Copyright 2014-2021 Barroux Abbey (www.barroux.org)
+# Copyright 2014-2021 Akretion France (www.akretion.com)
+# @author: Brother Irénée
+# @author: Alexis de Lattre <alexis.delattre@akretion.com>
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
@@ -12,77 +11,75 @@ from odoo.exceptions import UserError
 class DonationStayCreate(models.TransientModel):
     _name = 'donation.stay.create'
     _description = 'Create Donation from a Stay'
-    _rec_name = 'journal_id'
 
-    journal_id = fields.Many2one(
-        'account.journal', string='Payment Method', required=True,
-        domain=[
-            ('type', 'in', ('bank', 'cash')),
-            ('allow_donation', '=', True)])
+    stay_id = fields.Many2one('stay.stay', string='Stay', required=True)
+    company_id = fields.Many2one('res.company', string='Company', required=True)
+    partner_id = fields.Many2one(
+        'res.partner', string='Guest', required=True)
+    payment_mode_id = fields.Many2one(
+        'account.payment.mode', string='Payment Mode', required=True,
+        domain="[('donation', '=', True), ('company_id', '=', company_id)]")
     currency_id = fields.Many2one(
         'res.currency', string='Currency', required=True,
-        default=lambda self: self.env.user.company_id.currency_id)
+        default=lambda self: self.env.company.currency_id)
     amount = fields.Monetary(
-        string='Donation Amount', currency_field='currency_id')
+        string='Donation Amount', currency_field='currency_id', required=True)
     date_donation = fields.Date(
         'Donation Date', required=True, default=fields.Date.context_today)
-    payment_ref = fields.Char('Payment Reference', size=32)
+    payment_ref = fields.Char('Payment Reference')
 
-    # 1. create object "donation.donation" (in database !),
-    # parameters are initialized in a "prepare function"
-    # (only values which need values by default)
     @api.model
-    def _prepare_donation(self, stay):
-        campaign = self.env.ref('donation_stay.stay_campaign')
-        stay_donation_product = self.env.ref(
-            'donation_stay.product_product_stay_donation')
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        assert self._context.get('active_model') == 'stay.stay'
+        stay = self.env['stay.stay'].browse(self._context.get('active_id'))
+        res.update({
+            'stay_id': stay.id,
+            'company_id': stay.company_id.id,
+            'partner_id': stay.partner_id.id or False,
+            })
+        return res
+
+    def _prepare_donation(self):
+        if self.currency_id.compare_amounts(self.amount, 0) <= 0:
+            raise UserError(_("The amount of the donation is not set or negative."))
+        company = self.company_id
+        assert self.stay_id.company_id == company
+        campaign_id = company.donation_stay_campaign_id.id or False
+        stay_donation_product = company.donation_stay_product_id
+        if not stay_donation_product:
+            raise UserError(_(
+                "Donation Stay Product not set on company '%s'.") % company.display_name)
         line_vals = {
             'product_id': stay_donation_product.id,
             'quantity': 1,
             'unit_price': self.amount,
             }
         vals = {
-            'partner_id': stay.partner_id.id,
-            'journal_id': self.journal_id.id,
+            'partner_id': self.partner_id.id,
+            'payment_mode_id': self.payment_mode_id.id,
             'currency_id': self.currency_id.id,
             'payment_ref': self.payment_ref,
             'check_total': self.amount,
             'donation_date': self.date_donation,
-            'campaign_id': campaign.id,
+            'campaign_id': campaign_id,
             'line_ids': [(0, 0, line_vals)],
-            'company_id': stay.company_id.id,
+            'company_id': self.company_id.id,
+            'tax_receipt_option': self.partner_id.commercial_partner_id.tax_receipt_option,
         }
         return vals
 
     def create_donation(self):
         self.ensure_one()
-        assert self.env.context.get('active_model') == 'stay.stay',\
-            'Underlying model should be stay.stay'
-        stay = self.env['stay.stay'].browse(self.env.context['active_id'])
-
-        if not stay.partner_id:
-            raise UserError(_(
-                "This Partner is anonymous. You must create a real Partner."))
-
-        # 1. create object "donation.donation" (in database !),
-        # parameters are initialized in a "prepare fonction"
-        # (only values which need values by default),
-        # values stocked in "receipt_vals"
-        # create function used one time, but two objects are created :
-        # donation object and donation_line object
-        donation_vals = self._prepare_donation(stay)
+        donation_vals = self._prepare_donation()
         donation = self.env['donation.donation'].create(donation_vals)
-        donation.partner_id_change()
-        donation.line_ids.product_id_change()
-
-        # launch an action in order to open a view type "form" (donation form)
-        action = {
-            'name': _('Donations'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'donation.donation',
-            'view_mode': 'form,tree,graph',
-            'nodestroy': False,
-            'target': 'current',
+        donation.message_post(body=_(
+            "Donation created from stay <a href=# data-oe-model=stay.stay data-oe-id=%d>%s</a>.") % (self.stay_id.id, self.stay_id.name))
+        self.stay_id.write({'donation_id': donation.id})
+        action = self.env.ref('donation.donation_action').sudo().read()[0]
+        action.update({
+            'views': False,
+            'view_mode': 'form,tree,pivot,graph',
             'res_id': donation.id,
-            }
+            })
         return action

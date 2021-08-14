@@ -10,8 +10,6 @@
     <field name="donation">1</field>
     <field name="list_price">0</field>
     <field name="type">service</field>
-    <field name="uom_id" ref="product.product_uom_unit"/>
-    <field name="uom_po_id" ref="product.product_uom_unit"/>
     <field name="description">This is the donation product for stays.</field>
     <field name="taxes_id" eval="False"/>
     <field name="supplier_taxes_id" eval="False"/>
@@ -19,6 +17,11 @@
 
 <record id="stay_campaign" model="donation.campaign">
     <field name="name">Stay</field>
+</record>
+
+<record id="base.main_company" model="res.company">
+    <field name="donation_stay_product_id" ref="product_product_stay_donation"/>
+    <field name="donation_stay_campaign_id" ref="stay_campaign"/>
 </record>
 
 </odoo>
