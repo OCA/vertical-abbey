@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  © 2014-2017 Barroux Abbey (www.barroux.org)
-  © 2014-2017 Akretion France (www.akretion.com)
+  Copyright 2014-2021 Barroux Abbey (www.barroux.org)
+  Copyright 2014-2021 Akretion France (www.akretion.com)
   @author: Alexis de Lattre <alexis.delattre@akretion.com>
   @author: Brother Bernard <informatique@barroux.org>
   License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
@@ -27,7 +27,6 @@
                         <field name="partner_id"/>
                         <field name="partner_name"/>
                         <field name="guest_qty"/>
-                        <!-- <field name="create_uid" readonly="1"/> -->
                     </group>
                     <group name="right">
                         <field name="arrival_date"/>
@@ -45,6 +44,7 @@
             </sheet>
             <div class="oe_chatter">
                 <field name="message_follower_ids" widget="mail_followers"/>
+                <field name="activity_ids" widget="mail_activity"/>
                 <field name="message_ids" widget="mail_thread"/>
             </div>
         </form>
@@ -63,9 +63,9 @@
             <field name="arrival_time"/>
             <field name="departure_date"/>
             <field name="departure_time"/>
-            <field name="group_id"/>
+            <field name="group_id" optional="show"/>
             <field name="room_id"/>
-            <field name="company_id" groups="base.group_multi_company"/>
+            <field name="company_id" groups="base.group_multi_company" optional="show"/>
         </tree>
     </field>
 </record>
@@ -115,7 +115,7 @@
     <field name="name">stay.graph</field>
     <field name="model">stay.stay</field>
     <field name="arch"  type="xml">
-        <pivot string="Stays" type="pivot">
+        <pivot string="Stays">
             <field name="arrival_date" interval="month" type="row"/>
             <field name="guest_qty" type="measure"/>
         </pivot>
@@ -169,18 +169,16 @@
     <field name="model">stay.refectory</field>
     <field name="arch"  type="xml">
         <form string="Refectory">
-            <div class="oe_button_box" name="button_box">
-                <button name="toggle_active" type="object"
-                    class="oe_stat_button" icon="fa-archive">
-                    <field name="active" widget="boolean_button"
-                        options='{"terminology": "archive"}'/>
-                </button>
-            </div>
+            <sheet>
+            <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
             <group name="main">
                 <field name="name"/>
                 <field name="code"/>
+                <field name="company_id" groups="base.group_multi_company"/>
                 <field name="capacity"/>
+                <field name="active" invisible="1"/>
             </group>
+    </sheet>
         </form>
     </field>
 </record>
@@ -190,9 +188,11 @@
     <field name="model">stay.refectory</field>
     <field name="arch"  type="xml">
         <tree string="Refectories">
+            <field name="sequence" widget="handle"/>
             <field name="name"/>
-            <field name="code"/>
+            <field name="code" optional="show"/>
             <field name="capacity"/>
+            <field name="company_id" groups="base.group_multi_company" optional="show"/>
         </tree>
     </field>
 </record>
@@ -225,21 +225,19 @@
     <field name="model">stay.room</field>
     <field name="arch"  type="xml">
         <form string="Room">
-            <div class="oe_button_box" name="button_box">
-                <button name="toggle_active" type="object"
-                    class="oe_stat_button" icon="fa-archive">
-                    <field name="active" widget="boolean_button"
-                        options='{"terminology": "archive"}'/>
-                </button>
-            </div>
+            <sheet>
+            <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
             <group name="main">
                 <field name="name"/>
                 <field name="code"/>
+                <field name="company_id" groups="base.group_multi_company"/>
                 <field name="group_id"/>
                 <field name="bed_qty"/>
                 <field name="allow_simultaneous" attrs="{'invisible': [('bed_qty', '=', 1)]}"/>
                 <field name="no_meals"/>
+                <field name="active" invisible="1"/>
             </group>
+    </sheet>
         </form>
     </field>
 </record>
@@ -251,10 +249,11 @@
         <tree string="Rooms">
             <field name="sequence" widget="handle"/>
             <field name="name"/>
-            <field name="code"/>
-            <field name="group_id"/>
+            <field name="code" optional="show"/>
+            <field name="group_id" optional="show"/>
             <field name="bed_qty"/>
             <field name="no_meals"/>
+            <field name="company_id" groups="base.group_multi_company" optional="show"/>
         </tree>
     </field>
 </record>
@@ -267,7 +266,8 @@
             <field name="name"
                     filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
             <field name="group_id"/>
-            <filter string="My Rooms" domain="[('user_id', '=', uid)]"/>
+            <separator/>
+            <filter name="my_rooms" string="My Rooms" domain="[('user_id', '=', uid)]"/>
             <separator/>
             <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
             <group name="groupby">
@@ -291,12 +291,15 @@
     <field name="name">stay.group.form</field>
     <field name="model">stay.group</field>
     <field name="arch"  type="xml">
-        <form string="Group">
+            <form string="Group">
+            <sheet>
             <group name="main">
                 <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
                 <field name="user_id"/>
                 <field name="notify_user_ids" widget="many2many_tags"/>
             </group>
+    </sheet>
         </form>
     </field>
 </record>
@@ -309,6 +312,7 @@
             <field name="sequence" widget="handle"/>
             <field name="name"/>
             <field name="user_id"/>
+            <field name="company_id" groups="base.group_multi_company" optional="show"/>
         </tree>
     </field>
 </record>
@@ -367,12 +371,12 @@
             <field name="stay_id" invisible="not context.get('stay_line_main_view')"/>
             <field name="date"/>
             <field name="partner_name"/>
-            <field name="lunch_qty" sum="Total Lunches"/>
-            <field name="dinner_qty" sum="Total Dinners"/>
-            <field name="bed_night_qty" sum="Total Bed Nights"/>
-            <field name="refectory_id"/>
+            <field name="lunch_qty" sum="1"/>
+            <field name="dinner_qty" sum="1"/>
+            <field name="bed_night_qty" sum="1"/>
+            <field name="refectory_id" optional="show"/>
             <field name="room_id"/>
-            <field name="company_id" groups="base.group_multi_company"/>
+            <field name="company_id" groups="base.group_multi_company" optional="show"/>
         </tree>
     </field>
 </record>
@@ -386,7 +390,7 @@
             <field name="partner_name"/>
             <field name="group_id"/>
             <separator/>
-            <filter string="My Rooms" domain="[('user_id', '=', uid)]"/>
+            <filter name="my_rooms" string="My Rooms" domain="[('user_id', '=', uid)]"/>
             <separator/>
             <filter string="Last 12 months" name="last12months" domain="[('date', '&gt;=', (context_today() + relativedelta(day=1, months=-12)).strftime('%Y-%m-%d'))]"/>
             <filter string="Current and Future Lines" name="current_and_future" domain="[('date', '&gt;=', (context_today().strftime('%Y-%m-%d')))]"/>
@@ -419,7 +423,7 @@
     <field name="name">stay.line.pivot</field>
     <field name="model">stay.line</field>
     <field name="arch"  type="xml">
-        <pivot string="Stay Lines" type="pivot">
+        <pivot string="Stay Lines">
             <field name="date" interval="month" type="row"/>
             <field name="lunch_qty" type="measure"/>
             <field name="dinner_qty" type="measure"/>
