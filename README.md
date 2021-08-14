@@ -32,12 +32,12 @@ how to configure and use the modules.
 
 Available addons
 ----------------
-addon | version | summary
---- | --- | ---
-[donation_mass](donation_mass/) | 10.0.1.0.0 | Ability to create mass from donation lines
-[donation_stay](donation_stay/) | 10.0.1.0.0 | Create donations from a stay
-[mass](mass/) | 10.0.1.0.1 | Manage Mass
-[stay](stay/) | 10.0.1.0.0 | Simple management of stays and meals
-[stay_report_py3o](stay_report_py3o/) | 10.0.1.0.0 | Replace Qweb report by Py3o report on stay module
+addon | version | maintainers | summary
+--- | --- | --- | ---
+[donation_mass](donation_mass/) | 10.0.1.0.0 |  | Ability to create mass from donation lines
+[donation_stay](donation_stay/) | 10.0.1.0.0 |  | Create donations from a stay
+[mass](mass/) | 10.0.1.0.1 |  | Manage Mass
+[stay](stay/) | 10.0.1.0.0 |  | Simple management of stays and meals
+[stay_report_py3o](stay_report_py3o/) | 10.0.1.0.0 |  | Replace Qweb report by Py3o report on stay module
 
 [//]: # (end addons)
