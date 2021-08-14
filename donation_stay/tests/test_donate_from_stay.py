@@ -6,14 +6,14 @@ from odoo.tests.common import TransactionCase
 
 
 class TestDonationFromStay(TransactionCase):
-
     def test_donate_from_stay(self):
-        stay = self.env.ref('stay.stay2')
-        dsco = self.env['donation.stay.create']
+        stay = self.env.ref("stay.stay2")
+        dsco = self.env["donation.stay.create"]
         ctx = {
-            'active_id': stay.id,
-            'active_ids': [stay.id],
-            'active_model': 'stay.stay'}
+            "active_id": stay.id,
+            "active_ids": [stay.id],
+            "active_model": "stay.stay",
+        }
         bank_journal = self.env["account.journal"].create(
             {
                 "type": "bank",
@@ -31,23 +31,27 @@ class TestDonationFromStay(TransactionCase):
                 ).id,
             }
         )
-        payment_ref = 'CHQ LBP 421242'
-        wiz = dsco.with_context(ctx).create({
-            'payment_mode_id': payment_mode.id,
-            'amount': 200,
-            'payment_ref': payment_ref})
+        payment_ref = "CHQ LBP 421242"
+        wiz = dsco.with_context(ctx).create(
+            {
+                "payment_mode_id": payment_mode.id,
+                "amount": 200,
+                "payment_ref": payment_ref,
+            }
+        )
         action = wiz.create_donation()
-        donation_id = action['res_id']
-        donation = self.env['donation.donation'].browse(donation_id)
-        self.assertEqual(donation.state, 'draft')
+        donation_id = action["res_id"]
+        donation = self.env["donation.donation"].browse(donation_id)
+        self.assertEqual(donation.state, "draft")
         self.assertEqual(
-            donation.campaign_id, stay.company_id.donation_stay_campaign_id)
+            donation.campaign_id, stay.company_id.donation_stay_campaign_id
+        )
         self.assertEqual(stay.donation_id, donation)
         self.assertEqual(donation.amount_total, 200)
         self.assertEqual(
-            donation.partner_id, self.env.ref('base.res_partner_address_2'))
+            donation.partner_id, self.env.ref("base.res_partner_address_2")
+        )
         donation.validate()
-        self.assertEqual(donation.move_id.state, 'posted')
-        self.assertEqual(
-            donation.payment_mode_id, payment_mode)
+        self.assertEqual(donation.move_id.state, "posted")
+        self.assertEqual(donation.payment_mode_id, payment_mode)
         self.assertEqual(donation.payment_ref, payment_ref)
