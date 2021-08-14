@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
 
@@ -8,7 +7,7 @@
     <field name="py3o_filetype">odt</field>
     <field name="module">stay_report_py3o</field>
     <field name="py3o_template_fallback">stay_journal.odt</field>
-    <field name="py3o_multi_in_one" eval="True"/>
+    <field name="py3o_multi_in_one" eval="True" />
 </record>
 
 
