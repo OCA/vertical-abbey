@@ -1,11 +1,11 @@
-# -*- coding: utf-8 -*-
-# © 2014-2017 Barroux Abbey (www.barroux.org)
-# © 2014-2017 Akretion France (www.akretion.com)
+# Copyright 2014-2021 Barroux Abbey (www.barroux.org)
+# Copyright 2014-2021 Akretion France (www.akretion.com)
 # @author: Alexis de Lattre <alexis.delattre@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
+from odoo.tools.misc import format_date
 
 
 class SwapCelebrant(models.TransientModel):
@@ -13,7 +13,10 @@ class SwapCelebrant(models.TransientModel):
     _description = "Swap Celebrant"
 
     @api.model
-    def _check_good(self):
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        assert self._context['active_model'] == 'mass.line', \
+            'active_model should be mass.line'
         line_ids = self._context['active_ids']
         if len(line_ids) != 2:
             raise UserError(_(
@@ -24,24 +27,19 @@ class SwapCelebrant(models.TransientModel):
             raise UserError(_(
                 'The 2 mass lines that you selected have different dates '
                 '(%s and %s). You can swap celebrants only between 2 '
-                'masses of the same date.') % (lines[0].date, lines[1].date))
-        return True
+                'masses of the same date.') % (
+                    format_date(self.env, lines[0].date), format_date(self.env, lines[1].date)))
+        res['line_ids'] = [(6, 0, lines.ids)]
+        return res
 
-    pass_in_default_get = fields.Boolean(string='No', default=_check_good)
-    # This field is here just to execute a default function
-    # It is not visible in the view
+    line_ids = fields.Many2many('mass.line', string="Mass Lines to Swap", readonly=True)
 
     def swap_celebrant(self):
         self.ensure_one()
-        line_ids = self._context['active_ids']
-        assert len(line_ids) == 2, "Must have 2 mass IDs"
-        assert self._context['active_model'] == 'mass.line', \
-            'active_model should be mass.line'
-        lines = self.env['mass.line'].browse(line_ids)
+        lines = self.line_ids
         swapped = {
-            lines[0]: lines[1].celebrant_id,
-            lines[1]: lines[0].celebrant_id,
+            lines[0]: lines[1].celebrant_id.id,
+            lines[1]: lines[0].celebrant_id.id,
             }
-        for line, celebrant in swapped.iteritems():
-            line.celebrant_id = celebrant.id
-        return
+        for line, celebrant_id in swapped.items():
+            line.write({'celebrant_id': celebrant_id})
