@@ -1,0 +1,5 @@
+In the menu Mass > Mass Requests, create new mass requests. On each mass request, you should select the donor, the donation date, the mass request type and the intention. If the donor asked for a special date for the mass, you should also set a *Celebration Requested Date* (otherwise, leave empty). If the donor wanted the mass to be celebrated by a particular celebrant, select the celebrant (otherwise, leave empty).
+
+Then, start the wizard *Generate Masses Journal* to generate the masses for a particular date. You can print a report that display the list of masses with the associated celebrant , donor and intention. When it is confirmed that the masses for that day have been celebrated, start the wizard *Validate Masses Journal* to validate the masses ; you won't be able to modify the masses any more.
+
+If you want to transfer mass requests to an external celebrant with the associated donations, create a new mass requests transfer. When you validate the mass request transfer, it will generate the corresponding accounting entries ; with these accounting entries, you will be able to generate the payment of the corresponding donations to the external celebrant.
