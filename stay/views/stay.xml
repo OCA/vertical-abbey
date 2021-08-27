@@ -30,8 +30,10 @@
                     <group name="right">
                         <field name="arrival_date" />
                         <field name="arrival_time" />
+                        <field name="arrival_note" />
                         <field name="departure_date" />
                         <field name="departure_time" />
+                        <field name="departure_note" />
                         <field name="room_id" />
                         <field name="group_id" />
                         <field name="no_meals" />
@@ -60,8 +62,10 @@
             <field name="guest_qty" />
             <field name="arrival_date" />
             <field name="arrival_time" />
+            <field name="arrival_note" optional="show" />
             <field name="departure_date" />
             <field name="departure_time" />
+            <field name="departure_note" optional="show" />
             <field name="group_id" optional="show" />
             <field name="room_id" />
             <field
@@ -322,6 +326,7 @@
                             attrs="{'invisible': [('bed_qty', '=', 1)]}"
                         />
                 <field name="no_meals" />
+                <field name="notes" />
                 <field name="active" invisible="1" />
             </group>
     </sheet>
@@ -511,7 +516,7 @@
             <field
                     name="company_id"
                     groups="base.group_multi_company"
-                    optional="show"
+                    optional="hide"
                 />
         </tree>
     </field>

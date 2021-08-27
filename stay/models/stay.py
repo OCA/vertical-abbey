@@ -67,6 +67,7 @@ class StayStay(models.Model):
     arrival_datetime = fields.Datetime(
         compute="_compute_arrival_datetime", store=True, string="Arrival Date and Time"
     )
+    arrival_note = fields.Char(string="Arrival Note")
     departure_date = fields.Date(
         string="Departure Date", required=True, tracking=True, index=True
     )
@@ -85,6 +86,7 @@ class StayStay(models.Model):
         store=True,
         string="Departure Date and Time",
     )
+    departure_note = fields.Char(string="Departure Note")
     room_id = fields.Many2one(
         "stay.room",
         string="Room",
@@ -436,6 +438,16 @@ class StayRefectory(models.Model):
             res.append((ref.id, name))
         return res
 
+    @api.model
+    def name_search(self, name="", args=None, operator="ilike", limit=100):
+        if args is None:
+            args = []
+        if name and operator == "ilike":
+            recs = self.search([("code", "=", name)] + args, limit=limit)
+            if recs:
+                return recs.name_get()
+        return super().name_search(name=name, args=args, operator=operator, limit=limit)
+
 
 class StayRoom(models.Model):
     _name = "stay.room"
@@ -474,6 +486,7 @@ class StayRoom(models.Model):
         help="If active, the stays linked to this room will have the "
         "same option active by default.",
     )
+    notes = fields.Text()
 
     _sql_constraints = [
         (
@@ -497,6 +510,16 @@ class StayRoom(models.Model):
                 name = "[%s] %s" % (room.code, name)
             res.append((room.id, name))
         return res
+
+    @api.model
+    def name_search(self, name="", args=None, operator="ilike", limit=100):
+        if args is None:
+            args = []
+        if name and operator == "ilike":
+            recs = self.search([("code", "=", name)] + args, limit=limit)
+            if recs:
+                return recs.name_get()
+        return super().name_search(name=name, args=args, operator=operator, limit=limit)
 
 
 class StayGroup(models.Model):
