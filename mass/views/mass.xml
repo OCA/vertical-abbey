@@ -43,7 +43,7 @@
     <field name="view_mode">tree,form</field>
 </record>
 
-<menuitem id="mass_top_menu" sequence="17" name="Mass" groups="group_mass_viewer"/>
+<menuitem id="mass_top_menu" sequence="39" name="Mass" groups="group_mass_viewer" web_icon="mass,static/description/icon.png"/>
 
 <menuitem id="mass_title_menu" sequence="10" name="Mass"
     parent="mass_top_menu"/>
