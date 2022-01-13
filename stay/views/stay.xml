@@ -213,7 +213,13 @@
 </record>
 
 
-<menuitem id="stay_top_menu" sequence="5" name="Stays" groups="group_stay_viewer" web_icon="stay,static/description/icon.png"/>
+<menuitem
+        id="stay_top_menu"
+        sequence="5"
+        name="Stays"
+        groups="group_stay_viewer"
+        web_icon="stay,static/description/icon.png"
+    />
 
 <menuitem id="stay_sub_menu" sequence="10" name="Stays" parent="stay_top_menu" />
 
