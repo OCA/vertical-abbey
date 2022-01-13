@@ -604,7 +604,9 @@ class StayLine(models.Model):
     _order = "date desc"
     _check_company_auto = True
 
-    stay_id = fields.Many2one("stay.stay", string="Stay", check_company=True)
+    stay_id = fields.Many2one(
+        "stay.stay", string="Stay", check_company=True, ondelete="cascade"
+    )
     company_id = fields.Many2one(
         "res.company",
         string="Company",
