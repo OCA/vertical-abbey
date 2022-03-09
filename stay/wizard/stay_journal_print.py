@@ -50,7 +50,7 @@ class StayJournalPrint(models.TransientModel):
         )
         if not lines:
             raise UserError(
-                _("No stay on %s in company %s.")
+                _("There are no stays on %s in company %s.")
                 % (format_date(self.env, self.date), self.company_id.display_name)
             )
         action = (
