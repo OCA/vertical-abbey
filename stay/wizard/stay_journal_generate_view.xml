@@ -39,7 +39,7 @@
 
 <menuitem
         id="stay_journal_generate_menu"
-        sequence="30"
+        sequence="40"
         action="stay_journal_generate_action"
         parent="stay_sub_menu"
         groups="group_stay_user"

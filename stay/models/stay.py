@@ -12,7 +12,7 @@ import pytz
 from dateutil.relativedelta import relativedelta
 
 from odoo import SUPERUSER_ID, _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date
 
 logger = logging.getLogger(__name__)
@@ -49,7 +49,7 @@ class StayStay(models.Model):
         ondelete="restrict",
         help="If guest is anonymous, leave this field empty.",
     )
-    partner_name = fields.Text("Guest Name", required=True, tracking=True)
+    partner_name = fields.Text("Guest Names", required=True, tracking=True)
     guest_qty = fields.Integer(string="Guest Quantity", default=1, tracking=True)
     arrival_date = fields.Date(
         string="Arrival Date", required=True, tracking=True, index=True
@@ -87,15 +87,9 @@ class StayStay(models.Model):
         string="Departure Date and Time",
     )
     departure_note = fields.Char(string="Departure Note")
-    room_id = fields.Many2one(
-        "stay.room",
-        string="Room",
-        tracking=True,
-        copy=False,
-        domain="[('company_id', '=', company_id)]",
-        ondelete="restrict",
-        index=True,
-        check_company=True,
+    notes = fields.Text()  # TODO add to view
+    room_assign_ids = fields.One2many(
+        "stay.room.assign", "stay_id", string="Room Assignments"
     )
     # Here, group_id is not a related of room, because we want to be able
     # to first set the group and later set the room
@@ -108,8 +102,6 @@ class StayStay(models.Model):
         ondelete="restrict",
         check_company=True,
     )
-    group_id_integer = fields.Integer(related="group_id.id", string="Group ID")
-    # The field group_id_integer is used for colors in timeline view
     # to workaround the bug https://github.com/OCA/web/issues/1446
     # in v12+, if this PR is merged https://github.com/OCA/web/issues/1446
     # the we could use color_field
@@ -120,10 +112,21 @@ class StayStay(models.Model):
         help="The stay lines generated from this stay will not have "
         "lunchs nor dinners by default.",
     )
-    calendar_display_name = fields.Char(
-        compute="_compute_calendar_display_name", store=False
+    rooms_display_name = fields.Char(
+        compute="_compute_room_assignment", string="Rooms", store=True
     )
-    # don't store because contains translation
+    assign_status = fields.Selection(
+        [
+            ("none", "Waiting Assignation"),
+            ("partial", "Partial"),
+            ("assigned", "Assigned"),
+            ("error", "Error"),
+        ],
+        string="Assign Status",
+        compute="_compute_room_assignment",
+        store=True,
+    )
+    guest_qty_to_assign = fields.Integer(compute="_compute_room_assignment", store=True)
 
     _sql_constraints = [
         (
@@ -137,6 +140,31 @@ class StayStay(models.Model):
             "The guest quantity must be positive.",
         ),
     ]
+
+    @api.depends("room_assign_ids.guest_qty")
+    def _compute_room_assignment(self):
+        for stay in self:
+            guest_qty_to_assign = stay.guest_qty
+            room_codes = []
+            for assign in stay.room_assign_ids:
+                guest_qty_to_assign -= assign.guest_qty
+                room_codes.append(assign.room_id.code or assign.room_id.name)
+            if room_codes:
+                rooms_display_name = "-".join(room_codes)
+            else:
+                rooms_display_name = "-"  # TODO find unicode symbol ?
+
+            if not guest_qty_to_assign:
+                assign_status = "assigned"
+            elif guest_qty_to_assign == stay.guest_qty:
+                assign_status = "none"
+            elif guest_qty_to_assign > 0:
+                assign_status = "partial"
+            else:
+                assign_status = "error"
+            stay.assign_status = assign_status
+            stay.guest_qty_to_assign = guest_qty_to_assign
+            stay.rooms_display_name = rooms_display_name
 
     @api.model
     def create(self, vals):
@@ -183,27 +211,12 @@ class StayStay(models.Model):
                 )
             stay.departure_datetime = datetime_naive_utc
 
-    @api.depends("partner_name", "arrival_time", "departure_time", "room_id")
-    def _compute_calendar_display_name(self):
-        for stay in self:
-            if stay.room_id:
-                room = stay.room_id.code or stay.room_id.name
-            else:
-                room = _("No Room")
-            stay.calendar_display_name = "[%s] %s, %s, %d [%s]" % (
-                TIME2CODE[stay.arrival_time],
-                stay.partner_name,
-                room,
-                stay.guest_qty,
-                TIME2CODE[stay.departure_time],
-            )
-
     @api.constrains(
         "departure_date",
         "departure_time",
         "arrival_date",
         "arrival_time",
-        "room_id",
+        "room_assign_ids",
         "group_id",
         "guest_qty",
     )
@@ -246,37 +259,199 @@ class StayStay(models.Model):
                             "or afternoon."
                         )
                     )
-            if stay.room_id:
-                if stay.room_id.group_id and stay.group_id != stay.room_id.group_id:
+            if stay.room_assign_ids:
+                group2room = {}
+                total_guest_qty = 0
+                # Only one loop on rooms, to improve perfs
+                for room_assign in stay.room_assign_ids:
+                    if room_assign.room_id.group_id:
+                        group2room[room_assign.room_id.group_id] = room_assign.room_id
+                    total_guest_qty += room_assign.guest_qty
+                if stay.group_id:
+                    for group, room in group2room.items():
+                        if group != stay.group_id:
+                            raise ValidationError(
+                                _(
+                                    "Stay '%s' is linked to group '%s', but the "
+                                    "room '%s' is linked to group '%s'."
+                                )
+                                % (
+                                    stay.display_name,
+                                    stay.group_id.display_name,
+                                    room.display_name,
+                                    group.display_name,
+                                )
+                            )
+                if stay.guest_qty < total_guest_qty:
                     raise ValidationError(
                         _(
-                            "For stay '%s', the room '%s' is linked to "
-                            "group '%s', but the selected group is '%s'."
-                        )
-                        % (
-                            stay.display_name,
-                            stay.room_id.display_name,
-                            stay.room_id.group_id.display_name,
-                            stay.group_id.display_name,
-                        )
-                    )
-                if stay.guest_qty > stay.room_id.bed_qty:
-                    raise ValidationError(
-                        _(
-                            "Stay '%s' has %d guest(s), but the selected room "
-                            "'%s' only has %d bed(s)."
+                            "Stay '%s' has %d guest(s), but its room assignment has "
+                            "a total of %d guest(s)."
                         )
                         % (
                             stay.display_name,
                             stay.guest_qty,
-                            stay.room_id.display_name,
-                            stay.room_id.bed_qty,
+                            total_guest_qty,
                         )
                     )
-                if self.room_id.bed_qty > 1 and self.room_id.allow_simultaneous:
-                    stay._check_reservation_conflict_multi()
+
+    @api.depends("partner_name", "name", "assign_room_ids")
+    def name_get(self):
+        res = []
+        for stay in self:
+            if self._context.get("stay_name_get_partner_name"):
+                name = stay.partner_name
+            elif self._context.get("stay_name_get_partner_name_qty"):
+                name = stay.partner_name
+                if stay.guest_qty > 1:
+                    name += " (%d)" % stay.guest_qty
+            elif self._context.get("stay_name_get_partner_name_qty_room"):
+                name = stay.partner_name
+                if stay.guest_qty > 1:
+                    name += " (%d)" % stay.guest_qty
+                if stay.rooms_display_name:
+                    name += " [%s]" % stay.rooms_display_name
+            else:
+                name = stay.name
+            res.append((stay.id, name))
+        return res
+
+    @api.onchange("partner_id")
+    def partner_id_change(self):
+        if self.partner_id:
+            partner = self.partner_id
+            partner_name = partner.name
+            if partner.title and not partner.is_company:
+                partner_lg = partner
+                if partner.lang:
+                    partner_lg = partner.with_context(lang=partner.lang)
+                title = partner_lg.title.shortcut or partner_lg.title.name
+                partner_name = "%s %s" % (title, partner_name)
+            self.partner_name = partner_name
+
+    # called by wizard stay.journal.generate
+    def _prepare_stay_line(self, date):
+        self.ensure_one()
+        assert self.assign_status == "assigned"
+        vals = {
+            "date": date,
+            "stay_id": self.id,
+            "partner_id": self.partner_id.id,
+            "partner_name": self.partner_name,
+            "refectory_id": self.company_id.default_refectory_id.id,
+            "room_ids": self.room_assign_ids.room_id.ids,
+            "company_id": self.company_id.id,
+            "lunch_qty": 0,
+            "dinner_qty": 0,
+            "bed_night_qty": 0,
+        }
+        if date == self.arrival_date and date == self.departure_date:
+            if self.arrival_time == "morning":
+                # then departure_time is afternoon or evening
+                vals["lunch_qty"] = self.guest_qty
+                if self.departure_time == "evening":
+                    vals["dinner_qty"] = self.guest_qty
+            elif self.arrival_time == "afternoon":
+                # then departure_time is evening
+                vals["dinner_qty"] = self.guest_qty
+        elif date == self.arrival_date:
+            vals["bed_night_qty"] = self.guest_qty
+            if self.arrival_time == "morning":
+                vals["lunch_qty"] = self.guest_qty
+                vals["dinner_qty"] = self.guest_qty
+            elif self.arrival_time == "afternoon":
+                vals["dinner_qty"] = self.guest_qty
+        elif date == self.departure_date:
+            if self.departure_time == "morning":
+                return {}
+            elif self.departure_time == "afternoon":
+                vals["lunch_qty"] = self.guest_qty
+            elif self.departure_time == "evening":
+                vals["lunch_qty"] = self.guest_qty
+                vals["dinner_qty"] = self.guest_qty
+        else:
+            vals.update(
+                {
+                    "lunch_qty": self.guest_qty,
+                    "dinner_qty": self.guest_qty,
+                    "bed_night_qty": self.guest_qty,
+                }
+            )
+        if not self.company_id.default_refectory_id:
+            raise UserError(
+                _("Missing default refectory on the company '%s'.")
+                % (self.company_id.display_name)
+            )
+        if self.no_meals:
+            vals.update({"lunch_qty": 0, "dinner_qty": 0, "refectory_id": False})
+        return vals
+
+
+class StayRoomAssign(models.Model):
+    _name = "stay.room.assign"
+    _description = "Room assignments"
+    _check_company_auto = True
+
+    stay_id = fields.Many2one("stay.stay", ondelete="cascade", index=True)
+    room_id = fields.Many2one(
+        "stay.room",
+        required=True,
+        ondelete="restrict",
+        index=True,
+        check_company=True,
+        domain="[('company_id', '=', company_id), '|', ('group_id', '=', False), ('group_id', '=', group_id)]",
+    )
+    guest_qty = fields.Integer(string="Guest Quantity", required=True)
+    calendar_display_name = fields.Char(
+        compute="_compute_calendar_display_name", store=False
+    )
+    # Related fields
+    group_id = fields.Many2one(related="room_id.group_id", store=True)
+    # The field group_id_integer is used for colors in timeline view
+    group_id_integer = fields.Integer(related="room_id.group_id.id", string="Group ID")
+    user_id = fields.Many2one(related="room_id.group_id.user_id", store=True)
+    arrival_date = fields.Date(related="stay_id.arrival_date", store=True)
+    arrival_time = fields.Selection(related="stay_id.arrival_time", store=True)
+    arrival_datetime = fields.Datetime(related="stay_id.arrival_datetime", store=True)
+    departure_date = fields.Date(related="stay_id.departure_date", store=True)
+    departure_time = fields.Selection(related="stay_id.departure_time", store=True)
+    departure_datetime = fields.Datetime(
+        related="stay_id.departure_datetime", store=True
+    )
+    partner_id = fields.Many2one(related="stay_id.partner_id", store=True)
+    partner_name = fields.Text(related="stay_id.partner_name", store=True)
+    company_id = fields.Many2one(related="stay_id.company_id", store=True)
+
+    _sql_constraints = [
+        (
+            "guest_qty_positive",
+            "CHECK(guest_qty > 0)",
+            "The guest quantity must be positive.",
+        ),
+        (
+            "stay_room_unique",
+            "unique(stay_id, room_id)",
+            "This room has already been used in this stay.",
+        ),
+    ]
+
+    @api.constrains("room_id", "guest_qty", "arrival_datetime", "departure_datetime")
+    def _check_room_assign(self):
+        for assign in self:
+            if assign.guest_qty > assign.room_id.bed_qty:
+                raise UserError(
+                    _("Room %s only has %d bed capacity, not %d!")
+                    % (
+                        assign.room_id.display_name,
+                        assign.room_id.bed_qty,
+                        assign.guest_qty,
+                    )
+                )
+            if assign.room_id:
+                if assign.room_id.bed_qty > 1 and assign.room_id.allow_simultaneous:
+                    assign._check_reservation_conflict_multi()
                 else:
-                    stay._check_reservation_conflict_single()
+                    assign._check_reservation_conflict_single()
 
     def _check_reservation_conflict_single(self):
         self.ensure_one()
@@ -287,7 +462,7 @@ class StayStay(models.Model):
         # CONTRARY :
         # leaves after my arrival
         # AND arrives before my departure
-        conflict_stay = self.search(
+        conflict_assign = self.search(
             [
                 ("id", "!=", self.id),
                 ("room_id", "=", self.room_id.id),
@@ -296,7 +471,8 @@ class StayStay(models.Model):
             ],
             limit=1,
         )
-        if conflict_stay:
+        if conflict_assign:
+            conflict_stay = conflict_assign.stay_id
             raise ValidationError(
                 _(
                     "This stay conflicts with stay %s of '%s' "
@@ -309,7 +485,7 @@ class StayStay(models.Model):
                     conflict_stay.arrival_time,
                     format_date(self.env, conflict_stay.departure_date),
                     conflict_stay.departure_time,
-                    conflict_stay.room_id.display_name,
+                    conflict_assign.room_id.display_name,
                 )
             )
 
@@ -338,60 +514,43 @@ class StayStay(models.Model):
             if qty > bed_qty:
                 raise ValidationError(
                     _(
-                        "With stay '%s' (%d guests), we would have a total of "
-                        "%d guest on %s whereas room '%s' only has %d beds."
+                        "Conflict in room %s: with stay '%s', we would have a total of "
+                        "%d guests on %s whereas that room only has %d beds."
                     )
                     % (
-                        self.display_name,
-                        guest_qty,
+                        self.room_id.display_name,
+                        self.stay_id.name,
                         qty,
                         format_date(self.env, date),
-                        self.room_id.display_name,
                         bed_qty,
                     )
                 )
             date += relativedelta(days=1)
 
-    @api.depends("partner_name", "name", "room_id")
-    def name_get(self):
-        res = []
-        for stay in self:
-            if self._context.get("stay_name_get_partner_name"):
-                name = stay.partner_name
-            elif self._context.get("stay_name_get_partner_name_qty"):
-                name = stay.partner_name
-                if stay.guest_qty > 1:
-                    name += " (%d)" % stay.guest_qty
-            elif self._context.get("stay_name_get_partner_name_qty_room"):
-                name = stay.partner_name
-                if stay.guest_qty > 1:
-                    name += " (%d)" % stay.guest_qty
-                if stay.room_id:
-                    name += " [%s]" % stay.room_id.code or stay.room_id.name
-            else:
-                name = stay.name
-            res.append((stay.id, name))
-        return res
-
-    @api.onchange("partner_id")
-    def partner_id_change(self):
-        if self.partner_id:
-            partner = self.partner_id
-            partner_name = partner.name
-            if partner.title and not partner.is_company:
-                partner_lg = partner
-                if partner.lang:
-                    partner_lg = partner.with_context(lang=partner.lang)
-                title = partner_lg.title.shortcut or partner_lg.title.name
-                partner_name = "%s %s" % (title, partner_name)
-            self.partner_name = partner_name
+    @api.depends("partner_name", "arrival_time", "departure_time", "room_id")
+    def _compute_calendar_display_name(self):
+        for assign in self:
+            assign.calendar_display_name = "[%s] %s, %s, %d [%s]" % (
+                TIME2CODE[assign.arrival_time],
+                assign.partner_name,
+                assign.room_id.code or assign.room_id.name,
+                assign.guest_qty,
+                TIME2CODE[assign.departure_time],
+            )
 
     @api.onchange("room_id")
     def room_id_change(self):
-        if self.room_id:
-            self.no_meals = self.room_id.no_meals
-            if self.room_id.group_id:
-                self.group_id = self.room_id.group_id.id
+        if (
+            self.stay_id
+            and self.room_id
+            and self.room_id.bed_qty
+            and not self.guest_qty
+        ):
+            if self.stay_id.guest_qty_to_assign:
+                if self.stay_id.guest_qty_to_assign <= self.room_id.bed_qty:
+                    self.guest_qty = self.stay_id.guest_qty_to_assign
+                else:
+                    self.guest_qty = self.room_id.bed_qty
 
     @api.onchange("group_id")
     def group_id_change(self):
@@ -481,11 +640,11 @@ class StayRoom(models.Model):
         "at the same time in the room.",
     )
     active = fields.Boolean(default=True)
-    no_meals = fields.Boolean(
-        string="No Meals",
-        help="If active, the stays linked to this room will have the "
-        "same option active by default.",
-    )
+    #    no_meals = fields.Boolean(
+    #        string="No Meals",
+    #        help="If active, the stays linked to this room will have the "
+    #        "same option active by default.",
+    #    )
     notes = fields.Text()
 
     _sql_constraints = [
@@ -631,18 +790,21 @@ class StayLine(models.Model):
         check_company=True,
         default=lambda self: self.env.company.default_refectory_id,
     )
-    room_id = fields.Many2one(
+    room_ids = fields.Many2many(
         "stay.room",
-        string="Room",
+        string="Rooms",
         ondelete="restrict",
         domain="[('company_id', '=', company_id)]",
         index=True,
         check_company=True,
     )
-    group_id = fields.Many2one(related="room_id.group_id", store=True)
-    user_id = fields.Many2one(related="room_id.group_id.user_id", store=True)
+    rooms_display_name = fields.Char(
+        compute="_compute_rooms_display_name", store=True, string="Room List"
+    )
+    group_id = fields.Many2one(related="stay_id.group_id", store=True)
+    user_id = fields.Many2one(related="stay_id.group_id.user_id", store=True)
 
-    @api.constrains("refectory_id", "lunch_qty", "dinner_qty", "date", "room_id")
+    @api.constrains("refectory_id", "lunch_qty", "dinner_qty", "date", "room_ids")
     def _check_room_refectory(self):
         for line in self:
             if (line.lunch_qty or line.dinner_qty) and not line.refectory_id:
@@ -650,25 +812,14 @@ class StayLine(models.Model):
                     _("Missing refectory for guest '%s' on %s.")
                     % (line.partner_name, format_date(self.env, line.date))
                 )
-            if line.room_id and line.bed_night_qty:
-                same_room_same_day_line = self.search(
-                    [
-                        ("date", "=", line.date),
-                        ("room_id", "=", line.room_id.id),
-                        ("bed_night_qty", ">", 0),
-                    ]
-                )
-                guests_in_room_qty = 0
-                for same_room in same_room_same_day_line:
-                    guests_in_room_qty += same_room.bed_night_qty
-                if guests_in_room_qty > line.room_id.bed_qty:
-                    raise ValidationError(
-                        _(
-                            "The room '%s' is booked or all beds of the "
-                            "room are booked."
-                        )
-                        % line.room_id.display_name
-                    )
+
+    @api.depends("room_ids")
+    def _compute_rooms_display_name(self):
+        for line in self:
+            rooms = []
+            for room in line.room_ids:
+                rooms.append(room.code or room.name)
+            line.rooms_display_name = ", ".join(rooms)
 
     _sql_constraints = [
         (
