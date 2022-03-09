@@ -10,6 +10,8 @@ access_stay_date_label_user,Read access on stay.date.label to everybody,model_st
 access_stay_stay_user,Full access on stay.stay to Stay User,model_stay_stay,group_stay_user,1,1,1,1
 access_stay_stay_employee,Read access on stay.stay to Employee,model_stay_stay,base.group_user,1,0,0,0
 access_stay_stay_viewer,Read access on stay.stay to Stay Viewer,model_stay_stay,group_stay_viewer,1,0,0,0
+access_stay_room_assign_user,Full access on stay.room.assign to Stay User,model_stay_room_assign,group_stay_user,1,1,1,1
+access_stay_room_assign_viewer,Read access on stay.room.assign to Stay Viewer,model_stay_room_assign,group_stay_viewer,1,0,0,0
 access_stay_line_user,Full access on stay.line to Stay User,model_stay_line,group_stay_user,1,1,1,1
 access_stay_line_viewer,Read access on stay.line to Stay Viewer,model_stay_line,group_stay_viewer,1,0,0,0
 access_stay_journal_generate,Full access on stay.journal.generate wizard,model_stay_journal_generate,group_stay_user,1,1,1,1

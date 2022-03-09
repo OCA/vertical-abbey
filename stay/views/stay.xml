@@ -26,6 +26,7 @@
                         <field name="partner_id" />
                         <field name="partner_name" />
                         <field name="guest_qty" />
+                        <field name="assign_status" />
                     </group>
                     <group name="right">
                         <field name="arrival_date" />
@@ -34,12 +35,14 @@
                         <field name="departure_date" />
                         <field name="departure_time" />
                         <field name="departure_note" />
-                        <field name="room_id" />
                         <field name="group_id" />
                         <field name="no_meals" />
                     </group>
                 </group>
-                <group name="lines">
+                <group name="rooms" string="Room Assignment">
+                    <field name="room_assign_ids" nolabel="1" />
+                </group>
+                <group name="lines" string="Stay Lines">
                     <field name="line_ids" nolabel="1" />
                 </group>
             </sheet>
@@ -56,7 +59,7 @@
     <field name="name">stay.tree</field>
     <field name="model">stay.stay</field>
     <field name="arch" type="xml">
-        <tree string="Stay">
+        <tree>
             <field name="name" />
             <field name="partner_name" invisible="context.get('partner_view')" />
             <field name="guest_qty" />
@@ -66,8 +69,16 @@
             <field name="departure_date" />
             <field name="departure_time" />
             <field name="departure_note" optional="show" />
+            <field name="rooms_display_name" string="Rooms" />
+            <field
+                    name="assign_status"
+                    decoration-success="assign_status == 'assigned'"
+                    decoration-danger="assign_status == 'error'"
+                    decoration-info="assign_status == 'none'"
+                    decoration-warning="assign_status == 'partial'"
+                    widget="badge"
+                />
             <field name="group_id" optional="show" />
-            <field name="room_id" />
             <field
                     name="company_id"
                     groups="base.group_multi_company"
@@ -86,7 +97,6 @@
             <field name="partner_name" />
             <field name="partner_id" />
             <field name="group_id" />
-            <field name="room_id" />
             <field
                     name="departure_date"
                     string="Arrivals and Departures on"
@@ -97,6 +107,17 @@
                     string="My Rooms"
                     name="my_rooms"
                     domain="[('user_id', '=', uid)]"
+                />
+            <separator />
+            <filter
+                    string="To Assign"
+                    name="to_assign"
+                    domain="[('assign_status', '!=', 'assigned')]"
+                />
+            <filter
+                    string="Assigned"
+                    name="assigned"
+                    domain="[('assign_status', '=', 'assigned')]"
                 />
             <separator />
             <filter
@@ -115,10 +136,11 @@
                     domain="[('departure_date', '&gt;=', (context_today().strftime('%Y-%m-%d')))]"
                 />
             <separator />
+            <filter string="Arrival Date" name="arrival_date" date="arrival_date" />
             <filter
-                    string="Last 12 months"
-                    name="last12months"
-                    domain="[('arrival_date', '&gt;=', (context_today() + relativedelta(day=1, months=-12)).strftime('%Y-%m-%d'))]"
+                    string="Departure Date"
+                    name="departure_date"
+                    date="departure_date"
                 />
             <separator />
             <group string="Group By" name="groupby">
@@ -141,6 +163,11 @@
                         name="arrival_date_groupby"
                         string="Arrival Date"
                         context="{'group_by': 'arrival_date'}"
+                    />
+                <filter
+                        name="assign_status_groupby"
+                        string="Assign Status"
+                        context="{'group_by': 'assign_status'}"
                     />
             </group>
         </search>
@@ -175,38 +202,26 @@
     <field name="arch" type="xml">
         <calendar
                 string="Stays"
-                color="room_id"
+                color="group_id"
                 date_start="arrival_datetime"
                 date_stop="departure_datetime"
                 mode="month"
             >
-            <field name="calendar_display_name" />
+            <field name="arrival_date" />
+            <field name="arrival_time" />
+            <field name="departure_date" />
+            <field name="departure_time" />
+            <field name="guest_qty" />
+            <field name="partner_name" />
+            <field name="rooms_display_name" />
         </calendar>
-    </field>
-</record>
-
-<record id="stay_timeline" model="ir.ui.view">
-    <field name="name">stay.timeline</field>
-    <field name="model">stay.stay</field>
-    <field name="arch" type="xml">
-        <timeline
-                date_start="arrival_datetime"
-                date_stop="departure_datetime"
-                string="Stays"
-                default_group_by="room_id"
-                event_open_popup="true"
-                mode="week"
-                colors="#ec7063:group_id_integer == 1;#2ecb71:group_id_integer == 2;#f34242:group_id_integer == 3"
-                zoomKey="ctrlKey"
-            >
-        </timeline>
     </field>
 </record>
 
 <record id="stay_action" model="ir.actions.act_window">
     <field name="name">Stays</field>
     <field name="res_model">stay.stay</field>
-    <field name="view_mode">tree,form,calendar,graph,pivot,timeline</field>
+    <field name="view_mode">tree,form,calendar,graph,pivot</field>
     <field
             name="context"
         >{'search_default_current_and_future': True, 'stay_name_get_partner_name_qty': True}</field>
@@ -226,6 +241,163 @@
 <menuitem id="stay_report_menu" sequence="20" name="Reports" parent="stay_top_menu" />
 
 <menuitem id="stay_menu" action="stay_action" parent="stay_sub_menu" sequence="10" />
+
+
+<record id="stay_room_assign_tree" model="ir.ui.view">
+    <field name="model">stay.room.assign</field>
+    <field name="arch" type="xml">
+        <tree editable="bottom">
+            <field
+                    name="stay_id"
+                    invisible="not context.get('stay_room_assign_main_view')"
+                />
+            <field
+                    name="arrival_date"
+                    invisible="not context.get('stay_room_assign_main_view')"
+                />
+            <field
+                    name="departure_date"
+                    invisible="not context.get('stay_room_assign_main_view')"
+                />
+            <field name="room_id" />
+            <field name="guest_qty" />
+            <field name="group_id" invisible="1" />
+            <field name="company_id" groups="base.group_multi_company" />
+        </tree>
+    </field>
+</record>
+
+<record id="stay_room_assign_calendar" model="ir.ui.view">
+    <field name="model">stay.room.assign</field>
+    <field name="arch" type="xml">
+        <calendar
+                color="room_id"
+                date_start="arrival_datetime"
+                date_stop="departure_datetime"
+                mode="month"
+            >
+            <field name="calendar_display_name" />
+        </calendar>
+    </field>
+</record>
+
+
+<record id="stay_room_assign_timeline" model="ir.ui.view">
+    <field name="name">stay.room.assign.timeline</field>
+    <field name="model">stay.room.assign</field>
+    <field name="arch" type="xml">
+        <timeline
+                date_start="arrival_datetime"
+                date_stop="departure_datetime"
+                default_group_by="room_id"
+                event_open_popup="true"
+                mode="week"
+                colors="#ec7063:group_id_integer == 1;#2ecb71:group_id_integer == 2;#f34242:group_id_integer == 3"
+                zoomKey="ctrlKey"
+            >
+        </timeline>
+    </field>
+</record>
+
+<record id="stay_room_assign_pivot" model="ir.ui.view">
+    <field name="model">stay.room.assign</field>
+    <field name="arch" type="xml">
+        <pivot>
+            <field name="arrival_date" interval="month" type="row" />
+            <field name="guest_qty" type="measure" />
+        </pivot>
+    </field>
+</record>
+
+<record id="stay_room_assign_search" model="ir.ui.view">
+    <field name="name">stay.room.assign.search</field>
+    <field name="model">stay.room.assign</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="partner_name" />
+            <field name="partner_id" />
+            <field name="group_id" />
+            <field name="room_id" />
+            <field
+                    name="departure_date"
+                    string="Arrivals and Departures on"
+                    filter_domain="['|', ('arrival_date', '=', self), ('departure_date', '=', self)]"
+                />
+            <separator />
+            <filter
+                    string="My Rooms"
+                    name="my_rooms"
+                    domain="[('user_id', '=', uid)]"
+                />
+            <separator />
+            <filter
+                    string="Arrivals/Departures Today"
+                    name="in_out_today"
+                    domain="['|', ('arrival_date', '=', context_today().strftime('%Y-%m-%d')), ('departure_date', '=', context_today().strftime('%Y-%m-%d'))]"
+                />
+            <filter
+                    string="Arrivals/Departures Tomorrow"
+                    name="in_out_tomorrow"
+                    domain="['|', ('arrival_date', '=', (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')), ('departure_date', '=', (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"
+                />
+            <filter
+                    string="Current and Future Stays"
+                    name="current_and_future"
+                    domain="[('departure_date', '&gt;=', (context_today().strftime('%Y-%m-%d')))]"
+                />
+            <separator />
+            <filter string="Arrival Date" name="arrival_date" date="arrival_date" />
+            <filter
+                    string="Departure Date"
+                    name="departure_date"
+                    date="departure_date"
+                />
+            <separator />
+            <group string="Group By" name="groupby">
+                <filter
+                        name="group_groupby"
+                        string="Group"
+                        context="{'group_by': 'group_id'}"
+                    />
+                <filter
+                        name="user_groupby"
+                        string="In Charge"
+                        context="{'group_by': 'user_id'}"
+                    />
+                <filter
+                        name="partner_groupby"
+                        string="Guest Name"
+                        context="{'group_by': 'partner_name'}"
+                    />
+                <filter
+                        name="arrival_date_groupby"
+                        string="Arrival Date"
+                        context="{'group_by': 'arrival_date'}"
+                    />
+            </group>
+        </search>
+    </field>
+</record>
+
+
+
+<record id="stay_room_assign_action" model="ir.actions.act_window">
+    <field name="name">Room Assignments</field>
+    <field name="res_model">stay.room.assign</field>
+    <field name="view_mode">tree,timeline,calendar,pivot</field>
+    <field
+            name="context"
+        >{'search_default_current_and_future': True, 'stay_name_get_partner_name_qty': True, 'stay_room_assign_main_view': True}</field>
+</record>
+
+
+<menuitem
+        id="stay_room_assign_menu"
+        action="stay_room_assign_action"
+        parent="stay_sub_menu"
+        sequence="20"
+    />
+
 
 <record id="stay_refectory_form" model="ir.ui.view">
     <field name="name">stay.refectory.form</field>
@@ -331,7 +503,7 @@
                             name="allow_simultaneous"
                             attrs="{'invisible': [('bed_qty', '=', 1)]}"
                         />
-                <field name="no_meals" />
+                <!--                <field name="no_meals" />  -->
                 <field name="notes" />
                 <field name="active" invisible="1" />
             </group>
@@ -350,7 +522,7 @@
             <field name="code" optional="show" />
             <field name="group_id" optional="show" />
             <field name="bed_qty" />
-            <field name="no_meals" />
+            <!--            <field name="no_meals" /> -->
             <field
                     name="company_id"
                     groups="base.group_multi_company"
@@ -498,7 +670,7 @@
                 <field name="dinner_qty" />
                 <field name="bed_night_qty" />
                 <field name="refectory_id" />
-                <field name="room_id" />
+                <field name="room_ids" />
                 <field name="group_id" />
                 <field name="user_id" />
             </group>
@@ -518,7 +690,7 @@
             <field name="dinner_qty" sum="1" />
             <field name="bed_night_qty" sum="1" />
             <field name="refectory_id" optional="show" />
-            <field name="room_id" />
+            <field name="rooms_display_name" />
             <field
                     name="company_id"
                     groups="base.group_multi_company"
@@ -537,21 +709,18 @@
             <field name="partner_name" />
             <field name="group_id" />
             <separator />
-            <filter
-                    name="my_rooms"
-                    string="My Rooms"
-                    domain="[('user_id', '=', uid)]"
-                />
+            <filter string="Date" name="date" date="date" />
             <separator />
-            <filter
-                    string="Last 12 months"
-                    name="last12months"
-                    domain="[('date', '&gt;=', (context_today() + relativedelta(day=1, months=-12)).strftime('%Y-%m-%d'))]"
-                />
             <filter
                     string="Current and Future Lines"
                     name="current_and_future"
                     domain="[('date', '&gt;=', (context_today().strftime('%Y-%m-%d')))]"
+                />
+            <separator />
+            <filter
+                    name="my_rooms"
+                    string="My Rooms"
+                    domain="[('user_id', '=', uid)]"
                 />
             <separator />
             <group string="Group By" name="groupby">
@@ -625,7 +794,7 @@
         id="stay_line_menu"
         action="stay_line_action"
         parent="stay_sub_menu"
-        sequence="20"
+        sequence="30"
     />
 
 <menuitem
@@ -678,6 +847,8 @@
         <search string="Search Date Labels">
             <field name="name" />
             <field name="date" />
+            <separator />
+            <filter string="Date" name="date" date="date" />
             <group name="groupby">
                 <filter
                         name="date_groupby"

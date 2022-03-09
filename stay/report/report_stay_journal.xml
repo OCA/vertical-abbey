@@ -14,7 +14,10 @@
 
 <div class="page">
 
-<h1>Guest List <span t-field="doc.date" /></h1>
+    <div class="text-center">
+        <h2>Guest List <span t-field="doc.date" /></h2>
+        <t t-if="doc.date_label"><span t-field="doc.date_label" /></t>
+    </div>
 
 <t t-foreach="doc.get_report_by_refectory()" t-as="k">
 
@@ -28,7 +31,7 @@
             <th>Arrival</th>
             <th>Departure</th>
             <th>Guests</th>
-            <th>Room</th>
+            <th>Rooms</th>
             <th class="text-center">Lunches</th>
             <th class="text-center">Dinners</th>
             <th class="text-center">Nights</th>
@@ -45,7 +48,7 @@
                                                 t-field="line.stay_id.departure_time"
                                             /></td>
             <td><p t-field="line.partner_name" /></td>
-            <td><span t-field="line.room_id" /></td>
+            <td><span t-field="line.rooms_display_name" /></td>
             <td class="text-center"><span t-field="line.lunch_qty" /></td>
             <td class="text-center"><span t-field="line.dinner_qty" /></td>
             <td class="text-center"><span t-field="line.bed_night_qty" /></td>

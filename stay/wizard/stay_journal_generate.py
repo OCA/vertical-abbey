@@ -86,7 +86,8 @@ class StayJournalGenerate(models.TransientModel):
 
     def generate(self):
         self.ensure_one()
-        lines_to_delete = self.env["stay.line"].search(
+        slo = self.env["stay.line"]
+        lines_to_delete = slo.search(
             [
                 ("date", "=", self.date),
                 ("stay_id", "!=", False),
@@ -105,10 +106,19 @@ class StayJournalGenerate(models.TransientModel):
         if not stays:
             raise UserError(_("No stay for this date."))
         for stay in stays:
-            vals = self._prepare_stay_line(stay)
+            if stay.assign_status != "assigned":
+                raise UserError(
+                    _("Stay '{stay}' has an Assign Status '{assign_status}'.").format(
+                        stay=stay.display_name,
+                        assign_status=stay.convert_to_export(stay.assign_status, stay),
+                    )
+                )
+            line_vals = []
+            vals = stay._prepare_stay_line(self.date)
             if vals:
-                self.env["stay.line"].create(vals)
+                line_vals.append(vals)
+            slo.create(line_vals)
 
-        action = self.env.ref("stay.stay_line_action").sudo().read([])[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stay.stay_line_action")
         action["domain"] = [("date", "=", self.date)]
         return action

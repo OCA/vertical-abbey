@@ -69,22 +69,22 @@ class StayStayXlsx(models.TransientModel):
 
     def run(self):
         self.ensure_one()
-        sso = self.env["stay.stay"]
-        start_date = self.start_date
-        end_date = self.end_date
-        start_date_dt = fields.Date.from_string(start_date)
-        end_date_dt = fields.Date.from_string(end_date)
+        srao = self.env["stay.room.assign"]
+        start_date_dt = self.start_date
+        end_date_dt = self.end_date
+        #        start_date_dt = fields.Date.from_string(start_date)
+        #        end_date_dt = fields.Date.from_string(end_date)
         date_labels = self.env["stay.date.label"].search_read(
             [
                 ("date", ">=", self.start_date),
                 ("date", "<=", self.end_date),
                 ("name", "!=", False),
-            ]
+            ],
+            ["date", "name"],
         )
         date2label = {}
         for date_label in date_labels:
-            date_dt = fields.Date.from_string(date_label["date"])
-            date2label[date_dt] = date_label["name"]
+            date2label[date_label["date"]] = date_label["name"]
         file_data = BytesIO()
         workbook = xlsxwriter.Workbook(file_data)
         for group_name, rooms in self.prepare_tab().items():
@@ -169,19 +169,19 @@ class StayStayXlsx(models.TransientModel):
 
                 date_dt += relativedelta(days=1)
             for room in rooms:
-                stays = sso.search(
+                room_assigns = srao.search(
                     [
                         ("room_id", "=", room.id),
-                        ("arrival_date", "<=", end_date),
-                        ("departure_date", ">=", start_date),
+                        ("arrival_date", "<=", end_date_dt),
+                        ("departure_date", ">=", start_date_dt),
                     ]
                 )
                 col = room2col[room]
-                for stay in stays:
+                for assign in room_assigns:
                     nights_dt = []
-                    stay_start_dt = fields.Date.from_string(stay.arrival_date)
-                    stay_end_dt = fields.Date.from_string(stay.departure_date)
-                    cell_label = stay.partner_name
+                    stay_start_dt = assign.arrival_date
+                    stay_end_dt = assign.departure_date
+                    cell_label = assign.partner_name
                     stay_date_dt = stay_start_dt
                     while stay_date_dt < stay_end_dt:
                         nights_dt.append(stay_date_dt)
