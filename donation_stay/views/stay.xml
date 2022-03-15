@@ -28,12 +28,12 @@
     </field>
 </record>
 
-        <record id="stay_tree" model="ir.ui.view">
+<record id="stay_tree" model="ir.ui.view">
     <field name="name">donation.stay.tree</field>
     <field name="model">stay.stay</field>
     <field name="inherit_id" ref="stay.stay_tree" />
     <field name="arch" type="xml">
-            <field name="room_id" position="after">
+            <field name="assign_status" position="after">
                     <field name="donation_id" optional="show" />
             </field>
             </field>
