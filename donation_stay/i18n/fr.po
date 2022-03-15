@@ -19,12 +19,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:donation_stay.field_res_company__donation_stay_campaign_id
 #: model:ir.model.fields,field_description:donation_stay.field_res_config_settings__donation_stay_campaign_id
 msgid "Campaign for Stay Donations"
-msgstr ""
+msgstr "Campagne pour les dons hôtellerie"
 
 #. module: donation_stay
 #: model_terms:ir.ui.view,arch_db:donation_stay.create_donation_stay_form
 msgid "Cancel"
-msgstr "Quitter"
+msgstr "Annuler"
 
 #. module: donation_stay
 #: model:ir.model,name:donation_stay.model_res_company
@@ -34,7 +34,7 @@ msgstr "Sociétés"
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__company_id
 msgid "Company"
-msgstr ""
+msgstr "Société"
 
 #. module: donation_stay
 #: model:ir.model,name:donation_stay.model_res_config_settings
@@ -55,27 +55,27 @@ msgstr "Créer un don à partir d'un séjour"
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Créé par"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Créé le"
 
 #. module: donation_stay
 #: model:ir.actions.act_window,name:donation_stay.create_donation_stay_action
 msgid "Creation of Donation for a Guest Stay"
-msgstr "Créer un don lié au séjour d'un retraitant"
+msgstr "Créer un don depuis le séjour d'un hôte"
 
 #. module: donation_stay
 #: model_terms:ir.ui.view,arch_db:donation_stay.create_donation_stay_form
 msgid "Creation of a Donation for a Guest Stay"
-msgstr "Créer un don lié au séjour d'un retraitant"
+msgstr "Créer un don lié depuis le séjour d'un hôte"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Devise"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__display_name
@@ -88,7 +88,7 @@ msgstr "Nom à afficher"
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_stay_stay__donation_id
 msgid "Donation"
-msgstr ""
+msgstr "Don"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__amount
@@ -104,7 +104,7 @@ msgstr "Date du don"
 #: code:addons/donation_stay/wizard/create_donation_stay.py:0
 #, python-format
 msgid "Donation Stay Product not set on company '%s'."
-msgstr ""
+msgstr "Article de don pour séjour non configuré sur la société '%s'."
 
 #. module: donation_stay
 #: code:addons/donation_stay/wizard/create_donation_stay.py:0
@@ -112,12 +112,12 @@ msgstr ""
 msgid ""
 "Donation created from stay <a href=# data-oe-model=stay.stay data-oe-"
 "id=%d>%s</a>."
-msgstr ""
+msgstr "Don créé depuis le séjour <a href=# data-oe-model=stay.stay data-oe-id=%d>%s</a>."
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__partner_id
 msgid "Guest"
-msgstr ""
+msgstr "Hôte"
 
 #. module: donation_stay
 #: model:ir.model,name:donation_stay.model_stay_stay
@@ -143,33 +143,33 @@ msgstr "Dernière modification le"
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Dernière modification par"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Dernière modification le"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__payment_mode_id
 msgid "Payment Mode"
-msgstr ""
+msgstr "Mode de paiement"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__payment_ref
 msgid "Payment Reference"
-msgstr ""
+msgstr "Référence de paiement"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_res_company__donation_stay_product_id
 #: model:ir.model.fields,field_description:donation_stay.field_res_config_settings__donation_stay_product_id
 msgid "Product for Stay Donations"
-msgstr ""
+msgstr "Article pour les dons de séjour"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__stay_id
 msgid "Stay"
-msgstr ""
+msgstr "Séjour"
 
 #. module: donation_stay
 #: model:product.product,name:donation_stay.product_product_stay_donation
@@ -181,16 +181,10 @@ msgstr "Don hôtellerie"
 #: code:addons/donation_stay/wizard/create_donation_stay.py:0
 #, python-format
 msgid "The amount of the donation is not set or negative."
-msgstr ""
-
-#. module: donation_stay
-#: model:product.product,description:donation_stay.product_product_stay_donation
-#: model:product.template,description:donation_stay.product_product_stay_donation_product_template
-msgid "This is the donation product for stays."
-msgstr "C'est le produit 'don' pour les séjours."
+msgstr "Le montant du don n'est pas renseigné ou est négatif."
 
 #. module: donation_stay
 #: model:product.product,uom_name:donation_stay.product_product_stay_donation
 #: model:product.template,uom_name:donation_stay.product_product_stay_donation_product_template
 msgid "Units"
-msgstr ""
+msgstr "Unités"
