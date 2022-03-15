@@ -26,7 +26,7 @@
                 <th style="padding: 5px; border: 1px solid black;">Guest Name</th>
                 <th style="padding: 5px; border: 1px solid black;">Guest Qty</th>
                 <th style="padding: 5px; border: 1px solid black;">Arrival Time</th>
-                <th style="padding: 5px; border: 1px solid black;">Room</th>
+                <th style="padding: 5px; border: 1px solid black;">Rooms</th>
                 <th style="padding: 5px; border: 1px solid black;">Departure Date</th>
             </tr>
             % for o in ctx.get('stay_list'):
@@ -40,7 +40,7 @@
                 <td
                                 style="padding: 5px; border: 1px solid black;"
                             >${o['arrival_time']}</td>
-                <td style="padding: 5px; border: 1px solid black;">${o['room']}</td>
+                <td style="padding: 5px; border: 1px solid black;">${o['rooms']}</td>
                 <td
                                 style="padding: 5px; border: 1px solid black;"
                             >${format_date(o['departure_date'])} (${o['departure_time']})</td>
