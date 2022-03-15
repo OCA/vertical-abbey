@@ -9,7 +9,6 @@
     <field name="donation">1</field>
     <field name="list_price">0</field>
     <field name="type">service</field>
-    <field name="description">This is the donation product for stays.</field>
     <field name="taxes_id" eval="False" />
     <field name="supplier_taxes_id" eval="False" />
 </record>
