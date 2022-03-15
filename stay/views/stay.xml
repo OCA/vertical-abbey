@@ -93,7 +93,7 @@
     <field name="name">stay.search</field>
     <field name="model">stay.stay</field>
     <field name="arch" type="xml">
-        <search string="Search Stays">
+        <search>
             <field name="partner_name" />
             <field name="partner_id" />
             <field name="group_id" />
@@ -151,7 +151,7 @@
                     />
                 <filter
                         name="user_groupby"
-                        string="In Charge"
+                        string="Responsible"
                         context="{'group_by': 'user_id'}"
                     />
                 <filter
@@ -361,7 +361,7 @@
                     />
                 <filter
                         name="user_groupby"
-                        string="In Charge"
+                        string="Responsible"
                         context="{'group_by': 'user_id'}"
                     />
                 <filter
@@ -445,7 +445,7 @@
     <field name="name">stay.refectory.search</field>
     <field name="model">stay.refectory</field>
     <field name="arch" type="xml">
-        <search string="Search Refectories">
+        <search>
             <field
                     name="name"
                     filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"
@@ -536,7 +536,7 @@
     <field name="name">stay.room.search</field>
     <field name="model">stay.room</field>
     <field name="arch" type="xml">
-        <search string="Search Rooms">
+        <search>
             <field
                     name="name"
                     filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"
@@ -562,7 +562,7 @@
                     />
                 <filter
                         name="user_groupby"
-                        string="In Charge"
+                        string="Responsible"
                         context="{'group_by': 'user_id'}"
                     />
             </group>
@@ -622,7 +622,7 @@
     <field name="name">stay.group.search</field>
     <field name="model">stay.group</field>
     <field name="arch" type="xml">
-        <search string="Search Groups">
+        <search>
             <field
                     name="name"
                     filter_domain="['|', ('name', 'ilike', self), ('user_id', 'ilike', self)]"
@@ -704,7 +704,7 @@
     <field name="name">stay.line.search</field>
     <field name="model">stay.line</field>
     <field name="arch" type="xml">
-        <search string="Search Stay Lines">
+        <search>
             <field name="date" />
             <field name="partner_name" />
             <field name="group_id" />
@@ -731,7 +731,7 @@
                     />
                 <filter
                         name="user_groupby"
-                        string="In Charge"
+                        string="Responsible"
                         context="{'group_by': 'user_id'}"
                     />
                 <filter
@@ -844,7 +844,7 @@
     <field name="name">stay.date.label.search</field>
     <field name="model">stay.date.label</field>
     <field name="arch" type="xml">
-        <search string="Search Date Labels">
+        <search>
             <field name="name" />
             <field name="date" />
             <separator />

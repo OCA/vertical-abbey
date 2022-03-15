@@ -731,7 +731,7 @@ class StayGroup(models.Model):
                             "partner_name": stay.partner_name,
                             "guest_qty": stay.guest_qty,
                             "arrival_time": fields_get_time[stay.arrival_time],
-                            "room": stay.room_id and stay.room_id.display_name or "",
+                            "rooms": stay.rooms_display_name,
                             "departure_date": stay.departure_date,
                             "departure_time": fields_get_time[stay.departure_time],
                         }
@@ -825,17 +825,17 @@ class StayLine(models.Model):
         (
             "lunch_qty_positive",
             "CHECK (lunch_qty >= 0)",
-            "The number of lunches must be positive or null",
+            "The number of lunches must be positive or null.",
         ),
         (
             "dinner_qty_positive",
             "CHECK (dinner_qty >= 0)",
-            "The number of dinners must be positive or null",
+            "The number of dinners must be positive or null.",
         ),
         (
             "bed_night_qty_positive",
             "CHECK (bed_night_qty >= 0)",
-            "The number of bed nights must be positive or null",
+            "The number of bed nights must be positive or null.",
         ),
     ]
 
