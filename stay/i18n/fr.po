@@ -1182,7 +1182,7 @@ msgstr "Cette chambre a déjà été utilisée pour ce séjour."
 #, python-format
 msgid ""
 "This stay conflicts with stay %s of '%s' from %s %s to %s %s in room %s."
-msgstr "Ce séjour entre en conflit avec le séjour %s de '%s' du %s %s au %s dans la chambre %s."
+msgstr "Ce séjour entre en conflit avec le séjour %s de '%s' du %s %s au %s %s dans la chambre %s."
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
