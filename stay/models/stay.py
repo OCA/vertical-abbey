@@ -10,6 +10,7 @@ from datetime import datetime
 
 import pytz
 from dateutil.relativedelta import relativedelta
+from textwrap import shorten
 
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -402,9 +403,6 @@ class StayRoomAssign(models.Model):
         domain="[('company_id', '=', company_id), '|', ('group_id', '=', False), ('group_id', '=', group_id)]",
     )
     guest_qty = fields.Integer(string="Guest Quantity", required=True)
-    calendar_display_name = fields.Char(
-        compute="_compute_calendar_display_name", store=False
-    )
     # Related fields
     group_id = fields.Many2one(related="room_id.group_id", store=True)
     # The field group_id_integer is used for colors in timeline view
@@ -482,9 +480,9 @@ class StayRoomAssign(models.Model):
                     conflict_stay.name,
                     conflict_stay.partner_name,
                     format_date(self.env, conflict_stay.arrival_date),
-                    conflict_stay.arrival_time,
+                    conflict_stay._fields['arrival_time'].convert_to_export(conflict_stay.arrival_time, conflict_stay),
                     format_date(self.env, conflict_stay.departure_date),
-                    conflict_stay.departure_time,
+                    conflict_stay._fields['departure_time'].convert_to_export(conflict_stay.departure_time, conflict_stay),
                     conflict_assign.room_id.display_name,
                 )
             )
@@ -528,15 +526,18 @@ class StayRoomAssign(models.Model):
             date += relativedelta(days=1)
 
     @api.depends("partner_name", "arrival_time", "departure_time", "room_id")
-    def _compute_calendar_display_name(self):
+    def name_get(self):
+        res = []
         for assign in self:
-            assign.calendar_display_name = "[%s] %s, %s, %d [%s]" % (
+            name = "[%s] %s, %s, %d [%s]" % (
                 TIME2CODE[assign.arrival_time],
-                assign.partner_name,
+                shorten(assign.partner_name, 20, placeholder='...'),
                 assign.room_id.code or assign.room_id.name,
                 assign.guest_qty,
                 TIME2CODE[assign.departure_time],
             )
+            res.append((assign.id, name))
+        return res
 
     @api.onchange("room_id")
     def room_id_change(self):
