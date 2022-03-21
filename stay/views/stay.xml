@@ -276,7 +276,7 @@
                 date_stop="departure_datetime"
                 mode="month"
             >
-            <field name="calendar_display_name" />
+            <field name="display_name" />
         </calendar>
     </field>
 </record>
