@@ -39,4 +39,18 @@
             </field>
     </record>
 
+<record id="stay_search" model="ir.ui.view">
+    <field name="name">donation.stay.search</field>
+    <field name="model">stay.stay</field>
+    <field name="inherit_id" ref="stay.stay_search" />
+    <field name="arch" type="xml">
+        <filter name="departure_date" position="after">
+            <separator/>
+            <filter name="donation_todo" string="No Donation" domain="[('donation_id', '=', False)]"/>
+            <filter name="donation_done" string="Donation Recorded" domain="[('donation_id', '!=', False)]"/>
+        </filter>
+    </field>
+</record>
+
+
 </odoo>
