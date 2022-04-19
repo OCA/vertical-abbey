@@ -13,7 +13,33 @@
     <field name="model">stay.stay</field>
     <field name="arch" type="xml">
         <form string="Stay">
-            <header /> <!-- used by module donation_stay -->
+            <header>
+                <button
+                        name="draft2confirm"
+                        type="object"
+                        string="Confirm"
+                        states="draft"
+                        class="btn-primary"
+                    />
+                <button
+                        name="cancel2draft"
+                        type="object"
+                        string="Back to Draft"
+                        states="cancel"
+                    />
+                <button
+                        name="cancel"
+                        type="object"
+                        string="Cancel"
+                        states="draft,confirm,current,done"
+                        confirm="Are you sure you want to cancel this stay?"
+                    />
+                <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,confirm,current,done"
+                    />
+            </header>
             <sheet>
                 <div class="oe_title">
                     <h1>
@@ -26,24 +52,41 @@
                         <field name="partner_id" />
                         <field name="partner_name" />
                         <field name="guest_qty" />
-                        <field name="assign_status" />
+                        <field
+                                name="assign_status"
+                                states="confirm,current,done"
+                                decoration-success="assign_status == 'assigned'"
+                                decoration-danger="assign_status == 'error'"
+                                decoration-info="assign_status == 'none'"
+                                decoration-warning="assign_status == 'partial'"
+                                widget="badge"
+                            />
                     </group>
                     <group name="right">
                         <field name="arrival_date" />
                         <field name="arrival_time" />
+                        <field name="arrival_datetime" invisible="1" />
                         <field name="arrival_note" />
                         <field name="departure_date" />
                         <field name="departure_time" />
+                        <field name="departure_datetime" invisible="1" />
                         <field name="departure_note" />
                         <field name="group_id" />
                         <field name="no_meals" />
+                        <field
+                                name="refectory_id"
+                                attrs="{'invisible': [('no_meals', '=', True)]}"
+                            />
                     </group>
                 </group>
-                <group name="rooms" string="Room Assignment">
+                <group name="rooms" states="confirm,current,done">
                     <field name="room_assign_ids" nolabel="1" />
                 </group>
-                <group name="lines" string="Stay Lines">
+                <group name="lines" states="confirm,current,done">
                     <field name="line_ids" nolabel="1" />
+                </group>
+                <group name="notes">
+                    <field name="notes" />
                 </group>
             </sheet>
             <div class="oe_chatter">
@@ -61,6 +104,12 @@
     <field name="arch" type="xml">
         <tree>
             <field name="name" />
+            <field name="group_id" optional="show" />
+            <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    optional="hide"
+                />
             <field name="partner_name" invisible="context.get('partner_view')" />
             <field name="guest_qty" />
             <field name="arrival_date" />
@@ -69,6 +118,7 @@
             <field name="departure_date" />
             <field name="departure_time" />
             <field name="departure_note" optional="show" />
+            <field name="refectory_id" optional="hide" />
             <field name="rooms_display_name" string="Rooms" />
             <field
                     name="assign_status"
@@ -78,11 +128,14 @@
                     decoration-warning="assign_status == 'partial'"
                     widget="badge"
                 />
-            <field name="group_id" optional="show" />
             <field
-                    name="company_id"
-                    groups="base.group_multi_company"
-                    optional="show"
+                    name="state"
+                    decoration-info="state == 'draft'"
+                    decoration-success="state == 'confirm'"
+                    decoration-warning="state == 'current'"
+                    decoration-muted="state == 'cancel'"
+                    decoration-danger="state == 'done'"
+                    widget="badge"
                 />
         </tree>
     </field>
@@ -97,6 +150,7 @@
             <field name="partner_name" />
             <field name="partner_id" />
             <field name="group_id" />
+            <field name="refectory_id" />
             <field
                     name="departure_date"
                     string="Arrivals and Departures on"
@@ -108,6 +162,20 @@
                     name="my_rooms"
                     domain="[('user_id', '=', uid)]"
                 />
+            <separator />
+            <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]" />
+            <filter
+                    string="Confirmed"
+                    name="confirm"
+                    domain="[('state', '=', 'confirm')]"
+                />
+            <filter
+                    string="Current"
+                    name="current"
+                    domain="[('state', '=', 'current')]"
+                />
+            <filter string="Finished" name="done" domain="[('state', '=', 'done')]" />
+            <filter string="Cancel" name="cancel" domain="[('state', '=', 'cancel')]" />
             <separator />
             <filter
                     string="To Assign"
@@ -133,7 +201,7 @@
             <filter
                     string="Current and Future Stays"
                     name="current_and_future"
-                    domain="[('departure_date', '&gt;=', (context_today().strftime('%Y-%m-%d')))]"
+                    domain="[('state', 'in', ('draft', 'confirm', 'current'))]"
                 />
             <separator />
             <filter string="Arrival Date" name="arrival_date" date="arrival_date" />
@@ -148,6 +216,16 @@
                         name="group_groupby"
                         string="Group"
                         context="{'group_by': 'group_id'}"
+                    />
+                <filter
+                        name="state_groupby"
+                        string="Group"
+                        context="{'group_by': 'state'}"
+                    />
+                <filter
+                        name="refectory_groupby"
+                        string="Refectory"
+                        context="{'group_by': 'refectory_id'}"
                     />
                 <filter
                         name="user_groupby"
@@ -196,6 +274,8 @@
     </field>
 </record>
 
+<!-- arrival_datetime and departure_datetime are readonly, so, when you create a stay
+from the calendar view, the dates are not set -->
 <record id="stay_calendar" model="ir.ui.view">
     <field name="name">stay.calendar</field>
     <field name="model">stay.stay</field>
@@ -206,6 +286,7 @@
                 date_start="arrival_datetime"
                 date_stop="departure_datetime"
                 mode="month"
+                quick_add="false"
             >
             <field name="arrival_date" />
             <field name="arrival_time" />
@@ -262,7 +343,12 @@
             <field name="room_id" />
             <field name="guest_qty" />
             <field name="group_id" invisible="1" />
-            <field name="company_id" groups="base.group_multi_company" />
+            <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    optional="hide"
+                    invisible="not context.get('stay_room_assign_main_view')"
+                />
         </tree>
     </field>
 </record>
@@ -477,7 +563,7 @@
         id="stay_refectory_menu"
         action="stay_refectory_action"
         parent="stay_configuration"
-        sequence="30"
+        sequence="40"
     />
 
 
@@ -580,7 +666,7 @@
         id="stay_room_menu"
         action="stay_room_action"
         parent="stay_configuration"
-        sequence="20"
+        sequence="30"
     />
 
 
@@ -593,6 +679,7 @@
             <group name="main">
                 <field name="name" />
                 <field name="company_id" groups="base.group_multi_company" />
+                <field name="default_refectory_id" />
                 <field name="user_id" />
                 <field name="notify_user_ids" widget="many2many_tags" />
             </group>
@@ -608,6 +695,7 @@
         <tree string="Groups">
             <field name="sequence" widget="handle" />
             <field name="name" />
+            <field name="default_refectory_id" optional="show" />
             <field name="user_id" />
             <field
                     name="company_id"
@@ -648,7 +736,7 @@
         id="stay_group_menu"
         action="stay_group_action"
         parent="stay_configuration"
-        sequence="10"
+        sequence="20"
     />
 
 
@@ -658,21 +746,22 @@
     <field name="arch" type="xml">
         <form string="Stay Line">
             <group name="main">
+                <field name="date" />
                 <field
                         name="stay_id"
                         invisible="not context.get('stay_line_main_view')"
                     />
-                <field name="company_id" groups="base.group_multi_company" />
-                <field name="date" />
+                <field name="rooms_display_name" />
                 <field name="partner_id" />
                 <field name="partner_name" />
+                <field name="breakfast_qty" groups="stay.group_stay_breakfast" />
                 <field name="lunch_qty" />
                 <field name="dinner_qty" />
                 <field name="bed_night_qty" />
                 <field name="refectory_id" />
-                <field name="room_ids" />
                 <field name="group_id" />
                 <field name="user_id" />
+                <field name="company_id" groups="base.group_multi_company" />
             </group>
         </form>
     </field>
@@ -682,15 +771,32 @@
     <field name="name">stay.line.tree</field>
     <field name="model">stay.line</field>
     <field name="arch" type="xml">
-        <tree string="Stay Lines">
+        <tree string="Stay Lines" editable="bottom">
             <field name="stay_id" invisible="not context.get('stay_line_main_view')" />
             <field name="date" />
-            <field name="partner_name" />
+            <field
+                    name="partner_id"
+                    invisible="not context.get('stay_line_main_view')"
+                />
+            <field
+                    name="partner_name"
+                    invisible="not context.get('stay_line_main_view')"
+                />
+            <field
+                    name="breakfast_qty"
+                    sum="1"
+                    optional="show"
+                    groups="stay.group_stay_breakfast"
+                />
             <field name="lunch_qty" sum="1" />
             <field name="dinner_qty" sum="1" />
             <field name="bed_night_qty" sum="1" />
             <field name="refectory_id" optional="show" />
-            <field name="rooms_display_name" />
+            <field
+                    name="rooms_display_name"
+                    invisible="not context.get('stay_line_main_view')"
+                    optional="show"
+                />
             <field
                     name="company_id"
                     groups="base.group_multi_company"
@@ -870,7 +976,7 @@
         id="stay_date_label_menu"
         action="stay_date_label_action"
         parent="stay_configuration"
-        sequence="40"
+        sequence="50"
     />
 
 

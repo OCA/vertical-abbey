@@ -20,7 +20,6 @@
         "views/stay.xml",
         "data/sequence.xml",
         "wizard/res_config_settings_view.xml",
-        "wizard/stay_journal_generate_view.xml",
         "wizard/stay_journal_print_view.xml",
         "wizard/stay_stay_xlsx_view.xml",
         "security/ir.model.access.csv",

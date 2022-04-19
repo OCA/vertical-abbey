@@ -1,1 +1,1 @@
-from . import test_generate_journal
+from . import test_stay

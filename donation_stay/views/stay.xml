@@ -13,18 +13,18 @@
     <field name="model">stay.stay</field>
     <field name="inherit_id" ref="stay.stay_form" />
     <field name="arch" type="xml">
-        <header position="inside">
+        <button name="cancel" position="before">
             <button
                     type="action"
                     string="Create Donation"
                     name="%(create_donation_stay_action)d"
                     groups="donation.group_donation_user"
-                    attrs="{'invisible': [('donation_id', '!=', False)]}"
+                    attrs="{'invisible': ['|', ('donation_id', '!=', False), ('state', 'in', ('cancel', 'draft'))]}"
                 />
-    </header>
-        <field name="guest_qty" position="after">
-                <field name="donation_id" />
-        </field>
+        </button>
+        <group name="left" position="inside">
+            <field name="donation_id" />
+        </group>
     </field>
 </record>
 
@@ -45,9 +45,17 @@
     <field name="inherit_id" ref="stay.stay_search" />
     <field name="arch" type="xml">
         <filter name="departure_date" position="after">
-            <separator/>
-            <filter name="donation_todo" string="No Donation" domain="[('donation_id', '=', False)]"/>
-            <filter name="donation_done" string="Donation Recorded" domain="[('donation_id', '!=', False)]"/>
+            <separator />
+            <filter
+                    name="donation_todo"
+                    string="No Donation"
+                    domain="[('donation_id', '=', False)]"
+                />
+            <filter
+                    name="donation_done"
+                    string="Donation Recorded"
+                    domain="[('donation_id', '!=', False)]"
+                />
         </filter>
     </field>
 </record>
