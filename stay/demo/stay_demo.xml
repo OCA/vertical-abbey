@@ -27,10 +27,12 @@
 
 <record id="group1" model="stay.group">
     <field name="name">Hôtellerie monastère</field>
+    <field name="default_refectory_id" ref="refectory_monastique" />
 </record>
 
 <record id="group2" model="stay.group">
     <field name="name">Hôtellerie familles</field>
+    <field name="default_refectory_id" ref="refectory_ste_francoise" />
 </record>
 
 <record id="room_st_cure_ars" model="stay.room">
