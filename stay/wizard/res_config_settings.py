@@ -13,3 +13,6 @@ class ResConfigSettings(models.TransientModel):
     stay_default_refectory_id = fields.Many2one(
         related="company_id.default_refectory_id", readonly=False
     )
+    group_stay_breakfast = fields.Boolean(
+        string="Manage Breakfasts", implied_group="stay.group_stay_breakfast"
+    )

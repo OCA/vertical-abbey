@@ -10,4 +10,9 @@ from odoo import fields, models
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    default_refectory_id = fields.Many2one("stay.refectory", string="Default Refectory")
+    default_refectory_id = fields.Many2one(
+        "stay.refectory",
+        string="Default Refectory",
+        ondelete="restrict",
+        check_company=True,
+    )

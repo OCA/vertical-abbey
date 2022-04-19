@@ -7,13 +7,14 @@
 
 import logging
 from datetime import datetime
+from textwrap import shorten
 
 import pytz
 from dateutil.relativedelta import relativedelta
-from textwrap import shorten
 
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.osv import expression
 from odoo.tools.misc import format_date
 
 logger = logging.getLogger(__name__)
@@ -43,6 +44,8 @@ class StayStay(models.Model):
         string="Company",
         required=True,
         default=lambda self: self.env.company,
+        readonly=True,
+        states={"draft": [("readonly", False)]},
     )
     partner_id = fields.Many2one(
         "res.partner",
@@ -66,7 +69,10 @@ class StayStay(models.Model):
         tracking=True,
     )
     arrival_datetime = fields.Datetime(
-        compute="_compute_arrival_datetime", store=True, string="Arrival Date and Time"
+        compute="_compute_arrival_datetime",
+        inverse="_inverse_arrival_datetime",
+        store=True,
+        string="Arrival Date and Time",
     )
     arrival_note = fields.Char(string="Arrival Note")
     departure_date = fields.Date(
@@ -84,13 +90,17 @@ class StayStay(models.Model):
     )
     departure_datetime = fields.Datetime(
         compute="_compute_departure_datetime",
+        inverse="_inverse_departure_datetime",
         store=True,
         string="Departure Date and Time",
     )
     departure_note = fields.Char(string="Departure Note")
-    notes = fields.Text()  # TODO add to view
+    notes = fields.Text()
     room_assign_ids = fields.One2many(
-        "stay.room.assign", "stay_id", string="Room Assignments"
+        "stay.room.assign",
+        "stay_id",
+        string="Room Assignments",
+        states={"draft": [("readonly", True)], "cancel": [("readonly", True)]},
     )
     # Here, group_id is not a related of room, because we want to be able
     # to first set the group and later set the room
@@ -107,7 +117,18 @@ class StayStay(models.Model):
     # in v12+, if this PR is merged https://github.com/OCA/web/issues/1446
     # the we could use color_field
     user_id = fields.Many2one(related="group_id.user_id", store=True)
-    line_ids = fields.One2many("stay.line", "stay_id", string="Stay Lines")
+    line_ids = fields.One2many(
+        "stay.line",
+        "stay_id",
+        string="Stay Lines",
+        states={"draft": [("readonly", True)], "cancel": [("readonly", True)]},
+    )
+    refectory_id = fields.Many2one(
+        "stay.refectory",
+        string="Refectory",
+        check_company=True,
+        default=lambda self: self.env.company.default_refectory_id,
+    )
     no_meals = fields.Boolean(
         string="No Meals",
         help="The stay lines generated from this stay will not have "
@@ -128,6 +149,19 @@ class StayStay(models.Model):
         store=True,
     )
     guest_qty_to_assign = fields.Integer(compute="_compute_room_assignment", store=True)
+    state = fields.Selection(
+        [
+            ("draft", "Draft"),
+            ("confirm", "Confirmed"),
+            ("current", "Current"),
+            ("done", "Finished"),
+            ("cancel", "Cancelled"),
+        ],
+        readonly=True,
+        default="draft",
+        tracking=True,
+        copy=False,
+    )
 
     _sql_constraints = [
         (
@@ -174,9 +208,9 @@ class StayStay(models.Model):
         return super().create(vals)
 
     @api.model
-    def _convert_to_datetime_naive_utc(self, date_str, time_sel):
+    def _convert_to_datetime_naive_utc(self, date, time_sel):
         # Convert from local time to datetime naive UTC
-        datetime_str = "%s %s" % (date_str, TIMEDICT[time_sel])
+        datetime_str = "%s %s" % (date, TIMEDICT[time_sel])
         datetime_naive = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
         admin_user = self.env["res.users"].browse(SUPERUSER_ID)
         if admin_user.tz:
@@ -191,6 +225,20 @@ class StayStay(models.Model):
         datetime_aware_utc = datetime_aware_admin_tz.astimezone(pytz.utc)
         datetime_naive_utc = datetime_aware_utc.replace(tzinfo=None)
         return datetime_naive_utc
+
+    @api.model
+    def _convert_to_date_and_time_selection(self, date_naive_utc):
+        # Convert from datetime naive UTC to local time
+        date_aware_utc = pytz.utc.localize(date_naive_utc)
+        tz = pytz.timezone(self.env.user.tz)
+        date_aware_local = date_aware_utc.astimezone(tz)
+        if date_aware_local.hour < 12:
+            time_selection = "morning"
+        elif date_aware_local.hour < 18:
+            time_selection = "afternoon"
+        else:
+            time_selection = "evening"
+        return date_aware_local.date(), time_selection
 
     @api.depends("arrival_date", "arrival_time")
     def _compute_arrival_datetime(self):
@@ -211,6 +259,32 @@ class StayStay(models.Model):
                     stay.departure_date, stay.departure_time
                 )
             stay.departure_datetime = datetime_naive_utc
+
+    # Used for the calendar view
+    @api.onchange("departure_datetime")
+    def _inverse_departure_datetime(self):
+        for stay in self:
+            departure_date = False
+            departure_time = False
+            if stay.departure_datetime:
+                (
+                    departure_date,
+                    departure_time,
+                ) = self._convert_to_date_and_time_selection(stay.departure_datetime)
+            stay.departure_date = departure_date
+            self.departure_time = departure_time
+
+    @api.onchange("arrival_datetime")
+    def _inverse_arrival_datetime(self):
+        for stay in self:
+            arrival_date = False
+            arrival_time = False
+            if stay.arrival_datetime:
+                arrival_date, arrival_time = self._convert_to_date_and_time_selection(
+                    stay.arrival_datetime
+                )
+            stay.arrival_date = arrival_date
+            stay.arrival_time = arrival_time
 
     @api.constrains(
         "departure_date",
@@ -296,24 +370,23 @@ class StayStay(models.Model):
                         )
                     )
 
-    @api.depends("partner_name", "name", "assign_room_ids")
+    @api.depends("partner_name", "name", "rooms_display_name", "state")
     def name_get(self):
         res = []
+        state2label = dict(self.fields_get("state", "selection")["state"]["selection"])
         for stay in self:
+            state = state2label.get(stay.state)
             if self._context.get("stay_name_get_partner_name"):
-                name = stay.partner_name
+                name = "%s, %s" % (stay.partner_name, state)
             elif self._context.get("stay_name_get_partner_name_qty"):
-                name = stay.partner_name
-                if stay.guest_qty > 1:
-                    name += " (%d)" % stay.guest_qty
+                name = "%s (%d), %s" % (stay.partner_name, stay.guest_qty, state)
             elif self._context.get("stay_name_get_partner_name_qty_room"):
-                name = stay.partner_name
-                if stay.guest_qty > 1:
-                    name += " (%d)" % stay.guest_qty
+                name = "%s (%d)" % (stay.partner_name, stay.guest_qty)
                 if stay.rooms_display_name:
                     name += " [%s]" % stay.rooms_display_name
+                name += ", %s" % state
             else:
-                name = stay.name
+                name = "%s, %s" % (stay.name, state)
             res.append((stay.id, name))
         return res
 
@@ -330,18 +403,28 @@ class StayStay(models.Model):
                 partner_name = "%s %s" % (title, partner_name)
             self.partner_name = partner_name
 
-    # called by wizard stay.journal.generate
-    def _prepare_stay_line(self, date):
+    @api.onchange("group_id")
+    def group_id_change(self):
+        if self.group_id and self.group_id.default_refectory_id:
+            self.refectory_id = self.group_id.default_refectory_id
+
+    def _prepare_stay_line(self, date):  # noqa: C901
         self.ensure_one()
-        assert self.assign_status == "assigned"
+        refectory_id = False
+        if self.refectory_id:
+            refectory_id = self.refectory_id.id
+        elif self.group_id and self.group_id.default_refectory_id:
+            refectory_id = self.group_id.default_refectory_id.id
+        elif self.company_id.default_refectory_id:
+            refectory_id = self.company_id.default_refectory_id.id
         vals = {
             "date": date,
             "stay_id": self.id,
             "partner_id": self.partner_id.id,
             "partner_name": self.partner_name,
-            "refectory_id": self.company_id.default_refectory_id.id,
-            "room_ids": self.room_assign_ids.room_id.ids,
+            "refectory_id": refectory_id,
             "company_id": self.company_id.id,
+            "breakfast_qty": 0,
             "lunch_qty": 0,
             "dinner_qty": 0,
             "bed_night_qty": 0,
@@ -363,8 +446,12 @@ class StayStay(models.Model):
             elif self.arrival_time == "afternoon":
                 vals["dinner_qty"] = self.guest_qty
         elif date == self.departure_date:
+            vals["breakfast_qty"] = self.guest_qty
             if self.departure_time == "morning":
-                return {}
+                # When 'Manage breakfast' is not enable, we avoid to generate
+                # a stay line for the last day if they leave in the morning
+                if not self.env.user.has_group("stay.group_stay_breakfast"):
+                    return {}
             elif self.departure_time == "afternoon":
                 vals["lunch_qty"] = self.guest_qty
             elif self.departure_time == "evening":
@@ -373,19 +460,151 @@ class StayStay(models.Model):
         else:
             vals.update(
                 {
+                    "breakfast_qty": self.guest_qty,
                     "lunch_qty": self.guest_qty,
                     "dinner_qty": self.guest_qty,
                     "bed_night_qty": self.guest_qty,
                 }
             )
-        if not self.company_id.default_refectory_id:
-            raise UserError(
-                _("Missing default refectory on the company '%s'.")
-                % (self.company_id.display_name)
-            )
         if self.no_meals:
-            vals.update({"lunch_qty": 0, "dinner_qty": 0, "refectory_id": False})
+            vals.update(
+                {
+                    "breakfast_qty": 0,
+                    "lunch_qty": 0,
+                    "dinner_qty": 0,
+                    "refectory_id": False,
+                }
+            )
         return vals
+
+    def _update_lines(self, previous_vals=None):
+        self.ensure_one()
+        slo = self.env["stay.line"]
+        if previous_vals:
+            domain = [("stay_id", "=", self.id)]
+            if previous_vals["guest_qty"] == self.guest_qty:
+                # delete dates out of scope
+                domain_dates = expression.OR(
+                    [
+                        [("date", "<", self.arrival_date)],
+                        [("date", ">", self.departure_date)],
+                    ]
+                )
+                # if arrival_date or time has changed, also delete old arrival line
+                if (
+                    previous_vals["arrival_date"] != self.arrival_date
+                    or previous_vals["arrival_time"] != self.arrival_time
+                ):
+                    # delete old and new arrival date
+                    domain_dates = expression.OR(
+                        [
+                            domain_dates,
+                            [("date", "=", self.arrival_date)],
+                            [("date", "=", previous_vals["arrival_date"])],
+                        ]
+                    )
+                # if departure_date has changed, also delete old departure line
+                if (
+                    previous_vals["departure_date"] != self.departure_date
+                    or previous_vals["departure_time"] != self.departure_time
+                ):
+                    domain_dates = expression.OR(
+                        [
+                            domain_dates,
+                            [("date", "=", self.departure_date)],
+                            [("date", "=", previous_vals["departure_date"])],
+                        ]
+                    )
+                domain = expression.AND([domain, domain_dates])
+            lines_to_delete = slo.search(domain)
+            lines_to_delete.unlink()
+
+        date = self.arrival_date
+        existing_dates = [line.date for line in self.line_ids]
+        while date <= self.departure_date:
+            if date not in existing_dates:
+                vals = self._prepare_stay_line(date)
+                if vals:
+                    slo.create(vals)
+            date += relativedelta(days=1)
+
+    def write(self, vals):
+        stay2previous_vals = {}
+        if not self._context.get("stay_no_auto_update"):
+            for stay in self:
+                if stay.line_ids:
+                    stay2previous_vals[stay.id] = {
+                        "arrival_date": stay.arrival_date,
+                        "arrival_time": stay.arrival_time,
+                        "departure_date": stay.departure_date,
+                        "departure_time": stay.departure_time,
+                        "guest_qty": stay.guest_qty,
+                    }
+        res = super().write(vals)
+        if not self._context.get("stay_no_auto_update"):
+            today = fields.Date.context_today(self)
+            for stay in self:
+                if stay.state not in ("draft", "cancel"):
+                    stay._update_lines(stay2previous_vals.get(stay.id))
+                    stay._update_state(today)
+        return res
+
+    def _update_state(self, today):
+        self.ensure_one()
+        if self.state in ("confirm", "current") and self.departure_date < today:
+            self.with_context(stay_no_auto_update=True).write({"state": "done"})
+            return
+        if self.state in ("confirm", "done") and self.arrival_date <= today:
+            self.with_context(stay_no_auto_update=True).write({"state": "current"})
+        if self.state in ("current", "done") and self.arrival_date > today:
+            self.with_context(stay_no_auto_update=True).write({"state": "confirm"})
+
+    # No need to call update_state() nor _update_lines() upon create
+    # because stays are always created as draft
+
+    def unlink(self):
+        for stay in self:
+            if stay.state not in ("draft", "cancel"):
+                raise UserError(
+                    _("You cannot delete stay '%s': you must cancel it first.")
+                    % stay.display_name
+                )
+        return super().unlink()
+
+    def draft2confirm(self):
+        self.ensure_one()
+        assert self.state == "draft"
+        assert not self.line_ids
+        self.write({"state": "confirm"})
+        # write() will generate the stay lines
+
+    def cancel(self):
+        self.ensure_one()
+        assert self.state in ("draft", "confirm", "current", "done")
+        self.room_assign_ids.unlink()
+        self.line_ids.unlink()
+        self.with_context(stay_no_auto_update=True).write({"state": "cancel"})
+
+    def cancel2draft(self):
+        self.ensure_one()
+        assert self.state == "cancel"
+        self.room_assign_ids.unlink()
+        self.line_ids.unlink()
+        self.with_context(stay_no_auto_update=True).write({"state": "draft"})
+
+    @api.model
+    def _cron_stay_state_update(self):
+        logger.info("Start Cron stay state update")
+        today_dt = fields.Date.context_today(self)
+        to_done = self.search(
+            [("state", "in", ("confirm", "current")), ("departure_date", "<", today_dt)]
+        )
+        to_done.write({"state": "done"})
+        to_current = self.search(
+            [("state", "=", "confirm"), ("arrival_date", "<=", today_dt)]
+        )
+        to_current.write({"state": "current"})
+        logger.info("End cron stay state update")
 
 
 class StayRoomAssign(models.Model):
@@ -400,7 +619,8 @@ class StayRoomAssign(models.Model):
         ondelete="restrict",
         index=True,
         check_company=True,
-        domain="[('company_id', '=', company_id), '|', ('group_id', '=', False), ('group_id', '=', group_id)]",
+        domain="[('company_id', '=', company_id), '|', ('group_id', '=', False),"
+        "('group_id', '=', parent.group_id)]",
     )
     guest_qty = fields.Integer(string="Guest Quantity", required=True)
     # Related fields
@@ -480,9 +700,13 @@ class StayRoomAssign(models.Model):
                     conflict_stay.name,
                     conflict_stay.partner_name,
                     format_date(self.env, conflict_stay.arrival_date),
-                    conflict_stay._fields['arrival_time'].convert_to_export(conflict_stay.arrival_time, conflict_stay),
+                    conflict_stay._fields["arrival_time"].convert_to_export(
+                        conflict_stay.arrival_time, conflict_stay
+                    ),
                     format_date(self.env, conflict_stay.departure_date),
-                    conflict_stay._fields['departure_time'].convert_to_export(conflict_stay.departure_time, conflict_stay),
+                    conflict_stay._fields["departure_time"].convert_to_export(
+                        conflict_stay.departure_time, conflict_stay
+                    ),
                     conflict_assign.room_id.display_name,
                 )
             )
@@ -531,7 +755,7 @@ class StayRoomAssign(models.Model):
         for assign in self:
             name = "[%s] %s, %s, %d [%s]" % (
                 TIME2CODE[assign.arrival_time],
-                shorten(assign.partner_name, 20, placeholder='...'),
+                shorten(assign.partner_name, 20, placeholder="..."),
                 assign.room_id.code or assign.room_id.name,
                 assign.guest_qty,
                 TIME2CODE[assign.departure_time],
@@ -552,13 +776,6 @@ class StayRoomAssign(models.Model):
                     self.guest_qty = self.stay_id.guest_qty_to_assign
                 else:
                     self.guest_qty = self.room_id.bed_qty
-
-    @api.onchange("group_id")
-    def group_id_change(self):
-        res = {"domain": {"room_id": []}}
-        if self.group_id and not self.room_id:
-            res["domain"]["room_id"] = [("group_id", "=", self.group_id.id)]
-        return res
 
 
 class StayRefectory(models.Model):
@@ -686,6 +903,7 @@ class StayGroup(models.Model):
     _name = "stay.group"
     _description = "Stay Group"
     _order = "sequence, id"
+    _check_company_auto = True
 
     name = fields.Char(string="Group Name", required=True)
     company_id = fields.Many2one(
@@ -699,6 +917,12 @@ class StayGroup(models.Model):
     sequence = fields.Integer()
     room_ids = fields.One2many("stay.room", "group_id", string="Rooms")
     notify_user_ids = fields.Many2many("res.users", string="Users Notified by E-mail")
+    default_refectory_id = fields.Many2one(
+        "stay.refectory",
+        string="Default Refectory",
+        ondelete="restrict",
+        check_company=True,
+    )
 
     _sql_constraints = [
         (
@@ -761,7 +985,7 @@ class StayLine(models.Model):
     _name = "stay.line"
     _description = "Stay Journal"
     _rec_name = "partner_name"
-    _order = "date desc"
+    _order = "date"
     _check_company_auto = True
 
     stay_id = fields.Many2one(
@@ -776,6 +1000,7 @@ class StayLine(models.Model):
     date = fields.Date(
         string="Date", required=True, default=fields.Date.context_today, index=True
     )
+    breakfast_qty = fields.Integer(string="Breakfast")
     lunch_qty = fields.Integer(string="Lunches")
     dinner_qty = fields.Integer(string="Dinners")
     bed_night_qty = fields.Integer(string="Bed Nights")
@@ -791,36 +1016,20 @@ class StayLine(models.Model):
         check_company=True,
         default=lambda self: self.env.company.default_refectory_id,
     )
-    room_ids = fields.Many2many(
-        "stay.room",
-        string="Rooms",
-        ondelete="restrict",
-        domain="[('company_id', '=', company_id)]",
-        index=True,
-        check_company=True,
-    )
-    rooms_display_name = fields.Char(
-        compute="_compute_rooms_display_name", store=True, string="Room List"
-    )
+    rooms_display_name = fields.Char(related="stay_id.rooms_display_name", store=True)
     group_id = fields.Many2one(related="stay_id.group_id", store=True)
     user_id = fields.Many2one(related="stay_id.group_id.user_id", store=True)
 
-    @api.constrains("refectory_id", "lunch_qty", "dinner_qty", "date", "room_ids")
+    @api.constrains("refectory_id", "breakfast_qty", "lunch_qty", "dinner_qty")
     def _check_room_refectory(self):
         for line in self:
-            if (line.lunch_qty or line.dinner_qty) and not line.refectory_id:
+            if (
+                line.lunch_qty or line.dinner_qty or line.breakfast_qty
+            ) and not line.refectory_id:
                 raise ValidationError(
                     _("Missing refectory for guest '%s' on %s.")
                     % (line.partner_name, format_date(self.env, line.date))
                 )
-
-    @api.depends("room_ids")
-    def _compute_rooms_display_name(self):
-        for line in self:
-            rooms = []
-            for room in line.room_ids:
-                rooms.append(room.code or room.name)
-            line.rooms_display_name = ", ".join(rooms)
 
     _sql_constraints = [
         (
