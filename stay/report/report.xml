@@ -18,4 +18,36 @@
         >'stay_journal-%s' % object.date</field>
             </record>
 
+    <record id="report_stay_toclean" model="ir.actions.report">
+                <field name="name">Rooms to clean</field>
+    <field name="model">stay.toclean.print</field>
+    <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stay.report_staytoclean</field>
+            <field name="report_file">stay.report_staytoclean</field>
+                    <field
+            name="print_report_name"
+        >'rooms_to_clean-%s' % str(object.create_date)[:10]</field>
+            </record>
+
+    <record id="report_stay_journal_arrival" model="ir.actions.report">
+                <field name="name">Arrival list</field>
+    <field name="model">stay.journal.print</field>
+    <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stay.report_stayjournalarrival</field>
+            <field name="report_file">stay.report_stayjournalarrival</field>
+                    <field
+            name="print_report_name"
+        >'stay_arrival-%s' % object.date</field>
+            </record>
+
+    <record id="report_stay_journal_meal" model="ir.actions.report">
+                <field name="name">Meal plan</field>
+    <field name="model">stay.journal.print</field>
+    <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stay.report_stayjournalmeal</field>
+            <field name="report_file">stay.report_stayjournalmeal</field>
+                    <field name="print_report_name">'stay_meal-%s' % object.date</field>
+            </record>
+
+
 </odoo>

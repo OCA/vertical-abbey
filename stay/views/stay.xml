@@ -28,6 +28,13 @@
                         states="cancel"
                     />
                 <button
+                        name="guest_has_left"
+                        type="object"
+                        string="Guest has Left"
+                        groups="stay.group_stay_user"
+                        states="current"
+                    />
+                <button
                         name="cancel"
                         type="object"
                         string="Cancel"
@@ -103,6 +110,15 @@
     <field name="model">stay.stay</field>
     <field name="arch" type="xml">
         <tree>
+            <header>  <!-- v14+ Use same action as in the Action menu -->
+                <button
+                        name="guest_has_left"
+                        type="object"
+                        string="Guest has Left"
+                        groups="stay.group_stay_user"
+                        states="current"
+                    />
+            </header>
             <field name="name" />
             <field name="group_id" optional="show" />
             <field
@@ -219,7 +235,7 @@
                     />
                 <filter
                         name="state_groupby"
-                        string="Group"
+                        string="State"
                         context="{'group_by': 'state'}"
                     />
                 <filter
@@ -572,7 +588,28 @@ from the calendar view, the dates are not set -->
     <field name="model">stay.room</field>
     <field name="arch" type="xml">
         <form string="Room">
+            <header>
+                <button
+                        name="mark_as_cleaned"
+                        type="object"
+                        string="Mark as Cleaned"
+                        attrs="{'invisible': [('to_clean', '=', False)]}"
+                        class="btn-primary"
+                    />
+        </header>
             <sheet>
+            <widget
+                        name="web_ribbon"
+                        title="To Clean"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('to_clean', '=', False)]}"
+                    />
+            <widget
+                        name="web_ribbon"
+                        title="Clean"
+                        bg_color="bg-success"
+                        attrs="{'invisible': [('to_clean', '!=', False)]}"
+                    />
             <widget
                         name="web_ribbon"
                         title="Archived"
@@ -589,11 +626,11 @@ from the calendar view, the dates are not set -->
                             name="allow_simultaneous"
                             attrs="{'invisible': [('bed_qty', '=', 1)]}"
                         />
-                <!--                <field name="no_meals" />  -->
+                <field name="to_clean" />
                 <field name="notes" />
                 <field name="active" invisible="1" />
             </group>
-    </sheet>
+        </sheet>
         </form>
     </field>
 </record>
@@ -603,12 +640,15 @@ from the calendar view, the dates are not set -->
     <field name="model">stay.room</field>
     <field name="arch" type="xml">
         <tree string="Rooms">
+            <header>
+                <button name="mark_as_cleaned" type="object" string="Mark as Cleaned" />
+            </header>
             <field name="sequence" widget="handle" />
             <field name="name" />
             <field name="code" optional="show" />
             <field name="group_id" optional="show" />
             <field name="bed_qty" />
-            <!--            <field name="no_meals" /> -->
+            <field name="to_clean" />
             <field
                     name="company_id"
                     groups="base.group_multi_company"
@@ -636,6 +676,12 @@ from the calendar view, the dates are not set -->
                 />
             <separator />
             <filter
+                    name="to_clean"
+                    string="To Clean"
+                    domain="[('to_clean', '!=', False)]"
+                />
+            <filter name="clean" string="Clean" domain="[('to_clean', '=', False)]" />
+            <filter
                     string="Archived"
                     name="inactive"
                     domain="[('active', '=', False)]"
@@ -662,6 +708,13 @@ from the calendar view, the dates are not set -->
     <field name="view_mode">tree,form</field>
 </record>
 
+<record id="stay_room_to_clean_action" model="ir.actions.act_window">
+    <field name="name">Rooms to Clean</field>
+    <field name="res_model">stay.room</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">[('to_clean', '!=', False)]</field>
+</record>
+
 <menuitem
         id="stay_room_menu"
         action="stay_room_action"
@@ -669,6 +722,12 @@ from the calendar view, the dates are not set -->
         sequence="30"
     />
 
+<menuitem
+        id="stay_room_to_clean_menu"
+        action="stay_room_to_clean_action"
+        parent="stay_sub_menu"
+        sequence="40"
+    />
 
 <record id="stay_group_form" model="ir.ui.view">
     <field name="name">stay.group.form</field>

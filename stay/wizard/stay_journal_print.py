@@ -5,6 +5,12 @@
 # @author: Brother Irénée
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from datetime import datetime
+
+from babel.dates import (
+    format_date as babel_format_date,
+    format_datetime as babel_format_datetime,
+)
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
@@ -31,17 +37,33 @@ class StayJournalPrint(models.TransientModel):
         required=True,
         default=lambda self: self.env.company,
     )
+    report_type = fields.Selection(
+        [
+            ("general", "General"),
+            ("meal", "Meals"),
+            ("arrival", "Arrivals"),
+        ],
+        default="general",
+        required=True,
+    )
 
     @api.depends("date")
     def _compute_date_label(self):
         for wiz in self:
-            res = self.env["stay.date.label"].search(
-                [("date", "=", self.date)], limit=1
-            )
-            wiz.date_label = res and res.name or False
+            res = self.env["stay.date.label"]._get_date_label(self.date)
+            wiz.date_label = res
 
     def print_journal(self):
         self.ensure_one()
+        if self.report_type == "general":
+            return self.print_journal_general()
+        elif self.report_type == "meal":
+            return self.print_journal_meal()
+        elif self.report_type == "arrival":
+            return self.print_journal_arrival()
+        return
+
+    def print_journal_general(self):
         lines = self.env["stay.line"].search(
             [
                 ("date", "=", self.date),
@@ -55,6 +77,22 @@ class StayJournalPrint(models.TransientModel):
             )
         action = (
             self.env.ref("stay.report_stay_journal_print")
+            .with_context({"discard_logo_check": True})
+            .report_action(self)
+        )
+        return action
+
+    def print_journal_meal(self):
+        action = (
+            self.env.ref("stay.report_stay_journal_meal")
+            .with_context({"discard_logo_check": True})
+            .report_action(self)
+        )
+        return action
+
+    def print_journal_arrival(self):
+        action = (
+            self.env.ref("stay.report_stay_journal_arrival")
             .with_context({"discard_logo_check": True})
             .report_action(self)
         )
@@ -94,3 +132,37 @@ class StayJournalPrint(models.TransientModel):
                 }
         # print "res=", res.items()
         return res.items()
+
+    def _report_move_date(self, date, move_type, raise_if_none=False):
+        assert move_type in ("arrival", "departure")
+        assert date
+        sso = self.env["stay.stay"]
+        stays = sso.search(
+            [
+                (move_type + "_date", "=", date),
+                ("company_id", "=", self.company_id.id),
+                ("state", "not in", ("draft", "cancel")),
+            ]
+        )
+        if not stays and raise_if_none:
+            if move_type == "arrival":
+                raise UserError(_("No arrival on %s.") % format_date(self.env, date))
+            elif move_type == "departure":
+                raise UserError(_("No departure on %s.") % format_date(self.env, date))
+        res = (
+            stays.filtered(lambda x: x[move_type + "_time"] == "morning")
+            + stays.filtered(lambda x: x[move_type + "_time"] == "afternoon")
+            + stays.filtered(lambda x: x[move_type + "_time"] == "evening")
+        )
+        return res
+
+    def report_arrival_data(self):
+        return self._report_move_date(self.date, "arrival", raise_if_none=True)
+
+    def report_date_formatted(self):
+        return babel_format_date(self.date, "full", locale=self.env.user.lang)
+
+    def report_edit_datetime(self):
+        now = fields.Datetime.context_timestamp(self, datetime.now())
+        res = babel_format_datetime(now, "d MMMM yyyy hh:mm", locale=self.env.user.lang)
+        return res

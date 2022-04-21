@@ -43,7 +43,7 @@
                 <td style="padding: 5px; border: 1px solid black;">${o['rooms']}</td>
                 <td
                                 style="padding: 5px; border: 1px solid black;"
-                            >${format_date(o['departure_date'])} (${o['departure_time']})</td>
+                            >${format_date(o['departure_date'])} (${o._fields['departure_time'].convert_to_export(o.departure_time, o)})</td>
             </tr>
             % endfor
         </table>

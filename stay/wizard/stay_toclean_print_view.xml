@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2022 Akretion France (www.akretion.com)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+
+<record id="stay_toclean_print_form" model="ir.ui.view">
+    <field name="name">stay_toclean_print.form</field>
+    <field name="model">stay.toclean.print</field>
+    <field name="arch" type="xml">
+        <form string="To Clean Report">
+                <p>Print the <b>To Clean</b> report.</p>
+            <group name="main">
+                <field name="company_id" groups="base.group_multi_company" />
+            </group>
+            <footer>
+                <button
+                        type="object"
+                        name="print_report"
+                        string="Print"
+                        class="btn-primary"
+                    />
+                <button special="cancel" string="Cancel" />
+            </footer>
+        </form>
+    </field>
+</record>
+
+<record id="stay_toclean_print_action" model="ir.actions.act_window">
+    <field name="name">To Clean Report</field>
+    <field name="res_model">stay.toclean.print</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+</record>
+
+<menuitem
+        id="stay_toclean_print_menu"
+        sequence="30"
+        action="stay_toclean_print_action"
+        parent="stay_report_menu"
+    />
+
+
+</odoo>

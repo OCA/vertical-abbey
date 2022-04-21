@@ -14,6 +14,7 @@
     <field name="arch" type="xml">
         <form string="Print Stay Journal">
             <group name="main">
+                <field name="report_type" widget="radio" />
                 <field name="date" />
                 <field name="date_label" />
                 <field name="company_id" groups="base.group_multi_company" />
