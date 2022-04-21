@@ -376,12 +376,13 @@ class StayStay(models.Model):
         state2label = dict(self.fields_get("state", "selection")["state"]["selection"])
         for stay in self:
             state = state2label.get(stay.state)
+            short_partner_name = shorten(stay.partner_name, 35)
             if self._context.get("stay_name_get_partner_name"):
-                name = "%s, %s" % (stay.partner_name, state)
+                name = "%s, %s" % (short_partner_name, state)
             elif self._context.get("stay_name_get_partner_name_qty"):
-                name = "%s (%d), %s" % (stay.partner_name, stay.guest_qty, state)
+                name = "%s (%d), %s" % (short_partner_name, stay.guest_qty, state)
             elif self._context.get("stay_name_get_partner_name_qty_room"):
-                name = "%s (%d)" % (stay.partner_name, stay.guest_qty)
+                name = "%s (%d)" % (short_partner_name, stay.guest_qty)
                 if stay.rooms_display_name:
                     name += " [%s]" % stay.rooms_display_name
                 name += ", %s" % state
@@ -549,14 +550,32 @@ class StayStay(models.Model):
                     stay._update_state(today)
         return res
 
+    def _prepare_to_clean_info(self):
+        self.ensure_one()
+        to_clean = "%s %s (%d)" % (
+            self.name,
+            shorten(self.partner_name, 35),
+            self.guest_qty,
+        )
+        return to_clean
+
+    def _set_to_clean(self):
+        for stay in self:
+            for aline in stay.room_assign_ids:
+                aline.room_id.write({"to_clean": stay._prepare_to_clean_info()})
+
     def _update_state(self, today):
         self.ensure_one()
         if self.state in ("confirm", "current") and self.departure_date < today:
             self.with_context(stay_no_auto_update=True).write({"state": "done"})
-            return
-        if self.state in ("confirm", "done") and self.arrival_date <= today:
+            self._set_to_clean()
+        elif (
+            self.state == "confirm"
+            and self.arrival_date <= today
+            and self.departure_date >= today
+        ):
             self.with_context(stay_no_auto_update=True).write({"state": "current"})
-        if self.state in ("current", "done") and self.arrival_date > today:
+        elif self.state in ("current", "done") and self.arrival_date > today:
             self.with_context(stay_no_auto_update=True).write({"state": "confirm"})
 
     # No need to call update_state() nor _update_lines() upon create
@@ -580,7 +599,6 @@ class StayStay(models.Model):
 
     def cancel(self):
         self.ensure_one()
-        assert self.state in ("draft", "confirm", "current", "done")
         self.room_assign_ids.unlink()
         self.line_ids.unlink()
         self.with_context(stay_no_auto_update=True).write({"state": "cancel"})
@@ -592,6 +610,20 @@ class StayStay(models.Model):
         self.line_ids.unlink()
         self.with_context(stay_no_auto_update=True).write({"state": "draft"})
 
+    def guest_has_left(self):
+        today = fields.Date.context_today(self)
+        for stay in self:
+            if stay.state != "current":
+                raise UserError(
+                    _("Stay '%s' is not in 'Current' state.") % stay.display_name
+                )
+            vals = {"state": "done"}
+            if stay.departure_date > today:
+                vals["departure_date"] = today
+                stay.message_post(body=_("Guest has left before the end of his stay."))
+            stay.write(vals)
+            stay._set_to_clean()
+
     @api.model
     def _cron_stay_state_update(self):
         logger.info("Start Cron stay state update")
@@ -599,11 +631,20 @@ class StayStay(models.Model):
         to_done = self.search(
             [("state", "in", ("confirm", "current")), ("departure_date", "<", today_dt)]
         )
-        to_done.write({"state": "done"})
+        to_done.with_context(stay_no_auto_update=True).write({"state": "done"})
+        to_done._set_to_clean()
         to_current = self.search(
-            [("state", "=", "confirm"), ("arrival_date", "<=", today_dt)]
+            [
+                ("state", "=", "confirm"),
+                ("arrival_date", "<=", today_dt),
+                ("departure_date", ">=", today_dt),
+            ]
         )
-        to_current.write({"state": "current"})
+        to_current.with_context(stay_no_auto_update=True).write({"state": "current"})
+        to_cancel = self.search(
+            [("state", "=", "draft"), ("departure_date", "<", today_dt)]
+        )
+        to_cancel.write({"state": "cancel"})
         logger.info("End cron stay state update")
 
 
@@ -830,7 +871,6 @@ class StayRoom(models.Model):
     _name = "stay.room"
     _description = "Room"
     _order = "sequence, id"
-    _rec_name = "display_name"
     _check_company_auto = True
 
     code = fields.Char(string="Code", size=10, copy=False)
@@ -864,6 +904,12 @@ class StayRoom(models.Model):
     #        "same option active by default.",
     #    )
     notes = fields.Text()
+    to_clean = fields.Char(
+        string="To Clean",
+        help="When the field has a value, it means the room must be cleaned "
+        "(when a stay is terminated, this field is auto-set with the "
+        "stay description). When the room is cleaned, the field is emptied.",
+    )
 
     _sql_constraints = [
         (
@@ -897,6 +943,9 @@ class StayRoom(models.Model):
             if recs:
                 return recs.name_get()
         return super().name_search(name=name, args=args, operator=operator, limit=limit)
+
+    def mark_as_cleaned(self):
+        self.write({"to_clean": False})
 
 
 class StayGroup(models.Model):
@@ -1050,9 +1099,17 @@ class StayLine(models.Model):
     ]
 
     @api.onchange("partner_id")
-    def _partner_id_change(self):
+    def partner_id_change(self):
         if self.partner_id:
-            self.partner_name = self.partner_id.display_name
+            partner = self.partner_id
+            partner_name = partner.name
+            if partner.title and not partner.is_company:
+                partner_lg = partner
+                if partner.lang:
+                    partner_lg = partner.with_context(lang=partner.lang)
+                title = partner_lg.title.shortcut or partner_lg.title.name
+                partner_name = "%s %s" % (title, partner_name)
+            self.partner_name = partner_name
 
 
 class StayDateLabel(models.Model):
@@ -1064,3 +1121,13 @@ class StayDateLabel(models.Model):
     name = fields.Char(string="Label")
 
     _sql_constraints = [("date_uniq", "unique(date)", "This date already exists.")]
+
+    @api.model
+    def _get_date_label(self, date):
+        res = False
+        if date:
+            date_label = self.env["stay.date.label"].search(
+                [("date", "=", date)], limit=1
+            )
+            res = date_label and date_label.name or False
+        return res

@@ -14,5 +14,5 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.default_refectory_id", readonly=False
     )
     group_stay_breakfast = fields.Boolean(
-        string="Manage Breakfasts", implied_group="stay.group_stay_breakfast"
+        string="Manage Breakfast", implied_group="stay.group_stay_breakfast"
     )
