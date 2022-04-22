@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-21 10:11+0000\n"
-"PO-Revision-Date: 2022-04-21 10:11+0000\n"
+"POT-Creation-Date: 2022-04-22 15:26+0000\n"
+"PO-Revision-Date: 2022-04-22 15:26+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -39,7 +39,7 @@ msgid ""
 "        <table style=\"border-spacing: 0; border-collapse: collapse; width: 100%; text-align: center;\">\n"
 "            <tr>\n"
 "                <th style=\"padding: 5px; border: 1px solid black;\">Nom de l'hôte</th>\n"
-"                <th style=\"padding: 5px; border: 1px solid black;\">Nombre</th>\n"
+"                <th style=\"padding: 5px; border: 1px solid black;\">Nb</th>\n"
 "                <th style=\"padding: 5px; border: 1px solid black;\">Heure d'arrivée</th>\n"
 "                <th style=\"padding: 5px; border: 1px solid black;\">Chambres</th>\n"
 "                <th style=\"padding: 5px; border: 1px solid black;\">Date de départ</th>\n"
@@ -50,7 +50,7 @@ msgid ""
 "                <td style=\"padding: 5px; border: 1px solid black;\">${o['guest_qty']}</td>\n"
 "                <td style=\"padding: 5px; border: 1px solid black;\">${o['arrival_time']}</td>\n"
 "                <td style=\"padding: 5px; border: 1px solid black;\">${o['rooms']}</td>\n"
-"                <td style=\"padding: 5px; border: 1px solid black;\">${format_date(o['departure_date'])} (${o['departure_time']})</td>\n"
+"                <td style=\"padding: 5px; border: 1px solid black;\">${format_date(o['departure_date'])} (${o._fields['departure_time'].convert_to_export(o.departure_time, o)})</td>\n"
 "            </tr>\n"
 "            % endfor\n"
 "        </table>\n"
@@ -254,6 +254,7 @@ msgstr "Petits déjeuners"
 #: model_terms:ir.ui.view,arch_db:stay.stay_journal_print_form
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_stay_xlsx_form
+#: model_terms:ir.ui.view,arch_db:stay.stay_toclean_print_form
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -272,6 +273,12 @@ msgstr "Capacité"
 #, python-format
 msgid "Celebration"
 msgstr "Fête"
+
+#. module: stay
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_form
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_search
+msgid "Clean"
+msgstr "Nettoyé"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_refectory__code
@@ -293,6 +300,7 @@ msgstr "Sociétés"
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__company_id
 #: model:ir.model.fields,field_description:stay.field_stay_stay__company_id
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__company_id
+#: model:ir.model.fields,field_description:stay.field_stay_toclean_print__company_id
 msgid "Company"
 msgstr "Société"
 
@@ -342,6 +350,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__create_uid
 #: model:ir.model.fields,field_description:stay.field_stay_stay__create_uid
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__create_uid
+#: model:ir.model.fields,field_description:stay.field_stay_toclean_print__create_uid
 msgid "Created by"
 msgstr "Créé par"
 
@@ -355,6 +364,7 @@ msgstr "Créé par"
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__create_date
 #: model:ir.model.fields,field_description:stay.field_stay_stay__create_date
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__create_date
+#: model:ir.model.fields,field_description:stay.field_stay_toclean_print__create_date
 msgid "Created on"
 msgstr "Créé le"
 
@@ -384,7 +394,7 @@ msgstr "Séjours actuels et futurs"
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_search
 #, python-format
 msgid "Date"
-msgstr "Date"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_journal_print__date_label
@@ -454,6 +464,7 @@ msgstr "Dîners"
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__display_name
 #: model:ir.model.fields,field_description:stay.field_stay_stay__display_name
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__display_name
+#: model:ir.model.fields,field_description:stay.field_stay_toclean_print__display_name
 msgid "Display Name"
 msgstr "Nom affiché"
 
@@ -667,6 +678,7 @@ msgstr "Hôtes"
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__id
 #: model:ir.model.fields,field_description:stay.field_stay_stay__id
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__id
+#: model:ir.model.fields,field_description:stay.field_stay_toclean_print__id
 msgid "ID"
 msgstr ""
 
@@ -730,6 +742,7 @@ msgstr "Libellé"
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign____last_update
 #: model:ir.model.fields,field_description:stay.field_stay_stay____last_update
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx____last_update
+#: model:ir.model.fields,field_description:stay.field_stay_toclean_print____last_update
 msgid "Last Modified on"
 msgstr "Dernière modification le"
 
@@ -743,6 +756,7 @@ msgstr "Dernière modification le"
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__write_uid
 #: model:ir.model.fields,field_description:stay.field_stay_stay__write_uid
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__write_uid
+#: model:ir.model.fields,field_description:stay.field_stay_toclean_print__write_uid
 msgid "Last Updated by"
 msgstr "Dernière modification par"
 
@@ -756,6 +770,7 @@ msgstr "Dernière modification par"
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__write_date
 #: model:ir.model.fields,field_description:stay.field_stay_stay__write_date
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__write_date
+#: model:ir.model.fields,field_description:stay.field_stay_toclean_print__write_date
 msgid "Last Updated on"
 msgstr "Dernière modification le"
 
@@ -771,14 +786,10 @@ msgid "Main Attachment"
 msgstr ""
 
 #. module: stay
+#: model:ir.model.fields,field_description:stay.field_res_config_settings__group_stay_breakfast
 #: model:res.groups,name:stay.group_stay_breakfast
 msgid "Manage Breakfast"
 msgstr "Gestion du petit déjeuner"
-
-#. module: stay
-#: model:ir.model.fields,field_description:stay.field_res_config_settings__group_stay_breakfast
-msgid "Manage Breakfasts"
-msgstr ""
 
 #. module: stay
 #: model:ir.module.category,description:stay.module_category_stay
@@ -791,8 +802,8 @@ msgid "Manager"
 msgstr "Responsable"
 
 #. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_form
-#: model_terms:ir.ui.view,arch_db:stay.stay_tree
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_form
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_tree
 msgid "Mark as Cleaned"
 msgstr "Ménage fait"
 
@@ -930,12 +941,17 @@ msgstr ""
 #: model:ir.actions.act_window,name:stay.stay_date_label_action
 #: model:ir.ui.menu,name:stay.stay_date_label_menu
 msgid "Ordo"
-msgstr "Ordo"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__assign_status__partial
 msgid "Partial"
 msgstr "Partiel"
+
+#. module: stay
+#: model_terms:ir.ui.view,arch_db:stay.stay_toclean_print_form
+msgid "Print"
+msgstr "Imprimer"
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_journal_print_action
@@ -966,9 +982,19 @@ msgid "Print Stays"
 msgstr "Rapport séjours"
 
 #. module: stay
+#: model_terms:ir.ui.view,arch_db:stay.stay_toclean_print_form
+msgid "Print the <b>To Clean</b> report."
+msgstr "Imprimer le <b>rapport de ménage</b>."
+
+#. module: stay
 #: model:ir.model,name:stay.model_stay_journal_print
 msgid "Print the Stay Lines"
 msgstr "Impression des lignes de séjour"
+
+#. module: stay
+#: model:ir.model,name:stay.model_stay_toclean_print
+msgid "Print to clean report"
+msgstr "Imprimer le rapport ménage"
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_refectory_action
@@ -1049,10 +1075,15 @@ msgid "Rooms"
 msgstr "Chambres"
 
 #. module: stay
-#: model:ir.actions.report,name:stay.report_stay_journal_toclean
-#: model:ir.model.fields.selection,name:stay.selection__stay_journal_print__report_type__toclean
+#: model:ir.actions.act_window,name:stay.stay_room_to_clean_action
+#: model:ir.ui.menu,name:stay.stay_room_to_clean_menu
+msgid "Rooms to Clean"
+msgstr "Chambres à nettoyer"
+
+#. module: stay
+#: model:ir.actions.report,name:stay.report_stay_toclean
 msgid "Rooms to clean"
-msgstr "Ménage à faire"
+msgstr "Chambres à nettoyer"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_group__sequence
@@ -1079,6 +1110,7 @@ msgstr "Date de début"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__state
+#: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "State"
 msgstr "État"
 
@@ -1125,12 +1157,6 @@ msgstr ""
 #, python-format
 msgid "Stay '%s' is not in 'Current' state."
 msgstr "Le séjour '%s' n'est pas à l'état 'En cours'."
-
-#. module: stay
-#: code:addons/stay/models/stay.py:0
-#, python-format
-msgid "Stay '%s' is not in state 'To Clean'."
-msgstr "Le séjour '%s' n'est pas à l'état 'Ménage à faire'"
 
 #. module: stay
 #: model:ir.model,name:stay.model_stay_date_label
@@ -1279,10 +1305,18 @@ msgid "To Assign"
 msgstr "A attribuer"
 
 #. module: stay
-#: model:ir.model.fields.selection,name:stay.selection__stay_stay__state__to_clean
-#: model_terms:ir.ui.view,arch_db:stay.stay_search
+#: model:ir.model.fields,field_description:stay.field_stay_room__to_clean
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_form
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_search
 msgid "To Clean"
-msgstr "Ménage à faire"
+msgstr "A nettoyer"
+
+#. module: stay
+#: model:ir.actions.act_window,name:stay.stay_toclean_print_action
+#: model:ir.ui.menu,name:stay.stay_toclean_print_menu
+#: model_terms:ir.ui.view,arch_db:stay.stay_toclean_print_form
+msgid "To Clean Report"
+msgstr "Rapport ménage"
 
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__activity_exception_decoration
@@ -1318,6 +1352,14 @@ msgstr "Lecture seule"
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__assign_status__none
 msgid "Waiting Assignation"
 msgstr "En attente d'attribution"
+
+#. module: stay
+#: model:ir.model.fields,help:stay.field_stay_room__to_clean
+msgid ""
+"When the field has a value, it means the room must be cleaned (when a stay "
+"is terminated, this field is auto-set with the stay description). When the "
+"room is cleaned, the field is emptied."
+msgstr ""
 
 #. module: stay
 #: code:addons/stay/models/stay.py:0
