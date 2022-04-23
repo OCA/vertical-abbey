@@ -681,6 +681,7 @@ from the calendar view, the dates are not set -->
                     domain="[('to_clean', '!=', False)]"
                 />
             <filter name="clean" string="Clean" domain="[('to_clean', '=', False)]" />
+            <separator />
             <filter
                     string="Archived"
                     name="inactive"
