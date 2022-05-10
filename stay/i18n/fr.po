@@ -131,7 +131,7 @@ msgstr "Tous"
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room__allow_simultaneous
 msgid "Allow simultaneous"
-msgstr "Autoriser simultanné"
+msgstr "Autoriser simultané"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_refectory_form
