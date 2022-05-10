@@ -62,7 +62,7 @@
                         <field
                                 name="assign_status"
                                 states="confirm,current,done"
-                                decoration-success="assign_status == 'assigned'"
+                                decoration-success="assign_status in ('assigned', 'no_night')"
                                 decoration-danger="assign_status == 'error'"
                                 decoration-info="assign_status == 'none'"
                                 decoration-warning="assign_status == 'partial'"
@@ -109,7 +109,7 @@
     <field name="name">stay.tree</field>
     <field name="model">stay.stay</field>
     <field name="arch" type="xml">
-        <tree>
+        <tree decoration-muted="state == 'cancel'">
             <header>  <!-- v14+ Use same action as in the Action menu -->
                 <button
                         name="guest_has_left"
@@ -138,7 +138,7 @@
             <field name="rooms_display_name" string="Rooms" />
             <field
                     name="assign_status"
-                    decoration-success="assign_status == 'assigned'"
+                    decoration-success="assign_status in ('assigned', 'no_night')"
                     decoration-danger="assign_status == 'error'"
                     decoration-info="assign_status == 'none'"
                     decoration-warning="assign_status == 'partial'"
