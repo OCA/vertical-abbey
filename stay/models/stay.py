@@ -131,6 +131,7 @@ class StayStay(models.Model):
     )
     no_meals = fields.Boolean(
         string="No Meals",
+        tracking=True,
         help="The stay lines generated from this stay will not have "
         "lunchs nor dinners by default.",
     )
@@ -140,6 +141,7 @@ class StayStay(models.Model):
     assign_status = fields.Selection(
         [
             ("none", "Waiting Assignation"),
+            ("no_night", "No Nights"),
             ("partial", "Partial"),
             ("assigned", "Assigned"),
             ("error", "Error"),
@@ -176,7 +178,13 @@ class StayStay(models.Model):
         ),
     ]
 
-    @api.depends("room_assign_ids.guest_qty")
+    @api.depends(
+        "room_assign_ids.guest_qty",
+        "departure_date",
+        "arrival_date",
+        "guest_qty",
+        "state",
+    )
     def _compute_room_assignment(self):
         for stay in self:
             guest_qty_to_assign = stay.guest_qty
@@ -189,8 +197,12 @@ class StayStay(models.Model):
             else:
                 rooms_display_name = "-"  # TODO find unicode symbol ?
 
-            if not guest_qty_to_assign:
+            if stay.state in ("draft", "cancel"):
+                assign_status = False
+            elif not guest_qty_to_assign:
                 assign_status = "assigned"
+            elif stay.arrival_date == stay.departure_date:
+                assign_status = "no_night"
             elif guest_qty_to_assign == stay.guest_qty:
                 assign_status = "none"
             elif guest_qty_to_assign > 0:
@@ -483,7 +495,10 @@ class StayStay(models.Model):
         slo = self.env["stay.line"]
         if previous_vals:
             domain = [("stay_id", "=", self.id)]
-            if previous_vals["guest_qty"] == self.guest_qty:
+            if (
+                previous_vals["guest_qty"] == self.guest_qty
+                and previous_vals["no_meals"] == self.no_meals
+            ):
                 # delete dates out of scope
                 domain_dates = expression.OR(
                     [
@@ -540,6 +555,7 @@ class StayStay(models.Model):
                         "departure_date": stay.departure_date,
                         "departure_time": stay.departure_time,
                         "guest_qty": stay.guest_qty,
+                        "no_meals": stay.no_meals,
                     }
         res = super().write(vals)
         if not self._context.get("stay_no_auto_update"):
@@ -898,11 +914,6 @@ class StayRoom(models.Model):
         "at the same time in the room.",
     )
     active = fields.Boolean(default=True)
-    #    no_meals = fields.Boolean(
-    #        string="No Meals",
-    #        help="If active, the stays linked to this room will have the "
-    #        "same option active by default.",
-    #    )
     notes = fields.Text()
     to_clean = fields.Char(
         string="To Clean",
