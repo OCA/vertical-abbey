@@ -26,15 +26,17 @@ class StayTocleanPrint(models.TransientModel):
 
     def report_toclean_data(self):
         self.ensure_one()
-        sro = self.env['stay.room']
-        sgo = self.env['stay.group']
+        sro = self.env["stay.room"]
+        sgo = self.env["stay.group"]
         # The result must be orderd by group and by room
         res = {}
-        for group in sgo.search([('company_id', '=', self.company_id.id)]):
+        for group in sgo.search([("company_id", "=", self.company_id.id)]):
             res[group.name] = []
-        res['none'] = []
-        for room in sro.search([('to_clean', '!=', False), ('company_id', '=', self.company_id.id)]):
-            group = room.group_id and room.group_id.name or 'none'
+        res["none"] = []
+        for room in sro.search(
+            [("to_clean", "!=", False), ("company_id", "=", self.company_id.id)]
+        ):
+            group = room.group_id and room.group_id.name or "none"
             res[group].append(room)
         res_final = {}
         # remove empty groups
