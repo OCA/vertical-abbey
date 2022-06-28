@@ -24,6 +24,7 @@
         "wizard/stay_journal_print_view.xml",
         "wizard/stay_toclean_print_view.xml",
         "wizard/stay_stay_xlsx_view.xml",
+        "wizard/stay_multi_duplicate_view.xml",
         "security/ir.model.access.csv",
         "report/report.xml",
         "report/report_stay_journal.xml",
