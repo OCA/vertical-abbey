@@ -101,6 +101,7 @@ class StayStay(models.Model):
         "stay_id",
         string="Room Assignments",
         states={"draft": [("readonly", True)], "cancel": [("readonly", True)]},
+        copy=True,
     )
     # Here, group_id is not a related of room, because we want to be able
     # to first set the group and later set the room
@@ -135,6 +136,7 @@ class StayStay(models.Model):
         help="The stay lines generated from this stay will not have "
         "lunchs nor dinners by default.",
     )
+    construction = fields.Boolean()
     rooms_display_name = fields.Char(
         compute="_compute_room_assignment", string="Rooms", store=True
     )
@@ -276,27 +278,44 @@ class StayStay(models.Model):
     @api.onchange("departure_datetime")
     def _inverse_departure_datetime(self):
         for stay in self:
-            departure_date = False
-            departure_time = False
             if stay.departure_datetime:
                 (
                     departure_date,
                     departure_time,
                 ) = self._convert_to_date_and_time_selection(stay.departure_datetime)
-            stay.departure_date = departure_date
-            self.departure_time = departure_time
+                stay.departure_date = departure_date
+                self.departure_time = departure_time
 
     @api.onchange("arrival_datetime")
     def _inverse_arrival_datetime(self):
         for stay in self:
-            arrival_date = False
-            arrival_time = False
             if stay.arrival_datetime:
                 arrival_date, arrival_time = self._convert_to_date_and_time_selection(
                     stay.arrival_datetime
                 )
-            stay.arrival_date = arrival_date
-            stay.arrival_time = arrival_time
+                stay.arrival_date = arrival_date
+                stay.arrival_time = arrival_time
+
+    @api.onchange("arrival_date")
+    def arrival_date_change(self):
+        if self.arrival_date and (
+            not self.departure_date or self.departure_date < self.arrival_date
+        ):
+            self.departure_date = self.arrival_date
+
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if res.get("construction"):
+            res.update(
+                {
+                    "partner_name": _("CONSTRUCTION"),
+                    "arrival_time": "morning",
+                    "departure_time": "evening",
+                    "state": "confirm",
+                }
+            )
+        return res
 
     @api.constrains(
         "departure_date",
@@ -492,6 +511,9 @@ class StayStay(models.Model):
 
     def _update_lines(self, previous_vals=None):
         self.ensure_one()
+        if self.construction:
+            return
+
         slo = self.env["stay.line"]
         if previous_vals:
             domain = [("stay_id", "=", self.id)]

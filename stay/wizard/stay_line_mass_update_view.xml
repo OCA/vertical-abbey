@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2022 Akretion France (www.akretion.com)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  @author: Matthieu Dubois <dubois.matthieu@tutanota.com>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+
+<record id="stay_line_mass_update_form" model="ir.ui.view">
+    <field name="model">stay.line.mass.update</field>
+    <field name="arch" type="xml">
+        <form string="Update All Stay Lines">
+            <group name="main">
+                <field name="stay_id" />
+                <field name="no_breakfast" />
+                <field name="no_lunch" />
+                <field name="no_dinner" />
+                <field name="no_bed_night" />
+                <field name="refectory_id" />
+            </group>
+            <footer>
+                <button
+                        type="object"
+                        name="apply"
+                        string="Apply Changes"
+                        class="btn-primary"
+                    />
+                <button special="cancel" string="Cancel" />
+            </footer>
+        </form>
+    </field>
+</record>
+
+<record id="stay_line_mass_update_action" model="ir.actions.act_window">
+    <field name="name">Update all lines</field>
+    <field name="res_model">stay.line.mass.update</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+</record>
+
+
+</odoo>

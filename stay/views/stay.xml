@@ -35,6 +35,13 @@
                         states="current"
                     />
                 <button
+                        name="%(stay_line_mass_update_action)d"
+                        type="action"
+                        string="Update All Lines"
+                        states="confirm,current"
+                    />
+
+                <button
                         name="cancel"
                         type="object"
                         string="Cancel"
@@ -47,6 +54,15 @@
                         statusbar_visible="draft,confirm,current,done"
                     />
             </header>
+
+            <div
+                    class="alert alert-warning"
+                    role="alert"
+                    attrs="{'invisible': [('construction', '=', False)]}"
+                >
+                Special stay to mark rooms as unavailable due to construction works.
+            </div>
+
             <sheet>
                 <div class="oe_title">
                     <h1>
@@ -56,7 +72,10 @@
                 <group name="main">
                     <group name="left">
                         <field name="company_id" groups="base.group_multi_company" />
-                        <field name="partner_id" />
+                        <field
+                                name="partner_id"
+                                attrs="{'invisible': [('construction', '=', True)]}"
+                            />
                         <field name="partner_name" />
                         <field name="guest_qty" />
                         <field
@@ -79,17 +98,25 @@
                         <field name="departure_datetime" invisible="1" />
                         <field name="departure_note" />
                         <field name="group_id" />
-                        <field name="no_meals" />
+                        <field
+                                name="no_meals"
+                                attrs="{'invisible': ['|', ('construction', '=', True), ('state', '!=', 'draft')]}"
+                            />
+                        <field name="construction" invisible="1" />
                         <field
                                 name="refectory_id"
-                                attrs="{'invisible': [('no_meals', '=', True)]}"
+                                attrs="{'invisible': ['|', '|', ('no_meals', '=', True), ('construction', '=', True), ('state', '!=', 'draft')]}"
                             />
                     </group>
                 </group>
+
                 <group name="rooms" states="confirm,current,done">
                     <field name="room_assign_ids" nolabel="1" />
                 </group>
-                <group name="lines" states="confirm,current,done">
+                <group
+                        name="lines"
+                        attrs="{'invisible': ['|', ('construction', '=', True), ('state', 'in', ('draft', 'cancel'))]}"
+                    >
                     <field name="line_ids" nolabel="1" />
                 </group>
                 <group name="notes">
@@ -163,10 +190,13 @@
     <field name="model">stay.stay</field>
     <field name="arch" type="xml">
         <search>
-            <field name="partner_name" />
+            <field
+                    name="partner_name"
+                    filter_domain="['|', ('partner_name', 'ilike', self), ('name', 'ilike', self)]"
+                    string="Guest Name or Stay Number"
+                />
             <field name="partner_id" />
             <field name="group_id" />
-            <field name="refectory_id" />
             <field
                     name="departure_date"
                     string="Arrivals and Departures on"
@@ -227,6 +257,7 @@
                     date="departure_date"
                 />
             <separator />
+
             <group string="Group By" name="groupby">
                 <filter
                         name="group_groupby"
@@ -319,10 +350,23 @@ from the calendar view, the dates are not set -->
     <field name="name">Stays</field>
     <field name="res_model">stay.stay</field>
     <field name="view_mode">tree,form,calendar,graph,pivot</field>
+    <field name="domain"> [('construction', '=', False)]</field>
     <field
             name="context"
-        >{'search_default_current_and_future': True, 'stay_name_get_partner_name_qty': True}</field>
+        >{'search_default_current_and_future': True, 'stay_name_get_partner_name_qty': True, 'default_construction': False}</field>
 </record>
+
+<record id="stay_construction_action" model="ir.actions.act_window">
+    <field name="name">Construction</field>
+    <field name="res_model">stay.stay</field>
+    <field name="view_mode">tree,form,calendar,graph,pivot</field>
+    <field name="domain"> [('construction', '=', True)]</field>
+    <field
+            name="context"
+        >{'search_default_current_and_future': True, 'stay_name_get_partner_name_qty': True, 'default_construction': True}</field>
+</record>
+
+
 
 
 <menuitem
@@ -339,6 +383,12 @@ from the calendar view, the dates are not set -->
 
 <menuitem id="stay_menu" action="stay_action" parent="stay_sub_menu" sequence="10" />
 
+<menuitem
+        id="stay_construction_menu"
+        action="stay_construction_action"
+        parent="stay_sub_menu"
+        sequence="100"
+    />
 
 <record id="stay_room_assign_tree" model="ir.ui.view">
     <field name="model">stay.room.assign</field>
