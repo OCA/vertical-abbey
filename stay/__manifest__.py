@@ -18,7 +18,7 @@
     "data": [
         "security/stay_security.xml",
         "views/stay.xml",
-        #"views/stay_iframe.xml",
+        "views/stay_iframe.xml",
         "data/sequence.xml",
         "wizard/res_config_settings_view.xml",
         "wizard/stay_journal_print_view.xml",

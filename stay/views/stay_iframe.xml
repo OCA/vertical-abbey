@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="stay_form_iframe" name="Stay form">
+    <div id="wrap">
+        <form action="/stay/saved" method="post">
+                <p>Demande de séjour à l'hôtellerie</p>
+                <div>
+                        <label for="partner_name">Nom et prénom :</label>
+                <input id="partner_name" type="text" name="partner_name" required="1"/>
+
+        </div>
+                <div>
+                 <label for="email">Email:</label>
+                <input id="email" type="text" name="email" required="1"/>
+                </div>
+                <div>
+                        <label for="mobile">Mobile :</label>
+                        <input id="mobile" type="tel" name="mobile" required="1"/>
+                </div>
+                 <label for="title">Title:</label>
+                <select id="title" name="title">
+    <option value="madam">Madame</option>
+    <option value="mister">Monsieur</option>
+    <option value="miss">Mademoiselle</option>
+  </select>
+  <fieldset>
+          <legend>Arrivée</legend>
+        <label for="arrival_date">Date d'arrivée :</label>
+          <input id="arrival_date" name="arrival_date" type="date" required="1"/>
+            <br/>
+          <input type="radio" id="morning" name="arrival_time" value="morning" checked="1"/>
+          <label for="morning">Morning</label>
+            <br/>
+          <input type="radio" id="afternoon" name="arrival_time" value="afternoon"/>
+            <label for="afternoon">Afternoon</label>
+            <br/>
+          <input type="radio" id="evening" name="arrival_time" value="evening"/>
+          <label for="evening">Evening</label>
+  </fieldset>
+  <fieldset>
+          <legend>Départ</legend>
+          <label for="departure_date">Date de départ :</label>
+          <input id="departure_date" name="departure_date" type="date" required="1"/>
+          <br/>
+          <input type="radio" id="morning" name="departure_time" value="morning" checked="1"/>
+          <label for="morning">Morning</label>
+            <br/>
+          <input type="radio" id="afternoon" name="departure_time" value="afternoon"/>
+            <label for="afternoon">Afternoon</label>
+            <br/>
+          <input type="radio" id="evening" name="departure_time" value="evening"/>
+          <label for="evening">Evening</label>
+
+  </fieldset>
+  <div>
+  <label for="guest_qty">Nombre d'hôtes :</label>
+  <input id="guest_qty" name="guest_qty" type="number" min="1" max="50" value="1" required="1"/>
+  </div>
+  <div>
+  <label for="notes">Notes :</label>
+  <textarea id="notes" name="notes" rows="6" cols="50">Faites-nous part de vos motivations pour cette retraite.</textarea>
+  </div>
+    <input type="submit" value="Submit"/>
+                </form>
+    </div>
+</template>
+
+<template id="stay_saved_iframe" name="Stay Saved" >
+        <div id="wrap">
+             <section>
+                <div class="container">
+                    <div class="mt32">
+                        <div>
+                                <h1>Demande de séjour enregistrée sous le n°<span t-field="stay.name"/></h1>
+                            <ul>
+                                    <li>Date d'arrivée : 
+                                    <span t-field="stay.arrival_date"/></li>
+                            <li>Heure d'arrivée : <span t-field="stay.arrival_time"/></li>
+                            <li>Date de départ : <span t-field="stay.departure_date"/></li>
+                            <li>Heure de départ : <span t-field="stay.departure_time"/></li>
+                            <li>Nombre d'hôtes : <span t-field="stay.guest_qty"/></li>
+                    </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+</template>
+
+</odoo>
