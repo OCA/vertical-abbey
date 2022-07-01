@@ -16,7 +16,7 @@
                         name="partner_name"
                         required="1"
                         placeholder="Name and Surname"
-                        alt="Your name and Surname"
+                        alt="Your Name and Surname"
                     />
             </div>
 
@@ -112,7 +112,7 @@
                         placeholder="Additional Notes/your motivations"
                     />
   </div>
-    <input type="submit" value="Submit" />
+    <input type="submit" value="Submit" id="submit" />
                 </form>
     </div>
 </template>

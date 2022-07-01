@@ -26,8 +26,7 @@ class StayLineMassUpdate(models.TransientModel):
         res["stay_id"] = self._context.get("active_id")
         return res
 
-    def apply(self):
-        self.ensure_one()
+    def _prepare_write_stay_line(self):
         vals = {}
         if self.no_breakfast:
             vals["breakfast_qty"] = 0
@@ -39,9 +38,17 @@ class StayLineMassUpdate(models.TransientModel):
             vals["bed_night_qty"] = 0
         if self.refectory_id:
             vals["refectory_id"] = self.refectory_id.id
-            self.stay_id.write({"refectory_id": self.refectory_id.id})
+        return vals
 
-        if not len(vals):
+    def _prepare_write_stay(self):
+        vals = {}
+        if self.refectory_id:
+            vals["refectory_id"] = self.refectory_id.id
+        return vals
+
+    def apply(self):
+        vals = self._prepare_write_stay_line()
+        if not vals:
             raise UserError(
                 _(
                     "You must check at least one option! You didn't check any... "
@@ -50,3 +57,4 @@ class StayLineMassUpdate(models.TransientModel):
                 )
             )
         self.stay_id.line_ids.write(vals)
+        self.stay_id.write(self._prepare_write_stay())

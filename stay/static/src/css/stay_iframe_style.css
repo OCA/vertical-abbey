@@ -36,3 +36,22 @@ select {
 fieldset {
     margin-bottom: 8px;
 }
+#submit {
+    background-color: #7c7bad;
+    border-color: #5f5e97;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    padding: 7px 16px;
+    border-radius: 3px;
+    transition-duration: 0.4s;
+}
+
+#submit:hover {
+    background-color: white;
+    color: #5f5e97;
+    border-color: #7c7bad;
+    cursor: pointer;
+}
