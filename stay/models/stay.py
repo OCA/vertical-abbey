@@ -23,6 +23,7 @@ TIMEDICT = {
     "morning": "09:00",
     "afternoon": "15:00",
     "evening": "20:00",
+    "unknown": "08:00",
 }
 TIME2CODE = {
     "morning": _("Mo"),
@@ -63,6 +64,7 @@ class StayStay(models.Model):
             ("morning", "Morning"),
             ("afternoon", "Afternoon"),
             ("evening", "Evening"),
+            ("unknown", "Unknown"),
         ],
         string="Arrival Time",
         required=True,
@@ -83,6 +85,7 @@ class StayStay(models.Model):
             ("morning", "Morning"),
             ("afternoon", "Afternoon"),
             ("evening", "Evening"),
+            ("unknown", "Unknown"),
         ],
         string="Departure Time",
         required=True,
@@ -258,7 +261,11 @@ class StayStay(models.Model):
     def _compute_arrival_datetime(self):
         for stay in self:
             datetime_naive_utc = False
-            if stay.arrival_date and stay.arrival_time:
+            if (
+                stay.arrival_date
+                and stay.arrival_time
+                and stay.arrival_time != "unknown"
+            ):
                 datetime_naive_utc = self._convert_to_datetime_naive_utc(
                     stay.arrival_date, stay.arrival_time
                 )
@@ -268,7 +275,11 @@ class StayStay(models.Model):
     def _compute_departure_datetime(self):
         for stay in self:
             datetime_naive_utc = False
-            if stay.departure_date and stay.departure_time:
+            if (
+                stay.departure_date
+                and stay.departure_time
+                and stay.departure_time != "unknown"
+            ):
                 datetime_naive_utc = self._convert_to_datetime_naive_utc(
                     stay.departure_date, stay.departure_time
                 )
@@ -325,9 +336,27 @@ class StayStay(models.Model):
         "room_assign_ids",
         "group_id",
         "guest_qty",
+        "state",
     )
     def _check_stay(self):
         for stay in self:
+            if stay.arrival_time == "unknown" and stay.state not in ("draft", "cancel"):
+                raise ValidationError(
+                    _(
+                        "Arrival time cannot be set to unknown"
+                        "if the stay is confirmed!"
+                    )
+                )
+            if stay.departure_time == "unknown" and stay.state not in (
+                "draft",
+                "cancel",
+            ):
+                raise ValidationError(
+                    _(
+                        "Departure Time cannot be set to unknown if the stay is "
+                        "confirmed."
+                    )
+                )
             if stay.arrival_date > stay.departure_date:
                 raise ValidationError(
                     _("Arrival date (%s) cannot be after " "departure date (%s)!")
