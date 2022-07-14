@@ -17,6 +17,7 @@
     "external_dependencies": {"python": ["xlsxwriter"]},
     "data": [
         "security/stay_security.xml",
+        "views/stay_menu.xml",
         "wizard/res_config_settings_view.xml",
         "wizard/stay_journal_print_view.xml",
         "wizard/stay_toclean_print_view.xml",
