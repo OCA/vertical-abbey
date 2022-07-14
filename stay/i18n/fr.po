@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-30 16:20+0000\n"
-"PO-Revision-Date: 2022-06-30 16:20+0000\n"
+"POT-Creation-Date: 2022-07-01 15:25+0000\n"
+"PO-Revision-Date: 2022-07-01 15:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -98,7 +98,9 @@ msgstr "Une chambre avec ce code existe déjà dans cette société."
 #: code:addons/stay/wizard/stay_multi_duplicate.py:0
 #, python-format
 msgid "A stay already exists for guest '%s' with arrival date %s (stay %s)."
-msgstr "Un séjour existe déjà pour l'hote '%s' avec comme date d'arrivée '%s' (séjour '%s')"
+msgstr ""
+"Un séjour existe déjà pour l'hote '%s' avec comme date d'arrivée '%s' "
+"(séjour '%s')"
 
 #. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_stay_name_company_uniq
@@ -237,6 +239,13 @@ msgstr ""
 #: model:ir.actions.report,name:stay.report_stay_journal_arrival
 msgid "Arrival list"
 msgstr "Liste des arrivées"
+
+#. module: stay
+#: code:addons/stay/models/stay.py:0
+#, python-format
+msgid "Arrival time cannot be set to unknownif the stay is confirmed!"
+msgstr ""
+"Avant de confirmer un séjour, il est impératif de mettre une heure d'arrivée"
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_journal_print__report_type__arrival
@@ -401,6 +410,7 @@ msgstr ""
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_construction_action
+#: model:ir.model.fields,field_description:stay.field_stay_stay__construction
 #: model:ir.ui.menu,name:stay.stay_construction_menu
 msgid "Construction"
 msgstr "En travaux"
@@ -542,6 +552,14 @@ msgstr "Heure de départ"
 #: model_terms:ir.ui.view,arch_db:stay.stay_saved_iframe
 msgid "Departure Time :"
 msgstr "Date de fin"
+
+#. module: stay
+#: code:addons/stay/models/stay.py:0
+#, python-format
+msgid "Departure Time cannot be set to unknown if the stay is confirmed."
+msgstr ""
+"Avant de confirmer un séjour, merci de sélectionner une heure de départ "
+"(pour l'instant, celle-ci est inconnue.)"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line__dinner_qty
@@ -1111,15 +1129,10 @@ msgid "No departure on %s."
 msgstr "Aucun départ le %s"
 
 #. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_search
-msgid "Not Under Construction"
-msgstr "N'est pas en travaux"
-
-#. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room__notes
 #: model:ir.model.fields,field_description:stay.field_stay_stay__notes
 msgid "Notes"
-msgstr "Notes"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_needaction_counter
@@ -1233,7 +1246,6 @@ msgstr "Réfectoires"
 #: model:ir.model.fields,field_description:stay.field_stay_stay__refectory_id
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_refectory_form
-#: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Refectory"
 msgstr "Réfectoire"
 
@@ -1350,7 +1362,8 @@ msgstr "Afficher"
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
 msgid "Special stay to mark rooms as unavailable due to construction works."
-msgstr "Séjour spécial pour rendre des chambres indisponibles à cause de travaux"
+msgstr ""
+"Séjour spécial pour rendre des chambres indisponibles à cause de travaux"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_multi_duplicate__start_date
@@ -1526,12 +1539,6 @@ msgid "The start date %s is in the past!"
 msgstr ""
 
 #. module: stay
-#: model:ir.model.fields,help:stay.field_stay_stay__construction
-msgid ""
-"The stay created with this option are used to mark room(s) as unavailable"
-msgstr ""
-
-#. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__no_meals
 msgid ""
 "The stay lines generated from this stay will not have lunchs nor dinners by "
@@ -1605,9 +1612,10 @@ msgid "Type of the exception activity on record."
 msgstr ""
 
 #. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_search
-msgid "Under Construction"
-msgstr "En travaux"
+#: model:ir.model.fields.selection,name:stay.selection__stay_stay__arrival_time__unknown
+#: model:ir.model.fields.selection,name:stay.selection__stay_stay__departure_time__unknown
+msgid "Unknown"
+msgstr "Inconnue"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_unread
@@ -1684,18 +1692,13 @@ msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
-msgid "Your name and Surname"
+msgid "Your Name and Surname"
 msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_saved_iframe
 msgid "Your stay application was assigned number:"
 msgstr ""
-
-#. module: stay
-#: model:ir.model.fields,field_description:stay.field_stay_stay__construction
-msgid "construction"
-msgstr "En travaux"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
