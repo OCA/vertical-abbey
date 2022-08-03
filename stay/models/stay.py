@@ -185,6 +185,7 @@ class StayStay(models.Model):
 
     @api.depends(
         "room_assign_ids.guest_qty",
+        "room_assign_ids.room_id",
         "departure_date",
         "arrival_date",
         "guest_qty",
