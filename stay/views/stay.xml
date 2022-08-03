@@ -517,9 +517,11 @@ from the calendar view, the dates are not set -->
     <field name="name">Room Assignments</field>
     <field name="res_model">stay.room.assign</field>
     <field name="view_mode">tree,timeline,calendar,pivot</field>
+    <!-- We don't put search_default_current_and_future: True on stay.room.assign
+        because we want to have all rooms in the timeline view -->
     <field
             name="context"
-        >{'search_default_current_and_future': True, 'stay_name_get_partner_name_qty': True, 'stay_room_assign_main_view': True}</field>
+        >{'stay_name_get_partner_name_qty': True, 'stay_room_assign_main_view': True}</field>
 </record>
 
 
