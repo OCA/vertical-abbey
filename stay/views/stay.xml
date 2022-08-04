@@ -111,7 +111,13 @@
                 </group>
 
                 <group name="rooms" states="confirm,current,done">
-                    <field name="room_assign_ids" nolabel="1" />
+                    <field name="room_assign_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="room_id" />
+                            <field name="guest_qty" />
+                            <field name="room_domain_ids" invisible="1" />
+                        </tree>
+                    </field>
                 </group>
                 <group
                         name="lines"
@@ -402,6 +408,7 @@ from the calendar view, the dates are not set -->
                     />
                 <field name="room_id" />
                 <field name="guest_qty" />
+                <field name="room_domain_ids" invisible="1" />
                 <field name="stay_group_id" invisible="1" />
                 <field
                         name="company_id"
@@ -418,30 +425,12 @@ from the calendar view, the dates are not set -->
 <record id="stay_room_assign_tree" model="ir.ui.view">
     <field name="model">stay.room.assign</field>
     <field name="arch" type="xml">
-        <tree editable="bottom">
-            <field
-                    name="stay_id"
-                    invisible="not context.get('stay_room_assign_main_view')"
-                    readonly="1"
-                />
-            <field
-                    name="arrival_date"
-                    invisible="not context.get('stay_room_assign_main_view')"
-                />
-            <field
-                    name="arrival_time"
-                    invisible="not context.get('stay_room_assign_main_view')"
-                    optional="show"
-                />
-            <field
-                    name="departure_date"
-                    invisible="not context.get('stay_room_assign_main_view')"
-                />
-            <field
-                    name="departure_time"
-                    invisible="not context.get('stay_room_assign_main_view')"
-                    optional="show"
-                />
+        <tree create="0">
+            <field name="stay_id" />
+            <field name="arrival_date" />
+            <field name="arrival_time" optional="show" />
+            <field name="departure_date" />
+            <field name="departure_time" optional="show" />
             <field name="room_id" />
             <field name="guest_qty" />
             <field name="stay_group_id" invisible="1" />
@@ -449,7 +438,6 @@ from the calendar view, the dates are not set -->
                     name="company_id"
                     groups="base.group_multi_company"
                     optional="hide"
-                    invisible="not context.get('stay_room_assign_main_view')"
                 />
         </tree>
     </field>
@@ -572,7 +560,7 @@ from the calendar view, the dates are not set -->
 <record id="stay_room_assign_action" model="ir.actions.act_window">
     <field name="name">Room Assignments</field>
     <field name="res_model">stay.room.assign</field>
-    <field name="view_mode">tree,timeline,calendar,pivot</field>
+    <field name="view_mode">timeline,tree,calendar,pivot</field>
     <!-- We don't put search_default_current_and_future: True on stay.room.assign
         because we want to have all rooms in the timeline view -->
     <field
