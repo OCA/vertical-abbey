@@ -192,7 +192,7 @@
         <search>
             <field
                     name="partner_name"
-                    filter_domain="['|', ('partner_name', 'ilike', self), ('name', 'ilike', self)]"
+                    filter_domain="['|', '|', ('partner_name', 'ilike', self), ('partner_id', 'ilike', self), ('name', 'ilike', self)]"
                     string="Guest Name or Stay Number"
                 />
             <field name="partner_id" />
