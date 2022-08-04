@@ -729,11 +729,12 @@ class StayRoomAssign(models.Model):
         index=True,
         check_company=True,
         domain="[('company_id', '=', company_id), '|', ('group_id', '=', False),"
-        "('group_id', '=', parent.group_id)]",
+        "('group_id', '=', stay_group_id)]",
     )
     guest_qty = fields.Integer(string="Guest Quantity", required=True)
     # Related fields
     group_id = fields.Many2one(related="room_id.group_id", store=True)
+    stay_group_id = fields.Many2one(related="stay_id.group_id", store=True)
     # The field group_id_integer is used for colors in timeline view
     group_id_integer = fields.Integer(related="room_id.group_id.id", string="Group ID")
     user_id = fields.Many2one(related="room_id.group_id.user_id", store=True)
