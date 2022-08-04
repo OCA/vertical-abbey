@@ -370,6 +370,51 @@ from the calendar view, the dates are not set -->
         sequence="100"
     />
 
+<record id="stay_room_assign_form" model="ir.ui.view">
+    <field name="model">stay.room.assign</field>
+    <field name="arch" type="xml">
+        <form>
+            <group name="main">
+                <field
+                        name="stay_id"
+                        invisible="not context.get('stay_room_assign_main_view')"
+                        readonly="1"
+                    />
+                <field
+                        name="partner_name"
+                        invisible="not context.get('stay_room_assign_main_view')"
+                    />
+                <field
+                        name="arrival_date"
+                        invisible="not context.get('stay_room_assign_main_view')"
+                    />
+                <field
+                        name="arrival_time"
+                        invisible="not context.get('stay_room_assign_main_view')"
+                    />
+                <field
+                        name="departure_date"
+                        invisible="not context.get('stay_room_assign_main_view')"
+                    />
+                <field
+                        name="departure_time"
+                        invisible="not context.get('stay_room_assign_main_view')"
+                    />
+                <field name="room_id" />
+                <field name="guest_qty" />
+                <field name="stay_group_id" invisible="1" />
+                <field
+                        name="company_id"
+                        groups="base.group_multi_company"
+                        invisible="not context.get('stay_room_assign_main_view')"
+                    />
+            </group>
+        </form>
+    </field>
+</record>
+
+
+
 <record id="stay_room_assign_tree" model="ir.ui.view">
     <field name="model">stay.room.assign</field>
     <field name="arch" type="xml">
@@ -377,18 +422,29 @@ from the calendar view, the dates are not set -->
             <field
                     name="stay_id"
                     invisible="not context.get('stay_room_assign_main_view')"
+                    readonly="1"
                 />
             <field
                     name="arrival_date"
                     invisible="not context.get('stay_room_assign_main_view')"
                 />
             <field
+                    name="arrival_time"
+                    invisible="not context.get('stay_room_assign_main_view')"
+                    optional="show"
+                />
+            <field
                     name="departure_date"
                     invisible="not context.get('stay_room_assign_main_view')"
                 />
+            <field
+                    name="departure_time"
+                    invisible="not context.get('stay_room_assign_main_view')"
+                    optional="show"
+                />
             <field name="room_id" />
             <field name="guest_qty" />
-            <field name="group_id" invisible="1" />
+            <field name="stay_group_id" invisible="1" />
             <field
                     name="company_id"
                     groups="base.group_multi_company"
