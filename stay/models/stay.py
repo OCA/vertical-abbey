@@ -6,6 +6,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
+from collections import defaultdict
 from datetime import datetime
 from textwrap import shorten
 
@@ -728,13 +729,17 @@ class StayRoomAssign(models.Model):
         ondelete="restrict",
         index=True,
         check_company=True,
-        domain="[('company_id', '=', company_id), '|', ('group_id', '=', False),"
-        "('group_id', '=', stay_group_id)]",
+        domain="[('id', 'in', room_domain_ids)]",
+    )
+    room_domain_ids = fields.Many2many(
+        "stay.room", compute="_compute_room_domain_ids", string="Available Rooms"
     )
     guest_qty = fields.Integer(string="Guest Quantity", required=True)
     # Related fields
     group_id = fields.Many2one(related="room_id.group_id", store=True)
-    stay_group_id = fields.Many2one(related="stay_id.group_id", store=True)
+    stay_group_id = fields.Many2one(
+        related="stay_id.group_id", store=True, string="Stay Group"
+    )
     # The field group_id_integer is used for colors in timeline view
     group_id_integer = fields.Integer(related="room_id.group_id.id", string="Group ID")
     user_id = fields.Many2one(related="room_id.group_id.user_id", store=True)
@@ -858,6 +863,55 @@ class StayRoomAssign(models.Model):
                     )
                 )
             date += relativedelta(days=1)
+
+    @api.depends(
+        "stay_id",
+        "stay_group_id",
+        "room_id",
+        "company_id",
+        "arrival_datetime",
+        "departure_datetime",
+    )
+    def _compute_room_domain_ids(self):
+        # Current implementation:
+        # we exlude ONLY single rooms and
+        # multi-bed-rooms with allow_simultaneous = False
+        # that are already occupied (we call them "potential_excl_rooms")
+        # For that, we must search on conflicting assignments linked to
+        # those rooms only
+        sro = self.env["stay.room"]
+        company_id2potential_excl_room_ids = defaultdict(list)
+        room_sr = sro.search_read([("allow_simultaneous", "=", False)], ["company_id"])
+        for room in room_sr:
+            company_id = room["company_id"][0]
+            company_id2potential_excl_room_ids[company_id].append(room["id"])
+
+        for assign in self:
+            company_id = assign.company_id.id or self.env.company.id
+            potential_excl_room_ids = company_id2potential_excl_room_ids.get(
+                company_id, []
+            )
+
+            conflict_domain = [
+                ("room_id", "in", potential_excl_room_ids),
+                ("departure_datetime", ">=", assign.arrival_datetime),
+                ("arrival_datetime", "<=", assign.departure_datetime),
+            ]
+            if assign._origin.id:
+                conflict_domain.append(("id", "!=", assign._origin.id))
+            conflict_assigns = self.search_read(conflict_domain, ["room_id"])
+            conflict_rooms = {x["room_id"][0]: True for x in conflict_assigns}
+
+            eligible_domain = [
+                ("company_id", "=", company_id),
+                ("id", "not in", list(conflict_rooms.keys())),
+            ]
+            if assign.stay_group_id:
+                eligible_domain += [
+                    ("group_id", "in", (False, assign.stay_group_id.id))
+                ]
+            eligible_rooms = sro.search(eligible_domain)
+            assign.room_domain_ids = eligible_rooms.ids
 
     @api.depends("partner_name", "arrival_time", "departure_time", "room_id")
     def name_get(self):
@@ -987,6 +1041,23 @@ class StayRoom(models.Model):
             "The number of beds must be positive.",
         ),
     ]
+
+    @api.constrains("allow_simultaneous", "bed_qty")
+    def _check_room_config(self):
+        for room in self:
+            if room.allow_simultaneous and room.bed_qty <= 1:
+                raise ValidationError(
+                    _(
+                        "Room %s has the option Allow simultaneous, but this option "
+                        "is only for rooms with several beds."
+                    )
+                    % room.display_name
+                )
+
+    @api.onchange("allow_simultaneous", "bed_qty")
+    def room_config_change(self):
+        if self.allow_simultaneous and self.bed_qty <= 1:
+            self.allow_simultaneous = False
 
     @api.depends("name", "code")
     def name_get(self):

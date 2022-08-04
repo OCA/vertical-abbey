@@ -85,6 +85,7 @@
     <field name="departure_date" eval="time.strftime('%Y-%m-05')" />
     <field name="departure_time">morning</field>
     <field name="group_id" ref="group1" />
+    <field name="state">confirm</field>
 </record>
 
 <record id="stay1_room_assign" model="stay.room.assign">
@@ -102,6 +103,7 @@
     <field name="departure_date" eval="time.strftime('%Y-%m-06')" />
     <field name="departure_time">evening</field>
     <field name="group_id" ref="group1" />
+    <field name="state">confirm</field>
 </record>
 
 <record id="stay2_room_assign" model="stay.room.assign">
@@ -119,6 +121,7 @@
     <field name="departure_date" eval="time.strftime('%Y-%m-12')" />
     <field name="departure_time">evening</field>
     <field name="group_id" ref="group1" />
+    <field name="state">confirm</field>
 </record>
 
 <record id="stay3_room_assign" model="stay.room.assign">
@@ -136,12 +139,24 @@
     <field name="departure_time">morning</field>
     <field name="no_meals" eval="True" />
     <field name="group_id" ref="group2" />
+    <field name="state">confirm</field>
 </record>
 
 <record id="stay4_room_assign" model="stay.room.assign">
     <field name="stay_id" ref="stay4" />
     <field name="room_id" ref="st_benoit_house" />
     <field name="guest_qty">5</field>
+</record>
+
+<record id="stay5" model="stay.stay">
+    <field name="partner_name">Dr Santé</field>
+    <field name="guest_qty">1</field>
+    <field name="arrival_date" eval="time.strftime('%Y-%m-01')" />
+    <field name="arrival_time">afternoon</field>
+    <field name="departure_date" eval="time.strftime('%Y-%m-05')" />
+    <field name="departure_time">unknown</field>
+    <field name="group_id" ref="group2" />
+    <field name="state">draft</field>
 </record>
 
 <record id="base.main_company" model="res.company">
