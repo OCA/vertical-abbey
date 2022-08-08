@@ -156,6 +156,38 @@ class StayJournalPrint(models.TransientModel):
         )
         return res
 
+    def _report_nomove(self, date):
+        assert date
+        sso = self.env['stay.stay']
+        stays = sso.search([
+            ('company_id', '=', self.company_id.id),
+            ('arrival_date', '<', date),
+            ('departure_date', '>', date),
+            ('state', 'not in', ('draft', 'cancel')),
+            ])
+        return stays
+
+    def report_general_data(self):
+        res = {}
+        day = self.date
+        day_ordo = self.env["stay.date.label"]._get_date_label(day)
+        res[day] = {
+            'date_label': babel_format_date(day, 'full', locale='fr'),
+            'ordo': self.env["stay.date.label"]._get_date_label(day) or '',
+            'departure': self._report_move_date(day, 'departure'),
+            'arrival': self._report_move_date(day, 'arrival'),
+            'nomove': self._report_nomove(day),
+            }
+        nextday = day + relativedelta(days=1)
+        res[nextday] = {
+            'date_label': babel_format_date(nextday, locale='fr', format='full'),
+            'ordo': self.env["stay.date.label"]._get_date_label(nextday) or '',
+            'departure': self._report_move_date(nextday, 'departure'),
+            'arrival': self._report_move_date(nextday, 'arrival'),
+            'nomove': self._report_nomove(nextday),
+            }
+        return res
+
     def report_arrival_data(self):
         return self._report_move_date(self.date, "arrival", raise_if_none=True)
 
