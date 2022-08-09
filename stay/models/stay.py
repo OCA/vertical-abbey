@@ -150,6 +150,7 @@ class StayStay(models.Model):
             ("no_night", "No Nights"),
             ("partial", "Partial"),
             ("assigned", "Assigned"),
+            ("over-assigned", "Over Assigned"),
             ("error", "Error"),
         ],
         string="Assign Status",
@@ -202,7 +203,7 @@ class StayStay(models.Model):
             if room_codes:
                 rooms_display_name = "-".join(room_codes)
             else:
-                rooms_display_name = "-"  # TODO find unicode symbol ?
+                rooms_display_name = "\u2205"
 
             if stay.state in ("draft", "cancel"):
                 assign_status = False
@@ -214,6 +215,8 @@ class StayStay(models.Model):
                 assign_status = "none"
             elif guest_qty_to_assign > 0:
                 assign_status = "partial"
+            elif guest_qty_to_assign < 0:
+                assign_status = "over-assigned"
             else:
                 assign_status = "error"
             stay.assign_status = assign_status
@@ -398,12 +401,10 @@ class StayStay(models.Model):
                     )
             if stay.room_assign_ids:
                 group2room = {}
-                total_guest_qty = 0
                 # Only one loop on rooms, to improve perfs
                 for room_assign in stay.room_assign_ids:
                     if room_assign.room_id.group_id:
                         group2room[room_assign.room_id.group_id] = room_assign.room_id
-                    total_guest_qty += room_assign.guest_qty
                 if stay.group_id:
                     for group, room in group2room.items():
                         if group != stay.group_id:
@@ -419,18 +420,6 @@ class StayStay(models.Model):
                                     group.display_name,
                                 )
                             )
-                if stay.guest_qty < total_guest_qty:
-                    raise ValidationError(
-                        _(
-                            "Stay '%s' has %d guest(s), but its room assignment has "
-                            "a total of %d guest(s)."
-                        )
-                        % (
-                            stay.display_name,
-                            stay.guest_qty,
-                            total_guest_qty,
-                        )
-                    )
 
     @api.depends("partner_name", "name", "rooms_display_name", "state")
     def name_get(self):

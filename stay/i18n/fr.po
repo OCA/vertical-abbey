@@ -1405,8 +1405,7 @@ msgid ""
 "Stay '%s' has %d guest(s), but its room assignment has a total of %d "
 "guest(s)."
 msgstr ""
-"Le séjour '%s' a %d hôtes, mais seulement %d hôte(s) ont des chambres "
-"attribuées."
+"Le séjour '%s' a %d hôtes, mais des chambres ont été attribuées pour un total de %d hôte(s)."
 
 #. module: stay
 #: code:addons/stay/models/stay.py:0

@@ -20,3 +20,4 @@ access_stay_multi_duplicate,Full access on stay.multi.duplicate wizard,model_sta
 access_stay_line_mass_update,Full access on stay.line.mass.update wizard,model_stay_line_mass_update,group_stay_user,1,1,1,1
 access_stay_line_reset,Full access on stay.line.reset wizard,model_stay_line_reset,group_stay_user,1,1,1,1
 access_stay_stay_xlsx,Full access on stay.stay.xlsx wizard,model_stay_stay_xlsx,group_stay_user,1,1,1,1
+access_stay_room_mass_assign,Full access on stay.room.mass.assign wizard,model_stay_room_mass_assign,group_stay_user,1,1,1,1

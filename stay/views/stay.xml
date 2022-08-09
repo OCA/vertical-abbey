@@ -82,7 +82,7 @@
                                 name="assign_status"
                                 states="confirm,current,done"
                                 decoration-success="assign_status in ('assigned', 'no_night')"
-                                decoration-danger="assign_status == 'error'"
+                                decoration-danger="assign_status in ('over-assigned', 'error')"
                                 decoration-info="assign_status == 'none'"
                                 decoration-warning="assign_status == 'partial'"
                                 widget="badge"
@@ -172,7 +172,7 @@
             <field
                     name="assign_status"
                     decoration-success="assign_status in ('assigned', 'no_night')"
-                    decoration-danger="assign_status == 'error'"
+                    decoration-danger="assign_status in ('over-assigned', 'error')"
                     decoration-info="assign_status == 'none'"
                     decoration-warning="assign_status == 'partial'"
                     widget="badge"
@@ -432,7 +432,7 @@ from the calendar view, the dates are not set -->
             <field name="departure_date" />
             <field name="departure_time" optional="show" />
             <field name="room_id" />
-            <field name="guest_qty" />
+            <field name="guest_qty" sum="1" />
             <field name="stay_group_id" invisible="1" />
             <field
                     name="company_id"
