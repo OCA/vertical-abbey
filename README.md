@@ -16,7 +16,13 @@ TODO: add repo description.
 
 [//]: # (addons)
 
-This part will be replaced when running the oca-gen-addons-table script from OCA/maintainer-tools.
+Available addons
+----------------
+addon | version | maintainers | summary
+--- | --- | --- | ---
+[donation_stay](donation_stay/) | 14.0.1.0.0 | [![alexis-via](https://github.com/alexis-via.png?size=30px)](https://github.com/alexis-via) | Create donations from a stay
+[stay](stay/) | 14.0.1.0.0 | [![alexis-via](https://github.com/alexis-via.png?size=30px)](https://github.com/alexis-via) | Simple management of stays and meals
+[stay_report_py3o](stay_report_py3o/) | 14.0.1.0.0 | [![alexis-via](https://github.com/alexis-via.png?size=30px)](https://github.com/alexis-via) | Replace Qweb report by Py3o report on stay module
 
 [//]: # (end addons)
 
