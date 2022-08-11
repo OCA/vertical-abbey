@@ -1,0 +1,23 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stay_refectory_manager,Full access on stay.refectory to Stay Manager,model_stay_refectory,group_stay_manager,1,1,1,1
+access_stay_refectory_user,Read access on stay.refectory to Stay Viewer,model_stay_refectory,group_stay_viewer,1,0,0,0
+access_stay_room_manager,Full access on stay.room to Stay Manager,model_stay_room,group_stay_manager,1,1,1,1
+access_stay_room_user,Read access on stay.room to Stay Viewer,model_stay_room,group_stay_viewer,1,0,0,0
+access_stay_group_manager,Full access on stay.group to Stay Manager,model_stay_group,group_stay_manager,1,1,1,1
+access_stay_group_user,Read access on stay.group to Stay Viewer,model_stay_group,group_stay_viewer,1,0,0,0
+access_stay_date_label_manager,Full access on stay.date.label to Stay Manager,model_stay_date_label,group_stay_manager,1,1,1,1
+access_stay_date_label_user,Read access on stay.date.label to everybody,model_stay_date_label,,1,0,0,0
+access_stay_stay_user,Full access on stay.stay to Stay User,model_stay_stay,group_stay_user,1,1,1,1
+access_stay_stay_employee,Read access on stay.stay to Employee,model_stay_stay,base.group_user,1,0,0,0
+access_stay_stay_viewer,Read access on stay.stay to Stay Viewer,model_stay_stay,group_stay_viewer,1,0,0,0
+access_stay_room_assign_user,Full access on stay.room.assign to Stay User,model_stay_room_assign,group_stay_user,1,1,1,1
+access_stay_room_assign_viewer,Read access on stay.room.assign to Stay Viewer,model_stay_room_assign,group_stay_viewer,1,0,0,0
+access_stay_line_user,Full access on stay.line to Stay User,model_stay_line,group_stay_user,1,1,1,1
+access_stay_line_viewer,Read access on stay.line to Stay Viewer,model_stay_line,group_stay_viewer,1,0,0,0
+access_stay_journal_print,Full access on stay.journal.print wizard,model_stay_journal_print,group_stay_user,1,1,1,1
+access_stay_toclean_print,Full access on stay.toclean.print wizard,model_stay_toclean_print,group_stay_user,1,1,1,1
+access_stay_multi_duplicate,Full access on stay.multi.duplicate wizard,model_stay_multi_duplicate,group_stay_user,1,1,1,1
+access_stay_line_mass_update,Full access on stay.line.mass.update wizard,model_stay_line_mass_update,group_stay_user,1,1,1,1
+access_stay_line_reset,Full access on stay.line.reset wizard,model_stay_line_reset,group_stay_user,1,1,1,1
+access_stay_stay_xlsx,Full access on stay.stay.xlsx wizard,model_stay_stay_xlsx,group_stay_user,1,1,1,1
+access_stay_room_mass_assign,Full access on stay.room.mass.assign wizard,model_stay_room_mass_assign,group_stay_user,1,1,1,1

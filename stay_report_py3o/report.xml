@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+
+<record id="stay.report_stay_journal_print" model="ir.actions.report">
+    <field name="report_type">py3o</field>
+    <field name="py3o_filetype">odt</field>
+    <field name="module">stay_report_py3o</field>
+    <field name="py3o_template_fallback">stay_journal.odt</field>
+    <field name="py3o_multi_in_one" eval="True" />
+</record>
+
+<record id="stay.report_stay_journal_meal" model="ir.actions.report">
+    <field name="report_type">py3o</field>
+    <field name="py3o_filetype">odt</field>
+    <field name="module">stay_report_py3o</field>
+    <field name="py3o_template_fallback">stay_meal.odt</field>
+    <field name="py3o_multi_in_one" eval="True" />
+</record>
+
+
+<record id="stay.report_stay_journal_arrival" model="ir.actions.report">
+    <field name="report_type">py3o</field>
+    <field name="py3o_filetype">odt</field>
+    <field name="module">stay_report_py3o</field>
+    <field name="py3o_template_fallback">stay_arrival.odt</field>
+</record>
+
+<record id="stay.report_stay_toclean" model="ir.actions.report">
+    <field name="report_type">py3o</field>
+    <field name="py3o_filetype">odt</field>
+    <field name="module">stay_report_py3o</field>
+    <field name="py3o_template_fallback">stay_toclean.odt</field>
+</record>
+
+
+
+</odoo>

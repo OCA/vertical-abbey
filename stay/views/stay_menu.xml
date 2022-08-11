@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2014-2022 Barroux Abbey (www.barroux.org)
+  Copyright 2014-2022 Akretion France (www.akretion.com)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  @author: Brother Bernard <informatique@barroux.org>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+
+
+<menuitem
+        id="stay_top_menu"
+        sequence="5"
+        name="Stays"
+        groups="group_stay_viewer"
+        web_icon="stay,static/description/icon.png"
+    />
+
+<menuitem id="stay_sub_menu" sequence="10" name="Stays" parent="stay_top_menu" />
+
+<menuitem id="stay_report_menu" sequence="20" name="Reports" parent="stay_top_menu" />
+
+<menuitem
+        id="stay_configuration"
+        sequence="50"
+        name="Configuration"
+        parent="stay_top_menu"
+        groups="group_stay_manager"
+    />
+
+</odoo>

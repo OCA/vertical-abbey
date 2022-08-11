@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+<template id="stay_form_iframe" name="Stay form">
+    <xpath expr="//head" position="inside">
+        <link rel='stylesheet' href="./static/src/css/stay_iframe_style.css" />
+    </xpath>
+    <header> <h2>Book your Stay</h2> </header>
+    <div class="wrap">
+        <form action="/stay/saved" method="post">
+
+            <div>
+                <input
+                        id="partner_name"
+                        type="text"
+                        name="partner_name"
+                        required="1"
+                        placeholder="Name and Surname"
+                        alt="Your Name and Surname"
+                    />
+            </div>
+
+            <div>
+                <input
+                        id="email"
+                        type="text"
+                        name="email"
+                        required="1"
+                        placeholder="email"
+                        alt="your email adress"
+                    />
+            </div>
+
+            <div>
+                <input
+                        id="mobile"
+                        type="tel"
+                        name="mobile"
+                        placeholder="mobile"
+                        required="1"
+                        alt="mobile phone number"
+                    />
+            </div>
+            <label for="title">Title:</label>
+            <select id="title" name="title">
+                <option value="madam">Madam</option>
+                <option value="mister">Mister</option>
+                <option value="miss">Miss</option>
+            </select>
+    <fieldset>
+        <legend>Arrival</legend>
+
+        <label for="arrival_date">Arrival Date :</label>
+        <input id="arrival_date" name="arrival_date" type="date" required="1" />
+        <br />
+        <input
+                        type="radio"
+                        class="morning"
+                        name="arrival_time"
+                        value="morning"
+                        checked="1"
+                    />
+        <label for="morning">Morning</label>
+        <br />
+        <input type="radio" class="afternoon" name="arrival_time" value="afternoon" />
+        <label for="afternoon">Afternoon</label>
+        <br />
+        <input type="radio" class="evening" name="arrival_time" value="evening" />
+        <label for="evening">Evening</label>
+    </fieldset>
+
+    <fieldset>
+        <legend>Departure</legend>
+        <label for="departure_date">Departure Date :</label>
+        <input id="departure_date" name="departure_date" type="date" required="1" />
+        <br />
+        <input
+                        type="radio"
+                        class="morning"
+                        name="departure_time"
+                        value="morning"
+                        checked="1"
+                    />
+        <label for="morning">Morning</label>
+        <br />
+        <input type="radio" class="afternoon" name="departure_time" value="afternoon" />
+        <label for="afternoon">Afternoon</label>
+        <br />
+        <input type="radio" class="evening" name="departure_time" value="evening" />
+        <label for="evening">Evening</label>
+
+  </fieldset>
+  <div>
+  <label for="guest_qty">Number of guests</label>
+  <input
+                        id="guest_qty"
+                        name="guest_qty"
+                        type="number"
+                        min="1"
+                        max="50"
+                        value="1"
+                        placeholder="Number of Guests"
+                        required="1"
+                    />
+  </div>
+  <div>
+  <textarea
+                        id="notes"
+                        name="notes"
+                        rows="6"
+                        cols="50"
+                        placeholder="Additional Notes/your motivations"
+                    />
+  </div>
+    <input type="submit" value="Submit" id="submit" />
+                </form>
+    </div>
+</template>
+
+<template id="stay_saved_iframe" name="Stay Saved">
+        <div class="wrap">
+             <section>
+                <div class="container">
+                    <div class="mt32">
+                        <div>
+                                <h1>Your stay application was assigned number: <span
+                                    t-field="stay.name"
+                                /></h1>
+                            <ul>
+                                    <li>Arrival Date :
+                                    <span t-field="stay.arrival_date" /></li>
+                            <li>Arrival Time : <span t-field="stay.arrival_time" /></li>
+                            <li>Departure Date : <span
+                                        t-field="stay.departure_date"
+                                    /></li>
+                            <li>Departure Time : <span
+                                        t-field="stay.departure_time"
+                                    /></li>
+                            <li>number of guests : <span
+                                        t-field="stay.guest_qty"
+                                    /></li>
+                    </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+</template>
+
+<template id="dates_selection_error" name="Dates Selection Error">
+    <h1>Dates selection Error</h1>
+    <p
+        >Either the arrival date you've chosen is past, or the arrival date you've selected is after your departure date!</p>
+    <a href="./new">Return to form</a>
+</template>
+</odoo>

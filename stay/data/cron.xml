@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2020-2022 Akretion France (http://www.akretion.com/)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo noupdate="1">
+
+
+<record id="stay_arrival_notify_cron" model="ir.cron">
+    <field name="name">Stay: notify arrivals</field>
+    <field name="user_id" ref="base.user_root" />
+    <field name="interval_number">1</field>
+    <field name="interval_type">days</field>
+    <field name="numbercall">-1</field>
+    <field name="model_id" ref="model_stay_group" />
+    <field name="state">code</field>
+    <field name="code">model._stay_notify()</field>
+</record>
+
+<record id="stay_state_update_cron" model="ir.cron">
+    <field name="name">Stay: update state</field>
+    <field name="user_id" ref="base.user_root" />
+    <field name="interval_number">1</field>
+    <field name="interval_type">days</field>
+    <field name="numbercall">-1</field>
+    <field name="model_id" ref="model_stay_stay" />
+    <field name="state">code</field>
+    <field name="code">model._cron_stay_state_update()</field>
+</record>
+
+
+</odoo>

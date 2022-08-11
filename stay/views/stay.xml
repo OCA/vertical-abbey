@@ -1,0 +1,1112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2014-2021 Barroux Abbey (www.barroux.org)
+  Copyright 2014-2021 Akretion France (www.akretion.com)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  @author: Brother Bernard <informatique@barroux.org>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+
+<record id="stay_form" model="ir.ui.view">
+    <field name="name">stay.form</field>
+    <field name="model">stay.stay</field>
+    <field name="arch" type="xml">
+        <form string="Stay">
+            <header>
+                <button
+                        name="draft2confirm"
+                        type="object"
+                        string="Confirm"
+                        states="draft"
+                        class="btn-primary"
+                    />
+                <button
+                        name="cancel2draft"
+                        type="object"
+                        string="Back to Draft"
+                        states="cancel"
+                    />
+                <button
+                        name="guest_has_left"
+                        type="object"
+                        string="Guest has Left"
+                        groups="stay.group_stay_user"
+                        states="current"
+                    />
+                <button
+                        name="%(stay_line_mass_update_action)d"
+                        type="action"
+                        string="Update All Lines"
+                        states="confirm,current"
+                    />
+
+                <button
+                        name="cancel"
+                        type="object"
+                        string="Cancel"
+                        states="draft,confirm,current,done"
+                        confirm="Are you sure you want to cancel this stay?"
+                    />
+                <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,confirm,current,done"
+                    />
+            </header>
+
+            <div
+                    class="alert alert-warning"
+                    role="alert"
+                    attrs="{'invisible': [('construction', '=', False)]}"
+                >
+                Special stay to mark rooms as unavailable due to construction works.
+            </div>
+
+            <sheet>
+                <div class="oe_title">
+                    <h1>
+                        <field name="name" readonly="1" />
+                    </h1>
+                </div>
+                <group name="main">
+                    <group name="left">
+                        <field name="company_id" groups="base.group_multi_company" />
+                        <field
+                                name="partner_id"
+                                attrs="{'invisible': [('construction', '=', True)]}"
+                            />
+                        <field name="partner_name" />
+                        <field name="guest_qty" />
+                        <field
+                                name="assign_status"
+                                states="confirm,current,done"
+                                decoration-success="assign_status in ('assigned', 'no_night')"
+                                decoration-danger="assign_status in ('over-assigned', 'error')"
+                                decoration-info="assign_status == 'none'"
+                                decoration-warning="assign_status == 'partial'"
+                                widget="badge"
+                            />
+                    </group>
+                    <group name="right">
+                        <field name="arrival_date" />
+                        <field name="arrival_time" />
+                        <field name="arrival_datetime" invisible="1" />
+                        <field name="arrival_note" />
+                        <field name="departure_date" />
+                        <field name="departure_time" />
+                        <field name="departure_datetime" invisible="1" />
+                        <field name="departure_note" />
+                        <field name="group_id" />
+                        <field
+                                name="no_meals"
+                                attrs="{'invisible': ['|', ('construction', '=', True), ('state', '!=', 'draft')]}"
+                            />
+                        <field name="construction" invisible="1" />
+                        <field
+                                name="refectory_id"
+                                attrs="{'invisible': ['|', '|', ('no_meals', '=', True), ('construction', '=', True), ('state', '!=', 'draft')]}"
+                            />
+                    </group>
+                </group>
+
+                <group name="rooms" states="confirm,current,done">
+                    <field name="room_assign_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="room_id" />
+                            <field name="guest_qty" />
+                            <field name="room_domain_ids" invisible="1" />
+                        </tree>
+                    </field>
+                </group>
+                <group
+                        name="lines"
+                        attrs="{'invisible': ['|', ('construction', '=', True), ('state', 'in', ('draft', 'cancel'))]}"
+                    >
+                    <field name="line_ids" nolabel="1" />
+                </group>
+                <group name="notes">
+                    <field name="notes" />
+                </group>
+            </sheet>
+            <div class="oe_chatter">
+                <field name="message_follower_ids" widget="mail_followers" />
+                <field name="activity_ids" widget="mail_activity" />
+                <field name="message_ids" widget="mail_thread" />
+            </div>
+        </form>
+    </field>
+</record>
+
+<record id="stay_tree" model="ir.ui.view">
+    <field name="name">stay.tree</field>
+    <field name="model">stay.stay</field>
+    <field name="arch" type="xml">
+        <tree decoration-muted="state == 'cancel'">
+            <header>  <!-- v14+ Use same action as in the Action menu -->
+                <button
+                        name="guest_has_left"
+                        type="object"
+                        string="Guest has Left"
+                        groups="stay.group_stay_user"
+                        states="current"
+                    />
+            </header>
+            <field name="name" />
+            <field name="group_id" optional="show" />
+            <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    optional="hide"
+                />
+            <field name="partner_name" invisible="context.get('partner_view')" />
+            <field name="guest_qty" />
+            <field name="arrival_date" />
+            <field name="arrival_time" />
+            <field name="arrival_note" optional="show" />
+            <field name="departure_date" />
+            <field name="departure_time" />
+            <field name="departure_note" optional="show" />
+            <field name="refectory_id" optional="hide" />
+            <field name="rooms_display_name" string="Rooms" />
+            <field
+                    name="assign_status"
+                    decoration-success="assign_status in ('assigned', 'no_night')"
+                    decoration-danger="assign_status in ('over-assigned', 'error')"
+                    decoration-info="assign_status == 'none'"
+                    decoration-warning="assign_status == 'partial'"
+                    widget="badge"
+                />
+            <field
+                    name="state"
+                    decoration-info="state == 'draft'"
+                    decoration-success="state == 'confirm'"
+                    decoration-warning="state == 'current'"
+                    decoration-muted="state == 'cancel'"
+                    decoration-danger="state == 'done'"
+                    widget="badge"
+                />
+        </tree>
+    </field>
+</record>
+
+
+<record id="stay_search" model="ir.ui.view">
+    <field name="name">stay.search</field>
+    <field name="model">stay.stay</field>
+    <field name="arch" type="xml">
+        <search>
+            <field
+                    name="partner_name"
+                    filter_domain="['|', '|', ('partner_name', 'ilike', self), ('partner_id', 'ilike', self), ('name', 'ilike', self)]"
+                    string="Guest Name or Stay Number"
+                />
+            <field name="partner_id" />
+            <field name="group_id" />
+            <field
+                    name="departure_date"
+                    string="Arrivals and Departures on"
+                    filter_domain="['|', ('arrival_date', '=', self), ('departure_date', '=', self)]"
+                />
+            <separator />
+            <filter
+                    string="My Rooms"
+                    name="my_rooms"
+                    domain="[('user_id', '=', uid)]"
+                />
+            <separator />
+            <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]" />
+            <filter
+                    string="Confirmed"
+                    name="confirm"
+                    domain="[('state', '=', 'confirm')]"
+                />
+            <filter
+                    string="Current"
+                    name="current"
+                    domain="[('state', '=', 'current')]"
+                />
+            <filter string="Finished" name="done" domain="[('state', '=', 'done')]" />
+            <filter string="Cancel" name="cancel" domain="[('state', '=', 'cancel')]" />
+            <separator />
+            <filter
+                    string="To Assign"
+                    name="to_assign"
+                    domain="[('assign_status', 'in', ('none', 'partial'))]"
+                />
+            <filter
+                    string="Assigned"
+                    name="assigned"
+                    domain="[('assign_status', '=', 'assigned')]"
+                />
+            <separator />
+            <filter
+                    string="Arrivals/Departures Today"
+                    name="in_out_today"
+                    domain="['|', ('arrival_date', '=', context_today().strftime('%Y-%m-%d')), ('departure_date', '=', context_today().strftime('%Y-%m-%d'))]"
+                />
+            <filter
+                    string="Arrivals/Departures Tomorrow"
+                    name="in_out_tomorrow"
+                    domain="['|', ('arrival_date', '=', (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')), ('departure_date', '=', (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"
+                />
+            <filter
+                    string="Current and Future Stays"
+                    name="current_and_future"
+                    domain="[('state', 'in', ('draft', 'confirm', 'current'))]"
+                />
+            <separator />
+            <filter string="Arrival Date" name="arrival_date" date="arrival_date" />
+            <filter
+                    string="Departure Date"
+                    name="departure_date"
+                    date="departure_date"
+                />
+            <separator />
+            <group string="Group By" name="groupby">
+                <filter
+                        name="group_groupby"
+                        string="Group"
+                        context="{'group_by': 'group_id'}"
+                    />
+                <filter
+                        name="state_groupby"
+                        string="State"
+                        context="{'group_by': 'state'}"
+                    />
+                <filter
+                        name="user_groupby"
+                        string="Responsible"
+                        context="{'group_by': 'user_id'}"
+                    />
+                <filter
+                        name="partner_groupby"
+                        string="Guest Name"
+                        context="{'group_by': 'partner_name'}"
+                    />
+                <filter
+                        name="arrival_date_groupby"
+                        string="Arrival Date"
+                        context="{'group_by': 'arrival_date'}"
+                    />
+                <filter
+                        name="assign_status_groupby"
+                        string="Assign Status"
+                        context="{'group_by': 'assign_status'}"
+                    />
+            </group>
+        </search>
+    </field>
+</record>
+
+<record id="stay_graph" model="ir.ui.view">
+    <field name="name">stay.graph</field>
+    <field name="model">stay.stay</field>
+    <field name="arch" type="xml">
+        <graph string="Stays">
+            <field name="arrival_date" interval="month" />
+            <field name="guest_qty" type="measure" />
+        </graph>
+    </field>
+</record>
+
+<record id="stay_pivot" model="ir.ui.view">
+    <field name="name">stay.graph</field>
+    <field name="model">stay.stay</field>
+    <field name="arch" type="xml">
+        <pivot string="Stays">
+            <field name="arrival_date" interval="month" type="row" />
+            <field name="guest_qty" type="measure" />
+        </pivot>
+    </field>
+</record>
+
+<!-- arrival_datetime and departure_datetime are readonly, so, when you create a stay
+from the calendar view, the dates are not set -->
+<record id="stay_calendar" model="ir.ui.view">
+    <field name="name">stay.calendar</field>
+    <field name="model">stay.stay</field>
+    <field name="arch" type="xml">
+        <calendar
+                string="Stays"
+                color="group_id"
+                date_start="arrival_datetime"
+                date_stop="departure_datetime"
+                mode="month"
+                quick_add="false"
+            >
+            <field name="arrival_date" />
+            <field name="arrival_time" />
+            <field name="departure_date" />
+            <field name="departure_time" />
+            <field name="guest_qty" />
+            <field name="partner_name" />
+            <field name="rooms_display_name" />
+        </calendar>
+    </field>
+</record>
+
+<record id="stay_action" model="ir.actions.act_window">
+    <field name="name">Stays</field>
+    <field name="res_model">stay.stay</field>
+    <field name="view_mode">tree,form,calendar,graph,pivot</field>
+    <field name="domain"> [('construction', '=', False)]</field>
+    <field
+            name="context"
+        >{'search_default_current_and_future': True, 'stay_name_get_partner_name_qty': True, 'default_construction': False}</field>
+</record>
+
+<record id="stay_construction_action" model="ir.actions.act_window">
+    <field name="name">Construction</field>
+    <field name="res_model">stay.stay</field>
+    <field name="view_mode">tree,form,calendar,graph,pivot</field>
+    <field name="domain"> [('construction', '=', True)]</field>
+    <field
+            name="context"
+        >{'search_default_current_and_future': True, 'stay_name_get_partner_name_qty': True, 'default_construction': True}</field>
+</record>
+
+
+<menuitem id="stay_menu" action="stay_action" parent="stay_sub_menu" sequence="10" />
+
+<menuitem
+        id="stay_construction_menu"
+        action="stay_construction_action"
+        parent="stay_sub_menu"
+        sequence="100"
+    />
+
+<record id="stay_room_assign_form" model="ir.ui.view">
+    <field name="model">stay.room.assign</field>
+    <field name="arch" type="xml">
+        <form>
+            <group name="main">
+                <field
+                        name="stay_id"
+                        invisible="not context.get('stay_room_assign_main_view')"
+                        readonly="1"
+                    />
+                <field
+                        name="partner_name"
+                        invisible="not context.get('stay_room_assign_main_view')"
+                    />
+                <field
+                        name="arrival_date"
+                        invisible="not context.get('stay_room_assign_main_view')"
+                    />
+                <field
+                        name="arrival_time"
+                        invisible="not context.get('stay_room_assign_main_view')"
+                    />
+                <field
+                        name="departure_date"
+                        invisible="not context.get('stay_room_assign_main_view')"
+                    />
+                <field
+                        name="departure_time"
+                        invisible="not context.get('stay_room_assign_main_view')"
+                    />
+                <field name="room_id" />
+                <field name="guest_qty" />
+                <field name="room_domain_ids" invisible="1" />
+                <field name="stay_group_id" invisible="1" />
+                <field
+                        name="company_id"
+                        groups="base.group_multi_company"
+                        invisible="not context.get('stay_room_assign_main_view')"
+                    />
+            </group>
+        </form>
+    </field>
+</record>
+
+
+
+<record id="stay_room_assign_tree" model="ir.ui.view">
+    <field name="model">stay.room.assign</field>
+    <field name="arch" type="xml">
+        <tree create="0">
+            <field name="stay_id" />
+            <field name="arrival_date" />
+            <field name="arrival_time" optional="show" />
+            <field name="departure_date" />
+            <field name="departure_time" optional="show" />
+            <field name="room_id" />
+            <field name="guest_qty" sum="1" />
+            <field name="stay_group_id" invisible="1" />
+            <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    optional="hide"
+                />
+        </tree>
+    </field>
+</record>
+
+<record id="stay_room_assign_calendar" model="ir.ui.view">
+    <field name="model">stay.room.assign</field>
+    <field name="arch" type="xml">
+        <calendar
+                color="room_id"
+                date_start="arrival_datetime"
+                date_stop="departure_datetime"
+                mode="month"
+            >
+            <field name="display_name" />
+        </calendar>
+    </field>
+</record>
+
+
+<record id="stay_room_assign_timeline" model="ir.ui.view">
+    <field name="name">stay.room.assign.timeline</field>
+    <field name="model">stay.room.assign</field>
+    <field name="arch" type="xml">
+        <timeline
+                date_start="arrival_datetime"
+                date_stop="departure_datetime"
+                default_group_by="room_id"
+                event_open_popup="true"
+                mode="week"
+                colors="#ec7063:group_id_integer == 1;#2ecb71:group_id_integer == 2;#f34242:group_id_integer == 3"
+                zoomKey="ctrlKey"
+            >
+        </timeline>
+    </field>
+</record>
+
+<record id="stay_room_assign_pivot" model="ir.ui.view">
+    <field name="model">stay.room.assign</field>
+    <field name="arch" type="xml">
+        <pivot>
+            <field name="arrival_date" interval="month" type="row" />
+            <field name="guest_qty" type="measure" />
+        </pivot>
+    </field>
+</record>
+
+<record id="stay_room_assign_search" model="ir.ui.view">
+    <field name="name">stay.room.assign.search</field>
+    <field name="model">stay.room.assign</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="partner_name" />
+            <field name="partner_id" />
+            <field name="group_id" />
+            <field name="room_id" />
+            <field
+                    name="departure_date"
+                    string="Arrivals and Departures on"
+                    filter_domain="['|', ('arrival_date', '=', self), ('departure_date', '=', self)]"
+                />
+            <separator />
+            <filter
+                    string="My Rooms"
+                    name="my_rooms"
+                    domain="[('user_id', '=', uid)]"
+                />
+            <separator />
+            <filter
+                    string="Arrivals/Departures Today"
+                    name="in_out_today"
+                    domain="['|', ('arrival_date', '=', context_today().strftime('%Y-%m-%d')), ('departure_date', '=', context_today().strftime('%Y-%m-%d'))]"
+                />
+            <filter
+                    string="Arrivals/Departures Tomorrow"
+                    name="in_out_tomorrow"
+                    domain="['|', ('arrival_date', '=', (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')), ('departure_date', '=', (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"
+                />
+            <filter
+                    string="Current and Future Stays"
+                    name="current_and_future"
+                    domain="[('departure_date', '&gt;=', (context_today().strftime('%Y-%m-%d')))]"
+                />
+            <separator />
+            <filter string="Arrival Date" name="arrival_date" date="arrival_date" />
+            <filter
+                    string="Departure Date"
+                    name="departure_date"
+                    date="departure_date"
+                />
+            <separator />
+            <group string="Group By" name="groupby">
+                <filter
+                        name="group_groupby"
+                        string="Group"
+                        context="{'group_by': 'group_id'}"
+                    />
+                <filter
+                        name="user_groupby"
+                        string="Responsible"
+                        context="{'group_by': 'user_id'}"
+                    />
+                <filter
+                        name="partner_groupby"
+                        string="Guest Name"
+                        context="{'group_by': 'partner_name'}"
+                    />
+                <filter
+                        name="arrival_date_groupby"
+                        string="Arrival Date"
+                        context="{'group_by': 'arrival_date'}"
+                    />
+            </group>
+        </search>
+    </field>
+</record>
+
+
+
+<record id="stay_room_assign_action" model="ir.actions.act_window">
+    <field name="name">Room Assignments</field>
+    <field name="res_model">stay.room.assign</field>
+    <field name="view_mode">timeline,tree,calendar,pivot</field>
+    <!-- We don't put search_default_current_and_future: True on stay.room.assign
+        because we want to have all rooms in the timeline view -->
+    <field
+            name="context"
+        >{'stay_name_get_partner_name_qty': True, 'stay_room_assign_main_view': True}</field>
+</record>
+
+
+<menuitem
+        id="stay_room_assign_menu"
+        action="stay_room_assign_action"
+        parent="stay_sub_menu"
+        sequence="20"
+    />
+
+
+<record id="stay_refectory_form" model="ir.ui.view">
+    <field name="name">stay.refectory.form</field>
+    <field name="model">stay.refectory</field>
+    <field name="arch" type="xml">
+        <form string="Refectory">
+            <sheet>
+            <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
+            <group name="main">
+                <field name="name" />
+                <field name="code" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="capacity" />
+                <field name="active" invisible="1" />
+            </group>
+    </sheet>
+        </form>
+    </field>
+</record>
+
+<record id="stay_refectory_tree" model="ir.ui.view">
+    <field name="name">stay.refectory.tree</field>
+    <field name="model">stay.refectory</field>
+    <field name="arch" type="xml">
+        <tree string="Refectories">
+            <field name="sequence" widget="handle" />
+            <field name="name" />
+            <field name="code" optional="show" />
+            <field name="capacity" />
+            <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    optional="show"
+                />
+        </tree>
+    </field>
+</record>
+
+<record id="stay_refectory_search" model="ir.ui.view">
+    <field name="name">stay.refectory.search</field>
+    <field name="model">stay.refectory</field>
+    <field name="arch" type="xml">
+        <search>
+            <field
+                    name="name"
+                    filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"
+                />
+            <filter
+                    string="Archived"
+                    name="inactive"
+                    domain="[('active', '=', False)]"
+                />
+        </search>
+    </field>
+</record>
+
+<record id="stay_refectory_action" model="ir.actions.act_window">
+    <field name="name">Refectories</field>
+    <field name="res_model">stay.refectory</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="stay_refectory_menu"
+        action="stay_refectory_action"
+        parent="stay_configuration"
+        sequence="40"
+    />
+
+
+<record id="stay_room_form" model="ir.ui.view">
+    <field name="name">stay.room.form</field>
+    <field name="model">stay.room</field>
+    <field name="arch" type="xml">
+        <form string="Room">
+            <header>
+                <button
+                        name="mark_as_cleaned"
+                        type="object"
+                        string="Mark as Cleaned"
+                        attrs="{'invisible': [('to_clean', '=', False)]}"
+                        class="btn-primary"
+                    />
+        </header>
+            <sheet>
+            <widget
+                        name="web_ribbon"
+                        title="To Clean"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('to_clean', '=', False)]}"
+                    />
+            <widget
+                        name="web_ribbon"
+                        title="Clean"
+                        bg_color="bg-success"
+                        attrs="{'invisible': [('to_clean', '!=', False)]}"
+                    />
+            <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
+            <group name="main">
+                <field name="name" />
+                <field name="code" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="group_id" />
+                <field name="bed_qty" />
+                <field
+                            name="allow_simultaneous"
+                            attrs="{'invisible': [('bed_qty', '=', 1)]}"
+                        />
+                <field name="to_clean" />
+                <field name="notes" />
+                <field name="active" invisible="1" />
+            </group>
+        </sheet>
+        </form>
+    </field>
+</record>
+
+<record id="stay_room_tree" model="ir.ui.view">
+    <field name="name">stay.room.tree</field>
+    <field name="model">stay.room</field>
+    <field name="arch" type="xml">
+        <tree string="Rooms">
+            <header>
+                <button name="mark_as_cleaned" type="object" string="Mark as Cleaned" />
+            </header>
+            <field name="sequence" widget="handle" />
+            <field name="name" />
+            <field name="code" optional="show" />
+            <field name="group_id" optional="show" />
+            <field name="bed_qty" />
+            <field name="to_clean" />
+            <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    optional="show"
+                />
+        </tree>
+    </field>
+</record>
+
+<record id="stay_room_search" model="ir.ui.view">
+    <field name="name">stay.room.search</field>
+    <field name="model">stay.room</field>
+    <field name="arch" type="xml">
+        <search>
+            <field
+                    name="name"
+                    filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"
+                />
+            <field name="group_id" />
+            <separator />
+            <filter
+                    name="my_rooms"
+                    string="My Rooms"
+                    domain="[('user_id', '=', uid)]"
+                />
+            <separator />
+            <filter
+                    name="to_clean"
+                    string="To Clean"
+                    domain="[('to_clean', '!=', False)]"
+                />
+            <filter name="clean" string="Clean" domain="[('to_clean', '=', False)]" />
+            <separator />
+            <filter
+                    string="Archived"
+                    name="inactive"
+                    domain="[('active', '=', False)]"
+                />
+            <group name="groupby">
+                <filter
+                        name="group_groupby"
+                        string="Group"
+                        context="{'group_by': 'group_id'}"
+                    />
+                <filter
+                        name="user_groupby"
+                        string="Responsible"
+                        context="{'group_by': 'user_id'}"
+                    />
+            </group>
+        </search>
+    </field>
+</record>
+
+<record id="stay_room_action" model="ir.actions.act_window">
+    <field name="name">Rooms</field>
+    <field name="res_model">stay.room</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<record id="stay_room_to_clean_action" model="ir.actions.act_window">
+    <field name="name">Rooms to Clean</field>
+    <field name="res_model">stay.room</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">[('to_clean', '!=', False)]</field>
+</record>
+
+<menuitem
+        id="stay_room_menu"
+        action="stay_room_action"
+        parent="stay_configuration"
+        sequence="30"
+    />
+
+<menuitem
+        id="stay_room_to_clean_menu"
+        action="stay_room_to_clean_action"
+        parent="stay_sub_menu"
+        sequence="40"
+    />
+
+<record id="stay_group_form" model="ir.ui.view">
+    <field name="name">stay.group.form</field>
+    <field name="model">stay.group</field>
+    <field name="arch" type="xml">
+            <form string="Group">
+            <sheet>
+            <group name="main">
+                <field name="name" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="default_refectory_id" />
+                <field name="user_id" />
+                <field name="notify_user_ids" widget="many2many_tags" />
+            </group>
+    </sheet>
+        </form>
+    </field>
+</record>
+
+<record id="stay_group_tree" model="ir.ui.view">
+    <field name="name">stay.group.tree</field>
+    <field name="model">stay.group</field>
+    <field name="arch" type="xml">
+        <tree string="Groups">
+            <field name="sequence" widget="handle" />
+            <field name="name" />
+            <field name="default_refectory_id" optional="show" />
+            <field name="user_id" />
+            <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    optional="show"
+                />
+        </tree>
+    </field>
+</record>
+
+<record id="stay_group_search" model="ir.ui.view">
+    <field name="name">stay.group.search</field>
+    <field name="model">stay.group</field>
+    <field name="arch" type="xml">
+        <search>
+            <field
+                    name="name"
+                    filter_domain="['|', ('name', 'ilike', self), ('user_id', 'ilike', self)]"
+                />
+            <group name="groupby">
+                <filter
+                        name="user_groupby"
+                        string="Responsible"
+                        context="{'group_by': 'user_id'}"
+                    />
+            </group>
+        </search>
+    </field>
+</record>
+
+<record id="stay_group_action" model="ir.actions.act_window">
+    <field name="name">Groups</field>
+    <field name="res_model">stay.group</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="stay_group_menu"
+        action="stay_group_action"
+        parent="stay_configuration"
+        sequence="20"
+    />
+
+
+<record id="stay_line_form" model="ir.ui.view">
+    <field name="name">stay.line.form</field>
+    <field name="model">stay.line</field>
+    <field name="arch" type="xml">
+        <form string="Stay Line">
+            <group name="main">
+                <field name="date" />
+                <field
+                        name="stay_id"
+                        invisible="not context.get('stay_line_main_view')"
+                    />
+                <field name="rooms_display_name" />
+                <field name="partner_id" />
+                <field name="partner_name" />
+                <field name="breakfast_qty" groups="stay.group_stay_breakfast" />
+                <field name="lunch_qty" />
+                <field name="dinner_qty" />
+                <field name="bed_night_qty" />
+                <field name="refectory_id" />
+                <field name="group_id" />
+                <field name="user_id" />
+                <field name="company_id" groups="base.group_multi_company" />
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="stay_line_tree" model="ir.ui.view">
+    <field name="name">stay.line.tree</field>
+    <field name="model">stay.line</field>
+    <field name="arch" type="xml">
+        <tree string="Stay Lines" editable="bottom">
+            <field name="stay_id" invisible="not context.get('stay_line_main_view')" />
+            <field name="date" />
+            <field
+                    name="partner_id"
+                    invisible="not context.get('stay_line_main_view')"
+                />
+            <field
+                    name="partner_name"
+                    invisible="not context.get('stay_line_main_view')"
+                />
+            <field
+                    name="breakfast_qty"
+                    sum="1"
+                    optional="show"
+                    groups="stay.group_stay_breakfast"
+                />
+            <field name="lunch_qty" sum="1" />
+            <field name="dinner_qty" sum="1" />
+            <field name="bed_night_qty" sum="1" />
+            <field name="refectory_id" optional="show" />
+            <field
+                    name="rooms_display_name"
+                    invisible="not context.get('stay_line_main_view')"
+                    optional="show"
+                />
+            <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    optional="hide"
+                />
+        </tree>
+    </field>
+</record>
+
+<record id="stay_line_search" model="ir.ui.view">
+    <field name="name">stay.line.search</field>
+    <field name="model">stay.line</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="date" />
+            <field name="partner_name" />
+            <field name="group_id" />
+            <separator />
+            <filter string="Date" name="date" date="date" />
+            <separator />
+            <filter
+                    string="Current and Future Lines"
+                    name="current_and_future"
+                    domain="[('date', '&gt;=', (context_today().strftime('%Y-%m-%d')))]"
+                />
+            <separator />
+            <filter
+                    name="my_rooms"
+                    string="My Rooms"
+                    domain="[('user_id', '=', uid)]"
+                />
+            <separator />
+            <group string="Group By" name="groupby">
+                <filter
+                        name="group_groupby"
+                        string="Group"
+                        context="{'group_by': 'group_id'}"
+                    />
+                <filter
+                        name="user_groupby"
+                        string="Responsible"
+                        context="{'group_by': 'user_id'}"
+                    />
+                <filter
+                        name="date_groupby"
+                        string="Date"
+                        context="{'group_by': 'date'}"
+                    />
+                <filter
+                        name="refectory_id"
+                        string="Refectory"
+                        context="{'group_by': 'refectory_id'}"
+                    />
+                <filter
+                        name="partner_name"
+                        string="Guest"
+                        context="{'group_by': 'partner_name'}"
+                    />
+            </group>
+        </search>
+    </field>
+</record>
+
+<record id="stay_line_graph" model="ir.ui.view">
+    <field name="name">stay.line.graph</field>
+    <field name="model">stay.line</field>
+    <field name="arch" type="xml">
+        <graph string="Stay Lines">
+            <field name="date" interval="month" />
+            <field name="lunch_qty" type="measure" />
+            <field name="dinner_qty" type="measure" />
+            <field name="bed_night_qty" type="measure" />
+        </graph>
+    </field>
+</record>
+
+<record id="stay_line_pivot" model="ir.ui.view">
+    <field name="name">stay.line.pivot</field>
+    <field name="model">stay.line</field>
+    <field name="arch" type="xml">
+        <pivot string="Stay Lines">
+            <field name="date" interval="month" type="row" />
+            <field name="lunch_qty" type="measure" />
+            <field name="dinner_qty" type="measure" />
+            <field name="bed_night_qty" type="measure" />
+        </pivot>
+    </field>
+</record>
+
+
+<record id="stay_line_action" model="ir.actions.act_window">
+    <field name="name">Stay Lines</field>
+    <field name="res_model">stay.line</field>
+    <field name="view_mode">tree,form,graph,pivot</field>
+    <field
+            name="context"
+        >{'stay_line_main_view': True, 'search_default_current_and_future': True}</field>
+</record>
+
+<menuitem
+        id="stay_line_menu"
+        action="stay_line_action"
+        parent="stay_sub_menu"
+        sequence="30"
+    />
+
+<menuitem
+        id="partners"
+        action="base.action_partner_form"
+        parent="stay_sub_menu"
+        sequence="50"
+        name="Guests"
+    />
+
+
+<record id="stay_date_label_form" model="ir.ui.view">
+    <field name="name">stay.date.label.form</field>
+    <field name="model">stay.date.label</field>
+    <field name="arch" type="xml">
+        <form string="Date Label">
+            <group name="main">
+                <field name="date" />
+                <field name="name" />
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="stay_date_label_tree" model="ir.ui.view">
+    <field name="name">stay.date.label.tree</field>
+    <field name="model">stay.date.label</field>
+    <field name="arch" type="xml">
+        <tree string="Date Labels">
+            <field name="date" />
+            <field name="name" />
+        </tree>
+    </field>
+</record>
+
+<record id="stay_date_label_calendar" model="ir.ui.view">
+    <field name="name">stay.date.label.calendar</field>
+    <field name="model">stay.date.label</field>
+    <field name="arch" type="xml">
+        <calendar string="Date Labels" date_start="date" date_stop="date" mode="month">
+            <field name="name" />
+        </calendar>
+    </field>
+</record>
+
+<record id="stay_date_label_search" model="ir.ui.view">
+    <field name="name">stay.date.label.search</field>
+    <field name="model">stay.date.label</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="name" />
+            <field name="date" />
+            <separator />
+            <filter string="Date" name="date" date="date" />
+            <group name="groupby">
+                <filter
+                        name="date_groupby"
+                        string="Date"
+                        context="{'group_by': 'date'}"
+                    />
+            </group>
+        </search>
+    </field>
+</record>
+
+<record id="stay_date_label_action" model="ir.actions.act_window">
+    <field name="name">Ordo</field>
+    <field name="res_model">stay.date.label</field>
+    <field name="view_mode">tree,form,calendar</field>
+</record>
+
+<menuitem
+        id="stay_date_label_menu"
+        action="stay_date_label_action"
+        parent="stay_configuration"
+        sequence="50"
+    />
+
+
+
+</odoo>

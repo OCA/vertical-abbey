@@ -1,0 +1,57 @@
+* {
+    margin: 0;
+}
+
+header {
+    margin: 0;
+    background-color: #7c7bad;
+    border-bottom-color: #5f5e97;
+    color: white;
+    border-bottom: 2px solid;
+    padding-bottom: 16px;
+    padding-top: 8px;
+    position: relative;
+    margin-bottom: 20px;
+    padding-left: 5px;
+}
+
+input,
+label,
+textarea {
+    margin-bottom: 8px;
+    margin-left: 8px;
+}
+input ~ label {
+    margin-left: 5px;
+}
+input {
+    border: 1px solid #b9b9b9;
+}
+select {
+    margin-bottom: 8px;
+    margin-left: 4px;
+    background-color: transparent;
+    border: 1px solid #b9b9b9;
+}
+fieldset {
+    margin-bottom: 8px;
+}
+#submit {
+    background-color: #7c7bad;
+    border-color: #5f5e97;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    padding: 7px 16px;
+    border-radius: 3px;
+    transition-duration: 0.4s;
+}
+
+#submit:hover {
+    background-color: white;
+    color: #5f5e97;
+    border-color: #7c7bad;
+    cursor: pointer;
+}

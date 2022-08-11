@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2014-2021 Barroux Abbey (www.barroux.org)
+  Copyright 2014-2021 Akretion France (www.akretion.com)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+
+<template id="stay.report_stayjournalprint_document">
+
+<t t-call="web.internal_layout">
+<t t-set="doc" t-value="doc.with_context({'lang':user.partner_id.lang})" />
+
+<div class="page">
+
+    <div class="text-center">
+        <h2>Guest List <span t-field="doc.date" /></h2>
+        <t t-if="doc.date_label"><span t-field="doc.date_label" /></t>
+    </div>
+
+<t t-foreach="doc.get_report_by_refectory()" t-as="k">
+
+<div>
+    <h3><t t-esc="k[0].name" /></h3>
+
+    <table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>Stay</th>
+            <th>Arrival</th>
+            <th>Departure</th>
+            <th>Guests</th>
+            <th>Rooms</th>
+            <th class="text-center" groups="stay.group_stay_breakfast">Breakfasts</th>
+            <th class="text-center">Lunches</th>
+            <th class="text-center">Dinners</th>
+            <th class="text-center">Nights</th>
+        </tr>
+    </thead>
+    <tbody>
+    <t t-foreach="k[1]['lines']" t-as="line">
+        <tr>
+            <td><span t-field="line.stay_id.name" /></td>
+            <td><span t-field="line.stay_id.arrival_date" /> <span
+                                                t-field="line.stay_id.arrival_time"
+                                            /></td>
+            <td><span t-field="line.stay_id.departure_date" /> <span
+                                                t-field="line.stay_id.departure_time"
+                                            /></td>
+            <td><p t-field="line.partner_name" /></td>
+            <td><span t-field="line.rooms_display_name" /></td>
+            <td class="text-center" groups="stay.group_stay_breakfast"><span
+                                                t-field="line.breakfast_qty"
+                                            /></td>
+            <td class="text-center"><span t-field="line.lunch_qty" /></td>
+            <td class="text-center"><span t-field="line.dinner_qty" /></td>
+            <td class="text-center"><span t-field="line.bed_night_qty" /></td>
+        </tr>
+    </t>
+        <tr>
+            <td />
+            <td />
+            <td />
+            <td />
+            <td><b>Sub-totals:</b></td>
+            <td class="text-center" groups="stay.group_stay_breakfast"><t
+                                            t-esc="k[1]['breakfast_subtotal']"
+                                        /></td>
+            <td class="text-center"><t t-esc="k[1]['lunch_subtotal']" /></td>
+            <td class="text-center"><t t-esc="k[1]['dinner_subtotal']" /></td>
+            <td class="text-center"><t t-esc="k[1]['bed_night_subtotal']" /></td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+</t>
+</div>
+
+</t>
+
+</template>
+
+<template id="report_stayjournalprint">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="doc">
+            <t
+                    t-call="stay.report_stayjournalprint_document"
+                    t-lang="user.partner_id.lang"
+                />
+        </t>
+    </t>
+</template>
+
+</odoo>
