@@ -4,7 +4,7 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-from odoo.tools.misc import format_date, format_datetime, format_amount
+from odoo.tools.misc import format_date
 from collections import defaultdict
 
 
