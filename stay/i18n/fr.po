@@ -10,6 +10,7 @@ msgstr ""
 "PO-Revision-Date: 2022-07-01 15:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -56,21 +57,33 @@ msgstr "<b>Sous-totaux :</b>"
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <table style=\"border-spacing: 0; border-collapse: collapse; width: 100%; text-align: center;\">\n"
+"        <table style=\"border-spacing: 0; border-collapse: collapse; width: "
+"100%; text-align: center;\">\n"
 "            <tr>\n"
-"                <th style=\"padding: 5px; border: 1px solid black;\">Guest Name</th>\n"
-"                <th style=\"padding: 5px; border: 1px solid black;\">Guest Qty</th>\n"
-"                <th style=\"padding: 5px; border: 1px solid black;\">Arrival Time</th>\n"
-"                <th style=\"padding: 5px; border: 1px solid black;\">Rooms</th>\n"
-"                <th style=\"padding: 5px; border: 1px solid black;\">Departure Date</th>\n"
+"                <th style=\"padding: 5px; border: 1px solid black;\">Guest "
+"Name</th>\n"
+"                <th style=\"padding: 5px; border: 1px solid black;\">Guest "
+"Qty</th>\n"
+"                <th style=\"padding: 5px; border: 1px solid black;\">Arrival "
+"Time</th>\n"
+"                <th style=\"padding: 5px; border: 1px solid black;\">Rooms</"
+"th>\n"
+"                <th style=\"padding: 5px; border: 1px solid black;"
+"\">Departure Date</th>\n"
 "            </tr>\n"
 "            % for o in ctx.get('stay_list'):\n"
 "            <tr>\n"
-"                <td style=\"padding: 5px; border: 1px solid black; text-align: left;\">${o['partner_name']}</td>\n"
-"                <td style=\"padding: 5px; border: 1px solid black;\">${o['guest_qty']}</td>\n"
-"                <td style=\"padding: 5px; border: 1px solid black;\">${o['arrival_time']}</td>\n"
-"                <td style=\"padding: 5px; border: 1px solid black;\">${o['rooms']}</td>\n"
-"                <td style=\"padding: 5px; border: 1px solid black;\">${format_date(o['departure_date'])} (${o._fields['departure_time'].convert_to_export(o.departure_time, o)})</td>\n"
+"                <td style=\"padding: 5px; border: 1px solid black; text-"
+"align: left;\">${o['partner_name']}</td>\n"
+"                <td style=\"padding: 5px; border: 1px solid black;\">"
+"${o['guest_qty']}</td>\n"
+"                <td style=\"padding: 5px; border: 1px solid black;\">"
+"${o['arrival_time']}</td>\n"
+"                <td style=\"padding: 5px; border: 1px solid black;\">"
+"${o['rooms']}</td>\n"
+"                <td style=\"padding: 5px; border: 1px solid black;\">"
+"${format_date(o['departure_date'])} (${o._fields['departure_time']."
+"convert_to_export(o.departure_time, o)})</td>\n"
 "            </tr>\n"
 "            % endfor\n"
 "        </table>\n"
@@ -99,8 +112,8 @@ msgstr "Une chambre avec ce code existe déjà dans cette société."
 #, python-format
 msgid "A stay already exists for guest '%s' with arrival date %s (stay %s)."
 msgstr ""
-"Un séjour existe déjà pour l'hote '%s' avec comme date d'arrivée '%s' "
-"(séjour '%s')"
+"Un séjour existe déjà pour l'hote '%s' avec comme date d'arrivée "
+"'%s' (séjour '%s')"
 
 #. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_stay_name_company_uniq
@@ -137,6 +150,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:stay.field_stay_stay__activity_type_icon
 msgid "Activity Type Icon"
 msgstr ""
+
+#. module: stay
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_mass_assign_form
+#, fuzzy
+msgid "Add Rooms"
+msgstr "Chambres"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
@@ -232,8 +251,8 @@ msgstr "Heure d'arrivée"
 #, python-format
 msgid "Arrival date (%s) cannot be after departure date (%s)!"
 msgstr ""
-"La date d'arrivée (%s) ne peut pas être postérieure à la date de départ (%s)"
-" !"
+"La date d'arrivée (%s) ne peut pas être postérieure à la date de départ "
+"(%s) !"
 
 #. module: stay
 #: model:ir.actions.report,name:stay.report_stay_journal_arrival
@@ -288,6 +307,11 @@ msgid "Attachment Count"
 msgstr ""
 
 #. module: stay
+#: model:ir.model.fields,field_description:stay.field_stay_room_assign__room_domain_ids
+msgid "Available Rooms"
+msgstr ""
+
+#. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
 msgid "Back to Draft"
 msgstr "Remettre en brouillon"
@@ -324,6 +348,7 @@ msgstr "EN TRAVAUX"
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_mass_update_form
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_reset
 #: model_terms:ir.ui.view,arch_db:stay.stay_multi_duplicate_form
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_mass_assign_form
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_stay_xlsx_form
 #: model_terms:ir.ui.view,arch_db:stay.stay_toclean_print_form
@@ -370,6 +395,7 @@ msgstr "Sociétés"
 #: model:ir.model.fields,field_description:stay.field_stay_refectory__company_id
 #: model:ir.model.fields,field_description:stay.field_stay_room__company_id
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__company_id
+#: model:ir.model.fields,field_description:stay.field_stay_room_mass_assign__company_id
 #: model:ir.model.fields,field_description:stay.field_stay_stay__company_id
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__company_id
 #: model:ir.model.fields,field_description:stay.field_stay_toclean_print__company_id
@@ -405,8 +431,8 @@ msgid ""
 "Conflict in room %s: with stay '%s', we would have a total of %d guests on "
 "%s whereas that room only has %d beds."
 msgstr ""
-"Conflit dans la chambre %s : avec le séjour '%s', il y aurait un total de %d"
-" hôtes le %s alors que cette chambre ne contient que %d lits."
+"Conflit dans la chambre %s : avec le séjour '%s', il y aurait un total de %d "
+"hôtes le %s alors que cette chambre ne contient que %d lits."
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_construction_action
@@ -436,6 +462,7 @@ msgstr "Statut"
 #: model:ir.model.fields,field_description:stay.field_stay_refectory__create_uid
 #: model:ir.model.fields,field_description:stay.field_stay_room__create_uid
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__create_uid
+#: model:ir.model.fields,field_description:stay.field_stay_room_mass_assign__create_uid
 #: model:ir.model.fields,field_description:stay.field_stay_stay__create_uid
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__create_uid
 #: model:ir.model.fields,field_description:stay.field_stay_toclean_print__create_uid
@@ -453,6 +480,7 @@ msgstr "Créé par"
 #: model:ir.model.fields,field_description:stay.field_stay_refectory__create_date
 #: model:ir.model.fields,field_description:stay.field_stay_room__create_date
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__create_date
+#: model:ir.model.fields,field_description:stay.field_stay_room_mass_assign__create_date
 #: model:ir.model.fields,field_description:stay.field_stay_stay__create_date
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__create_date
 #: model:ir.model.fields,field_description:stay.field_stay_toclean_print__create_date
@@ -581,6 +609,7 @@ msgstr "Dîners"
 #: model:ir.model.fields,field_description:stay.field_stay_refectory__display_name
 #: model:ir.model.fields,field_description:stay.field_stay_room__display_name
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__display_name
+#: model:ir.model.fields,field_description:stay.field_stay_room_mass_assign__display_name
 #: model:ir.model.fields,field_description:stay.field_stay_stay__display_name
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__display_name
 #: model:ir.model.fields,field_description:stay.field_stay_toclean_print__display_name
@@ -678,8 +707,8 @@ msgid ""
 "For a stay without night, when the departure time is afternoon, the arrival "
 "time must be morning."
 msgstr ""
-"Pour un séjour sans nuité, quand l'heure de départ est 'Après-midi', l'heure"
-" d'arrivée doit être 'Matin'"
+"Pour un séjour sans nuité, quand l'heure de départ est 'Après-midi', l'heure "
+"d'arrivée doit être 'Matin'"
 
 #. module: stay
 #: code:addons/stay/models/stay.py:0
@@ -710,6 +739,7 @@ msgstr "Génerer les séjours"
 #: model:ir.model.fields,field_description:stay.field_stay_line__group_id
 #: model:ir.model.fields,field_description:stay.field_stay_room__group_id
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__group_id
+#: model:ir.model.fields,field_description:stay.field_stay_room_mass_assign__group_id
 #: model:ir.model.fields,field_description:stay.field_stay_stay__group_id
 #: model_terms:ir.ui.view,arch_db:stay.stay_group_form
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_search
@@ -823,6 +853,7 @@ msgstr "Hôtes"
 #: model:ir.model.fields,field_description:stay.field_stay_refectory__id
 #: model:ir.model.fields,field_description:stay.field_stay_room__id
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__id
+#: model:ir.model.fields,field_description:stay.field_stay_room_mass_assign__id
 #: model:ir.model.fields,field_description:stay.field_stay_stay__id
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__id
 #: model:ir.model.fields,field_description:stay.field_stay_toclean_print__id
@@ -847,6 +878,7 @@ msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__message_has_error
+#: model:ir.model.fields,help:stay.field_stay_stay__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
 
@@ -900,6 +932,7 @@ msgstr "Libellé"
 #: model:ir.model.fields,field_description:stay.field_stay_refectory____last_update
 #: model:ir.model.fields,field_description:stay.field_stay_room____last_update
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign____last_update
+#: model:ir.model.fields,field_description:stay.field_stay_room_mass_assign____last_update
 #: model:ir.model.fields,field_description:stay.field_stay_stay____last_update
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx____last_update
 #: model:ir.model.fields,field_description:stay.field_stay_toclean_print____last_update
@@ -917,6 +950,7 @@ msgstr "Dernière modification le"
 #: model:ir.model.fields,field_description:stay.field_stay_refectory__write_uid
 #: model:ir.model.fields,field_description:stay.field_stay_room__write_uid
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__write_uid
+#: model:ir.model.fields,field_description:stay.field_stay_room_mass_assign__write_uid
 #: model:ir.model.fields,field_description:stay.field_stay_stay__write_uid
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__write_uid
 #: model:ir.model.fields,field_description:stay.field_stay_toclean_print__write_uid
@@ -934,6 +968,7 @@ msgstr "Dernière modification par"
 #: model:ir.model.fields,field_description:stay.field_stay_refectory__write_date
 #: model:ir.model.fields,field_description:stay.field_stay_room__write_date
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__write_date
+#: model:ir.model.fields,field_description:stay.field_stay_room_mass_assign__write_date
 #: model:ir.model.fields,field_description:stay.field_stay_stay__write_date
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__write_date
 #: model:ir.model.fields,field_description:stay.field_stay_toclean_print__write_date
@@ -977,6 +1012,17 @@ msgstr "Responsable"
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_tree
 msgid "Mark as Cleaned"
 msgstr "Ménage fait"
+
+#. module: stay
+#: model:ir.actions.act_window,name:stay.stay_room_mass_assign_action
+#, fuzzy
+msgid "Mass Assign"
+msgstr "A attribuer"
+
+#. module: stay
+#: model:ir.model,name:stay.model_stay_room_mass_assign
+msgid "Mass Assignation of Stay Rooms"
+msgstr ""
 
 #. module: stay
 #: model:ir.actions.report,name:stay.report_stay_journal_meal
@@ -1181,6 +1227,12 @@ msgid "Ordo"
 msgstr ""
 
 #. module: stay
+#: model:ir.model.fields.selection,name:stay.selection__stay_stay__assign_status__over-assigned
+#, fuzzy
+msgid "Over Assigned"
+msgstr "Attribué"
+
+#. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__assign_status__partial
 msgid "Partial"
 msgstr "Partiel"
@@ -1303,6 +1355,14 @@ msgstr "Chambre"
 #. module: stay
 #: code:addons/stay/models/stay.py:0
 #, python-format
+msgid ""
+"Room %s has the option Allow simultaneous, but this option is only for rooms "
+"with several beds."
+msgstr ""
+
+#. module: stay
+#: code:addons/stay/models/stay.py:0
+#, python-format
 msgid "Room %s only has %d bed capacity, not %d!"
 msgstr "La chambre %s a seulement une capacité de %d lits, pas %d !"
 
@@ -1322,6 +1382,7 @@ msgstr "Attributions des chambres"
 #: model:ir.actions.act_window,name:stay.stay_room_action
 #: model:ir.model.fields,field_description:stay.field_stay_group__room_ids
 #: model:ir.model.fields,field_description:stay.field_stay_line__rooms_display_name
+#: model:ir.model.fields,field_description:stay.field_stay_room_mass_assign__room_ids
 #: model:ir.model.fields,field_description:stay.field_stay_stay__rooms_display_name
 #: model:ir.ui.menu,name:stay.stay_room_menu
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalprint_document
@@ -1340,6 +1401,11 @@ msgstr "Chambres à nettoyer"
 #: model:ir.actions.report,name:stay.report_stay_toclean
 msgid "Rooms to clean"
 msgstr "Chambres à nettoyer"
+
+#. module: stay
+#: model:ir.model.fields,field_description:stay.field_stay_stay__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_group__sequence
@@ -1392,6 +1458,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stay.field_stay_line_reset__stay_id
 #: model:ir.model.fields,field_description:stay.field_stay_multi_duplicate__stay_id
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__stay_id
+#: model:ir.model.fields,field_description:stay.field_stay_room_mass_assign__stay_id
 #: model:ir.module.category,name:stay.module_category_stay
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalprint_document
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
@@ -1402,17 +1469,7 @@ msgstr "Séjour"
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid ""
-"Stay '%s' has %d guest(s), but its room assignment has a total of %d "
-"guest(s)."
-msgstr ""
-"Le séjour '%s' a %d hôtes, mais des chambres ont été attribuées pour un total de %d hôte(s)."
-
-#. module: stay
-#: code:addons/stay/models/stay.py:0
-#, python-format
-msgid ""
-"Stay '%s' is linked to group '%s', but the room '%s' is linked to group "
-"'%s'."
+"Stay '%s' is linked to group '%s', but the room '%s' is linked to group '%s'."
 msgstr ""
 "Le séjour '%s' est lié au groupe '%s', mais la chambre '%s' est liée au "
 "groupe '%s'."
@@ -1424,12 +1481,19 @@ msgid "Stay '%s' is not in 'Current' state."
 msgstr "Le séjour '%s' n'est pas à l'état 'En cours'."
 
 #. module: stay
+#: code:addons/stay/wizard/stay_room_mass_assign.py:0
+#, fuzzy, python-format
+msgid "Stay '%s' is not in Confirmed nor Current state."
+msgstr "Le séjour '%s' n'est pas à l'état 'En cours'."
+
+#. module: stay
 #: model:ir.model,name:stay.model_stay_date_label
 msgid "Stay Date Label"
 msgstr "Libellé de date de séjour"
 
 #. module: stay
 #: model:ir.model,name:stay.model_stay_group
+#: model:ir.model.fields,field_description:stay.field_stay_room_assign__stay_group_id
 msgid "Stay Group"
 msgstr "Groupe de séjour"
 
@@ -1465,6 +1529,11 @@ msgid "Stay Number"
 msgstr "Numéro du séjour"
 
 #. module: stay
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_mass_assign_form
+msgid "Stay Room Mass Assign"
+msgstr ""
+
+#. module: stay
 #: model:ir.actions.server,name:stay.stay_arrival_notify_cron_ir_actions_server
 #: model:ir.cron,cron_name:stay.stay_arrival_notify_cron
 #: model:ir.cron,name:stay.stay_arrival_notify_cron
@@ -1479,6 +1548,7 @@ msgid "Stay: update state"
 msgstr "Séjour: mettre à jour l'état"
 
 #. module: stay
+#: model:ir.actions.act_window,name:stay.res_partner_stay_action
 #: model:ir.actions.act_window,name:stay.stay_action
 #: model:ir.model.fields,field_description:stay.field_res_partner__stay_ids
 #: model:ir.model.fields,field_description:stay.field_res_users__stay_ids
@@ -1543,8 +1613,8 @@ msgid ""
 "The stay lines generated from this stay will not have lunchs nor dinners by "
 "default."
 msgstr ""
-"Les lignes de séjour générées pour ce séjour n'auront pas de déjeuners ni de"
-" dîners par défaut"
+"Les lignes de séjour générées pour ce séjour n'auront pas de déjeuners ni de "
+"dîners par défaut"
 
 #. module: stay
 #: code:addons/stay/wizard/stay_journal_print.py:0
@@ -1560,8 +1630,8 @@ msgstr "Cette date existe déjà."
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_room__allow_simultaneous
 msgid ""
-"This option applies for rooms where bed quantity > 1. You should enable this"
-" option if you allow to have several stays at the same time in the room."
+"This option applies for rooms where bed quantity > 1. You should enable this "
+"option if you allow to have several stays at the same time in the room."
 msgstr ""
 "Cette option s'applique pour les chambres où le nombe de lits est > 1. Vous "
 "devez activer cette option si vous autorisez d'avoir plusieurs séjours en "
@@ -1662,6 +1732,16 @@ msgid "Waiting Assignation"
 msgstr "En attente d'attribution"
 
 #. module: stay
+#: model:ir.model.fields,field_description:stay.field_stay_stay__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: stay
+#: model:ir.model.fields,help:stay.field_stay_stay__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_multi_duplicate__frequency__weekly
 msgid "Weekly"
 msgstr "Chaque semaine"
@@ -1733,3 +1813,10 @@ msgstr "Assistant pour reinitialiser toutes les lignes aux valeurs par défaut"
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
 msgid "your email adress"
 msgstr ""
+
+#~ msgid ""
+#~ "Stay '%s' has %d guest(s), but its room assignment has a total of %d "
+#~ "guest(s)."
+#~ msgstr ""
+#~ "Le séjour '%s' a %d hôtes, mais des chambres ont été attribuées pour un "
+#~ "total de %d hôte(s)."

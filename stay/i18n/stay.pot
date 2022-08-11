@@ -4,25 +4,20 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-28 12:33+0000\n"
-"PO-Revision-Date: 2015-08-11 21:07+0800\n"
-"Last-Translator: <>\n"
+"Last-Translator: \n"
 "Language-Team: \n"
-"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-"X-Generator: Poedit 1.7.6\n"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_res_partner__stay_count
 #: model:ir.model.fields,field_description:stay.field_res_users__stay_count
-#, fuzzy
 msgid "# of Stays"
-msgstr "住宿"
+msgstr ""
 
 #. module: stay
 #: model:mail.template,subject:stay.stay_notify
@@ -51,42 +46,29 @@ msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalprint_document
-#, fuzzy
 msgid "<b>Sub-totals:</b>"
-msgstr "小计："
+msgstr ""
 
 #. module: stay
 #: model:mail.template,body_html:stay.stay_notify
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <table style=\"border-spacing: 0; border-collapse: collapse; width: "
-"100%; text-align: center;\">\n"
+"        <table style=\"border-spacing: 0; border-collapse: collapse; width: 100%; text-align: center;\">\n"
 "            <tr>\n"
-"                <th style=\"padding: 5px; border: 1px solid black;\">Guest "
-"Name</th>\n"
-"                <th style=\"padding: 5px; border: 1px solid black;\">Guest "
-"Qty</th>\n"
-"                <th style=\"padding: 5px; border: 1px solid black;\">Arrival "
-"Time</th>\n"
-"                <th style=\"padding: 5px; border: 1px solid black;\">Rooms</"
-"th>\n"
-"                <th style=\"padding: 5px; border: 1px solid black;"
-"\">Departure Date</th>\n"
+"                <th style=\"padding: 5px; border: 1px solid black;\">Guest Name</th>\n"
+"                <th style=\"padding: 5px; border: 1px solid black;\">Guest Qty</th>\n"
+"                <th style=\"padding: 5px; border: 1px solid black;\">Arrival Time</th>\n"
+"                <th style=\"padding: 5px; border: 1px solid black;\">Rooms</th>\n"
+"                <th style=\"padding: 5px; border: 1px solid black;\">Departure Date</th>\n"
 "            </tr>\n"
 "            % for o in ctx.get('stay_list'):\n"
 "            <tr>\n"
-"                <td style=\"padding: 5px; border: 1px solid black; text-"
-"align: left;\">${o['partner_name']}</td>\n"
-"                <td style=\"padding: 5px; border: 1px solid black;\">"
-"${o['guest_qty']}</td>\n"
-"                <td style=\"padding: 5px; border: 1px solid black;\">"
-"${o['arrival_time']}</td>\n"
-"                <td style=\"padding: 5px; border: 1px solid black;\">"
-"${o['rooms']}</td>\n"
-"                <td style=\"padding: 5px; border: 1px solid black;\">"
-"${format_date(o['departure_date'])} (${o._fields['departure_time']."
-"convert_to_export(o.departure_time, o)})</td>\n"
+"                <td style=\"padding: 5px; border: 1px solid black; text-align: left;\">${o['partner_name']}</td>\n"
+"                <td style=\"padding: 5px; border: 1px solid black;\">${o['guest_qty']}</td>\n"
+"                <td style=\"padding: 5px; border: 1px solid black;\">${o['arrival_time']}</td>\n"
+"                <td style=\"padding: 5px; border: 1px solid black;\">${o['rooms']}</td>\n"
+"                <td style=\"padding: 5px; border: 1px solid black;\">${format_date(o['departure_date'])} (${o._fields['departure_time'].convert_to_export(o.departure_time, o)})</td>\n"
 "            </tr>\n"
 "            % endfor\n"
 "        </table>\n"
@@ -97,21 +79,18 @@ msgstr ""
 
 #. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_group_name_company_uniq
-#, fuzzy
 msgid "A group with this name already exists in this company."
-msgstr "系统中存在对应该公司的住宿编号。"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_refectory_company_code_uniq
-#, fuzzy
 msgid "A refectory with this code already exists in this company."
-msgstr "此餐厅编号已存在。"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_room_company_code_uniq
-#, fuzzy
 msgid "A room with this code already exists in this company."
-msgstr "此房号已存在。"
+msgstr ""
 
 #. module: stay
 #: code:addons/stay/wizard/stay_multi_duplicate.py:0
@@ -122,7 +101,7 @@ msgstr ""
 #. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_stay_name_company_uniq
 msgid "A stay with this number already exists for this company."
-msgstr "系统中存在对应该公司的住宿编号。"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_needaction
@@ -133,13 +112,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:stay.field_stay_refectory__active
 #: model:ir.model.fields,field_description:stay.field_stay_room__active
 msgid "Active"
-msgstr "可用"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__activity_ids
-#, fuzzy
 msgid "Activities"
-msgstr "可用"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__activity_exception_decoration
@@ -148,9 +126,8 @@ msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__activity_state
-#, fuzzy
 msgid "Activity State"
-msgstr "可用"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__activity_type_icon
@@ -159,9 +136,8 @@ msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_mass_assign_form
-#, fuzzy
 msgid "Add Rooms"
-msgstr "房间"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
@@ -179,7 +155,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__departure_time__afternoon
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
 msgid "Afternoon"
-msgstr "下午"
+msgstr ""
 
 #. module: stay
 #: code:addons/stay/wizard/stay_stay_xlsx.py:0
@@ -213,9 +189,8 @@ msgstr ""
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalprint_document
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
-#, fuzzy
 msgid "Arrival"
-msgstr "到达日期"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__arrival_date
@@ -223,51 +198,46 @@ msgstr "到达日期"
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Arrival Date"
-msgstr "到达日期"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
 #: model_terms:ir.ui.view,arch_db:stay.stay_saved_iframe
-#, fuzzy
 msgid "Arrival Date :"
-msgstr "到达日期"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__arrival_datetime
 #: model:ir.model.fields,field_description:stay.field_stay_stay__arrival_datetime
-#, fuzzy
 msgid "Arrival Date and Time"
-msgstr "到达日期"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__arrival_note
-#, fuzzy
 msgid "Arrival Note"
-msgstr "到达日期"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__arrival_time
 #: model:ir.model.fields,field_description:stay.field_stay_stay__arrival_time
 msgid "Arrival Time"
-msgstr "到达时间"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_saved_iframe
-#, fuzzy
 msgid "Arrival Time :"
-msgstr "到达时间"
+msgstr ""
 
 #. module: stay
 #: code:addons/stay/models/stay.py:0
-#, fuzzy, python-format
+#, python-format
 msgid "Arrival date (%s) cannot be after departure date (%s)!"
-msgstr "到达日期 (%s) 必须早于离开日期 (%s)"
+msgstr ""
 
 #. module: stay
 #: model:ir.actions.report,name:stay.report_stay_journal_arrival
-#, fuzzy
 msgid "Arrival list"
-msgstr "到达日期"
+msgstr ""
 
 #. module: stay
 #: code:addons/stay/models/stay.py:0
@@ -277,16 +247,14 @@ msgstr ""
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_journal_print__report_type__arrival
-#, fuzzy
 msgid "Arrivals"
-msgstr "到达日期"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
-#, fuzzy
 msgid "Arrivals and Departures on"
-msgstr "到达日期"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
@@ -330,7 +298,7 @@ msgstr ""
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line__bed_night_qty
 msgid "Bed Nights"
-msgstr "夜宿"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
@@ -364,18 +332,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stay.stay_stay_xlsx_form
 #: model_terms:ir.ui.view,arch_db:stay.stay_toclean_print_form
 msgid "Cancel"
-msgstr "取消"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__state__cancel
-#, fuzzy
 msgid "Cancelled"
-msgstr "取消"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_refectory__capacity
 msgid "Capacity"
-msgstr "桌数"
+msgstr ""
 
 #. module: stay
 #: code:addons/stay/wizard/stay_stay_xlsx.py:0
@@ -393,12 +360,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:stay.field_stay_refectory__code
 #: model:ir.model.fields,field_description:stay.field_stay_room__code
 msgid "Code"
-msgstr "编号"
+msgstr ""
 
 #. module: stay
 #: model:ir.model,name:stay.model_res_company
 msgid "Companies"
-msgstr "公司"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_group__company_id
@@ -412,24 +379,22 @@ msgstr "公司"
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__company_id
 #: model:ir.model.fields,field_description:stay.field_stay_toclean_print__company_id
 msgid "Company"
-msgstr "单位"
+msgstr ""
 
 #. module: stay
 #: model:ir.model,name:stay.model_res_config_settings
-#, fuzzy
 msgid "Config Settings"
-msgstr "配置"
+msgstr ""
 
 #. module: stay
 #: model:ir.ui.menu,name:stay.stay_configuration
 msgid "Configuration"
-msgstr "配置"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
-#, fuzzy
 msgid "Confirm"
-msgstr "配置"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_multi_duplicate__create_state__confirm
@@ -450,9 +415,8 @@ msgstr ""
 #: model:ir.actions.act_window,name:stay.stay_construction_action
 #: model:ir.model.fields,field_description:stay.field_stay_stay__construction
 #: model:ir.ui.menu,name:stay.stay_construction_menu
-#, fuzzy
 msgid "Construction"
-msgstr "配置"
+msgstr ""
 
 #. module: stay
 #: model:ir.model,name:stay.model_res_partner
@@ -461,9 +425,8 @@ msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_multi_duplicate__create_state
-#, fuzzy
 msgid "Create State"
-msgstr "创建者"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_date_label__create_uid
@@ -481,7 +444,7 @@ msgstr "创建者"
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__create_uid
 #: model:ir.model.fields,field_description:stay.field_stay_toclean_print__create_uid
 msgid "Created by"
-msgstr "创建者"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_date_label__create_date
@@ -499,7 +462,7 @@ msgstr "创建者"
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__create_date
 #: model:ir.model.fields,field_description:stay.field_stay_toclean_print__create_date
 msgid "Created on"
-msgstr "创建于"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__state__current
@@ -527,7 +490,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_search
 #, python-format
 msgid "Date"
-msgstr "日期"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_journal_print__date_label
@@ -551,14 +514,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:stay.field_res_config_settings__stay_default_refectory_id
 #: model:ir.model.fields,field_description:stay.field_stay_group__default_refectory_id
 msgid "Default Refectory"
-msgstr "默认餐厅"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalprint_document
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
-#, fuzzy
 msgid "Departure"
-msgstr "离开日期"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__departure_date
@@ -566,39 +528,35 @@ msgstr "离开日期"
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Departure Date"
-msgstr "离开日期"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
 #: model_terms:ir.ui.view,arch_db:stay.stay_saved_iframe
-#, fuzzy
 msgid "Departure Date :"
-msgstr "离开日期"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__departure_datetime
 #: model:ir.model.fields,field_description:stay.field_stay_stay__departure_datetime
-#, fuzzy
 msgid "Departure Date and Time"
-msgstr "离开日期"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__departure_note
-#, fuzzy
 msgid "Departure Note"
-msgstr "离开日期"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__departure_time
 #: model:ir.model.fields,field_description:stay.field_stay_stay__departure_time
 msgid "Departure Time"
-msgstr "离开时间"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_saved_iframe
-#, fuzzy
 msgid "Departure Time :"
-msgstr "离开时间"
+msgstr ""
 
 #. module: stay
 #: code:addons/stay/models/stay.py:0
@@ -610,7 +568,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stay.field_stay_line__dinner_qty
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalprint_document
 msgid "Dinners"
-msgstr "晚餐"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_res_company__display_name
@@ -631,7 +589,7 @@ msgstr "晚餐"
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__display_name
 #: model:ir.model.fields,field_description:stay.field_stay_toclean_print__display_name
 msgid "Display Name"
-msgstr "显示名称"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_multi_duplicate__create_state__draft
@@ -650,9 +608,8 @@ msgstr ""
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_multi_duplicate__end_date
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__end_date
-#, fuzzy
 msgid "End Date"
-msgstr "日期"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__assign_status__error
@@ -670,7 +627,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__departure_time__evening
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
 msgid "Evening"
-msgstr "晚上"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__file_xlsx
@@ -691,19 +648,17 @@ msgstr ""
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_follower_ids
 msgid "Followers"
-msgstr "随行人员"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_channel_ids
-#, fuzzy
 msgid "Followers (Channels)"
-msgstr "随行人员"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_partner_ids
-#, fuzzy
 msgid "Followers (Partners)"
-msgstr "随行人员"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__activity_type_icon
@@ -741,15 +696,13 @@ msgstr ""
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_journal_print__report_type__general
-#, fuzzy
 msgid "General"
-msgstr "生成账本"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_multi_duplicate_form
-#, fuzzy
 msgid "Generate Stays"
-msgstr "生成住宿明细"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line__group_id
@@ -762,37 +715,33 @@ msgstr "生成住宿明细"
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
-#, fuzzy
 msgid "Group"
-msgstr "按分组"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Group By"
-msgstr "按分组"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__group_id_integer
-#, fuzzy
 msgid "Group ID"
-msgstr "按分组"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_group__name
-#, fuzzy
 msgid "Group Name"
-msgstr "客户姓名"
+msgstr ""
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_group_action
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__group_ids
 #: model:ir.ui.menu,name:stay.stay_group_menu
 #: model_terms:ir.ui.view,arch_db:stay.stay_group_tree
-#, fuzzy
 msgid "Groups"
-msgstr "按分组"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line__partner_id
@@ -800,32 +749,30 @@ msgstr "按分组"
 #: model:ir.model.fields,field_description:stay.field_stay_stay__partner_id
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_search
 msgid "Guest"
-msgstr "客户"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalprint_document
 msgid "Guest List"
-msgstr "客户列表"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Guest Name"
-msgstr "客户姓名"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
-#, fuzzy
 msgid "Guest Name or Stay Number"
-msgstr "住宿编号"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line__partner_name
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__partner_name
 #: model:ir.model.fields,field_description:stay.field_stay_stay__partner_name
-#, fuzzy
 msgid "Guest Names"
-msgstr "客户姓名"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__guest_qty_to_assign
@@ -836,19 +783,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__guest_qty
 #: model:ir.model.fields,field_description:stay.field_stay_stay__guest_qty
 msgid "Guest Quantity"
-msgstr "客户数量"
+msgstr ""
 
 #. module: stay
 #: model:ir.model,name:stay.model_stay_stay
 msgid "Guest Stay"
-msgstr "客户住宿"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
 #: model_terms:ir.ui.view,arch_db:stay.stay_tree
-#, fuzzy
 msgid "Guest has Left"
-msgstr "客户列表"
+msgstr ""
 
 #. module: stay
 #: code:addons/stay/models/stay.py:0
@@ -860,7 +806,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stay.partners
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalprint_document
 msgid "Guests"
-msgstr "客户"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_res_company__id
@@ -881,7 +827,7 @@ msgstr "客户"
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__id
 #: model:ir.model.fields,field_description:stay.field_stay_toclean_print__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__activity_exception_icon
@@ -896,23 +842,21 @@ msgstr ""
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__message_needaction
 #: model:ir.model.fields,help:stay.field_stay_stay__message_unread
-#, fuzzy
 msgid "If checked, new messages require your attention."
-msgstr "如您需要实时反馈新消息您得关注它。"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__message_has_error
 #: model:ir.model.fields,help:stay.field_stay_stay__message_has_sms_error
-#, fuzzy
 msgid "If checked, some messages have a delivery error."
-msgstr "如您需要实时反馈新消息您得关注它。"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_line__partner_id
 #: model:ir.model.fields,help:stay.field_stay_room_assign__partner_id
 #: model:ir.model.fields,help:stay.field_stay_stay__partner_id
 msgid "If guest is anonymous, leave this field empty."
-msgstr "若客户匿名，则留空此栏位。"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_group__user_id
@@ -925,9 +869,8 @@ msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_is_follower
-#, fuzzy
 msgid "Is Follower"
-msgstr "该员为随行人员"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_multi_duplicate__keep_notes
@@ -962,9 +905,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:stay.field_stay_stay____last_update
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx____last_update
 #: model:ir.model.fields,field_description:stay.field_stay_toclean_print____last_update
-#, fuzzy
 msgid "Last Modified on"
-msgstr "最后更新于"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_date_label__write_uid
@@ -982,7 +924,7 @@ msgstr "最后更新于"
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__write_uid
 #: model:ir.model.fields,field_description:stay.field_stay_toclean_print__write_uid
 msgid "Last Updated by"
-msgstr "最后更新于"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_date_label__write_date
@@ -1000,13 +942,13 @@ msgstr "最后更新于"
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__write_date
 #: model:ir.model.fields,field_description:stay.field_stay_toclean_print__write_date
 msgid "Last Updated on"
-msgstr "最后更新于"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line__lunch_qty
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalprint_document
 msgid "Lunches"
-msgstr "午餐"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
@@ -1021,19 +963,18 @@ msgstr ""
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_res_config_settings__group_stay_breakfast
 #: model:res.groups,name:stay.group_stay_breakfast
-#, fuzzy
 msgid "Manage Breakfast"
-msgstr "经理"
+msgstr ""
 
 #. module: stay
 #: model:ir.module.category,description:stay.module_category_stay
 msgid "Manage stays (lunch, diner, night, etc...)"
-msgstr "客栈管理(午餐, 晚餐, 夜宿, 等...)"
+msgstr ""
 
 #. module: stay
 #: model:res.groups,name:stay.group_stay_manager
 msgid "Manager"
-msgstr "经理"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_form
@@ -1058,9 +999,8 @@ msgstr ""
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_journal_print__report_type__meal
-#, fuzzy
 msgid "Meals"
-msgstr "无餐"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_has_error
@@ -1070,7 +1010,7 @@ msgstr ""
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_ids
 msgid "Messages"
-msgstr "消息"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
@@ -1081,7 +1021,7 @@ msgstr ""
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid "Missing refectory for guest '%s' on %s."
-msgstr "未发现客人'%s' 在 %s 的餐厅。"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
@@ -1099,7 +1039,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__departure_time__morning
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
 msgid "Morning"
-msgstr "早上"
+msgstr ""
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_multi_duplicate_action
@@ -1121,15 +1061,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
-#, fuzzy
 msgid "My Rooms"
-msgstr "房间"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_refectory__name
 #: model:ir.model.fields,field_description:stay.field_stay_room__name
 msgid "Name"
-msgstr "名称"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
@@ -1138,9 +1077,8 @@ msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line_mass_update__refectory_id
-#, fuzzy
 msgid "New Refectory"
-msgstr "餐厅"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__activity_date_deadline
@@ -1160,13 +1098,12 @@ msgstr ""
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalprint_document
 msgid "Nights"
-msgstr "晚上"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line_mass_update__no_bed_night
-#, fuzzy
 msgid "No Bed Nights"
-msgstr "夜宿"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line_mass_update__no_breakfast
@@ -1175,26 +1112,23 @@ msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line_mass_update__no_dinner
-#, fuzzy
 msgid "No Dinners"
-msgstr "晚餐"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line_mass_update__no_lunch
-#, fuzzy
 msgid "No Lunches"
-msgstr "午餐"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__no_meals
 msgid "No Meals"
-msgstr "无餐"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__assign_status__no_night
-#, fuzzy
 msgid "No Nights"
-msgstr "晚上"
+msgstr ""
 
 #. module: stay
 #: code:addons/stay/wizard/stay_journal_print.py:0
@@ -1216,32 +1150,28 @@ msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_needaction_counter
-#, fuzzy
 msgid "Number of Actions"
-msgstr "床数"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
-#, fuzzy
 msgid "Number of Guests"
-msgstr "床数"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room__bed_qty
 msgid "Number of beds"
-msgstr "床数"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_has_error_counter
-#, fuzzy
 msgid "Number of errors"
-msgstr "床数"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
-#, fuzzy
 msgid "Number of guests"
-msgstr "床数"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__message_needaction_counter
@@ -1255,9 +1185,8 @@ msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__message_unread_counter
-#, fuzzy
 msgid "Number of unread messages"
-msgstr "床数"
+msgstr ""
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_date_label_action
@@ -1285,31 +1214,28 @@ msgstr ""
 #: model:ir.ui.menu,name:stay.stay_journal_print_menu
 #: model_terms:ir.ui.view,arch_db:stay.stay_journal_print_form
 msgid "Print Journal"
-msgstr "打印账本"
+msgstr ""
 
 #. module: stay
 #: model:ir.model,name:stay.model_stay_stay_xlsx
-#, fuzzy
 msgid "Print Stay Global view"
-msgstr "打印住宿账本"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_journal_print_form
 msgid "Print Stay Journal"
-msgstr "打印住宿账本"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_stay_xlsx_form
-#, fuzzy
 msgid "Print Stay XLSX"
-msgstr "打印住宿明细"
+msgstr ""
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_stay_xlsx_action
 #: model:ir.ui.menu,name:stay.stay_stay_xlsx_menu
-#, fuzzy
 msgid "Print Stays"
-msgstr "打印住宿明细"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_toclean_print_form
@@ -1319,7 +1245,7 @@ msgstr ""
 #. module: stay
 #: model:ir.model,name:stay.model_stay_journal_print
 msgid "Print the Stay Lines"
-msgstr "打印住宿明细"
+msgstr ""
 
 #. module: stay
 #: model:ir.model,name:stay.model_stay_toclean_print
@@ -1331,7 +1257,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stay.stay_refectory_menu
 #: model_terms:ir.ui.view,arch_db:stay.stay_refectory_tree
 msgid "Refectories"
-msgstr "餐厅"
+msgstr ""
 
 #. module: stay
 #: model:ir.model,name:stay.model_stay_refectory
@@ -1340,7 +1266,7 @@ msgstr "餐厅"
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_refectory_form
 msgid "Refectory"
-msgstr "餐厅"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_journal_print__report_type
@@ -1354,9 +1280,8 @@ msgstr ""
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_line_reset_action
-#, fuzzy
 msgid "Reset All Stay Lines"
-msgstr "生成住宿明细"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_reset
@@ -1392,14 +1317,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__room_id
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_form
 msgid "Room"
-msgstr "房间"
+msgstr ""
 
 #. module: stay
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid ""
-"Room %s has the option Allow simultaneous, but this option is only for rooms "
-"with several beds."
+"Room %s has the option Allow simultaneous, but this option is only for rooms"
+" with several beds."
 msgstr ""
 
 #. module: stay
@@ -1431,7 +1356,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_tree
 #: model_terms:ir.ui.view,arch_db:stay.stay_tree
 msgid "Rooms"
-msgstr "房间"
+msgstr ""
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_room_to_clean_action
@@ -1475,9 +1400,8 @@ msgstr ""
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_multi_duplicate__start_date
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__start_date
-#, fuzzy
 msgid "Start Date"
-msgstr "离开日期"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__state
@@ -1505,13 +1429,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalprint_document
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
 msgid "Stay"
-msgstr "住宿"
+msgstr ""
 
 #. module: stay
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid ""
-"Stay '%s' is linked to group '%s', but the room '%s' is linked to group '%s'."
+"Stay '%s' is linked to group '%s', but the room '%s' is linked to group "
+"'%s'."
 msgstr ""
 
 #. module: stay
@@ -1534,20 +1459,19 @@ msgstr ""
 #. module: stay
 #: model:ir.model,name:stay.model_stay_group
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__stay_group_id
-#, fuzzy
 msgid "Stay Group"
-msgstr "住宿编号"
+msgstr ""
 
 #. module: stay
 #: model:ir.actions.report,name:stay.report_stay_journal_print
 #: model:ir.model,name:stay.model_stay_line
 msgid "Stay Journal"
-msgstr "住宿账本"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_form
 msgid "Stay Line"
-msgstr "住宿明细"
+msgstr ""
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_line_action
@@ -1557,7 +1481,7 @@ msgstr "住宿明细"
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_pivot
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_tree
 msgid "Stay Lines"
-msgstr "住宿明细"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_multi_duplicate_form
@@ -1567,7 +1491,7 @@ msgstr ""
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__name
 msgid "Stay Number"
-msgstr "住宿编号"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_mass_assign_form
@@ -1602,50 +1526,45 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stay.stay_pivot
 #: model_terms:ir.ui.view,arch_db:stay.view_partner_form
 msgid "Stays"
-msgstr "住宿"
+msgstr ""
 
 #. module: stay
 #: code:addons/stay/wizard/stay_stay_xlsx.py:0
-#, fuzzy, python-format
+#, python-format
 msgid "Stays - %s"
-msgstr "住宿"
+msgstr ""
 
 #. module: stay
 #: code:addons/stay/wizard/stay_multi_duplicate.py:0
-#, fuzzy, python-format
+#, python-format
 msgid "The end date (%s) must be after the start_date (%s)!"
-msgstr "到达日期 (%s) 必须早于离开日期 (%s)"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_room_assign_guest_qty_positive
 #: model:ir.model.constraint,message:stay.constraint_stay_stay_guest_qty_positive
-#, fuzzy
 msgid "The guest quantity must be positive."
-msgstr "夜宿数值必须为正数或null。"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_line_bed_night_qty_positive
-#, fuzzy
 msgid "The number of bed nights must be positive or null."
-msgstr "夜宿数值必须为正数或null。"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_room_bed_qty_positive
-#, fuzzy
 msgid "The number of beds must be positive."
-msgstr "夜宿数值必须为正数或null。"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_line_dinner_qty_positive
-#, fuzzy
 msgid "The number of dinners must be positive or null."
-msgstr "晚餐数值必须为正数或null。"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_line_lunch_qty_positive
-#, fuzzy
 msgid "The number of lunches must be positive or null."
-msgstr "午餐数值必须为正数或null。"
+msgstr ""
 
 #. module: stay
 #: code:addons/stay/wizard/stay_multi_duplicate.py:0
@@ -1658,7 +1577,7 @@ msgstr ""
 msgid ""
 "The stay lines generated from this stay will not have lunchs nor dinners by "
 "default."
-msgstr "从这里生成的住宿清单明细默认不含午餐晚餐在内。"
+msgstr ""
 
 #. module: stay
 #: code:addons/stay/wizard/stay_journal_print.py:0
@@ -1668,15 +1587,14 @@ msgstr ""
 
 #. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_date_label_date_uniq
-#, fuzzy
 msgid "This date already exists."
-msgstr "此房号已存在。"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_room__allow_simultaneous
 msgid ""
-"This option applies for rooms where bed quantity > 1. You should enable this "
-"option if you allow to have several stays at the same time in the room."
+"This option applies for rooms where bed quantity > 1. You should enable this"
+" option if you allow to have several stays at the same time in the room."
 msgstr ""
 
 #. module: stay
@@ -1729,13 +1647,12 @@ msgstr ""
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_unread
 msgid "Unread Messages"
-msgstr "未读信息"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_unread_counter
-#, fuzzy
 msgid "Unread Messages Counter"
-msgstr "未读信息"
+msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
@@ -1744,9 +1661,8 @@ msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_mass_update_form
-#, fuzzy
 msgid "Update All Stay Lines"
-msgstr "生成住宿明细"
+msgstr ""
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_line_mass_update_action
@@ -1756,7 +1672,7 @@ msgstr ""
 #. module: stay
 #: model:res.groups,name:stay.group_stay_user
 msgid "User"
-msgstr "用户"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_group__notify_user_ids
@@ -1775,15 +1691,13 @@ msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__website_message_ids
-#, fuzzy
 msgid "Website Messages"
-msgstr "消息"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__website_message_ids
-#, fuzzy
 msgid "Website communication history"
-msgstr "通信历史记录"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_multi_duplicate__frequency__weekly
@@ -1839,9 +1753,8 @@ msgstr ""
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_saved_iframe
-#, fuzzy
 msgid "number of guests :"
-msgstr "床数"
+msgstr ""
 
 #. module: stay
 #: model:ir.model,name:stay.model_stay_line_mass_update
@@ -1857,63 +1770,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
 msgid "your email adress"
 msgstr ""
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "记录上最后一条消息的日期。"
-
-#~ msgid "Generate Stay Journal"
-#~ msgstr "生成住宿账本"
-
-#~ msgid ""
-#~ "Holds the Chatter summary (number of messages, ...). This summary is "
-#~ "directly in html format in order to be inserted in kanban views."
-#~ msgstr ""
-#~ "总结：唠叨几句吧（此处省略若干字数...）这里可用HTML的格式直插到看板视图"
-#~ "里。"
-
-#~ msgid ""
-#~ "If active, the stays linked to this room will have the same option active "
-#~ "by default."
-#~ msgstr "如果激活的话，默认情况下，该房间将有相同的选项。"
-
-#~ msgid "Last Message Date"
-#~ msgstr "末条消息日期"
-
-#~ msgid "Missing default refectory on the company '%s'."
-#~ msgstr "未发现此公司默认设定的餐厅 '%s'。"
-
-#~ msgid "No stay for this date."
-#~ msgstr "当日无住宿。"
-
-#~ msgid "Partner"
-#~ msgstr "合作伙伴"
-
-#~ msgid "Search Refectories"
-#~ msgstr "搜索餐厅"
-
-#~ msgid "Search Rooms"
-#~ msgstr "搜索房间"
-
-#~ msgid "Search Stay Lines"
-#~ msgstr "搜索住宿明细"
-
-#~ msgid "Search Stays"
-#~ msgstr "搜索住宿"
-
-#~ msgid "Summary"
-#~ msgstr "总结"
-
-#~ msgid "TO WRITE"
-#~ msgstr "写入"
-
-#~ msgid "The room '%s' is booked or all beds of the room are booked"
-#~ msgstr "此房间 '%s' 已预订或房间暂无床位。"
-
-#~ msgid "Total Bed Nights"
-#~ msgstr "夜宿总计"
-
-#~ msgid "Total Dinners"
-#~ msgstr "晚餐总计"
-
-#~ msgid "Total Lunches"
-#~ msgstr "午餐总计"
