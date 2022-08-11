@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!--
   Copyright 2014-2021 Barroux Abbey (www.barroux.org)
   Copyright 2014-2021 Akretion France (www.akretion.com)
   @author: Alexis de Lattre <alexis.delattre@akretion.com>
   License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 -->
-
 <odoo>
 
 
@@ -15,13 +14,17 @@
     <field name="arch" type="xml">
         <form string="Masses Journal">
             <group name="main">
-                <field name="journal_date"/>
-                <field name="celebrant_ids" widget="many2many_tags"/>
+                <field name="journal_date" />
+                <field name="celebrant_ids" widget="many2many_tags" />
             </group>
             <footer>
-                <button name="generate_journal"
-                    type="object" string="Generate Journal" class="btn-primary"/>
-                <button special="cancel" string="Cancel"/>
+                <button
+                        name="generate_journal"
+                        type="object"
+                        string="Generate Journal"
+                        class="btn-primary"
+                    />
+                <button special="cancel" string="Cancel" />
             </footer>
         </form>
     </field>
