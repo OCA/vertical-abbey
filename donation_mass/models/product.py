@@ -3,22 +3,22 @@
 # @author: Alexis de Lattre <alexis.delattre@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import models, api
+from odoo import api, models
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _inherit = "product.template"
 
-    @api.onchange('mass')
+    @api.onchange("mass")
     def mass_donation_change(self):
         if self.mass:
             self.donation = True
 
 
 class ProductProduct(models.Model):
-    _inherit = 'product.product'
+    _inherit = "product.product"
 
-    @api.onchange('mass')
+    @api.onchange("mass")
     def mass_donation_change(self):
         if self.mass:
             self.donation = True

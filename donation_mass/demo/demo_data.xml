@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo noupdate="1">
 
 
@@ -8,7 +7,7 @@
     <field name="street">12 rue Alexis Perroncel</field>
     <field name="zip">69100</field>
     <field name="city">Villeurbanne</field>
-    <field name="country_id" ref="base.fr"/>
+    <field name="country_id" ref="base.fr" />
     <field name="email">sophie.durand@yahoo.example.com</field>
 </record>
 
@@ -17,7 +16,7 @@
     <field name="street">35 rue Anatole France</field>
     <field name="zip">69100</field>
     <field name="city">Villeurbanne</field>
-    <field name="country_id" ref="base.fr"/>
+    <field name="country_id" ref="base.fr" />
     <field name="email">eric.grosjean@gmail.example.com</field>
 </record>
 
@@ -26,21 +25,21 @@
     <field name="street">1 avenue Foch</field>
     <field name="zip">75116</field>
     <field name="city">Paris</field>
-    <field name="country_id" ref="base.fr"/>
+    <field name="country_id" ref="base.fr" />
     <field name="email">george.donuts@gmail.example.com</field>
 </record>
 
 <record id="donation_mass1" model="donation.donation">
     <field name="check_total">17</field>
-    <field name="partner_id" ref="donor_mass1"/>
-    <field name="donation_date" eval="time.strftime('%Y-%m-01')"/>
-    <field name="payment_mode_id" ref="account_payment_mode.payment_mode_inbound_ct1"/>
+    <field name="partner_id" ref="donor_mass1" />
+    <field name="donation_date" eval="time.strftime('%Y-%m-01')" />
+    <field name="payment_mode_id" ref="account_payment_mode.payment_mode_inbound_ct1" />
     <field name="payment_ref">CHQ CA 229026</field>
 </record>
 
 <record id="donation_mass1_l1" model="donation.line">
-    <field name="donation_id" ref="donation_mass1"/>
-    <field name="product_id" ref="mass.product_product_mass_simple"/>
+    <field name="donation_id" ref="donation_mass1" />
+    <field name="product_id" ref="mass.product_product_mass_simple" />
     <field name="quantity">1</field>
     <field name="unit_price">17</field>
     <field name="intention">For my grand-mother</field>
@@ -48,15 +47,15 @@
 
 <record id="donation_mass2" model="donation.donation">
     <field name="check_total">340</field>
-    <field name="partner_id" ref="donor_mass2"/>
-    <field name="donation_date" eval="time.strftime('%Y-%m-01')"/>
-    <field name="payment_mode_id" ref="account_payment_mode.payment_mode_inbound_ct1"/>
+    <field name="partner_id" ref="donor_mass2" />
+    <field name="donation_date" eval="time.strftime('%Y-%m-01')" />
+    <field name="payment_mode_id" ref="account_payment_mode.payment_mode_inbound_ct1" />
     <field name="payment_ref">CHQ BP 9087123</field>
 </record>
 
 <record id="donation_mass2_l1" model="donation.line">
-    <field name="donation_id" ref="donation_mass2"/>
-    <field name="product_id" ref="mass.product_product_mass_novena"/>
+    <field name="donation_id" ref="donation_mass2" />
+    <field name="product_id" ref="mass.product_product_mass_novena" />
     <field name="quantity">2</field>
     <field name="unit_price">170</field>
     <field name="intention">For my father</field>
@@ -64,19 +63,19 @@
 
 <record id="donation_mass3" model="donation.donation">
     <field name="check_total">540</field>
-    <field name="partner_id" ref="donor_mass3"/>
-    <field name="donation_date" eval="time.strftime('%Y-%m-01')"/>
-    <field name="payment_mode_id" ref="account_payment_mode.payment_mode_inbound_ct1"/>
+    <field name="partner_id" ref="donor_mass3" />
+    <field name="donation_date" eval="time.strftime('%Y-%m-01')" />
+    <field name="payment_mode_id" ref="account_payment_mode.payment_mode_inbound_ct1" />
     <field name="payment_ref">CHQ HSBC 98302217</field>
 </record>
 
 <record id="donation_mass3_l1" model="donation.line">
-    <field name="donation_id" ref="donation_mass3"/>
-    <field name="product_id" ref="mass.product_product_mass_gregorian"/>
+    <field name="donation_id" ref="donation_mass3" />
+    <field name="product_id" ref="mass.product_product_mass_gregorian" />
     <field name="quantity">1</field>
     <field name="unit_price">540</field>
     <field name="intention">For my grand-father</field>
-    <field name="celebrant_id" ref="mass.father_odilon"/>
+    <field name="celebrant_id" ref="mass.father_odilon" />
 </record>
 
 

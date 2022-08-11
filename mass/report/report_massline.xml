@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!--
   Copyright 2014-2021 Barroux Abbey (www.barroux.org)
   Copyright 2014-2021 Akretion France (www.akretion.com)
   @author: Alexis de Lattre <alexis.delattre@akretion.com>
   License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 -->
-
 <odoo>
 
 <template id="report_massline">
@@ -32,11 +31,11 @@
     <t t-foreach="docs" t-as="o">
 
         <tr>
-            <td><span t-field="o.date"/></td>
-            <td><span t-field="o.type_id.name"/></td>
-            <td><span t-field="o.celebrant_id.name"/></td>
-            <td><span t-field="o.partner_id.name"/></td>
-            <td><span t-field="o.intention"/></td>
+            <td><span t-field="o.date" /></td>
+            <td><span t-field="o.type_id.name" /></td>
+            <td><span t-field="o.celebrant_id.name" /></td>
+            <td><span t-field="o.partner_id.name" /></td>
+            <td><span t-field="o.intention" /></td>
         </tr>
 
     </t>
