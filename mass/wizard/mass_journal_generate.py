@@ -6,7 +6,7 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-from datetime import datetime
+from odoo.tools.misc import format_date
 from dateutil.relativedelta import relativedelta
 
 
