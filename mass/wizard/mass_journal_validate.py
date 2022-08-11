@@ -3,19 +3,21 @@
 # @author Alexis de Lattre <alexis.delattre@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError
 from collections import defaultdict
+
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class MassJournalValidate(models.TransientModel):
-    _name = 'mass.journal.validate'
+    _name = "mass.journal.validate"
     _description = "Validate Masses Journal"
 
     @api.model
     def _get_default_journal_date(self):
-        line = self.env['mass.line'].search(
-            [('state', '=', 'draft')], limit=1, order='date asc')
+        line = self.env["mass.line"].search(
+            [("state", "=", "draft")], limit=1, order="date asc"
+        )
         if line:
             journal_date = line.date
         else:
@@ -23,12 +25,16 @@ class MassJournalValidate(models.TransientModel):
         return journal_date
 
     company_id = fields.Many2one(
-        'res.company', string='Company',
+        "res.company",
+        string="Company",
         default=lambda self: self.env.company,
-        required=True)
+        required=True,
+    )
     journal_date = fields.Date(
-        'Journal Date', required=True,
-        default=lambda self: self._get_default_journal_date())
+        "Journal Date",
+        required=True,
+        default=lambda self: self._get_default_journal_date(),
+    )
 
     def _prepare_mass_validation_move(self, lines):
         company = self.company_id
@@ -43,8 +49,10 @@ class MassJournalValidate(models.TransientModel):
                 stock_account_id = line.request_id.stock_account_id.id
                 stock_acc2amount[stock_account_id] += amount
 
-                income_account_id = line.product_id._get_product_accounts()['income'].id
-                income_analytic_account_id = line.request_id.analytic_account_id.id or False
+                income_account_id = line.product_id._get_product_accounts()["income"].id
+                income_analytic_account_id = (
+                    line.request_id.analytic_account_id.id or False
+                )
                 key = (income_account_id, income_analytic_account_id)
                 income_acc2amount[key] += amount
 
@@ -52,28 +60,43 @@ class MassJournalValidate(models.TransientModel):
             return False
 
         for stock_account_id, amount in stock_acc2amount.items():
-            movelines.append((0, 0, {
-                'credit': 0,
-                'debit': amount,
-                'account_id': stock_account_id,
-                'analytic_account_id': False,
-                }))
+            movelines.append(
+                (
+                    0,
+                    0,
+                    {
+                        "credit": 0,
+                        "debit": amount,
+                        "account_id": stock_account_id,
+                        "analytic_account_id": False,
+                    },
+                )
+            )
 
-        for (income_account_id, income_analytic_account_id), amount in income_acc2amount.items():
-            movelines.append((0, 0, {
-                'debit': 0,
-                'credit': amount,
-                'account_id': income_account_id,
-                'analytic_account_id': income_analytic_account_id,
-                }))
+        for (
+            income_account_id,
+            income_analytic_account_id,
+        ), amount in income_acc2amount.items():
+            movelines.append(
+                (
+                    0,
+                    0,
+                    {
+                        "debit": 0,
+                        "credit": amount,
+                        "account_id": income_account_id,
+                        "analytic_account_id": income_analytic_account_id,
+                    },
+                )
+            )
 
         vals = {
-            'journal_id': company.mass_validation_journal_id.id,
-            'date': self.journal_date,
-            'ref': _('Masses'),
-            'company_id': company.id,
-            'line_ids': movelines,
-            }
+            "journal_id": company.mass_validation_journal_id.id,
+            "date": self.journal_date,
+            "ref": _("Masses"),
+            "company_id": company.id,
+            "line_ids": movelines,
+        }
         return vals
 
     def validate_journal(self):
@@ -81,24 +104,26 @@ class MassJournalValidate(models.TransientModel):
         date = self.journal_date
         company = self.company_id
         # Search draft mass lines on the date of the wizard
-        lines = self.env['mass.line'].search(
-            [('date', '=', date), ('company_id', '=', company.id)])
-        vals = {'state': 'done'}
+        lines = self.env["mass.line"].search(
+            [("date", "=", date), ("company_id", "=", company.id)]
+        )
+        vals = {"state": "done"}
         if not company.mass_validation_journal_id:
-            raise UserError(_(
-                "Missing Mass Validation Journal on company '%s'.")
-                % company.display_name)
+            raise UserError(
+                _("Missing Mass Validation Journal on company '%s'.")
+                % company.display_name
+            )
         # Create account move
         move_vals = self._prepare_mass_validation_move(lines)
         if move_vals:
-            move = self.env['account.move'].create(move_vals)
-            vals['move_id'] = move.id
+            move = self.env["account.move"].create(move_vals)
+            vals["move_id"] = move.id
             if company.mass_post_move:
                 move.action_post()
 
         # Update mass lines
         lines.write(vals)
 
-        action = self.env.ref('mass.mass_line_action').sudo().read([])[0]
-        action['domain'] = [('id', 'in', lines.ids)]
+        action = self.env.ref("mass.mass_line_action").sudo().read([])[0]
+        action["domain"] = [("id", "in", lines.ids)]
         return action
