@@ -111,7 +111,11 @@
                 </group>
 
                 <group name="rooms" states="confirm,current,done">
-                    <field name="room_assign_ids" nolabel="1">
+                    <field
+                            name="room_assign_ids"
+                            nolabel="1"
+                            context="{'form_view_ref': 'stay.stay_room_assign_form'}"
+                        >
                         <tree editable="bottom">
                             <field name="room_id" />
                             <field name="guest_qty" />
@@ -159,8 +163,8 @@
                     groups="base.group_multi_company"
                     optional="hide"
                 />
-            <field name="partner_name" invisible="context.get('partner_view')" />
             <field name="guest_qty" />
+            <field name="partner_name" invisible="context.get('partner_view')" />
             <field name="arrival_date" />
             <field name="arrival_time" />
             <field name="arrival_note" optional="show" />
@@ -378,6 +382,7 @@ from the calendar view, the dates are not set -->
 
 <record id="stay_room_assign_form" model="ir.ui.view">
     <field name="model">stay.room.assign</field>
+    <field name="priority">100</field>
     <field name="arch" type="xml">
         <form>
             <group name="main">
@@ -406,6 +411,34 @@ from the calendar view, the dates are not set -->
                         name="departure_time"
                         invisible="not context.get('stay_room_assign_main_view')"
                     />
+                <field name="room_id" />
+                <field name="guest_qty" />
+                <field name="room_domain_ids" invisible="1" />
+                <field name="stay_group_id" invisible="1" />
+                <field
+                        name="company_id"
+                        groups="base.group_multi_company"
+                        invisible="not context.get('stay_room_assign_main_view')"
+                    />
+            </group>
+        </form>
+    </field>
+</record>
+
+<!-- web_timeline doesn't transmit the context to the form view when you click on an stay
+So I use the form view below by default -->
+<record id="stay_room_assign_detailed_form" model="ir.ui.view">
+    <field name="model">stay.room.assign</field>
+    <field name="priority">10</field>
+    <field name="arch" type="xml">
+        <form>
+            <group name="main">
+                <field name="stay_id" readonly="1" />
+                <field name="partner_name" />
+                <field name="arrival_date" />
+                <field name="arrival_time" />
+                <field name="departure_date" />
+                <field name="departure_time" />
                 <field name="room_id" />
                 <field name="guest_qty" />
                 <field name="room_domain_ids" invisible="1" />
