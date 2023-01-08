@@ -56,6 +56,7 @@ class StayStay(models.Model):
     arrival_datetime = fields.Datetime(
         compute='_compute_arrival_datetime', store=True, readonly=True,
         string='Arrival Date and Time')
+    arrival_note = fields.Char(string="Arrival Note")
     departure_date = fields.Date(
         string='Departure Date', required=True, track_visibility='onchange',
         index=True)
@@ -67,6 +68,8 @@ class StayStay(models.Model):
     departure_datetime = fields.Datetime(
         compute='_compute_departure_datetime', store=True, readonly=True,
         string='Departure Date and Time')
+    departure_note = fields.Char(string="Departure Note")
+    notes = fields.Text()
     room_id = fields.Many2one(
         'stay.room', string='Room', track_visibility='onchange', copy=False,
         ondelete='restrict', index=True)
@@ -220,15 +223,15 @@ class StayStay(models.Model):
         assert self.room_id
         # No conflict IF :
         # leaves before my arrival (or same day)
-        # OR arrivers after my departure (or same day)
+        # OR arrives after my departure (or same day)
         # CONTRARY :
         # leaves after my arrival
         # AND arrives before my departure
         conflict_stay = self.search([
             ('id', '!=', self.id),
             ('room_id', '=', self.room_id.id),
-            ('departure_datetime', '>=', self.arrival_datetime),
-            ('arrival_datetime', '<=', self.departure_datetime),
+            ('departure_datetime', '>', self.arrival_datetime),
+            ('arrival_datetime', '<', self.departure_datetime),
             ], limit=1)
         if conflict_stay:
             raise ValidationError(_(

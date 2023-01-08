@@ -27,17 +27,21 @@
                         <field name="partner_id"/>
                         <field name="partner_name"/>
                         <field name="guest_qty"/>
-                        <!-- <field name="create_uid" readonly="1"/> -->
                     </group>
                     <group name="right">
                         <field name="arrival_date"/>
                         <field name="arrival_time"/>
+                        <field name="arrival_note"/>
                         <field name="departure_date"/>
                         <field name="departure_time"/>
+                        <field name="departure_note"/>
                         <field name="room_id"/>
                         <field name="group_id"/>
                         <field name="no_meals"/>
                     </group>
+                </group>
+                <group name="notes" string="Notes">
+                    <field name="notes" nolabel="1"/>
                 </group>
                 <group name="lines">
                     <field name="line_ids" nolabel="1"/>
@@ -61,11 +65,13 @@
             <field name="guest_qty"/>
             <field name="arrival_date"/>
             <field name="arrival_time"/>
+            <field name="departure_note"/>
             <field name="departure_date"/>
             <field name="departure_time"/>
+            <field name="departure_note"/>
             <field name="group_id"/>
             <field name="room_id"/>
-            <field name="company_id" groups="base.group_multi_company"/>
+            <field name="company_id" groups="base.group_multi_company" invisible="1"/>
         </tree>
     </field>
 </record>
