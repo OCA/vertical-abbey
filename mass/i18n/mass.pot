@@ -4,13 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-28 12:41+0000\n"
-"PO-Revision-Date: 2015-03-28 12:41+0000\n"
-"Last-Translator: <>\n"
+"Last-Translator: \n"
 "Language-Team: \n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,9 +15,9 @@ msgstr ""
 
 #. module: mass
 #: code:addons/mass/wizard/mass_journal_generate.py:0
-#, fuzzy, python-format
+#, python-format
 msgid "%s celebrants were not assigned."
-msgstr "%s célébrants n'ont pas été assignés"
+msgstr ""
 
 #. module: mass
 #: model:ir.actions.report,print_report_name:mass.report_mass_request_transfer
@@ -33,22 +30,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass.field_mass_line__move_id
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__move_id
 msgid "Account Move"
-msgstr "Ecriture comptable"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_religious_community__active
 msgid "Active"
-msgstr "Actif"
+msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.mass_requests_to_transfer_form
 msgid "Add"
-msgstr "Ajouter"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__amount_total
 msgid "Amount Total"
-msgstr "Montant total"
+msgstr ""
 
 #. module: mass
 #: code:addons/mass/models/res_partner.py:0
@@ -67,13 +64,11 @@ msgstr ""
 msgid ""
 "Are you sure you want to swap the celebrants of the two selected masses?"
 msgstr ""
-"Etes-vous sûr de vouloir échanger les célébrants des deux messes "
-"sélectionnées ?"
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_form
 msgid "Back to Draft"
-msgstr "Retour à l'état brouillon"
+msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.mass_journal_generate_form
@@ -81,7 +76,7 @@ msgstr "Retour à l'état brouillon"
 #: model_terms:ir.ui.view,arch_db:mass.mass_requests_to_transfer_form
 #: model_terms:ir.ui.view,arch_db:mass.swap_celebrant_form
 msgid "Cancel"
-msgstr "Quitter"
+msgstr ""
 
 #. module: mass
 #: code:addons/mass/models/mass.py:0
@@ -90,38 +85,33 @@ msgid ""
 "Cannot delete mass dated %s for %s because it is a %s which is an "
 "uninterrupted mass."
 msgstr ""
-"Cannot delete mass dated %s for %s because it is a %s which is an "
-"uninterrupted mass."
 
 #. module: mass
 #: code:addons/mass/models/mass.py:0
 #, python-format
 msgid "Cannot delete mass line dated %s for %s because it is in Done state."
-msgstr "Cannot delete mass line dated %s for %s because it is in Done state."
+msgstr ""
 
 #. module: mass
 #: code:addons/mass/models/mass.py:0
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot delete mass request '%s' because it is not in Waiting state."
 msgstr ""
-"Cannot delete mass request dated %s for %s because it is not in Waiting "
-"state."
 
 #. module: mass
 #: code:addons/mass/models/mass.py:0
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Cannot delete mass request transfer dated %s for %s because it is in Done "
 "state."
 msgstr ""
-"Cannot delete mass request transfer dated %s for %s because it is Done state."
 
 #. module: mass
 #: code:addons/mass/models/mass.py:0
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Cannot validate mass request transfer %s because it has no mass requests."
-msgstr "Cannot validate a Mass Request Transfer without Mass Requests."
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_line__celebrant_id
@@ -134,40 +124,40 @@ msgstr "Cannot validate a Mass Request Transfer without Mass Requests."
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_search
 #: model_terms:ir.ui.view,arch_db:mass.report_massline
 msgid "Celebrant"
-msgstr "Célébrant"
+msgstr ""
 
 #. module: mass
 #: model:ir.actions.act_window,name:mass.celebrant_partner_action
 #: model:ir.ui.menu,name:mass.mass_celebrants_menu
 #: model_terms:ir.ui.view,arch_db:mass.view_res_partner_filter
 msgid "Celebrants"
-msgstr "Célébrants"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_line__date
 #: model_terms:ir.ui.view,arch_db:mass.report_massline
 msgid "Celebration Date"
-msgstr "Date de célébration"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request__request_date
 msgid "Celebration Requested Date"
-msgstr "Date de célébration demandée"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_religious_community__name
 msgid "Community Code"
-msgstr "Code de la communauté"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_religious_community__long_name
 msgid "Community Name"
-msgstr "Nom de la communauté"
+msgstr ""
 
 #. module: mass
 #: model:ir.model,name:mass.model_res_company
 msgid "Companies"
-msgstr "Sociétés"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_journal_validate__company_id
@@ -176,26 +166,24 @@ msgstr "Sociétés"
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__company_id
 #: model:ir.model.fields,field_description:mass.field_mass_requests_to_transfer__company_id
 msgid "Company"
-msgstr "Société"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_line__company_currency_id
 #: model:ir.model.fields,field_description:mass.field_mass_request__company_currency_id
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__company_currency_id
-#, fuzzy
 msgid "Company Currency"
-msgstr "Société"
+msgstr ""
 
 #. module: mass
 #: model:ir.model,name:mass.model_res_config_settings
-#, fuzzy
 msgid "Config Settings"
-msgstr "Configuration"
+msgstr ""
 
 #. module: mass
 #: model:ir.ui.menu,name:mass.mass_config_menu
 msgid "Configuration"
-msgstr "Configuration"
+msgstr ""
 
 #. module: mass
 #: model:ir.model,name:mass.model_res_partner
@@ -206,7 +194,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass.field_mass_line__conventual_id
 #: model_terms:ir.ui.view,arch_db:mass.mass_line_search
 msgid "Conventual"
-msgstr "Messe Conventuelle"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_journal_generate__create_uid
@@ -219,7 +207,7 @@ msgstr "Messe Conventuelle"
 #: model:ir.model.fields,field_description:mass.field_religious_community__create_uid
 #: model:ir.model.fields,field_description:mass.field_swap_celebrant__create_uid
 msgid "Created by"
-msgstr "Créé par"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_journal_generate__create_date
@@ -232,12 +220,12 @@ msgstr "Créé par"
 #: model:ir.model.fields,field_description:mass.field_religious_community__create_date
 #: model:ir.model.fields,field_description:mass.field_swap_celebrant__create_date
 msgid "Created on"
-msgstr "Créé le"
+msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.mass_line_search
 msgid "Date"
-msgstr "Date"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_journal_generate__display_name
@@ -262,7 +250,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_search
 #: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
 msgid "Donation Date"
-msgstr "Date du don"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields.selection,name:mass.selection__mass_line__state__done
@@ -272,7 +260,7 @@ msgstr "Date du don"
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_search
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_search
 msgid "Done"
-msgstr "Validé"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_line__partner_id
@@ -281,7 +269,7 @@ msgstr "Validé"
 #: model_terms:ir.ui.view,arch_db:mass.report_massline
 #: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
 msgid "Donor"
-msgstr "Donateur"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields.selection,name:mass.selection__mass_line__state__draft
@@ -289,7 +277,7 @@ msgstr "Donateur"
 #: model_terms:ir.ui.view,arch_db:mass.mass_line_search
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_search
 msgid "Draft"
-msgstr "Brouillon"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields.selection,name:mass.selection__res_partner__celebrant__external
@@ -298,34 +286,33 @@ msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.view_res_partner_filter
-#, fuzzy
 msgid "External Celebrants"
-msgstr "Echange de célébrants"
+msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.mass_journal_generate_form
 msgid "Generate Journal"
-msgstr "Générer le journal"
+msgstr ""
 
 #. module: mass
 #: model:ir.actions.act_window,name:mass.mass_journal_generate_action
 #: model:ir.model,name:mass.model_mass_journal_generate
 #: model:ir.ui.menu,name:mass.mass_journal_generate_menu
 msgid "Generate Masses Journal"
-msgstr "Générer le journal "
+msgstr ""
 
 #. module: mass
 #: model:product.product,name:mass.product_product_mass_gregorian
 #: model:product.template,name:mass.product_product_mass_gregorian_product_template
 msgid "Gregorian Mass"
-msgstr "Gregorian Mass"
+msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.mass_line_search
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_search
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_search
 msgid "Group By"
-msgstr "Grouper par"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_journal_generate__id
@@ -343,7 +330,7 @@ msgstr "Grouper par"
 #: model:ir.model.fields,field_description:mass.field_res_partner__id
 #: model:ir.model.fields,field_description:mass.field_swap_celebrant__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,help:mass.field_mass_line__request_date
@@ -352,8 +339,6 @@ msgid ""
 "If the donor want the mass to be celebrated at a particular date, select it "
 "here. Otherwise, leave empty."
 msgstr ""
-"If the donor want the mass to be celebrated at a particular date, select it "
-"here. Otherwise, leave empty."
 
 #. module: mass
 #: model:ir.model.fields,help:mass.field_mass_request__celebrant_id
@@ -361,14 +346,11 @@ msgid ""
 "If the donor want the mass to be celebrated by a particular celebrant, "
 "select it here. Otherwise, leave empty."
 msgstr ""
-"If the donor want the mass to be celebrated by a particular celebrant, "
-"select it here. Otherwise, leave empty."
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request__analytic_account_id
-#, fuzzy
 msgid "Income Analytic Account"
-msgstr "Compte analytique"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_line__intention
@@ -376,7 +358,7 @@ msgstr "Compte analytique"
 #: model_terms:ir.ui.view,arch_db:mass.report_massline
 #: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
 msgid "Intention"
-msgstr "Intention"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields.selection,name:mass.selection__res_partner__celebrant__internal
@@ -387,13 +369,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass.field_product_product__mass
 #: model:ir.model.fields,field_description:mass.field_product_template__mass
 msgid "Is a Mass"
-msgstr "Messe"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_journal_generate__journal_date
 #: model:ir.model.fields,field_description:mass.field_mass_journal_validate__journal_date
 msgid "Journal Date"
-msgstr "Date du journal"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_journal_generate____last_update
@@ -410,9 +392,8 @@ msgstr "Date du journal"
 #: model:ir.model.fields,field_description:mass.field_res_config_settings____last_update
 #: model:ir.model.fields,field_description:mass.field_res_partner____last_update
 #: model:ir.model.fields,field_description:mass.field_swap_celebrant____last_update
-#, fuzzy
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_journal_generate__write_uid
@@ -425,7 +406,7 @@ msgstr "Dernière modification le"
 #: model:ir.model.fields,field_description:mass.field_religious_community__write_uid
 #: model:ir.model.fields,field_description:mass.field_swap_celebrant__write_uid
 msgid "Last Updated by"
-msgstr "Dernière modification par"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_journal_generate__write_date
@@ -438,22 +419,22 @@ msgstr "Dernière modification par"
 #: model:ir.model.fields,field_description:mass.field_religious_community__write_date
 #: model:ir.model.fields,field_description:mass.field_swap_celebrant__write_date
 msgid "Last Updated on"
-msgstr "Dernière modification le"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_journal_generate__celebrant_ids
 msgid "List of celebrants"
-msgstr "Liste des célébrants"
+msgstr ""
 
 #. module: mass
 #: model:ir.module.category,description:mass.module_category_mass
 msgid "Manage masses"
-msgstr "Gestion des messes"
+msgstr ""
 
 #. module: mass
 #: model:res.groups,name:mass.group_mass_manager
 msgid "Manager"
-msgstr "Responsable"
+msgstr ""
 
 #. module: mass
 #: model:ir.module.category,name:mass.module_category_mass
@@ -462,17 +443,17 @@ msgstr "Responsable"
 #: model_terms:ir.ui.view,arch_db:mass.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:mass.res_config_settings_view_form
 msgid "Mass"
-msgstr "Messes"
+msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.report_massline
 msgid "Mass Journal"
-msgstr "Journal de messes"
+msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.mass_line_form
 msgid "Mass Line"
-msgstr "Ligne de messe"
+msgstr ""
 
 #. module: mass
 #: model:ir.model,name:mass.model_mass_line
@@ -481,51 +462,49 @@ msgstr "Ligne de messe"
 #: model_terms:ir.ui.view,arch_db:mass.mass_line_pivot
 #: model_terms:ir.ui.view,arch_db:mass.mass_line_tree
 msgid "Mass Lines"
-msgstr "Lignes de messe"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_swap_celebrant__line_ids
-#, fuzzy
 msgid "Mass Lines to Swap"
-msgstr "Lignes de messe"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_line__product_id
 #: model:ir.model.fields,field_description:mass.field_mass_request__product_id
 #: model_terms:ir.ui.view,arch_db:mass.mass_line_search
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_search
-#, fuzzy
 msgid "Mass Product"
-msgstr "Article"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request__mass_remaining_quantity
 msgid "Mass Remaining Quantity"
-msgstr "Quantité restante de messes"
+msgstr ""
 
 #. module: mass
 #: model:ir.model,name:mass.model_mass_request
 #: model:ir.model.fields,field_description:mass.field_mass_line__request_id
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_form
 msgid "Mass Request"
-msgstr "Demande de messe"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_type__code
 #: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
 msgid "Mass Request Code"
-msgstr "Code de demande de messe"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_line__request_date
 msgid "Mass Request Date"
-msgstr "Date demande de messe"
+msgstr ""
 
 #. module: mass
 #: model:ir.actions.report,name:mass.report_mass_request_transfer
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_form
 msgid "Mass Request Transfer"
-msgstr "Transfert de requête de messe"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_line__type_id
@@ -539,13 +518,13 @@ msgstr "Transfert de requête de messe"
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_type_tree
 #: model_terms:ir.ui.view,arch_db:mass.report_massline
 msgid "Mass Request Type"
-msgstr "Type de messe"
+msgstr ""
 
 #. module: mass
 #: model:ir.actions.act_window,name:mass.mass_request_type_action
 #: model:ir.ui.menu,name:mass.mass_request_type_menu
 msgid "Mass Request Types"
-msgstr "Types de messe"
+msgstr ""
 
 #. module: mass
 #: model:ir.actions.act_window,name:mass.mass_request_action
@@ -556,31 +535,29 @@ msgstr "Types de messe"
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_search
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_tree
 msgid "Mass Requests"
-msgstr "Requêtes de messe"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_requests_to_transfer__request_ids
 msgid "Mass Requests to Transfer"
-msgstr "Demandes de messe à transférer"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_res_company__mass_stock_account_id
 #: model:ir.model.fields,field_description:mass.field_res_config_settings__mass_stock_account_id
-#, fuzzy
 msgid "Mass Stock Account"
-msgstr "Compte de stock"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_requests_to_transfer__transfer_id
-#, fuzzy
 msgid "Mass Transfer"
-msgstr "Transfert de messes"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_res_company__mass_validation_journal_id
 #: model:ir.model.fields,field_description:mass.field_res_config_settings__mass_validation_journal_id
 msgid "Mass Validation Journal"
-msgstr "Journal de validation de messe"
+msgstr ""
 
 #. module: mass
 #: code:addons/mass/wizard/mass_journal_validate.py:0
@@ -590,18 +567,18 @@ msgstr "Journal de validation de messe"
 #: model_terms:ir.ui.view,arch_db:mass.res_config_settings_view_form
 #, python-format
 msgid "Masses"
-msgstr "Messes"
+msgstr ""
 
 #. module: mass
 #: model:ir.actions.report,name:mass.report_mass_line
 #: model_terms:ir.ui.view,arch_db:mass.mass_journal_generate_form
 msgid "Masses Journal"
-msgstr "Journal des messes"
+msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_form
 msgid "Masses Requests"
-msgstr "Demandes de messes"
+msgstr ""
 
 #. module: mass
 #: model:ir.actions.act_window,name:mass.mass_request_transfer_action
@@ -611,24 +588,24 @@ msgstr "Demandes de messes"
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_search
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_tree
 msgid "Masses Requests Transfer"
-msgstr "Transfert de messes"
+msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
 msgid "Masses Transfer"
-msgstr "Transfert de messes"
+msgstr ""
 
 #. module: mass
 #: code:addons/mass/wizard/mass_journal_validate.py:0
 #, python-format
 msgid "Missing Mass Validation Journal on company '%s'."
-msgstr "Missing Mass Validation Journal on company '%s'."
+msgstr ""
 
 #. module: mass
 #: code:addons/mass/models/mass.py:0
-#, fuzzy, python-format
+#, python-format
 msgid "Missing stock account on mass request %s."
-msgstr "Missing stock account on mass request of %s"
+msgstr ""
 
 #. module: mass
 #: code:addons/mass/wizard/mass_journal_generate.py:0
@@ -637,8 +614,6 @@ msgid ""
 "More than one mass are assigned to the same celebrant %s. Please, modify "
 "requests."
 msgstr ""
-"More than one mass are assigned to the same celebrant %s. Please, modify "
-"requests."
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.religious_community_search
@@ -649,42 +624,41 @@ msgstr ""
 #: code:addons/mass/wizard/mass_journal_generate.py:0
 #, python-format
 msgid "No celebrants were selected !"
-msgstr "Aucun célébrant sélectionné !"
+msgstr ""
 
 #. module: mass
 #: model:product.product,name:mass.product_product_mass_novena
 #: model:product.template,name:mass.product_product_mass_novena_product_template
 msgid "Novena Mass"
-msgstr "Novena Mass"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_line__unit_offering
 #: model:ir.model.fields,field_description:mass.field_mass_request__offering
 #: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
 msgid "Offering"
-msgstr "Offrande"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request__unit_offering
 msgid "Offering per Mass"
-msgstr "Offrande par messe"
+msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_form
 msgid "Other Infos"
-msgstr "Other Infos"
+msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.mass_line_search
 msgid "Partner"
-msgstr "Partenaire"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_res_company__mass_post_move
 #: model:ir.model.fields,field_description:mass.field_res_config_settings__mass_post_move
-#, fuzzy
 msgid "Post Move"
-msgstr "Ecriture comptable"
+msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_form
@@ -694,25 +668,25 @@ msgstr ""
 #. module: mass
 #: model:ir.model,name:mass.model_product_product
 msgid "Product"
-msgstr "Article"
+msgstr ""
 
 #. module: mass
 #: model:ir.model,name:mass.model_product_template
 msgid "Product Template"
-msgstr "Product Template"
+msgstr ""
 
 #. module: mass
 #: model:ir.actions.act_window,name:mass.mass_product_action
 #: model:ir.ui.menu,name:mass.mass_products_menu
 msgid "Products"
-msgstr "Articles"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request__quantity
 #: model:ir.model.fields,field_description:mass.field_mass_request_type__quantity
 #: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
 msgid "Quantity"
-msgstr "Quantité"
+msgstr ""
 
 #. module: mass
 #: model:ir.actions.act_window,name:mass.religious_community_action
@@ -720,23 +694,23 @@ msgstr "Quantité"
 #: model_terms:ir.ui.view,arch_db:mass.religious_community_search
 #: model_terms:ir.ui.view,arch_db:mass.religious_community_tree
 msgid "Religious Communities"
-msgstr "Communautés religieuses"
+msgstr ""
 
 #. module: mass
 #: model:ir.model,name:mass.model_religious_community
 #: model_terms:ir.ui.view,arch_db:mass.religious_community_form
 msgid "Religious Community"
-msgstr "Communauté religieuse"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request__remaining_offering
 msgid "Remaining Offering"
-msgstr "Remaining Offering"
+msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.mass_line_search
 msgid "Search Mass Lines"
-msgstr "Recherche lignes de messe"
+msgstr ""
 
 #. module: mass
 #: model:ir.actions.act_window,name:mass.mass_requests_to_transfer_action
@@ -744,7 +718,7 @@ msgstr "Recherche lignes de messe"
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_form
 #: model_terms:ir.ui.view,arch_db:mass.mass_requests_to_transfer_form
 msgid "Select Mass Requests to Transfer"
-msgstr "Sélectionnez les demandes de messe à transférer"
+msgstr ""
 
 #. module: mass
 #: model:ir.actions.act_window,name:mass.mass_settings_action
@@ -756,13 +730,13 @@ msgstr ""
 #: model:product.product,name:mass.product_product_mass_simple
 #: model:product.template,name:mass.product_product_mass_simple_product_template
 msgid "Simple Mass"
-msgstr "Simple Mass"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields.selection,name:mass.selection__mass_request__state__started
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_search
 msgid "Started"
-msgstr "Démarré"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_line__state
@@ -771,45 +745,43 @@ msgstr "Démarré"
 #: model_terms:ir.ui.view,arch_db:mass.mass_line_search
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_search
 msgid "State"
-msgstr "Etat"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request__stock_account_id
 msgid "Stock Account"
-msgstr "Compte de stock"
+msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.swap_celebrant_form
 msgid "Swap"
-msgstr "Echange"
+msgstr ""
 
 #. module: mass
 #: model:ir.model,name:mass.model_swap_celebrant
 msgid "Swap Celebrant"
-msgstr "Echange de célébrant"
+msgstr ""
 
 #. module: mass
 #: model:ir.actions.act_window,name:mass.swap_celebrant_action
 #: model_terms:ir.ui.view,arch_db:mass.mass_line_tree
 #: model_terms:ir.ui.view,arch_db:mass.swap_celebrant_form
 msgid "Swap Celebrants"
-msgstr "Echange de célébrants"
+msgstr ""
 
 #. module: mass
 #: code:addons/mass/models/mass.py:0
-#, fuzzy, python-format
+#, python-format
 msgid "The 'Mass Validation Journal' is not set on company '%s'."
-msgstr "The 'Mass Validation Journal' is not set on company '%s'"
+msgstr ""
 
 #. module: mass
 #: code:addons/mass/wizard/swap_celebrant.py:0
 #, python-format
 msgid ""
-"The 2 mass lines that you selected have different dates (%s and %s). You can "
-"swap celebrants only between 2 masses of the same date."
+"The 2 mass lines that you selected have different dates (%s and %s). You can"
+" swap celebrants only between 2 masses of the same date."
 msgstr ""
-"The 2 mass lines that you selected have different dates (%s and %s). You can "
-"swap celebrants only between 2 masses of the same date."
 
 #. module: mass
 #: code:addons/mass/wizard/mass_journal_generate.py:0
@@ -817,7 +789,6 @@ msgstr ""
 msgid ""
 "The celebrant %s has an assigned mass for %s, but he is not available today."
 msgstr ""
-"The celebrant %s has an assigned mass for %s, but he is not available today."
 
 #. module: mass
 #: code:addons/mass/wizard/mass_journal_generate.py:0
@@ -826,98 +797,93 @@ msgid ""
 "The number of requests for this day exceeds the number of celebrants. "
 "Please, modify requests."
 msgstr ""
-"The number of requests for this day exceeds the number of celebrants. "
-"Please, modify requests."
 
 #. module: mass
 #: model:ir.model.fields,help:mass.field_mass_request__offering
 msgid "The total offering amount in company currency."
-msgstr "Montant total de l'offrande dans la devise de la Sté."
+msgstr ""
 
 #. module: mass
 #: code:addons/mass/wizard/mass_journal_generate.py:0
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "There is already a journal for %s. You cannot generate another journal for "
 "that date. Odoo has reverted to the default date."
 msgstr ""
-"There is already a journal for %s. You cannot generate another journal for "
-"that date. Odoo has reverted to the default date"
 
 #. module: mass
 #: model:ir.model.fields,help:mass.field_mass_request__unit_offering
 msgid "This field is the offering amount per mass in company currency."
 msgstr ""
-"Ce champ est le montant de l'offrande par messe dans la devise de la Sté."
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
 msgid "Total Amount:"
-msgstr "Montant total :"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request__mass_quantity
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__mass_total
 msgid "Total Mass Quantity"
-msgstr "Quantité de messes"
+msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
 msgid "Total Number of Masses:"
-msgstr "Nombre total des messes :"
+msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.mass_line_tree
 msgid "Total Offering"
-msgstr "Offrande totale"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__transfer_date
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_search
 msgid "Transfer Date"
-msgstr "Date de transfert"
+msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
 msgid "Transfer Date:"
-msgstr "Date de transfert :"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__number
 msgid "Transfer Number"
-msgstr "Numéro de transfert"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request__transfer_id
 msgid "Transfer Operation"
-msgstr "Operation de transfert"
+msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
 msgid "Transfer To:"
-msgstr "Transférer à :"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields.selection,name:mass.selection__mass_request__state__transfered
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_search
 msgid "Transfered"
-msgstr "Transferée"
+msgstr ""
 
 #. module: mass
 #: model:ir.model,name:mass.model_mass_request_transfer
 msgid "Transfered Mass Requests"
-msgstr "Demandes de messe transférées"
+msgstr ""
 
 #. module: mass
 #: model:ir.model,name:mass.model_mass_request_type
 msgid "Types of Mass Requests"
-msgstr "Types de requête de messes"
+msgstr ""
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request__uninterrupted
 #: model:ir.model.fields,field_description:mass.field_mass_request_type__uninterrupted
 msgid "Uninterrupted"
-msgstr "Ininterrompu"
+msgstr ""
 
 #. module: mass
 #: model:product.product,uom_name:mass.product_product_mass_gregorian
@@ -932,17 +898,17 @@ msgstr ""
 #. module: mass
 #: model:res.groups,name:mass.group_mass_user
 msgid "User"
-msgstr "Utilisateur"
+msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_form
 msgid "Validate"
-msgstr "Valider"
+msgstr ""
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.mass_journal_validate_form
 msgid "Validate Journal"
-msgstr "Validation du journal"
+msgstr ""
 
 #. module: mass
 #: model:ir.actions.act_window,name:mass.mass_journal_validate_action
@@ -950,7 +916,7 @@ msgstr "Validation du journal"
 #: model:ir.ui.menu,name:mass.mass_journal_validate_menu
 #: model_terms:ir.ui.view,arch_db:mass.mass_journal_validate_form
 msgid "Validate Masses Journal"
-msgstr "Valider le journal"
+msgstr ""
 
 #. module: mass
 #: model:res.groups,name:mass.group_mass_viewer
@@ -961,13 +927,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mass.selection__mass_request__state__waiting
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_search
 msgid "Waiting"
-msgstr "En attente"
+msgstr ""
 
 #. module: mass
 #: code:addons/mass/wizard/mass_journal_generate.py:0
 #, python-format
 msgid "Warning"
-msgstr "Avertissement"
+msgstr ""
 
 #. module: mass
 #: code:addons/mass/wizard/mass_journal_generate.py:0
@@ -976,30 +942,9 @@ msgid ""
 "You are about to generate another journal for %s : it is allowed for that "
 "date."
 msgstr ""
-"You are about to generate another journal for %s : it is allowed for that "
-"date."
 
 #. module: mass
 #: code:addons/mass/wizard/swap_celebrant.py:0
 #, python-format
 msgid "You should only select 2 mass lines (%d were selected)."
 msgstr ""
-"Vous devez sélectionner uniquement 2 messes (%d ont été sélectionnées)."
-
-#~ msgid "Mass Validation Account"
-#~ msgstr "Compte de validation de messe"
-
-#~ msgid "Masses celebrated on %s"
-#~ msgstr "Messes célébrées par %s"
-
-#~ msgid "Masses transfer %s"
-#~ msgstr "Transfert de messes %s"
-
-#~ msgid "No"
-#~ msgstr "N°"
-
-#~ msgid "The offering amount is in company currency."
-#~ msgstr "Le montant de l'offrande est dans la devise de la Sté."
-
-#~ msgid "Total Remaining Quantity"
-#~ msgstr "Solde total"
