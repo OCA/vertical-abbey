@@ -17,7 +17,7 @@ class TestStay(TransactionCase):
         tomorrow = today + relativedelta(days=1)
         departure_date = tomorrow + relativedelta(days=3)
         new_departure_date = departure_date + relativedelta(days=1)
-        refectory_id = self.env.ref("stay.refectory_ste_francoise").id
+        refectory_id = self.env["stay.refectory"].create({"name": "test"}).id
         stay1 = self.env["stay.stay"].create(
             {
                 "arrival_date": tomorrow,

@@ -9,7 +9,10 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     donation_stay_product_id = fields.Many2one(
-        "product.product", string="Product for Stay Donations", ondelete="restrict"
+        "product.product",
+        string="Product for Stay Donations",
+        ondelete="restrict",
+        domain=[("donation", "=", True)],
     )
     donation_stay_campaign_id = fields.Many2one(
         "donation.campaign", string="Campaign for Stay Donations", ondelete="restrict"

@@ -64,10 +64,11 @@ class StayMultiDuplicate(models.TransientModel):
             )
         if self.end_date <= self.start_date:
             raise UserError(
-                _("The end date (%s) must be after the start_date (%s)!")
-                % (
-                    format_date(self.env, self.end_date),
-                    format_date(self.env, self.start_date),
+                _(
+                    "The end date (%(end_date)s) must be after the "
+                    "start date (%(start_date)s)!",
+                    end_date=format_date(self.env, self.end_date),
+                    start_date=format_date(self.env, self.start_date),
                 )
             )
         freq2days = {
@@ -89,12 +90,11 @@ class StayMultiDuplicate(models.TransientModel):
             if existing_stay:
                 raise UserError(
                     _(
-                        "A stay already exists for guest '%s' with arrival date %s (stay %s)."
-                    )
-                    % (
-                        self.stay_id.partner_id.display_name,
-                        format_date(self.env, cur_arrival_date),
-                        existing_stay.name,
+                        "A stay already exists for guest '%(guest)s' "
+                        "with arrival date %(arival_date)s (stay %(stay)s).",
+                        guest=self.stay_id.partner_id.display_name,
+                        arrival_date=format_date(self.env, cur_arrival_date),
+                        stay=existing_stay.name,
                     )
                 )
             new_stay = self.stay_id.copy(self._prepare_stay_copy(cur_arrival_date))

@@ -46,9 +46,9 @@ class StayStayXlsx(models.TransientModel):
         )
         return res
 
-    company_id = fields.Many2one("res.company", string="Company", required=True)
-    start_date = fields.Date(string="Start Date", required=True)
-    end_date = fields.Date(string="End Date", required=True)
+    company_id = fields.Many2one("res.company", required=True)
+    start_date = fields.Date(required=True)
+    end_date = fields.Date(required=True)
     group_ids = fields.Many2many(
         "stay.group", string="Groups", domain="[('company_id', '=', company_id)]"
     )

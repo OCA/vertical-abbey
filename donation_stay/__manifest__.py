@@ -5,7 +5,7 @@
 
 {
     "name": "Donation Stay",
-    "version": "14.0.1.0.0",
+    "version": "16.0.1.0.0",
     "category": "Lodging",
     "license": "AGPL-3",
     "summary": "Create donations from a stay",

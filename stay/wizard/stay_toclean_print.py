@@ -16,14 +16,6 @@ class StayTocleanPrint(models.TransientModel):
         default=lambda self: self.env.company,
     )
 
-    def print_report(self):
-        action = (
-            self.env.ref("stay.report_stay_toclean")
-            .with_context({"discard_logo_check": True})
-            .report_action(self)
-        )
-        return action
-
     def report_toclean_data(self):
         self.ensure_one()
         sro = self.env["stay.room"]

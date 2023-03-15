@@ -29,11 +29,10 @@ class StayJournalPrint(models.TransientModel):
         today_dt = fields.Date.from_string(today_str)
         return today_dt + relativedelta(days=1)
 
-    date = fields.Date(string="Date", required=True, default=_default_date)
+    date = fields.Date(required=True, default=_default_date)
     date_label = fields.Char(compute="_compute_date_label")
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
     )
@@ -72,12 +71,15 @@ class StayJournalPrint(models.TransientModel):
         )
         if not lines:
             raise UserError(
-                _("There are no stays on %s in company %s.")
-                % (format_date(self.env, self.date), self.company_id.display_name)
+                _(
+                    "There are no stays on %(date)s in company %(company)s.",
+                    date=format_date(self.env, self.date),
+                    company=self.company_id.display_name,
+                )
             )
         action = (
             self.env.ref("stay.report_stay_journal_print")
-            .with_context({"discard_logo_check": True})
+            .with_context(discard_logo_check=True)
             .report_action(self)
         )
         return action
@@ -85,7 +87,7 @@ class StayJournalPrint(models.TransientModel):
     def print_journal_meal(self):
         action = (
             self.env.ref("stay.report_stay_journal_meal")
-            .with_context({"discard_logo_check": True})
+            .with_context(discard_logo_check=True)
             .report_action(self)
         )
         return action
@@ -93,7 +95,7 @@ class StayJournalPrint(models.TransientModel):
     def print_journal_arrival(self):
         action = (
             self.env.ref("stay.report_stay_journal_arrival")
-            .with_context({"discard_logo_check": True})
+            .with_context(discard_logo_check=True)
             .report_action(self)
         )
         return action

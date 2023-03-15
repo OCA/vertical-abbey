@@ -1605,12 +1605,6 @@ msgid "Stays"
 msgstr "住宿"
 
 #. module: stay
-#: code:addons/stay/wizard/stay_stay_xlsx.py:0
-#, fuzzy, python-format
-msgid "Stays - %s"
-msgstr "住宿"
-
-#. module: stay
 #: code:addons/stay/wizard/stay_multi_duplicate.py:0
 #, fuzzy, python-format
 msgid "The end date (%s) must be after the start_date (%s)!"

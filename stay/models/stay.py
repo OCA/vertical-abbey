@@ -40,10 +40,9 @@ class StayStay(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _check_company_auto = True
 
-    name = fields.Char(string="Stay Number", default="/", copy=False)
+    name = fields.Char(string="Stay Number", default=lambda self: _("New"), copy=False)
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
         readonly=True,
@@ -55,11 +54,17 @@ class StayStay(models.Model):
         ondelete="restrict",
         help="If guest is anonymous, leave this field empty.",
     )
-    partner_name = fields.Text("Guest Names", required=True, tracking=True)
-    guest_qty = fields.Integer(string="Guest Quantity", default=1, tracking=True)
-    arrival_date = fields.Date(
-        string="Arrival Date", required=True, tracking=True, index=True
+    partner_name = fields.Text(
+        string="Guest Names",
+        compute="_compute_partner_name",
+        readonly=False,
+        required=True,
+        tracking=True,
+        store=True,
+        precompute=True,
     )
+    guest_qty = fields.Integer(string="Guest Quantity", default=1, tracking=True)
+    arrival_date = fields.Date(required=True, tracking=True, index=True)
     arrival_time = fields.Selection(
         [
             ("morning", "Morning"),
@@ -67,7 +72,6 @@ class StayStay(models.Model):
             ("evening", "Evening"),
             ("unknown", "Unknown"),
         ],
-        string="Arrival Time",
         required=True,
         tracking=True,
     )
@@ -77,10 +81,8 @@ class StayStay(models.Model):
         store=True,
         string="Arrival Date and Time",
     )
-    arrival_note = fields.Char(string="Arrival Note")
-    departure_date = fields.Date(
-        string="Departure Date", required=True, tracking=True, index=True
-    )
+    arrival_note = fields.Char()
+    departure_date = fields.Date(required=True, tracking=True, index=True)
     departure_time = fields.Selection(
         [
             ("morning", "Morning"),
@@ -88,7 +90,6 @@ class StayStay(models.Model):
             ("evening", "Evening"),
             ("unknown", "Unknown"),
         ],
-        string="Departure Time",
         required=True,
         tracking=True,
     )
@@ -98,7 +99,7 @@ class StayStay(models.Model):
         store=True,
         string="Departure Date and Time",
     )
-    departure_note = fields.Char(string="Departure Note")
+    departure_note = fields.Char()
     notes = fields.Text()
     room_assign_ids = fields.One2many(
         "stay.room.assign",
@@ -111,7 +112,6 @@ class StayStay(models.Model):
     # to first set the group and later set the room
     group_id = fields.Many2one(
         "stay.group",
-        string="Group",
         tracking=True,
         copy=False,
         domain="[('company_id', '=', company_id)]",
@@ -130,12 +130,13 @@ class StayStay(models.Model):
     )
     refectory_id = fields.Many2one(
         "stay.refectory",
-        string="Refectory",
+        compute="_compute_refectory_id",
+        store=True,
+        precompute=True,
         check_company=True,
-        default=lambda self: self.env.company.default_refectory_id,
+        readonly=False,
     )
     no_meals = fields.Boolean(
-        string="No Meals",
         tracking=True,
         help="The stay lines generated from this stay will not have "
         "lunchs nor dinners by default.",
@@ -153,7 +154,6 @@ class StayStay(models.Model):
             ("over-assigned", "Over Assigned"),
             ("error", "Error"),
         ],
-        string="Assign Status",
         compute="_compute_room_assignment",
         store=True,
     )
@@ -223,11 +223,14 @@ class StayStay(models.Model):
             stay.guest_qty_to_assign = guest_qty_to_assign
             stay.rooms_display_name = rooms_display_name
 
-    @api.model
-    def create(self, vals):
-        if vals.get("name", "/") == "/":
-            vals["name"] = self.env["ir.sequence"].next_by_code("stay.stay")
-        return super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if "company_id" in vals:
+                self = self.with_company(vals["company_id"])
+            if vals.get("name", _("New")) == _("New"):
+                vals["name"] = self.env["ir.sequence"].next_by_code("stay.stay")
+        return super().create(vals_list)
 
     @api.model
     def _convert_to_datetime_naive_utc(self, date, time_sel):
@@ -364,10 +367,11 @@ class StayStay(models.Model):
                 )
             if stay.arrival_date > stay.departure_date:
                 raise ValidationError(
-                    _("Arrival date (%s) cannot be after " "departure date (%s)!")
-                    % (
-                        format_date(self.env, stay.arrival_date),
-                        format_date(self.env, stay.departure_date),
+                    _(
+                        "Arrival date (%(arrival_date)s) cannot be after "
+                        "departure date (%(departure_date)s)!",
+                        arrival_date=format_date(self.env, stay.arrival_date),
+                        departure_date=format_date(self.env, stay.departure_date),
                     )
                 )
             if stay.arrival_date == stay.departure_date:
@@ -410,14 +414,13 @@ class StayStay(models.Model):
                         if group != stay.group_id:
                             raise ValidationError(
                                 _(
-                                    "Stay '%s' is linked to group '%s', but the "
-                                    "room '%s' is linked to group '%s'."
-                                )
-                                % (
-                                    stay.display_name,
-                                    stay.group_id.display_name,
-                                    room.display_name,
-                                    group.display_name,
+                                    "Stay '%(stay)s' is linked to group "
+                                    "'%(stay_group)s', but the room '%(room)s' "
+                                    "is linked to group '%(room_group)s'.",
+                                    stay=stay.display_name,
+                                    stay_group=stay.group_id.display_name,
+                                    room=room.display_name,
+                                    room_group=group.display_name,
                                 )
                             )
 
@@ -442,23 +445,23 @@ class StayStay(models.Model):
             res.append((stay.id, name))
         return res
 
-    @api.onchange("partner_id")
-    def partner_id_change(self):
-        if self.partner_id:
-            partner = self.partner_id
-            partner_name = partner.name
-            if partner.title and not partner.is_company:
-                partner_lg = partner
-                if partner.lang:
-                    partner_lg = partner.with_context(lang=partner.lang)
-                title = partner_lg.title.shortcut or partner_lg.title.name
-                partner_name = "%s %s" % (title, partner_name)
-            self.partner_name = partner_name
+    @api.depends("partner_id")
+    def _compute_partner_name(self):
+        for stay in self:
+            partner_name = False
+            if stay.partner_id:
+                partner_name = stay.partner_id._stay_get_partner_name()
+            stay.partner_name = partner_name
 
-    @api.onchange("group_id")
-    def group_id_change(self):
-        if self.group_id and self.group_id.default_refectory_id:
-            self.refectory_id = self.group_id.default_refectory_id
+    @api.depends("group_id", "company_id")
+    def _compute_refectory_id(self):
+        for stay in self:
+            refectory_id = False
+            if stay.group_id and stay.group_id.default_refectory_id:
+                refectory_id = stay.group_id.default_refectory_id.id
+            elif stay.company_id.default_refectory_id:
+                refectory_id = stay.company_id.default_refectory_id.id
+            stay.refectory_id = refectory_id
 
     def _prepare_stay_line(self, date):  # noqa: C901
         self.ensure_one()
@@ -762,11 +765,11 @@ class StayRoomAssign(models.Model):
         for assign in self:
             if assign.guest_qty > assign.room_id.bed_qty:
                 raise UserError(
-                    _("Room %s only has %d bed capacity, not %d!")
-                    % (
-                        assign.room_id.display_name,
-                        assign.room_id.bed_qty,
-                        assign.guest_qty,
+                    _(
+                        "Room %(room)s only has %(bed_qty)d bed capacity, not %(guest_qty)d!",
+                        room=assign.room_id.display_name,
+                        bed_qty=assign.room_id.bed_qty,
+                        guest_qty=assign.guest_qty,
                     )
                 )
             if assign.room_id:
@@ -797,21 +800,20 @@ class StayRoomAssign(models.Model):
             conflict_stay = conflict_assign.stay_id
             raise ValidationError(
                 _(
-                    "This stay conflicts with stay %s of '%s' "
-                    "from %s %s to %s %s in room %s."
-                )
-                % (
-                    conflict_stay.name,
-                    conflict_stay.partner_name,
-                    format_date(self.env, conflict_stay.arrival_date),
-                    conflict_stay._fields["arrival_time"].convert_to_export(
-                        conflict_stay.arrival_time, conflict_stay
-                    ),
-                    format_date(self.env, conflict_stay.departure_date),
-                    conflict_stay._fields["departure_time"].convert_to_export(
-                        conflict_stay.departure_time, conflict_stay
-                    ),
-                    conflict_assign.room_id.display_name,
+                    "This stay conflicts with stay %(stay)s of '%(guest)s' "
+                    "from %(arrival_date)s %(arrival_time)s to "
+                    "%(departure_date)s %(departure_time)s in room %(room)s.",
+                    stay=conflict_stay.name,
+                    guest=conflict_stay.partner_name,
+                    arrival_date=format_date(self.env, conflict_stay.arrival_date),
+                    arrival_time=conflict_stay._fields[
+                        "arrival_time"
+                    ].convert_to_export(conflict_stay.arrival_time, conflict_stay),
+                    departure_date=format_date(self.env, conflict_stay.departure_date),
+                    departure_time=conflict_stay._fields[
+                        "departure_time"
+                    ].convert_to_export(conflict_stay.departure_time, conflict_stay),
+                    room=conflict_assign.room_id.display_name,
                 )
             )
 
@@ -840,15 +842,14 @@ class StayRoomAssign(models.Model):
             if qty > bed_qty:
                 raise ValidationError(
                     _(
-                        "Conflict in room %s: with stay '%s', we would have a total of "
-                        "%d guests on %s whereas that room only has %d beds."
-                    )
-                    % (
-                        self.room_id.display_name,
-                        self.stay_id.name,
-                        qty,
-                        format_date(self.env, date),
-                        bed_qty,
+                        "Conflict in room %(room)s: with stay '%(stay)s', "
+                        "we would have a total of %(qty)d guests on %(date)s "
+                        "whereas that room only has %(bed_qty)d beds.",
+                        room=self.room_id.display_name,
+                        stay=self.stay_id.name,
+                        qty=qty,
+                        date=format_date(self.env, date),
+                        bed_qty=bed_qty,
                     )
                 )
             date += relativedelta(days=1)
@@ -938,13 +939,12 @@ class StayRefectory(models.Model):
     _rec_name = "display_name"
 
     sequence = fields.Integer(default=10)
-    code = fields.Char(string="Code", size=10)
-    name = fields.Char(string="Name", required=True)
-    capacity = fields.Integer(string="Capacity")
+    code = fields.Char(size=10)
+    name = fields.Char(required=True)
+    capacity = fields.Integer()
     active = fields.Boolean(default=True)
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         ondelete="cascade",
         required=True,
         default=lambda self: self.env.company,
@@ -985,11 +985,10 @@ class StayRoom(models.Model):
     _order = "sequence, id"
     _check_company_auto = True
 
-    code = fields.Char(string="Code", size=10, copy=False)
-    name = fields.Char(string="Name", required=True, copy=False)
+    code = fields.Char(size=10, copy=False)
+    name = fields.Char(required=True, copy=False)
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         ondelete="cascade",
         required=True,
         default=lambda self: self.env.company,
@@ -997,14 +996,16 @@ class StayRoom(models.Model):
     sequence = fields.Integer(default=10)
     group_id = fields.Many2one(
         "stay.group",
-        string="Group",
         check_company=True,
         domain="[('company_id', '=', company_id)]",
     )
     user_id = fields.Many2one(related="group_id.user_id", store=True, readonly=True)
     bed_qty = fields.Integer(string="Number of beds", default=1)
     allow_simultaneous = fields.Boolean(
-        string="Allow simultaneous",
+        compute="_compute_allow_simultaneous",
+        store=True,
+        precompute=True,
+        readonly=False,
         help="This option applies for rooms where bed quantity > 1. You "
         "should enable this option if you allow to have several stays "
         "at the same time in the room.",
@@ -1012,7 +1013,6 @@ class StayRoom(models.Model):
     active = fields.Boolean(default=True)
     notes = fields.Text()
     to_clean = fields.Char(
-        string="To Clean",
         help="When the field has a value, it means the room must be cleaned "
         "(when a stay is terminated, this field is auto-set with the "
         "stay description). When the room is cleaned, the field is emptied.",
@@ -1043,10 +1043,11 @@ class StayRoom(models.Model):
                     % room.display_name
                 )
 
-    @api.onchange("allow_simultaneous", "bed_qty")
-    def room_config_change(self):
-        if self.allow_simultaneous and self.bed_qty <= 1:
-            self.allow_simultaneous = False
+    @api.depends("bed_qty")
+    def _compute_allow_simultaneous(self):
+        for room in self:
+            if room.bed_qty <= 1:
+                room.allow_simultaneous = False
 
     @api.depends("name", "code")
     def name_get(self):
@@ -1105,52 +1106,32 @@ class StayGroup(models.Model):
         )
     ]
 
+    def _mail_template_get_stays(self):
+        self.ensure_one()
+        today = fields.Date.context_today(self)
+        stays = self.env["stay.stay"].search(
+            [
+                ("arrival_date", "=", today),
+                ("group_id", "=", self.id),
+                ("state", "not in", ("draft", "cancel")),
+            ],
+            order="partner_name",
+        )
+        return stays
+
+    def _mail_template_partner_to(self):
+        self.ensure_one()
+        return ",".join([str(user.partner_id.id) for user in self.notify_user_ids])
+
     @api.model
     def _stay_notify(self):
         logger.info("Start stay arrival notify cron")
         today = fields.Date.context_today(self)
-        sso = self.env["stay.stay"]
-        fields_get_time = dict(
-            sso.fields_get("arrival_time", "selection")["arrival_time"]["selection"]
-        )
         for group in self.search([("notify_user_ids", "!=", False)]):
-            stays = sso.search(
-                [
-                    ("arrival_date", "=", today),
-                    ("group_id", "=", group.id),
-                ],
-                order="partner_name",
-            )
-            if stays:
-                stay_list = []
-                for stay in stays:
-                    stay_list.append(
-                        {
-                            "partner_name": stay.partner_name,
-                            "guest_qty": stay.guest_qty,
-                            "arrival_time": fields_get_time[stay.arrival_time],
-                            "rooms": stay.rooms_display_name,
-                            "departure_date": stay.departure_date,
-                            "departure_time": fields_get_time[stay.departure_time],
-                        }
-                    )
-                email_to_list = ",".join(
-                    [u.email for u in group.notify_user_ids if u.email]
-                )
-                email_from = (
-                    self.company_id and self.company_id.email or self.env.user.email
-                )
-                self.env.ref("stay.stay_notify").with_context(
-                    stay_list=stay_list,
-                    date=today,
-                    email_to_list=email_to_list,
-                    email_from=email_from,
-                ).send_mail(group.id)
-                logger.info(
-                    "Stay notification mail sent for group %s", group.display_name
-                )
-            else:
-                logger.info("No arrivals on %s for group %s", today, group.display_name)
+            self.env.ref("stay.stay_notify").with_context(
+                today=today,
+            ).send_mail(group.id)
+            logger.info("Stay notification mail sent for group %s", group.display_name)
         logger.info("End stay arrival notify cron")
 
 
@@ -1161,18 +1142,13 @@ class StayLine(models.Model):
     _order = "date"
     _check_company_auto = True
 
-    stay_id = fields.Many2one(
-        "stay.stay", string="Stay", check_company=True, ondelete="cascade"
-    )
+    stay_id = fields.Many2one("stay.stay", check_company=True, ondelete="cascade")
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
     )
-    date = fields.Date(
-        string="Date", required=True, default=fields.Date.context_today, index=True
-    )
+    date = fields.Date(required=True, default=fields.Date.context_today, index=True)
     breakfast_qty = fields.Integer(string="Breakfast")
     lunch_qty = fields.Integer(string="Lunches")
     dinner_qty = fields.Integer(string="Dinners")
@@ -1182,10 +1158,16 @@ class StayLine(models.Model):
         string="Guest",
         help="If guest is anonymous, leave this field empty.",
     )
-    partner_name = fields.Text("Guest Names", required=True)
+    partner_name = fields.Text(
+        string="Guest Names",
+        compute="_compute_partner_name",
+        required=True,
+        store=True,
+        precompute=True,
+        readonly=False,
+    )
     refectory_id = fields.Many2one(
         "stay.refectory",
-        string="Refectory",
         check_company=True,
         default=lambda self: self.env.company.default_refectory_id,
     )
@@ -1200,8 +1182,11 @@ class StayLine(models.Model):
                 line.lunch_qty or line.dinner_qty or line.breakfast_qty
             ) and not line.refectory_id:
                 raise ValidationError(
-                    _("Missing refectory for guest '%s' on %s.")
-                    % (line.partner_name, format_date(self.env, line.date))
+                    _(
+                        "Missing refectory for guest '%(guest)s' on %(date)s.",
+                        guest=line.partner_name,
+                        date=format_date(self.env, line.date),
+                    )
                 )
 
     _sql_constraints = [
@@ -1222,18 +1207,13 @@ class StayLine(models.Model):
         ),
     ]
 
-    @api.onchange("partner_id")
-    def partner_id_change(self):
-        if self.partner_id:
-            partner = self.partner_id
-            partner_name = partner.name
-            if partner.title and not partner.is_company:
-                partner_lg = partner
-                if partner.lang:
-                    partner_lg = partner.with_context(lang=partner.lang)
-                title = partner_lg.title.shortcut or partner_lg.title.name
-                partner_name = "%s %s" % (title, partner_name)
-            self.partner_name = partner_name
+    @api.depends("partner_id")
+    def _compute_partner_name(self):
+        for line in self:
+            partner_name = False
+            if line.partner_id:
+                partner_name = line.partner_id._stay_get_partner_name()
+            line.partner_name = partner_name
 
 
 class StayDateLabel(models.Model):
