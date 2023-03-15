@@ -2,17 +2,118 @@
 # @author: Alexis de Lattre <alexis.delattre@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo.tests.common import TransactionCase
+import time
+
+from odoo.tests.common import SavepointCase
 
 
-class TestDonationMass(TransactionCase):
+class TestDonationMass(SavepointCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+        cls.bank_journal = cls.env["account.journal"].create(
+            {
+                "type": "bank",
+                "name": "test bank journal",
+            }
+        )
+        cls.payment_mode = cls.env["account.payment.mode"].create(
+            {
+                "name": "test_payment_mode_donation_mass",
+                "donation": True,
+                "bank_account_link": "fixed",
+                "fixed_journal_id": cls.bank_journal.id,
+                "payment_method_id": cls.env.ref(
+                    "account.account_payment_method_manual_in"
+                ).id,
+            }
+        )
+        today = time.strftime("%Y-%m-%d")
+        cls.ddo = cls.env["donation.donation"]
+        cls.donor1 = cls.env.ref("donation_base.donor1")
+        cls.donor2 = cls.env.ref("donation_base.donor2")
+        cls.donor3 = cls.env.ref("donation_base.donor3")
+
+        cls.don1 = cls.ddo.create(
+            {
+                "check_total": 17,
+                "partner_id": cls.donor1.id,
+                "donation_date": today,
+                "payment_mode_id": cls.payment_mode.id,
+                "tax_receipt_option": "each",
+                "payment_ref": "CHQ CA 229026",
+                "line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": cls.env.ref(
+                                "mass.product_product_mass_simple"
+                            ).id,
+                            "quantity": 1,
+                            "unit_price": 17,
+                            "intention": "For my grand-mother",
+                        },
+                    )
+                ],
+            }
+        )
+        cls.don2 = cls.ddo.create(
+            {
+                "check_total": 340,
+                "partner_id": cls.donor2.id,
+                "donation_date": today,
+                "payment_mode_id": cls.payment_mode.id,
+                "tax_receipt_option": "each",
+                "payment_ref": "CHQ BP 9087123",
+                "line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": cls.env.ref(
+                                "mass.product_product_mass_novena"
+                            ).id,
+                            "quantity": 2,
+                            "unit_price": 170,
+                            "intention": "For my father",
+                        },
+                    )
+                ],
+            }
+        )
+        cls.don3 = cls.ddo.create(
+            {
+                "check_total": 540,
+                "partner_id": cls.donor3.id,
+                "donation_date": today,
+                "payment_mode_id": cls.payment_mode.id,
+                "tax_receipt_option": "each",
+                "payment_ref": "CHQ HSBC 98302217",
+                "line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": cls.env.ref(
+                                "mass.product_product_mass_gregorian"
+                            ).id,
+                            "quantity": 1,
+                            "unit_price": 540,
+                            "intention": "For my grand-father",
+                            "celebrant_id": cls.env.ref("mass.father_odilon").id,
+                        },
+                    )
+                ],
+            }
+        )
+
     def test_donation_mass(self):
-        ddo = self.env["donation.donation"]
-        donations = ddo
-        for i in range(3):
-            donations += self.env.ref("donation_mass.donation_mass%d" % (i + 1))
-        donations.validate()
-        for donation in donations:
+        for donation in [self.don1, self.don2, self.don3]:
+            self.assertEqual(donation.state, "draft")
+            donation.validate()
+            self.assertEqual(donation.state, "done")
             self.assertEqual(len(donation.line_ids[0].mass_request_ids), 1)
             mass_req = donation.line_ids[0].mass_request_ids
             dline = donation.line_ids[0]
