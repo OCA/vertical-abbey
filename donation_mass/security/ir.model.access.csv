@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mass_request_donation_user,Read access on mass.request to Donation Viewer,mass.model_mass_request,donation.group_donation_viewer,1,0,0,0
+access_mass_line_read_donation_user,Read access on mass.line to Donation User,mass.model_mass_line,donation.group_donation_viewer,1,0,0,0

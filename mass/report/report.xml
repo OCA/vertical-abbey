@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2014-2021 Barroux Abbey (www.barroux.org)
+  Copyright 2014-2021 Akretion France (www.akretion.com)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+
+        <record id="report_mass_request_transfer" model="ir.actions.report">
+            <field name="name">Mass Request Transfer</field>
+            <field name="model">mass.request.transfer</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">mass.report_massrequesttransfer</field>
+            <field name="report_file">mass.report_massrequesttransfer</field>
+            <field
+            name="print_report_name"
+        >'mass_request_transfer-%s%s' % (object.number or '-', object.state == 'draft' and '-draft' or '')</field>
+            <field name="binding_model_id" ref="model_mass_request_transfer" />
+        </record>
+
+        <record id="report_mass_line" model="ir.actions.report">
+            <field name="name">Masses Journal</field>
+            <field name="model">mass.line</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">mass.report_massline</field>
+            <field name="report_file">mass.report_massline</field>
+            <field name="binding_model_id" ref="model_mass_line" />
+        </record>
+
+
+</odoo>

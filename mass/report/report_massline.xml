@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2014-2021 Barroux Abbey (www.barroux.org)
+  Copyright 2014-2021 Akretion France (www.akretion.com)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+
+<template id="report_massline">
+
+<t t-call="web.html_container">
+<t t-call="web.internal_layout">
+
+<div class="page">
+
+<h1>Mass Journal</h1>
+
+    <table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>Celebration Date</th>
+            <th>Mass Request Type</th>
+            <th>Celebrant</th>
+            <th>Donor</th>
+            <th>Intention</th>
+        </tr>
+    </thead>
+    <tbody>
+
+    <t t-foreach="docs" t-as="o">
+
+        <tr>
+            <td><span t-field="o.date" /></td>
+            <td><span t-field="o.type_id.name" /></td>
+            <td><span t-field="o.celebrant_id.name" /></td>
+            <td><span t-field="o.partner_id.name" /></td>
+            <td><span t-field="o.intention" /></td>
+        </tr>
+
+    </t>
+
+    </tbody>
+    </table>
+
+</div>
+
+</t>
+</t>
+
+</template>
+
+</odoo>
