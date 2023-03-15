@@ -87,12 +87,13 @@ class DonationStayCreate(models.TransientModel):
         donation.message_post(
             body=_(
                 "Donation created from stay "
-                "<a href=# data-oe-model=stay.stay data-oe-id=%d>%s</a>."
+                "<a href=# data-oe-model=stay.stay data-oe-id=%(stay_id)s>%(stay)s</a>.",
+                stay_id=self.stay_id.id,
+                stay=self.stay_id.display_name,
             )
-            % (self.stay_id.id, self.stay_id.name)
         )
         self.stay_id.write({"donation_id": donation.id})
-        action = self.env.ref("donation.donation_action").sudo().read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("donation.donation_action")
         action.update(
             {
                 "views": False,

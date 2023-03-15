@@ -24,7 +24,10 @@
                         class='row mt16 o_settings_container'
                         name="stay_setting_container"
                     >
-                    <div class='col-12 col-lg-12 o_setting_box' id="stay_setting">
+                    <div
+                            class='col-12 col-lg-12 o_setting_box'
+                            id="stay_setting_refectory"
+                        >
                         <div class="o_setting_left_pane" />
                         <div class="o_setting_right_pane">
                             <div class="row">
@@ -34,9 +37,15 @@
                                     />
                                 <field name="stay_default_refectory_id" />
                             </div>
+                        </div>
+                        <div class="o_setting_left_pane">
+                            <div class="row">
+                                <field name="group_stay_breakfast" />
+                            </div>
+                        </div>
+                        <div class="o_setting_right_pane">
                             <div class="row">
                                 <label for="group_stay_breakfast" class="col-md-3" />
-                                <field name="group_stay_breakfast" />
                             </div>
                         </div>
                     </div>

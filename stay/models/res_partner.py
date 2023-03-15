@@ -26,3 +26,14 @@ class ResPartner(models.Model):
         readonly=True,
         compute_sudo=True,
     )
+
+    def _stay_get_partner_name(self):
+        self.ensure_one()
+        partner_name = self.name
+        if self.title and not self.is_company:
+            partner_lg = self
+            if self.lang:
+                partner_lg = self.with_context(lang=self.lang)
+            title = partner_lg.title.shortcut or partner_lg.title.name
+            partner_name = "%s %s" % (title, partner_name)
+        return partner_name

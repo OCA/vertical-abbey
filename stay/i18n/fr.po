@@ -1570,12 +1570,6 @@ msgid "Stays - %s"
 msgstr "Séjours - %s"
 
 #. module: stay
-#: code:addons/stay/wizard/stay_multi_duplicate.py:0
-#, python-format
-msgid "The end date (%s) must be after the start_date (%s)!"
-msgstr "La date de fin ne peut pas etre avant la date de début!"
-
-#. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_room_assign_guest_qty_positive
 #: model:ir.model.constraint,message:stay.constraint_stay_stay_guest_qty_positive
 msgid "The guest quantity must be positive."

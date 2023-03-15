@@ -12,7 +12,7 @@
     <field name="name">stay.form</field>
     <field name="model">stay.stay</field>
     <field name="arch" type="xml">
-        <form string="Stay">
+        <form>
             <header>
                 <button
                         name="draft2confirm"
@@ -71,7 +71,12 @@
                 </div>
                 <group name="main">
                     <group name="left">
-                        <field name="company_id" groups="base.group_multi_company" />
+                        <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                                options="{'no_create': True}"
+                            />
+                        <field name="company_id" invisible="1" />
                         <field
                                 name="partner_id"
                                 attrs="{'invisible': [('construction', '=', True)]}"
@@ -97,7 +102,7 @@
                         <field name="departure_time" />
                         <field name="departure_datetime" invisible="1" />
                         <field name="departure_note" />
-                        <field name="group_id" />
+                        <field name="group_id" options="{'no_create': True}" />
                         <field
                                 name="no_meals"
                                 attrs="{'invisible': ['|', ('construction', '=', True), ('state', '!=', 'draft')]}"
@@ -106,6 +111,7 @@
                         <field
                                 name="refectory_id"
                                 attrs="{'invisible': ['|', '|', ('no_meals', '=', True), ('construction', '=', True), ('state', '!=', 'draft')]}"
+                                options="{'no_create': True}"
                             />
                     </group>
                 </group>
@@ -115,9 +121,10 @@
                             name="room_assign_ids"
                             nolabel="1"
                             context="{'form_view_ref': 'stay.stay_room_assign_form'}"
+                            colspan="2"
                         >
                         <tree editable="bottom">
-                            <field name="room_id" />
+                            <field name="room_id" options="{'no_create': True}" />
                             <field name="guest_qty" />
                             <field name="room_domain_ids" invisible="1" />
                         </tree>
@@ -127,7 +134,7 @@
                         name="lines"
                         attrs="{'invisible': ['|', ('construction', '=', True), ('state', 'in', ('draft', 'cancel'))]}"
                     >
-                    <field name="line_ids" nolabel="1" />
+                    <field name="line_ids" nolabel="1" colspan="2" />
                 </group>
                 <group name="notes">
                     <field name="notes" />
@@ -156,7 +163,7 @@
                         states="current"
                     />
             </header>
-            <field name="name" />
+            <field name="name" decoration-bf="1" />
             <field name="group_id" optional="show" />
             <field
                     name="company_id"
@@ -307,7 +314,7 @@
     <field name="name">stay.graph</field>
     <field name="model">stay.stay</field>
     <field name="arch" type="xml">
-        <graph string="Stays">
+        <graph>
             <field name="arrival_date" interval="month" />
             <field name="guest_qty" type="measure" />
         </graph>
@@ -318,7 +325,7 @@
     <field name="name">stay.graph</field>
     <field name="model">stay.stay</field>
     <field name="arch" type="xml">
-        <pivot string="Stays">
+        <pivot>
             <field name="arrival_date" interval="month" type="row" />
             <field name="guest_qty" type="measure" />
         </pivot>
@@ -332,7 +339,6 @@ from the calendar view, the dates are not set -->
     <field name="model">stay.stay</field>
     <field name="arch" type="xml">
         <calendar
-                string="Stays"
                 color="group_id"
                 date_start="arrival_datetime"
                 date_stop="departure_datetime"
@@ -614,7 +620,7 @@ So I use the form view below by default -->
     <field name="name">stay.refectory.form</field>
     <field name="model">stay.refectory</field>
     <field name="arch" type="xml">
-        <form string="Refectory">
+        <form>
             <sheet>
             <widget
                         name="web_ribbon"
@@ -625,8 +631,8 @@ So I use the form view below by default -->
             <group name="main">
                 <field name="name" />
                 <field name="code" />
-                <field name="company_id" groups="base.group_multi_company" />
                 <field name="capacity" />
+                <field name="company_id" groups="base.group_multi_company" />
                 <field name="active" invisible="1" />
             </group>
     </sheet>
@@ -638,7 +644,7 @@ So I use the form view below by default -->
     <field name="name">stay.refectory.tree</field>
     <field name="model">stay.refectory</field>
     <field name="arch" type="xml">
-        <tree string="Refectories">
+        <tree>
             <field name="sequence" widget="handle" />
             <field name="name" />
             <field name="code" optional="show" />
@@ -688,7 +694,7 @@ So I use the form view below by default -->
     <field name="name">stay.room.form</field>
     <field name="model">stay.room</field>
     <field name="arch" type="xml">
-        <form string="Room">
+        <form>
             <header>
                 <button
                         name="mark_as_cleaned"
@@ -721,6 +727,7 @@ So I use the form view below by default -->
                 <field name="name" />
                 <field name="code" />
                 <field name="company_id" groups="base.group_multi_company" />
+                <field name="company_id" invisible="1" />
                 <field name="group_id" />
                 <field name="bed_qty" />
                 <field
@@ -740,7 +747,7 @@ So I use the form view below by default -->
     <field name="name">stay.room.tree</field>
     <field name="model">stay.room</field>
     <field name="arch" type="xml">
-        <tree string="Rooms">
+        <tree>
             <header>
                 <button name="mark_as_cleaned" type="object" string="Mark as Cleaned" />
             </header>
@@ -835,16 +842,17 @@ So I use the form view below by default -->
     <field name="name">stay.group.form</field>
     <field name="model">stay.group</field>
     <field name="arch" type="xml">
-            <form string="Group">
+        <form>
             <sheet>
-            <group name="main">
-                <field name="name" />
-                <field name="company_id" groups="base.group_multi_company" />
-                <field name="default_refectory_id" />
-                <field name="user_id" />
-                <field name="notify_user_ids" widget="many2many_tags" />
-            </group>
-    </sheet>
+                <group name="main">
+                    <field name="name" />
+                    <field name="company_id" groups="base.group_multi_company" />
+                    <field name="company_id" invisible="1" />
+                    <field name="default_refectory_id" />
+                    <field name="user_id" />
+                    <field name="notify_user_ids" widget="many2many_tags" />
+                </group>
+            </sheet>
         </form>
     </field>
 </record>
@@ -853,7 +861,7 @@ So I use the form view below by default -->
     <field name="name">stay.group.tree</field>
     <field name="model">stay.group</field>
     <field name="arch" type="xml">
-        <tree string="Groups">
+        <tree>
             <field name="sequence" widget="handle" />
             <field name="name" />
             <field name="default_refectory_id" optional="show" />
@@ -905,7 +913,7 @@ So I use the form view below by default -->
     <field name="name">stay.line.form</field>
     <field name="model">stay.line</field>
     <field name="arch" type="xml">
-        <form string="Stay Line">
+        <form>
             <group name="main">
                 <field name="date" />
                 <field
@@ -923,6 +931,7 @@ So I use the form view below by default -->
                 <field name="group_id" />
                 <field name="user_id" />
                 <field name="company_id" groups="base.group_multi_company" />
+                <field name="company_id" invisible="1" />
             </group>
         </form>
     </field>
@@ -932,7 +941,7 @@ So I use the form view below by default -->
     <field name="name">stay.line.tree</field>
     <field name="model">stay.line</field>
     <field name="arch" type="xml">
-        <tree string="Stay Lines" editable="bottom">
+        <tree editable="bottom">
             <field name="stay_id" invisible="not context.get('stay_line_main_view')" />
             <field name="date" />
             <field
@@ -958,11 +967,7 @@ So I use the form view below by default -->
                     invisible="not context.get('stay_line_main_view')"
                     optional="show"
                 />
-            <field
-                    name="company_id"
-                    groups="base.group_multi_company"
-                    optional="hide"
-                />
+            <field name="company_id" optional="hide" />
         </tree>
     </field>
 </record>
@@ -1025,7 +1030,7 @@ So I use the form view below by default -->
     <field name="name">stay.line.graph</field>
     <field name="model">stay.line</field>
     <field name="arch" type="xml">
-        <graph string="Stay Lines">
+        <graph>
             <field name="date" interval="month" />
             <field name="lunch_qty" type="measure" />
             <field name="dinner_qty" type="measure" />
@@ -1038,7 +1043,7 @@ So I use the form view below by default -->
     <field name="name">stay.line.pivot</field>
     <field name="model">stay.line</field>
     <field name="arch" type="xml">
-        <pivot string="Stay Lines">
+        <pivot>
             <field name="date" interval="month" type="row" />
             <field name="lunch_qty" type="measure" />
             <field name="dinner_qty" type="measure" />
@@ -1077,7 +1082,7 @@ So I use the form view below by default -->
     <field name="name">stay.date.label.form</field>
     <field name="model">stay.date.label</field>
     <field name="arch" type="xml">
-        <form string="Date Label">
+        <form>
             <group name="main">
                 <field name="date" />
                 <field name="name" />
@@ -1090,7 +1095,7 @@ So I use the form view below by default -->
     <field name="name">stay.date.label.tree</field>
     <field name="model">stay.date.label</field>
     <field name="arch" type="xml">
-        <tree string="Date Labels">
+        <tree>
             <field name="date" />
             <field name="name" />
         </tree>
@@ -1101,7 +1106,7 @@ So I use the form view below by default -->
     <field name="name">stay.date.label.calendar</field>
     <field name="model">stay.date.label</field>
     <field name="arch" type="xml">
-        <calendar string="Date Labels" date_start="date" date_stop="date" mode="month">
+        <calendar date_start="date" date_stop="date" mode="month">
             <field name="name" />
         </calendar>
     </field>

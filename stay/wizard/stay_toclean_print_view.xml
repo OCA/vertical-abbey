@@ -17,8 +17,8 @@
             </group>
             <footer>
                 <button
-                        type="object"
-                        name="print_report"
+                        type="action"
+                        name="%(stay.report_stay_toclean)d"
                         string="Print"
                         class="btn-primary"
                     />

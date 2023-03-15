@@ -6,7 +6,7 @@
 
 {
     "name": "Stay",
-    "version": "14.0.1.0.0",
+    "version": "16.0.1.0.0",
     "category": "Lodging",
     "license": "AGPL-3",
     "summary": "Simple management of stays and meals",
@@ -17,6 +17,7 @@
     "external_dependencies": {"python": ["xlsxwriter"]},
     "data": [
         "security/stay_security.xml",
+        "report/report.xml",
         "views/stay_menu.xml",
         "wizard/res_config_settings_view.xml",
         "wizard/stay_journal_print_view.xml",
@@ -30,7 +31,6 @@
         "views/stay_iframe.xml",
         "data/sequence.xml",
         "security/ir.model.access.csv",
-        "report/report.xml",
         "report/report_stay_journal.xml",
         "views/res_partner.xml",
         "data/cron.xml",
