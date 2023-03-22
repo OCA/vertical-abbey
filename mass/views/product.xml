@@ -12,16 +12,10 @@
     <field name="model">product.template</field>
     <field name="inherit_id" ref="product.product_template_form_view" />
     <field name="arch" type="xml">
-        <div name="options" position="inside">
-            <div name="mass">
-                <field name="mass" />
-                <label for="mass" />
-            </div>
-        </div>
-        <field name="type" position="after">
+        <field name="detailed_type" position="after">
             <field
                     name="mass_request_type_id"
-                    attrs="{'invisible': [('mass', '=', False)], 'required': [('mass', '=', True)]}"
+                    attrs="{'invisible': [('detailed_type', '!=', 'donation_mass')], 'required': [('detailed_type', '=', 'donation_mass')]}"
                     widget="selection"
                 />
         </field>
@@ -33,8 +27,12 @@
     <field name="model">product.template</field>
     <field name="inherit_id" ref="product.product_template_search_view" />
     <field name="arch" type="xml">
-        <filter name="filter_to_purchase" position="after">
-            <filter name="filter_mass" string="Mass" domain="[('mass', '=', 1)]" />
+        <filter name="consumable" position="after">
+            <filter
+                    name="filter_mass"
+                    string="Mass"
+                    domain="[('detailed_type', '=', 'donation_mass')]"
+                />
         </filter>
     </field>
 </record>
@@ -43,7 +41,9 @@
     <field name="name">Products</field>
     <field name="res_model">product.template</field>
     <field name="view_mode">kanban,tree,form</field>
-    <field name="context">{'search_default_filter_mass': 1, 'default_mass': 1}</field>
+    <field
+            name="context"
+        >{'search_default_filter_mass': 1, 'default_detailed_type': 'donation_mass'}</field>
 </record>
 
 <menuitem

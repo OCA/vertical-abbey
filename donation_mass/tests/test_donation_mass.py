@@ -4,18 +4,43 @@
 
 import time
 
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 
-class TestDonationMass(SavepointCase):
+class TestDonationMass(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+        cls.company = cls.env.ref("base.main_company")
+        cls.journal = cls.env["account.journal"].create(
+            {
+                "type": "general",
+                "code": "ZMASS",
+                "name": "Mass Validation",
+                "company_id": cls.company.id,
+            }
+        )
+        cls.stock_account = cls.env["account.account"].create(
+            {
+                "code": "MASSTOCK",
+                "name": "Mass Stock test",
+                "company_id": cls.company.id,
+                "account_type": "asset_current",
+                "reconcile": True,
+            }
+        )
+        cls.company.write(
+            {
+                "mass_validation_journal_id": cls.journal.id,
+                "mass_stock_account_id": cls.stock_account.id,
+            }
+        )
         cls.bank_journal = cls.env["account.journal"].create(
             {
                 "type": "bank",
                 "name": "test bank journal",
+                "company_id": cls.company.id,
             }
         )
         cls.payment_mode = cls.env["account.payment.mode"].create(
@@ -27,6 +52,7 @@ class TestDonationMass(SavepointCase):
                 "payment_method_id": cls.env.ref(
                     "account.account_payment_method_manual_in"
                 ).id,
+                "company_id": cls.company.id,
             }
         )
         today = time.strftime("%Y-%m-%d")
@@ -43,6 +69,7 @@ class TestDonationMass(SavepointCase):
                 "payment_mode_id": cls.payment_mode.id,
                 "tax_receipt_option": "each",
                 "payment_ref": "CHQ CA 229026",
+                "company_id": cls.company.id,
                 "line_ids": [
                     (
                         0,
@@ -67,6 +94,7 @@ class TestDonationMass(SavepointCase):
                 "payment_mode_id": cls.payment_mode.id,
                 "tax_receipt_option": "each",
                 "payment_ref": "CHQ BP 9087123",
+                "company_id": cls.company.id,
                 "line_ids": [
                     (
                         0,
@@ -91,6 +119,7 @@ class TestDonationMass(SavepointCase):
                 "payment_mode_id": cls.payment_mode.id,
                 "tax_receipt_option": "each",
                 "payment_ref": "CHQ HSBC 98302217",
+                "company_id": cls.company.id,
                 "line_ids": [
                     (
                         0,

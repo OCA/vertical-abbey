@@ -12,7 +12,7 @@
     <field name="name">mass.journal.validate.form</field>
     <field name="model">mass.journal.validate</field>
     <field name="arch" type="xml">
-        <form string="Validate Masses Journal">
+        <form>
             <group name="main">
                 <field name="company_id" groups="base.group_multi_company" />
                 <field name="journal_date" />
@@ -22,9 +22,9 @@
                         name="validate_journal"
                         type="object"
                         string="Validate Journal"
-                        class="oe_highlight"
+                        class="btn-primary"
                     />
-                <button special="cancel" string="Cancel" class="oe_link" />
+                <button special="cancel" string="Cancel" />
             </footer>
         </form>
     </field>

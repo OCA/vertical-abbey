@@ -100,30 +100,6 @@ msgid "Cannot delete mass line dated %s for %s because it is in Done state."
 msgstr "Cannot delete mass line dated %s for %s because it is in Done state."
 
 #. module: mass
-#: code:addons/mass/models/mass.py:0
-#, fuzzy, python-format
-msgid "Cannot delete mass request '%s' because it is not in Waiting state."
-msgstr ""
-"Cannot delete mass request dated %s for %s because it is not in Waiting "
-"state."
-
-#. module: mass
-#: code:addons/mass/models/mass.py:0
-#, fuzzy, python-format
-msgid ""
-"Cannot delete mass request transfer dated %s for %s because it is in Done "
-"state."
-msgstr ""
-"Cannot delete mass request transfer dated %s for %s because it is Done state."
-
-#. module: mass
-#: code:addons/mass/models/mass.py:0
-#, fuzzy, python-format
-msgid ""
-"Cannot validate mass request transfer %s because it has no mass requests."
-msgstr "Cannot validate a Mass Request Transfer without Mass Requests."
-
-#. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_line__celebrant_id
 #: model:ir.model.fields,field_description:mass.field_mass_request__celebrant_id
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__celebrant_id

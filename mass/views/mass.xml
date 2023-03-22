@@ -12,7 +12,7 @@
     <field name="name">mass.request.type.form</field>
     <field name="model">mass.request.type</field>
     <field name="arch" type="xml">
-        <form string="Mass Request Type">
+        <form>
             <group name="main">
                 <field name="name" />
                 <field name="code" />
@@ -27,7 +27,7 @@
     <field name="name">mass.request.type.tree</field>
     <field name="model">mass.request.type</field>
     <field name="arch" type="xml">
-        <tree string="Mass Request Type">
+        <tree>
             <field name="name" />
             <field name="code" />
             <field name="quantity" />
@@ -35,6 +35,20 @@
         </tree>
     </field>
 </record>
+
+<record id="mass_request_type_search" model="ir.ui.view">
+    <field name="model">mass.request.type</field>
+    <field name="arch" type="xml">
+        <search>
+            <field
+                    name="name"
+                    filter_domain="['|', ('name', 'ilike', self), ('code', '=ilike', self + '%')]"
+                    string="Name or Code"
+                />
+        </search>
+    </field>
+</record>
+
 
 <record id="mass_request_type_action" model="ir.actions.act_window">
     <field name="name">Mass Request Types</field>
@@ -89,7 +103,7 @@
     <field name="name">religious.community.form</field>
     <field name="model">religious.community</field>
     <field name="arch" type="xml">
-        <form string="Religious Community">
+        <form>
             <widget
                     name="web_ribbon"
                     title="Archived"
@@ -109,7 +123,7 @@
     <field name="name">religious.community.tree</field>
     <field name="model">religious.community</field>
     <field name="arch" type="xml">
-        <tree string="Religious Communities">
+        <tree>
             <field name="name" />
             <field name="long_name" optional="show" />
         </tree>
@@ -120,7 +134,7 @@
     <field name="name">religious.community.search</field>
     <field name="model">religious.community</field>
     <field name="arch" type="xml">
-        <search string="Religious Communities">
+        <search>
             <field
                     name="name"
                     filter_domain="['|', ('name', 'ilike', self), ('long_name', 'ilike', self)]"
@@ -154,7 +168,7 @@
     <field name="name">mass.request.form</field>
     <field name="model">mass.request</field>
     <field name="arch" type="xml">
-        <form string="Mass Request">
+        <form>
             <header>
                 <field name="state" widget="statusbar" />
             </header>
@@ -170,7 +184,7 @@
                         <field name="company_currency_id" invisible="1" />
                     </group>
                     <group name="mass">
-                        <field name="product_id" />
+                        <field name="product_id" options="{'no_create': True}" />
                         <field name="type_id" />
                         <field name="uninterrupted" />
                         <field name="quantity" />
@@ -190,13 +204,16 @@
                             <field name="remaining_offering" />
                             <field name="stock_account_id" />
                             <field
-                                    name="analytic_account_id"
+                                    name="analytic_distribution"
                                     groups="analytic.group_analytic_accounting"
+                                    widget="analytic_distribution"
+                                    options="{'product_field': 'product_id', 'business_domain': 'donation'}"
                                 />
                             <field
                                     name="company_id"
                                     groups="base.group_multi_company"
                                 />
+                            <field name="company_id" invisible="1" />
                         </group>
                     </page>
                 </notebook>
@@ -209,7 +226,7 @@
     <field name="name">mass.request.tree</field>
     <field name="model">mass.request</field>
     <field name="arch" type="xml">
-        <tree string="Mass Requests" multi_edit="1">
+        <tree multi_edit="1">
             <field name="partner_id" />
             <field name="donation_date" optional="show" />
             <field name="request_date" />
@@ -219,6 +236,14 @@
             <field name="intention" optional="hide" />
             <field name="offering" sum="1" optional="show" />
             <field name="unit_offering" optional="hide" />
+            <field name="stock_account_id" optional="hide" />
+            <field
+                    name="analytic_distribution"
+                    groups="analytic.group_analytic_accounting"
+                    widget="analytic_distribution"
+                    options="{'product_field': 'product_id', 'business_domain': 'donation'}"
+                    optional="hide"
+                />
             <field name="mass_quantity" sum="1" />
             <field name="mass_remaining_quantity" sum="1" />
             <field
@@ -228,6 +253,7 @@
                     decoration-warning="state == 'waiting'"
                 />
             <field name="company_currency_id" invisible="1" />
+            <field name="company_id" invisible="1" />
         </tree>
     </field>
 </record>
@@ -236,7 +262,10 @@
     <field name="name">mass.request.search</field>
     <field name="model">mass.request</field>
     <field name="arch" type="xml">
-        <search string="Mass Requests">
+        <search>
+            <field name="partner_id" />
+            <field name="celebrant_id" />
+            <separator />
             <filter
                     name="waiting"
                     string="Waiting"
@@ -253,8 +282,8 @@
                     domain="[('state', '=', 'transfered')]"
                 />
             <filter name="done" string="Done" domain="[('state', '=', 'done')]" />
-            <field name="partner_id" />
-            <field name="celebrant_id" />
+            <separator />
+            <filter string="Donation Date" name="donation_date" date="donation_date" />
             <group string="Group By" name="groupby">
                 <filter
                         name="state_groupby"
@@ -295,7 +324,7 @@
     <field name="name">mass.request.graph</field>
     <field name="model">mass.request</field>
     <field name="arch" type="xml">
-        <graph string="Mass Requests">
+        <graph>
             <field name="quantity" type="measure" />
         </graph>
     </field>
@@ -305,7 +334,7 @@
     <field name="name">mass.request.pivot</field>
     <field name="model">mass.request</field>
     <field name="arch" type="xml">
-        <pivot string="Mass Requests">
+        <pivot>
             <field name="quantity" type="measure" />
         </pivot>
     </field>
@@ -329,7 +358,7 @@
     <field name="name">mass.line.form</field>
     <field name="model">mass.line</field>
     <field name="arch" type="xml">
-        <form string="Mass Line">
+        <form>
             <header>
                 <field name="state" widget="statusbar" />
             </header>
@@ -345,6 +374,7 @@
                             groups="base.group_multi_company"
                             invisible="not context.get('mass_line_main_view')"
                         />
+                    <field name="company_id" invisible="1" />
                     <field name="company_currency_id" invisible="1" />
                     <field
                             name="request_date"
@@ -374,12 +404,7 @@
     <field name="name">mass.line.tree</field>
     <field name="model">mass.line</field>
     <field name="arch" type="xml">
-        <tree
-                string="Mass Lines"
-                decoration-info="state == 'draft'"
-                editable="bottom"
-                multi_edit="1"
-            >
+        <tree decoration-info="state == 'draft'" editable="bottom" multi_edit="1">
             <header>
                 <button
                         name="%(mass.swap_celebrant_action)d"
@@ -427,7 +452,7 @@
     <field name="name">mass.line.search</field>
     <field name="model">mass.line</field>
     <field name="arch" type="xml">
-        <search string="Search Mass Lines">
+        <search>
             <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]" />
             <filter name="done" string="Done" domain="[('state', '=', 'done')]" />
             <field name="date" />
@@ -478,7 +503,7 @@
     <field name="name">mass.line.graph</field>
     <field name="model">mass.line</field>
     <field name="arch" type="xml">
-        <graph string="Mass Lines">
+        <graph>
             <field name="celebrant_id" type="row" />
             <field name="date" type="col" />
         </graph>
@@ -489,7 +514,7 @@
     <field name="name">mass.line.pivot</field>
     <field name="model">mass.line</field>
     <field name="arch" type="xml">
-        <pivot string="Mass Lines">
+        <pivot>
             <field name="celebrant_id" type="row" />
             <field name="date" type="col" />
         </pivot>
@@ -518,7 +543,7 @@
     <field name="name">mass.request.transfer.form</field>
     <field name="model">mass.request.transfer</field>
     <field name="arch" type="xml">
-        <form string="Mass Request Transfer">
+        <form>
             <header>
                 <button
                         name="validate"
@@ -558,9 +583,10 @@
                             string="Select Mass Requests to Transfer"
                             attrs="{'invisible': [('state', '=', 'done')]}"
                             context="{'default_transfer_id': active_id}"
+                            colspan="2"
                         />
                     <newline />
-                    <field name="mass_request_ids" nolabel="1" />
+                    <field name="mass_request_ids" nolabel="1" colspan="2" />
                 </group>
             </sheet>
         </form>
@@ -572,13 +598,18 @@
     <field name="name">mass.request.transfer.tree</field>
     <field name="model">mass.request.transfer</field>
     <field name="arch" type="xml">
-        <tree string="Masses Requests Transfer" decoration-info="state == 'draft'">
-            <field name="number" />
+        <tree>
+            <field name="number" decoration-bf="1" />
             <field name="celebrant_id" />
             <field name="transfer_date" />
             <field name="amount_total" />
             <field name="mass_total" />
-            <field name="state" />
+            <field
+                    name="state"
+                    widget="badge"
+                    decoration-info="state == 'draft'"
+                    decoration-success="state == 'done'"
+                />
         </tree>
     </field>
 </record>
@@ -587,7 +618,7 @@
     <field name="name">mass.request.transfer.search</field>
     <field name="model">mass.request.transfer</field>
     <field name="arch" type="xml">
-        <search string="Masses Requests Transfer">
+        <search>
             <field name="celebrant_id" />
             <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]" />
             <filter name="done" string="Done" domain="[('state', '=', 'done')]" />
@@ -611,7 +642,7 @@
     <field name="name">mass.request.transfer.graph</field>
     <field name="model">mass.request.transfer</field>
     <field name="arch" type="xml">
-        <graph string="Masses Requests Transfer">
+        <graph>
             <field name="mass_total" type="measure" />
             <field name="amount_total" type="measure" />
         </graph>
@@ -622,7 +653,7 @@
     <field name="name">mass.request.transfer.pivot</field>
     <field name="model">mass.request.transfer</field>
     <field name="arch" type="xml">
-        <pivot string="Masses Requests Transfer">
+        <pivot>
             <field name="mass_total" type="measure" />
             <field name="amount_total" type="measure" />
         </pivot>

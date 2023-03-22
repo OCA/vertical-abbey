@@ -35,13 +35,18 @@
     <field name="inherit_id" ref="donation.donation_line_tree" />
     <field name="arch" type="xml">
         <field name="in_kind" position="after">
-            <field name="mass" invisible="1" />
-            <field name="celebrant_id" attrs="{'readonly': [('mass', '=', False)]}" />
+            <field
+                    name="celebrant_id"
+                    attrs="{'invisible': [('product_detailed_type', '!=', 'donation_mass')]}"
+                />
             <field
                     name="mass_request_date"
-                    attrs="{'readonly': [('mass', '=', False)]}"
+                    attrs="{'invisible': [('product_detailed_type', '!=', 'donation_mass')]}"
                 />
-            <field name="intention" attrs="{'readonly': [('mass', '=', False)]}" />
+            <field
+                    name="intention"
+                    attrs="{'invisible': [('product_detailed_type', '!=', 'donation_mass')]}"
+                />
         </field>
     </field>
 </record>
@@ -52,13 +57,18 @@
     <field name="inherit_id" ref="donation.donation_line_form" />
     <field name="arch" type="xml">
         <field name="amount" position="after">
-            <field name="mass" invisible="1" />
-            <field name="celebrant_id" attrs="{'invisible': [('mass', '=', False)]}" />
+            <field
+                    name="celebrant_id"
+                    attrs="{'invisible': [('product_detailed_type', '!=', 'donation_mass')]}"
+                />
             <field
                     name="mass_request_date"
-                    attrs="{'invisible': [('mass', '=', False)]}"
+                    attrs="{'invisible': [('product_detailed_type', '!=', 'donation_mass')]}"
                 />
-            <field name="intention" attrs="{'invisible': [('mass', '=', False)]}" />
+            <field
+                    name="intention"
+                    attrs="{'invisible': [('product_detailed_type', '!=', 'donation_mass')]}"
+                />
         </field>
     </field>
 </record>

@@ -61,66 +61,21 @@
         <field name="country_id" ref="base.fr" />
 </record>
 
-<record id="mass_stock_account" model="account.account">
-    <field name="code">MASSTOCK</field>
-    <field name="name">Mass Stock</field>
-    <field name="company_id" ref="base.main_company" />
-    <field name="reconcile" eval="True" />
-    <field name="user_type_id" ref="account.data_account_type_current_assets" />
-</record>
-
 <record id="base.main_company" model="res.company">
     <field
             name="mass_validation_journal_id"
             model="account.journal"
             search="[('type', '=', 'sale'), ('company_id', '=', ref('base.main_company'))]"
         />
-    <field name="mass_stock_account_id" ref="mass_stock_account" />
+    <field
+            name="mass_stock_account_id"
+            search="[('reconcile', '=', True), ('account_type', '=', 'asset_current'), ('company_id', '=', ref('base.main_company'))]"
+        />
 </record>
 
-<record id="mass_req1" model="mass.request">
-    <field name="partner_id" ref="partner1" />
-    <field name="donation_date">2014-06-14</field>
-    <field name="product_id" ref="product_product_mass_simple" />
-    <field name="offering">17.0</field>
-    <field name="company_id" ref="base.main_company" />
-    <field name="quantity">1</field>
-    <field name="intention">for my childrens</field>
-    <field name="stock_account_id" ref="mass_stock_account" />
-</record>
-
-<record id="mass_req2" model="mass.request">
-    <field name="partner_id" ref="partner2" />
-    <field name="donation_date">2014-05-29</field>
-    <field name="product_id" ref="product_product_mass_novena" />
-    <field name="offering">170.0</field>
-    <field name="company_id" ref="base.main_company" />
-    <field name="quantity">1</field>
-    <field name="intention">for my Grand-Father</field>
-    <field name="stock_account_id" ref="mass_stock_account" />
-</record>
-
-<record id="mass_req3" model="mass.request">
-    <field name="partner_id" ref="partner3" />
-    <field name="donation_date">2014-06-10</field>
-    <field name="product_id" ref="product_product_mass_gregorian" />
-    <field name="offering">540.0</field>
-    <field name="company_id" ref="base.main_company" />
-    <field name="quantity">1</field>
-    <field name="intention">for my Grand-Mother</field>
-    <field name="stock_account_id" ref="mass_stock_account" />
-</record>
-
-<record id="mass_req4" model="mass.request">
-    <field name="partner_id" ref="partner4" />
-    <field name="donation_date">2014-06-12</field>
-    <field name="product_id" ref="product_product_mass_simple" />
-    <field name="offering">51.0</field>
-    <field name="company_id" ref="base.main_company" />
-    <field name="quantity">3</field>
-    <field name="intention">for my success at the certification</field>
-    <field name="stock_account_id" ref="mass_stock_account" />
-</record>
+<!-- I cannot put mass.request in demo data because stock_account_id
+    is required and the search= solution often returns nothing
+-->
 
 <record id="base.user_demo" model="res.users">
     <field name="groups_id" eval="[(4, ref('group_mass_user'))]" />
