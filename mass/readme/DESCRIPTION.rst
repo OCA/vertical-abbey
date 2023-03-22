@@ -6,4 +6,4 @@ This module has an impact on accounting:
 
 This module also allows to transfer masses to an external celebrant. When validating the mass transfer, a journal entry is created that moves the corresponding donation amount from the mass stock account to the payable account of the external celebrant.
 
-This module has been developped by the Barroux Abbey which is a Catholic Abbey. It is specific to the management of christian masses.
+This module has been developped by the `Barroux Abbey <https://www.barroux.org/>`_ which is a French Catholic Abbey. It is specific to the management of christian masses.

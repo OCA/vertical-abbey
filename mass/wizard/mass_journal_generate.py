@@ -32,7 +32,6 @@ class MassJournalGenerate(models.TransientModel):
         return all_celebrants
 
     journal_date = fields.Date(
-        "Journal Date",
         required=True,
         default=lambda self: self._get_default_journal_date(),
     )
@@ -178,12 +177,10 @@ class MassJournalGenerate(models.TransientModel):
                 elif celebrant_id not in origin_celebrant_ids:
                     raise UserError(
                         _(
-                            "The celebrant %s has an assigned mass for %s, "
-                            "but he is not available today."
-                        )
-                        % (
-                            line["request"].celebrant_id.display_name,
-                            line["request"].partner_id.display_name,
+                            "The celebrant %(celebrant)s has an assigned mass for "
+                            "%(partner)s, but he is not available today.",
+                            celebrant=line["request"].celebrant_id.display_name,
+                            partner=line["request"].partner_id.display_name,
                         )
                     )
                 else:

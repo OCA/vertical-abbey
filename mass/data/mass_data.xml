@@ -32,11 +32,9 @@
     <field name="name">Gregorian Mass</field>
     <field name="default_code">MT</field>
     <field name="categ_id" ref="product.product_category_all" />
-    <field name="sale_ok" eval="False" />
-    <field name="mass">1</field>
     <field name="mass_request_type_id" ref="mass_type_gregorian" />
     <field name="list_price">540</field>
-    <field name="type">service</field>
+    <field name="detailed_type">donation_mass</field>
     <field name="taxes_id" eval="False" />
     <field name="supplier_taxes_id" eval="False" />
 </record>
@@ -45,11 +43,9 @@
     <field name="name">Novena Mass</field>
     <field name="default_code">MN</field>
     <field name="categ_id" ref="product.product_category_all" />
-    <field name="sale_ok" eval="False" />
-    <field name="mass">1</field>
     <field name="mass_request_type_id" ref="mass_type_novena" />
     <field name="list_price">170</field>
-    <field name="type">service</field>
+    <field name="detailed_type">donation_mass</field>
     <field name="taxes_id" eval="False" />
     <field name="supplier_taxes_id" eval="False" />
 </record>
@@ -58,11 +54,9 @@
     <field name="name">Simple Mass</field>
     <field name="default_code">MO</field>
     <field name="categ_id" ref="product.product_category_all" />
-    <field name="sale_ok" eval="False" />
-    <field name="mass">1</field>
     <field name="mass_request_type_id" ref="mass_type_simple" />
     <field name="list_price">17</field>
-    <field name="type">service</field>
+    <field name="detailed_type">donation_mass</field>
     <field name="taxes_id" eval="False" />
     <field name="supplier_taxes_id" eval="False" />
 </record>

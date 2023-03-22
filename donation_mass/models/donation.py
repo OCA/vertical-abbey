@@ -30,7 +30,7 @@ class DonationDonation(models.Model):
         mro = self.env["mass.request"]
         for donation in self:
             for line in donation.line_ids:
-                if line.product_id.mass:
+                if line.product_id.detailed_type == "donation_mass":
                     mro.sudo().create(line._prepare_mass_request())
         return res
 
@@ -44,15 +44,13 @@ class DonationDonation(models.Model):
                     if mass_request.state != "waiting":
                         raise UserError(
                             _(
-                                "Cannot cancel the donation '%s' "
+                                "Cannot cancel the donation '%(donation)s' "
                                 "because it is linked to a mass request in "
-                                "%s state."
-                            )
-                            % (
-                                donation.display_name,
-                                mass_request._fields["state"].convert_to_export(
-                                    mass_request.state, mass_request
-                                ),
+                                "%(mass_state)s state.",
+                                donation=donation.display_name,
+                                mass_state=mass_request._fields[
+                                    "state"
+                                ].convert_to_export(mass_request.state, mass_request),
                             )
                         )
                 self.message_post(
@@ -68,7 +66,7 @@ class DonationDonation(models.Model):
     def goto_mass_requests(self):
         self.ensure_one()
         assert self.mass_request_ids
-        action = self.env.ref("mass.mass_request_action").sudo().read([])[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mass.mass_request_action")
         if len(self.mass_request_ids) == 1:
             action.update(
                 {
@@ -87,19 +85,35 @@ class DonationDonation(models.Model):
             )
         return action
 
+    def _prepare_donation_move(self):
+        """Remove analytic distrib on mass lines:
+        we don't put analytic on stock accounts"""
+        vals = super()._prepare_donation_move()
+        ppo = self.env["product.product"]
+        if vals:
+            for line in vals.get("line_ids", []):
+                lvals = line[2]
+                if (
+                    lvals.get("display_type") == "product"
+                    and lvals.get("product_id")
+                    and lvals.get("analytic_distribution")
+                ):
+                    product = ppo.browse(lvals["product_id"])
+                    if product.detailed_type == "donation_mass":
+                        lvals["analytic_distribution"] = False
+        return vals
+
 
 class DonationLine(models.Model):
     _inherit = "donation.line"
 
-    mass = fields.Boolean(related="product_id.mass", store=True)
     celebrant_id = fields.Many2one(
         "res.partner",
-        string="Celebrant",
         ondelete="restrict",
         domain=[("celebrant", "=", "internal")],
     )
     mass_request_date = fields.Date(string="Celebration Requested Date")
-    intention = fields.Char(string="Intention")
+    intention = fields.Char()
     mass_request_ids = fields.One2many(
         "mass.request", "donation_line_id", string="Masses"
     )
@@ -120,7 +134,7 @@ class DonationLine(models.Model):
             "product_id": self.product_id.id,
             "offering": self.amount_company_currency,
             "stock_account_id": company.mass_stock_account_id.id,
-            "analytic_account_id": self.analytic_account_id.id or False,
+            "analytic_distribution": self.analytic_distribution or False,
             "quantity": self.quantity,
             "intention": self.intention,
             "donation_line_id": self.id,
@@ -128,12 +142,12 @@ class DonationLine(models.Model):
         }
         return vals
 
-    def _get_account_id(self):
-        if self.product_id.mass:
+    def _get_account(self):
+        if self.product_id.detailed_type == "donation_mass":
             if not self.company_id.mass_stock_account_id:
                 raise UserError(
                     _("Missing mass stock account on company '%s'.")
                     % self.company_id.display_name
                 )
-            return self.company_id.mass_stock_account_id.id
-        return super()._get_account_id()
+            return self.company_id.mass_stock_account_id
+        return super()._get_account()

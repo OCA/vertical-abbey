@@ -29,12 +29,10 @@ class SwapCelebrant(models.TransientModel):
             raise UserError(
                 _(
                     "The 2 mass lines that you selected have different dates "
-                    "(%s and %s). You can swap celebrants only between 2 "
-                    "masses of the same date."
-                )
-                % (
-                    format_date(self.env, lines[0].date),
-                    format_date(self.env, lines[1].date),
+                    "(%(date1)s and %(date2)s). You can swap celebrants only between 2 "
+                    "masses of the same date.",
+                    date1=format_date(self.env, lines[0].date),
+                    date2=format_date(self.env, lines[1].date),
                 )
             )
         res["line_ids"] = [(6, 0, lines.ids)]

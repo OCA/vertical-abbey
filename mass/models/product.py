@@ -2,29 +2,24 @@
 # Copyright 2014-2021 Akretion France (www.akretion.com)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    mass = fields.Boolean(string="Is a Mass")
-    mass_request_type_id = fields.Many2one(
-        "mass.request.type", string="Mass Request Type", ondelete="restrict"
+    detailed_type = fields.Selection(
+        selection_add=[
+            ("donation_mass", "Mass"),
+        ],
+        ondelete={
+            "donation_mass": "set service",
+        },
     )
 
-    @api.onchange("mass")
-    def mass_change(self):
-        if self.mass:
-            self.type = "service"
-            self.sale_ok = False
+    def _detailed_type_mapping(self):
+        res = super()._detailed_type_mapping()
+        res["donation_mass"] = "service"
+        return res
 
-
-class ProductProduct(models.Model):
-    _inherit = "product.product"
-
-    @api.onchange("mass")
-    def mass_change(self):
-        if self.mass:
-            self.type = "service"
-            self.sale_ok = False
+    mass_request_type_id = fields.Many2one("mass.request.type", ondelete="restrict")

@@ -16,8 +16,8 @@ class MassRequestType(models.Model):
 
     name = fields.Char(string="Mass Request Type", required=True)
     code = fields.Char(string="Mass Request Code", size=5)
-    quantity = fields.Integer(string="Quantity")
-    uninterrupted = fields.Boolean(string="Uninterrupted")
+    quantity = fields.Integer()
+    uninterrupted = fields.Boolean()
     # True for Novena and Gregorian series ; False for others
 
 
@@ -27,14 +27,113 @@ class ReligiousCommunity(models.Model):
 
     name = fields.Char(string="Community Code", size=12, required=True)
     long_name = fields.Char(string="Community Name")
-    active = fields.Boolean(string="Active", default=True)
+    active = fields.Boolean(default=True)
 
 
 class MassRequest(models.Model):
     _name = "mass.request"
+    _inherit = "analytic.mixin"
     _description = "Mass Request"
     _order = "id desc"
     _check_company_auto = True
+
+    partner_id = fields.Many2one(
+        "res.partner", string="Donor", required=True, ondelete="restrict", index=True
+    )
+    celebrant_id = fields.Many2one(
+        "res.partner",
+        domain=[("celebrant", "=", "internal")],
+        ondelete="restrict",
+        index=True,
+        help="If the donor want the mass to be celebrated by a particular "
+        "celebrant, select it here. Otherwise, leave empty.",
+    )
+    donation_date = fields.Date(required=True)
+    request_date = fields.Date(
+        string="Celebration Requested Date",
+        help="If the donor want the mass to be celebrated at a particular "
+        "date, select it here. Otherwise, leave empty.",
+    )
+    product_id = fields.Many2one(
+        "product.product",
+        string="Mass Product",
+        check_company=True,
+        domain="[('company_id', 'in', (False, company_id)), "
+        "('detailed_type', '=', 'donation_mass')]",
+        required=True,
+        readonly=True,
+        ondelete="restrict",
+        states={"waiting": [("readonly", False)]},
+    )
+    type_id = fields.Many2one(
+        related="product_id.mass_request_type_id",
+        store=True,
+        string="Mass Request Type",
+    )
+    uninterrupted = fields.Boolean(related="type_id.uninterrupted")
+    offering = fields.Monetary(
+        currency_field="company_currency_id",
+        readonly=True,
+        states={"waiting": [("readonly", False)]},
+        help="The total offering amount in company currency.",
+    )
+    unit_offering = fields.Monetary(
+        compute="_compute_unit_offering",
+        store=True,
+        string="Offering per Mass",
+        currency_field="company_currency_id",
+        help="This field is the offering amount per mass in company currency.",
+    )
+    stock_account_id = fields.Many2one(
+        "account.account",
+        check_company=True,
+        required=True,
+        domain="[('company_id', '=', company_id), ('deprecated', '=', False)]",
+        default=lambda self: self.env.company.mass_stock_account_id,
+    )
+    company_id = fields.Many2one(
+        "res.company",
+        required=True,
+        ondelete="restrict",
+        default=lambda self: self.env.company,
+    )
+    company_currency_id = fields.Many2one(
+        related="company_id.currency_id", string="Company Currency", store=True
+    )
+    quantity = fields.Integer(
+        default=1, readonly=True, states={"waiting": [("readonly", False)]}
+    )
+    # quantity = quantity in the donation line
+    mass_quantity = fields.Integer(
+        compute="_compute_total_qty", string="Total Mass Quantity", store=True
+    )
+    intention = fields.Char()
+    line_ids = fields.One2many("mass.line", "request_id", string="Mass Lines")
+    state = fields.Selection(
+        [
+            ("waiting", "Waiting"),
+            ("started", "Started"),
+            ("transfered", "Transfered"),
+            ("done", "Done"),
+        ],
+        compute="_compute_state_mass_remaining_quantity",
+        store=True,
+    )
+    mass_remaining_quantity = fields.Integer(
+        compute="_compute_state_mass_remaining_quantity",
+        store=True,
+    )
+    remaining_offering = fields.Monetary(
+        compute="_compute_state_mass_remaining_quantity",
+        store=True,
+        currency_field="company_currency_id",
+    )
+    transfer_id = fields.Many2one(
+        "mass.request.transfer",
+        string="Transfer Operation",
+        readonly=True,
+        check_company=True,
+    )
 
     @api.depends(
         "type_id", "type_id.quantity", "quantity", "line_ids.request_id", "transfer_id"
@@ -74,6 +173,26 @@ class MassRequest(models.Model):
         for req in self:
             req.mass_quantity = req.type_id.quantity * req.quantity
 
+    @api.depends("product_id")
+    def _compute_analytic_distribution(self):
+        for req in self:
+            product = req.product_id
+            if product:
+                account = product.with_company(
+                    req.company_id.id
+                )._get_product_accounts()["income"]
+                distribution = self.env[
+                    "account.analytic.distribution.model"
+                ]._get_distribution(
+                    {
+                        "product_id": product.id,
+                        "product_categ_id": product.categ_id.id,
+                        "account_prefix": account and account.code or False,
+                        "company_id": req.company_id.id,
+                    }
+                )
+                req.analytic_distribution = distribution or req.analytic_distribution
+
     def name_get(self):
         res = []
         for request in self:
@@ -89,118 +208,6 @@ class MassRequest(models.Model):
                 )
             )
         return res
-
-    partner_id = fields.Many2one(
-        "res.partner", string="Donor", required=True, ondelete="restrict", index=True
-    )
-    celebrant_id = fields.Many2one(
-        "res.partner",
-        string="Celebrant",
-        domain=[("celebrant", "=", "internal")],
-        ondelete="restrict",
-        index=True,
-        help="If the donor want the mass to be celebrated by a particular "
-        "celebrant, select it here. Otherwise, leave empty.",
-    )
-    donation_date = fields.Date(string="Donation Date", required=True)
-    request_date = fields.Date(
-        string="Celebration Requested Date",
-        help="If the donor want the mass to be celebrated at a particular "
-        "date, select it here. Otherwise, leave empty.",
-    )
-    product_id = fields.Many2one(
-        "product.product",
-        string="Mass Product",
-        check_company=True,
-        domain="[('company_id', 'in', (False, company_id)), ('mass', '=', True)]",
-        required=True,
-        readonly=True,
-        ondelete="restrict",
-        states={"waiting": [("readonly", False)]},
-    )
-    type_id = fields.Many2one(
-        related="product_id.mass_request_type_id",
-        store=True,
-        string="Mass Request Type",
-    )
-    uninterrupted = fields.Boolean(
-        related="type_id.uninterrupted", string="Uninterrupted", readonly=True
-    )
-    offering = fields.Monetary(
-        string="Offering",
-        currency_field="company_currency_id",
-        readonly=True,
-        states={"waiting": [("readonly", False)]},
-        help="The total offering amount in company currency.",
-    )
-    unit_offering = fields.Monetary(
-        compute="_compute_unit_offering",
-        store=True,
-        string="Offering per Mass",
-        currency_field="company_currency_id",
-        help="This field is the offering amount per mass in company " "currency.",
-    )
-    stock_account_id = fields.Many2one(
-        "account.account",
-        string="Stock Account",
-        check_company=True,
-        required=True,
-        domain="[('company_id', '=', company_id), ('deprecated', '=', False)]",
-        default=lambda self: self.env.company.mass_stock_account_id,
-    )
-    analytic_account_id = fields.Many2one(
-        "account.analytic.account",
-        string="Income Analytic Account",
-        domain="[('company_id', '=', company_id)]",
-        check_company=True,
-    )
-    company_id = fields.Many2one(
-        "res.company",
-        string="Company",
-        required=True,
-        ondelete="restrict",
-        default=lambda self: self.env.company,
-    )
-    company_currency_id = fields.Many2one(
-        related="company_id.currency_id", string="Company Currency", store=True
-    )
-    quantity = fields.Integer(
-        "Quantity", default=1, readonly=True, states={"waiting": [("readonly", False)]}
-    )
-    # quantity = quantity in the donation line
-    mass_quantity = fields.Integer(
-        compute="_compute_total_qty", string="Total Mass Quantity", store=True
-    )
-    intention = fields.Char(string="Intention")
-    line_ids = fields.One2many("mass.line", "request_id", string="Mass Lines")
-    state = fields.Selection(
-        [
-            ("waiting", "Waiting"),
-            ("started", "Started"),
-            ("transfered", "Transfered"),
-            ("done", "Done"),
-        ],
-        string="State",
-        compute="_compute_state_mass_remaining_quantity",
-        store=True,
-    )
-    mass_remaining_quantity = fields.Integer(
-        compute="_compute_state_mass_remaining_quantity",
-        string="Mass Remaining Quantity",
-        store=True,
-    )
-    remaining_offering = fields.Monetary(
-        compute="_compute_state_mass_remaining_quantity",
-        string="Remaining Offering",
-        store=True,
-        currency_field="company_currency_id",
-    )
-    transfer_id = fields.Many2one(
-        "mass.request.transfer",
-        string="Transfer Operation",
-        readonly=True,
-        check_company=True,
-    )
 
     @api.onchange("product_id")
     def product_id_change(self):
@@ -240,7 +247,7 @@ class MassLine(models.Model):
     )
     intention = fields.Char(related="request_id.intention", string="Intention")
     company_id = fields.Many2one(
-        "res.company", related="request_id.company_id", string="Company", store=True
+        "res.company", related="request_id.company_id", store=True
     )
     company_currency_id = fields.Many2one(
         "res.currency",
@@ -262,7 +269,6 @@ class MassLine(models.Model):
     )
     celebrant_id = fields.Many2one(
         "res.partner",
-        string="Celebrant",
         required=True,
         index=True,
         domain=[("celebrant", "=", "internal")],
@@ -276,13 +282,12 @@ class MassLine(models.Model):
         index=True,
         states={"done": [("readonly", True)]},
     )
-    move_id = fields.Many2one("account.move", string="Account Move", readonly=True)
+    move_id = fields.Many2one("account.move", string="Journal Entry", readonly=True)
     state = fields.Selection(
         [
             ("draft", "Draft"),
             ("done", "Done"),
         ],
-        string="State",
         default="draft",
         readonly=True,
     )
@@ -296,24 +301,21 @@ class MassLine(models.Model):
                 if mass.state == "done":
                     raise UserError(
                         _(
-                            "Cannot delete mass line dated %s for %s because "
-                            "it is in Done state."
-                        )
-                        % (
-                            format_date(self.env, mass.date),
-                            mass.partner_id.display_name,
+                            "Cannot delete mass line dated %(date)s for %(partner)s "
+                            "because it is in 'Done' state.",
+                            date=format_date(self.env, mass.date),
+                            partner=mass.partner_id.display_name,
                         )
                     )
                 if mass.type_id.uninterrupted and mass.date < last_date:
                     raise UserError(
                         _(
-                            "Cannot delete mass dated %s for %s because it is a %s "
-                            "which is an uninterrupted mass."
-                        )
-                        % (
-                            format_date(self.env, mass.date),
-                            mass.partner_id.display_name,
-                            mass.type_id.name,
+                            "Cannot delete mass dated %(date)s for %(partner)s "
+                            "because it is a %(mass_type_name)s which is an "
+                            "uninterrupted mass.",
+                            date=format_date(self.env, mass.date),
+                            partner=mass.partner_id.display_name,
+                            mass_type_name=mass.type_id.display_name,
                         )
                     )
         return super().unlink()
@@ -355,7 +357,6 @@ class MassRequestTransfer(models.Model):
     number = fields.Char(string="Transfer Number", readonly=True)
     celebrant_id = fields.Many2one(
         "res.partner",
-        string="Celebrant",
         required=True,
         index=True,
         domain=[("celebrant", "=", "external")],
@@ -364,7 +365,6 @@ class MassRequestTransfer(models.Model):
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         required=True,
         ondelete="restrict",
         states={"done": [("readonly", True)]},
@@ -377,7 +377,6 @@ class MassRequestTransfer(models.Model):
         store=True,
     )
     transfer_date = fields.Date(
-        string="Transfer Date",
         required=True,
         states={"done": [("readonly", True)]},
         default=fields.Date.context_today,
@@ -389,12 +388,11 @@ class MassRequestTransfer(models.Model):
         states={"done": [("readonly", True)]},
     )
     move_id = fields.Many2one(
-        "account.move", string="Account Move", readonly=True, check_company=True
+        "account.move", string="Journal Entry", readonly=True, check_company=True
     )
     amount_total = fields.Monetary(
         compute="_compute_transfer_totals",
         type="float",
-        string="Amount Total",
         currency_field="company_currency_id",
         store=True,
     )
@@ -406,7 +404,6 @@ class MassRequestTransfer(models.Model):
             ("draft", "Draft"),
             ("done", "Done"),
         ],
-        string="State",
         readonly=True,
         default="draft",
     )
@@ -450,6 +447,7 @@ class MassRequestTransfer(models.Model):
                     "credit": self.amount_total,
                     "account_id": self.celebrant_id.property_account_payable_id.id,
                     "partner_id": partner_id,
+                    "display_type": "payment_term",
                 },
             )
         )
@@ -489,7 +487,7 @@ class MassRequestTransfer(models.Model):
         move_vals = self._prepare_mass_transfer_move(number)
         move = self.env["account.move"].create(move_vals)
         if self.company_id.mass_post_move:
-            move.action_post()
+            move._post(soft=False)
 
         transfer_vals["move_id"] = move.id
         self.write(transfer_vals)
@@ -506,12 +504,10 @@ class MassRequestTransfer(models.Model):
             if trf.state == "done":
                 raise UserError(
                     _(
-                        "Cannot delete mass request transfer dated %s for %s "
-                        "because it is in Done state."
-                    )
-                    % (
-                        format_date(self.env, trf.transfer_date),
-                        trf.celebrant_id.display_name,
+                        "Cannot delete mass request transfer dated %(date)s for "
+                        "%(celebrant)s because it is in 'Done' state.",
+                        date=format_date(self.env, trf.transfer_date),
+                        celebrant=trf.celebrant_id.display_name,
                     )
                 )
         return super().unlink()

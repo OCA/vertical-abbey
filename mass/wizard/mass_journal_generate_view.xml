@@ -12,7 +12,7 @@
     <field name="name">mass.journal.generate.form</field>
     <field name="model">mass.journal.generate</field>
     <field name="arch" type="xml">
-        <form string="Masses Journal">
+        <form>
             <group name="main">
                 <field name="journal_date" />
                 <field name="celebrant_ids" widget="many2many_tags" />

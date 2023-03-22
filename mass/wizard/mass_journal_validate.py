@@ -3,6 +3,7 @@
 # @author Alexis de Lattre <alexis.delattre@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+import json
 from collections import defaultdict
 
 from odoo import _, api, fields, models
@@ -26,12 +27,10 @@ class MassJournalValidate(models.TransientModel):
 
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         default=lambda self: self.env.company,
         required=True,
     )
     journal_date = fields.Date(
-        "Journal Date",
         required=True,
         default=lambda self: self._get_default_journal_date(),
     )
@@ -50,10 +49,10 @@ class MassJournalValidate(models.TransientModel):
                 stock_acc2amount[stock_account_id] += amount
 
                 income_account_id = line.product_id._get_product_accounts()["income"].id
-                income_analytic_account_id = (
-                    line.request_id.analytic_account_id.id or False
+                key = (
+                    income_account_id,
+                    json.dumps(line.request_id.analytic_distribution),
                 )
-                key = (income_account_id, income_analytic_account_id)
                 income_acc2amount[key] += amount
 
         if not stock_acc2amount:
@@ -65,27 +64,29 @@ class MassJournalValidate(models.TransientModel):
                     0,
                     0,
                     {
+                        "display_type": "payment_term",
                         "credit": 0,
                         "debit": amount,
                         "account_id": stock_account_id,
-                        "analytic_account_id": False,
                     },
                 )
             )
 
         for (
             income_account_id,
-            income_analytic_account_id,
+            income_analytic_distribution_str,
         ), amount in income_acc2amount.items():
+            income_analytic_distribution = json.loads(income_analytic_distribution_str)
             movelines.append(
                 (
                     0,
                     0,
                     {
+                        "display_type": "product",
                         "debit": 0,
                         "credit": amount,
                         "account_id": income_account_id,
-                        "analytic_account_id": income_analytic_account_id,
+                        "analytic_distribution": income_analytic_distribution,
                     },
                 )
             )
@@ -119,7 +120,7 @@ class MassJournalValidate(models.TransientModel):
             move = self.env["account.move"].create(move_vals)
             vals["move_id"] = move.id
             if company.mass_post_move:
-                move.action_post()
+                move.with_context(validate_analytic=True)._post(soft=False)
 
         # Update mass lines
         lines.write(vals)

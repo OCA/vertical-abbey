@@ -37,15 +37,21 @@
                                         class="col-md-3"
                                     />
                                 <field name="mass_validation_journal_id" />
+                            </div>
                         </div>
+                        <div class="o_setting_left_pane">
+                            <div class="row">
+                                <field name="mass_post_move" />
+                            </div>
+                        </div>
+                        <div class="o_setting_right_pane">
                             <div class="row" id="mass_post_move">
                                 <label for="mass_post_move" class="col-md-3" />
-                                <field name="mass_post_move" />
+                            </div>
                         </div>
-                        </div>
-                        </div>
-                        </div>
+                    </div>
                 </div>
+            </div>
         </xpath>
     </field>
 </record>

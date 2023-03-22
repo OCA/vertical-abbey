@@ -14,7 +14,6 @@ class ResPartner(models.Model):
             ("internal", "Internal"),
             ("external", "External"),
         ],
-        string="Celebrant",
     )
 
     @api.constrains("celebrant", "is_company")
