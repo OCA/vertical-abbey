@@ -783,8 +783,8 @@ class StayRoomAssign(models.Model):
         assert self.room_id
         # No conflict IF :
         # leaves before my arrival (or same day)
-        # OR arrivers after my departure (or same day)
-        # CONTRARY :
+        # OR arrives after my departure (or same day)
+        # CONTRARY : conflict IF :
         # leaves after my arrival
         # AND arrives before my departure
         conflict_assign = self.search(
