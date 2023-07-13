@@ -130,15 +130,20 @@ class StayStay(models.Model):
     )
     refectory_id = fields.Many2one(
         "stay.refectory",
+        compute="_compute_refectory_id",
+        store=True,
+        readonly=False,
         string="Refectory",
         check_company=True,
-        default=lambda self: self.env.company.default_refectory_id,
     )
     no_meals = fields.Boolean(
+        compute="_compute_refectory_id",
+        store=True,
+        readonly=False,
         string="No Meals",
         tracking=True,
         help="The stay lines generated from this stay will not have "
-        "lunchs nor dinners by default.",
+        "breakfast/lunch/dinner by default.",
     )
     construction = fields.Boolean()
     rooms_display_name = fields.Char(
@@ -222,6 +227,18 @@ class StayStay(models.Model):
             stay.assign_status = assign_status
             stay.guest_qty_to_assign = guest_qty_to_assign
             stay.rooms_display_name = rooms_display_name
+
+    @api.depends("group_id")
+    def _compute_refectory_id(self):
+        for stay in self:
+            refectory_id = False
+            if stay.group_id and stay.group_id.default_refectory_id:
+                refectory_id = stay.group_id.default_refectory_id.id
+            elif stay.company_id.default_refectory_id:
+                refectory_id = stay.company_id.default_refectory_id.id
+            stay.refectory_id = refectory_id
+            if stay.group_id:
+                stay.no_meals = stay.group_id.default_no_meals
 
     @api.model
     def create(self, vals):
@@ -454,11 +471,6 @@ class StayStay(models.Model):
                 title = partner_lg.title.shortcut or partner_lg.title.name
                 partner_name = "%s %s" % (title, partner_name)
             self.partner_name = partner_name
-
-    @api.onchange("group_id")
-    def group_id_change(self):
-        if self.group_id and self.group_id.default_refectory_id:
-            self.refectory_id = self.group_id.default_refectory_id
 
     def _prepare_stay_line(self, date):  # noqa: C901
         self.ensure_one()
@@ -1108,6 +1120,7 @@ class StayGroup(models.Model):
         ondelete="restrict",
         check_company=True,
     )
+    default_no_meals = fields.Boolean(string="No Meals by Default")
 
     _sql_constraints = [
         (
