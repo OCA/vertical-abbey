@@ -1,0 +1,153 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* donation_mass
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-03-28 12:50+0000\n"
+"PO-Revision-Date: 2015-03-28 12:50+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: donation_mass
+#: model:ir.model.fields,field_description:donation_mass.field_donation_donation__mass_request_count
+#, fuzzy
+msgid "# of Mass Requests"
+msgstr "Demande de messe"
+
+#. module: donation_mass
+#: code:addons/donation_mass/models/donation.py:0
+#, python-format
+msgid "%d related mass request(s) in waiting state have been deleted."
+msgstr ""
+
+#. module: donation_mass
+#: code:addons/donation_mass/models/donation.py:0
+#, fuzzy, python-format
+msgid ""
+"Cannot cancel the donation '%s' because it is linked to a mass request in %s "
+"state."
+msgstr ""
+"Cannot set back to draft the donation with number %s because it is linked to "
+"a mass request in %s state."
+
+#. module: donation_mass
+#: model:ir.model.fields,field_description:donation_mass.field_donation_line__celebrant_id
+msgid "Celebrant"
+msgstr "Célébrant"
+
+#. module: donation_mass
+#: model:ir.model.fields,field_description:donation_mass.field_donation_line__mass_request_date
+msgid "Celebration Requested Date"
+msgstr "Date de célébration demandée"
+
+#. module: donation_mass
+#: model:ir.model.fields,field_description:donation_mass.field_donation_donation__display_name
+#: model:ir.model.fields,field_description:donation_mass.field_donation_line__display_name
+#: model:ir.model.fields,field_description:donation_mass.field_mass_request__display_name
+#: model:ir.model.fields,field_description:donation_mass.field_mass_requests_to_transfer__display_name
+#: model:ir.model.fields,field_description:donation_mass.field_product_product__display_name
+#: model:ir.model.fields,field_description:donation_mass.field_product_template__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: donation_mass
+#: model:ir.model,name:donation_mass.model_donation_donation
+msgid "Donation"
+msgstr "Don"
+
+#. module: donation_mass
+#: model:ir.model,name:donation_mass.model_donation_line
+msgid "Donation Lines"
+msgstr "Lignes de don"
+
+#. module: donation_mass
+#: model:ir.model.fields,field_description:donation_mass.field_donation_donation__id
+#: model:ir.model.fields,field_description:donation_mass.field_donation_line__id
+#: model:ir.model.fields,field_description:donation_mass.field_mass_request__id
+#: model:ir.model.fields,field_description:donation_mass.field_mass_requests_to_transfer__id
+#: model:ir.model.fields,field_description:donation_mass.field_product_product__id
+#: model:ir.model.fields,field_description:donation_mass.field_product_template__id
+msgid "ID"
+msgstr ""
+
+#. module: donation_mass
+#: model:ir.model.fields,field_description:donation_mass.field_donation_line__intention
+msgid "Intention"
+msgstr "Intention"
+
+#. module: donation_mass
+#: model:ir.model.fields,field_description:donation_mass.field_donation_line__mass
+msgid "Is a Mass"
+msgstr "Messe"
+
+#. module: donation_mass
+#: model:ir.model.fields,field_description:donation_mass.field_donation_donation____last_update
+#: model:ir.model.fields,field_description:donation_mass.field_donation_line____last_update
+#: model:ir.model.fields,field_description:donation_mass.field_mass_request____last_update
+#: model:ir.model.fields,field_description:donation_mass.field_mass_requests_to_transfer____last_update
+#: model:ir.model.fields,field_description:donation_mass.field_product_product____last_update
+#: model:ir.model.fields,field_description:donation_mass.field_product_template____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: donation_mass
+#: model:ir.model,name:donation_mass.model_mass_request
+msgid "Mass Request"
+msgstr "Demande de messe"
+
+#. module: donation_mass
+#: model_terms:ir.ui.view,arch_db:donation_mass.donation_form
+#, fuzzy
+msgid "Mass Requests"
+msgstr "Demande de messe"
+
+#. module: donation_mass
+#: model:ir.model.fields,field_description:donation_mass.field_mass_requests_to_transfer__request_ids
+#, fuzzy
+msgid "Mass Requests to Transfer"
+msgstr "Demande de messe"
+
+#. module: donation_mass
+#: model:ir.model.fields,field_description:donation_mass.field_donation_donation__mass_request_ids
+#: model:ir.model.fields,field_description:donation_mass.field_donation_line__mass_request_ids
+msgid "Masses"
+msgstr "Messes"
+
+#. module: donation_mass
+#: code:addons/donation_mass/models/donation.py:0
+#, python-format
+msgid "Missing mass stock account on company '%s'."
+msgstr ""
+
+#. module: donation_mass
+#: model:ir.model,name:donation_mass.model_product_product
+msgid "Product"
+msgstr "Article"
+
+#. module: donation_mass
+#: model:ir.model,name:donation_mass.model_product_template
+msgid "Product Template"
+msgstr "Product Template"
+
+#. module: donation_mass
+#: model:ir.model.fields,field_description:donation_mass.field_mass_request__donation_id
+msgid "Related Donation"
+msgstr "Don associé"
+
+#. module: donation_mass
+#: model:ir.model.fields,field_description:donation_mass.field_mass_request__donation_line_id
+msgid "Related Donation Line"
+msgstr "Ligne de don associée"
+
+#. module: donation_mass
+#: model:ir.model,name:donation_mass.model_mass_requests_to_transfer
+msgid "Select Mass Requests to Transfer"
+msgstr ""

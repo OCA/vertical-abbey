@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2014-2021 Barroux Abbey (www.barroux.org)
+  Copyright 2014-2021 Akretion France (www.akretion.com)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+
+<template id="report_massrequesttransfer">
+
+<t t-call="web.html_container">
+<t t-foreach="docs" t-as="o">
+<t t-call="web.internal_layout">
+
+<div class="page">
+
+<h1>Masses Transfer</h1>
+
+<h3>Transfer To: <span t-field="o.celebrant_id.name" /></h3>
+
+<h3>Transfer Date: <span t-field="o.transfer_date" /></h3>
+
+<p>Total Amount: <span
+                                t-field="o.amount_total"
+                                t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'
+                            /></p>
+
+<p>Total Number of Masses: <span t-field="o.mass_total" /></p>
+
+    <table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>Donor</th>
+            <th>Donation Date</th>
+            <th>Mass Request Code</th>
+            <th>Quantity</th>
+            <th>Offering</th>
+            <th>Intention</th>
+        </tr>
+    </thead>
+    <tbody>
+
+    <t t-foreach="o.mass_request_ids" t-as="req">
+
+        <tr>
+            <td><span t-field="req.partner_id.name" /></td>
+            <td><span t-field="req.donation_date" /></td>
+            <td><span t-field="req.type_id.code" /></td>
+            <td><span t-field="req.quantity" /></td>
+            <td><span
+                                                t-field="req.offering"
+                                                t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'
+                                            /></td>
+            <td><span t-field="req.intention" /></td>
+        </tr>
+
+    </t>
+
+    </tbody>
+    </table>
+
+</div>
+
+</t>
+</t>
+</t>
+
+</template>
+
+</odoo>

@@ -1,0 +1,677 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2014-2021 Barroux Abbey (www.barroux.org)
+  Copyright 2014-2021 Akretion France (www.akretion.com)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+
+<!-- Mass Request Types -->
+<record id="mass_request_type_form" model="ir.ui.view">
+    <field name="name">mass.request.type.form</field>
+    <field name="model">mass.request.type</field>
+    <field name="arch" type="xml">
+        <form>
+            <group name="main">
+                <field name="name" />
+                <field name="code" />
+                <field name="quantity" />
+                <field name="uninterrupted" />
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="mass_request_type_tree" model="ir.ui.view">
+    <field name="name">mass.request.type.tree</field>
+    <field name="model">mass.request.type</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="name" />
+            <field name="code" />
+            <field name="quantity" />
+            <field name="uninterrupted" />
+        </tree>
+    </field>
+</record>
+
+<record id="mass_request_type_search" model="ir.ui.view">
+    <field name="model">mass.request.type</field>
+    <field name="arch" type="xml">
+        <search>
+            <field
+                    name="name"
+                    filter_domain="['|', ('name', 'ilike', self), ('code', '=ilike', self + '%')]"
+                    string="Name or Code"
+                />
+        </search>
+    </field>
+</record>
+
+
+<record id="mass_request_type_action" model="ir.actions.act_window">
+    <field name="name">Mass Request Types</field>
+    <field name="res_model">mass.request.type</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="mass_top_menu"
+        sequence="39"
+        name="Mass"
+        groups="group_mass_viewer"
+        web_icon="mass,static/description/icon.png"
+    />
+
+<menuitem id="mass_title_menu" sequence="10" name="Mass" parent="mass_top_menu" />
+
+<menuitem
+        id="mass_config_menu"
+        sequence="30"
+        name="Configuration"
+        parent="mass_top_menu"
+        groups="group_mass_manager"
+    />
+
+<menuitem
+        id="mass_request_type_menu"
+        action="mass_request_type_action"
+        parent="mass_config_menu"
+        sequence="30"
+    />
+
+<menuitem
+        id="mass_journal_generate_menu"
+        sequence="30"
+        action="mass_journal_generate_action"
+        parent="mass_title_menu"
+        groups="group_mass_user"
+    />
+
+<menuitem
+        id="mass_journal_validate_menu"
+        sequence="40"
+        action="mass_journal_validate_action"
+        parent="mass_title_menu"
+        groups="group_mass_user"
+    />
+
+
+<!-- Religious Community -->
+<record id="religious_community_form" model="ir.ui.view">
+    <field name="name">religious.community.form</field>
+    <field name="model">religious.community</field>
+    <field name="arch" type="xml">
+        <form>
+            <widget
+                    name="web_ribbon"
+                    title="Archived"
+                    bg_color="bg-danger"
+                    attrs="{'invisible': [('active', '=', True)]}"
+                />
+            <group name="main">
+                <field name="name" />
+                <field name="long_name" />
+                <field name="active" invisible="1" />
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="religious_community_tree" model="ir.ui.view">
+    <field name="name">religious.community.tree</field>
+    <field name="model">religious.community</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="name" />
+            <field name="long_name" optional="show" />
+        </tree>
+    </field>
+</record>
+
+<record id="religious_community_search" model="ir.ui.view">
+    <field name="name">religious.community.search</field>
+    <field name="model">religious.community</field>
+    <field name="arch" type="xml">
+        <search>
+            <field
+                    name="name"
+                    filter_domain="['|', ('name', 'ilike', self), ('long_name', 'ilike', self)]"
+                    string="Name"
+                />
+            <separator />
+            <filter
+                    string="Archived"
+                    name="inactive"
+                    domain="[('active', '=', False)]"
+                />
+        </search>
+    </field>
+</record>
+
+<record id="religious_community_action" model="ir.actions.act_window">
+    <field name="name">Religious Communities</field>
+    <field name="res_model">religious.community</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="religious_community_menu"
+        action="religious_community_action"
+        parent="mass_config_menu"
+        sequence="40"
+    />
+
+<!-- Mass Requests -->
+<record id="mass_request_form" model="ir.ui.view">
+    <field name="name">mass.request.form</field>
+    <field name="model">mass.request</field>
+    <field name="arch" type="xml">
+        <form>
+            <header>
+                <field name="state" widget="statusbar" />
+            </header>
+            <sheet>
+                <group name="main">
+                    <group name="request">
+                        <field name="partner_id" />
+                        <field name="donation_date" />
+                        <field name="request_date" />
+                        <field name="celebrant_id" />
+                        <field name="intention" />
+                        <field name="offering" />
+                        <field name="company_currency_id" invisible="1" />
+                    </group>
+                    <group name="mass">
+                        <field name="product_id" options="{'no_create': True}" />
+                        <field name="type_id" />
+                        <field name="uninterrupted" />
+                        <field name="quantity" />
+                        <field name="mass_quantity" />
+                        <field name="mass_remaining_quantity" />
+                        <field name="transfer_id" states="transfered" />
+                    </group>
+                </group>
+                <notebook>
+                    <page name="lines" string="Masses">
+                        <field name="line_ids" nolabel="1" />
+                    </page>
+                    <page name="other" string="Other Infos">
+                        <group name="other">
+                            <field name="company_currency_id" invisible="1" />
+                            <field name="unit_offering" />
+                            <field name="remaining_offering" />
+                            <field name="stock_account_id" />
+                            <field
+                                    name="analytic_distribution"
+                                    groups="analytic.group_analytic_accounting"
+                                    widget="analytic_distribution"
+                                    options="{'product_field': 'product_id', 'business_domain': 'donation'}"
+                                />
+                            <field
+                                    name="company_id"
+                                    groups="base.group_multi_company"
+                                />
+                            <field name="company_id" invisible="1" />
+                        </group>
+                    </page>
+                </notebook>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+<record id="mass_request_tree" model="ir.ui.view">
+    <field name="name">mass.request.tree</field>
+    <field name="model">mass.request</field>
+    <field name="arch" type="xml">
+        <tree multi_edit="1">
+            <field name="partner_id" />
+            <field name="donation_date" optional="show" />
+            <field name="request_date" />
+            <field name="celebrant_id" />
+            <field name="product_id" />
+            <field name="type_id" optional="hide" />
+            <field name="intention" optional="hide" />
+            <field name="offering" sum="1" optional="show" />
+            <field name="unit_offering" optional="hide" />
+            <field name="stock_account_id" optional="hide" />
+            <field
+                    name="analytic_distribution"
+                    groups="analytic.group_analytic_accounting"
+                    widget="analytic_distribution"
+                    options="{'product_field': 'product_id', 'business_domain': 'donation'}"
+                    optional="hide"
+                />
+            <field name="mass_quantity" sum="1" />
+            <field name="mass_remaining_quantity" sum="1" />
+            <field
+                    name="state"
+                    widget="badge"
+                    decoration-success="state == 'started'"
+                    decoration-warning="state == 'waiting'"
+                />
+            <field name="company_currency_id" invisible="1" />
+            <field name="company_id" invisible="1" />
+        </tree>
+    </field>
+</record>
+
+<record id="mass_request_search" model="ir.ui.view">
+    <field name="name">mass.request.search</field>
+    <field name="model">mass.request</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="partner_id" />
+            <field name="celebrant_id" />
+            <separator />
+            <filter
+                    name="waiting"
+                    string="Waiting"
+                    domain="[('state', '=', 'waiting')]"
+                />
+            <filter
+                    name="started"
+                    string="Started"
+                    domain="[('state', '=', 'started')]"
+                />
+            <filter
+                    name="transfered"
+                    string="Transfered"
+                    domain="[('state', '=', 'transfered')]"
+                />
+            <filter name="done" string="Done" domain="[('state', '=', 'done')]" />
+            <separator />
+            <filter string="Donation Date" name="donation_date" date="donation_date" />
+            <group string="Group By" name="groupby">
+                <filter
+                        name="state_groupby"
+                        string="State"
+                        context="{'group_by': 'state'}"
+                    />
+                <filter
+                        name="celebrant_groupby"
+                        string="Celebrant"
+                        context="{'group_by': 'celebrant_id'}"
+                    />
+                <filter
+                        name="product_groupby"
+                        string="Mass Product"
+                        context="{'group_by': 'product_id'}"
+                    />
+                <filter
+                        name="type_groupby"
+                        string="Mass Request Type"
+                        context="{'group_by': 'type_id'}"
+                    />
+                <filter
+                        name="donation_date_groupby"
+                        string="Donation Date"
+                        context="{'group_by': 'donation_date'}"
+                    />
+                <filter
+                        name="partner_groupby"
+                        string="Donor"
+                        context="{'group_by': 'partner_id'}"
+                    />
+            </group>
+        </search>
+    </field>
+</record>
+
+<record id="mass_request_graph" model="ir.ui.view">
+    <field name="name">mass.request.graph</field>
+    <field name="model">mass.request</field>
+    <field name="arch" type="xml">
+        <graph>
+            <field name="quantity" type="measure" />
+        </graph>
+    </field>
+</record>
+
+<record id="mass_request_pivot" model="ir.ui.view">
+    <field name="name">mass.request.pivot</field>
+    <field name="model">mass.request</field>
+    <field name="arch" type="xml">
+        <pivot>
+            <field name="quantity" type="measure" />
+        </pivot>
+    </field>
+</record>
+
+<record id="mass_request_action" model="ir.actions.act_window">
+    <field name="name">Mass Requests</field>
+    <field name="res_model">mass.request</field>
+    <field name="view_mode">tree,form,pivot,graph</field>
+</record>
+
+<menuitem
+        id="mass_request_menu"
+        sequence="17"
+        action="mass_request_action"
+        parent="mass_title_menu"
+    />
+
+<!-- Mass Lines -->
+<record id="mass_line_form" model="ir.ui.view">
+    <field name="name">mass.line.form</field>
+    <field name="model">mass.line</field>
+    <field name="arch" type="xml">
+        <form>
+            <header>
+                <field name="state" widget="statusbar" />
+            </header>
+            <sheet>
+                <group name="main">
+                    <field name="date" />
+                    <field
+                            name="request_id"
+                            invisible="not context.get('mass_line_main_view')"
+                        />
+                    <field
+                            name="company_id"
+                            groups="base.group_multi_company"
+                            invisible="not context.get('mass_line_main_view')"
+                        />
+                    <field name="company_id" invisible="1" />
+                    <field name="company_currency_id" invisible="1" />
+                    <field
+                            name="request_date"
+                            invisible="not context.get('mass_line_main_view')"
+                        />
+                    <field
+                            name="partner_id"
+                            invisible="not context.get('mass_line_main_view')"
+                        />
+                    <field
+                            name="intention"
+                            invisible="not context.get('mass_line_main_view')"
+                        />
+                    <field name="product_id" />
+                    <field name="type_id" />
+                    <field name="unit_offering" />
+                    <field name="celebrant_id" />
+                    <field name="conventual_id" widget="selection" />
+                    <field name="move_id" />
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+<record id="mass_line_tree" model="ir.ui.view">
+    <field name="name">mass.line.tree</field>
+    <field name="model">mass.line</field>
+    <field name="arch" type="xml">
+        <tree decoration-info="state == 'draft'" editable="bottom" multi_edit="1">
+            <header>
+                <button
+                        name="%(mass.swap_celebrant_action)d"
+                        type="action"
+                        string="Swap Celebrants"
+                        groups="mass.group_mass_user"
+                    />
+            </header>
+            <field name="date" />
+            <field
+                    name="request_id"
+                    invisible="not context.get('mass_line_main_view')"
+                />
+            <field
+                    name="product_id"
+                    invisible="not context.get('mass_line_main_view')"
+                />
+            <field name="type_id" optional="hide" />
+            <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    invisible="not context.get('mass_line_main_view')"
+                />
+            <field
+                    name="request_date"
+                    invisible="not context.get('mass_line_main_view')"
+                />
+            <field name="celebrant_id" />
+            <field
+                    name="partner_id"
+                    invisible="not context.get('mass_line_main_view')"
+                    optional="show"
+                />
+            <field name="intention" optional="hide" />
+            <field name="unit_offering" sum="Total Offering" optional="show" />
+            <field name="conventual_id" widget="selection" optional="show" />
+            <field name="move_id" optional="hide" />
+            <field name="state" />
+            <field name="company_currency_id" invisible="1" />
+        </tree>
+    </field>
+</record>
+
+<record id="mass_line_search" model="ir.ui.view">
+    <field name="name">mass.line.search</field>
+    <field name="model">mass.line</field>
+    <field name="arch" type="xml">
+        <search>
+            <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]" />
+            <filter name="done" string="Done" domain="[('state', '=', 'done')]" />
+            <field name="date" />
+            <field name="partner_id" />
+            <field name="celebrant_id" />
+            <group string="Group By" name="groupby">
+                <filter
+                        name="state_groupby"
+                        string="State"
+                        context="{'group_by': 'state'}"
+                    />
+                <filter
+                        name="date_groupby"
+                        string="Date"
+                        context="{'group_by': 'date'}"
+                    />
+                <filter
+                        name="celebrant_groupby"
+                        string="Celebrant"
+                        context="{'group_by': 'celebrant_id'}"
+                    />
+                <filter
+                        name="partner_groupby"
+                        string="Partner"
+                        context="{'group_by': 'partner_id'}"
+                    />
+                <filter
+                        name="product_groupby"
+                        string="Mass Product"
+                        context="{'group_by': 'product_id'}"
+                    />
+                <filter
+                        name="type_groupby"
+                        string="Mass Request Type"
+                        context="{'group_by': 'type_id'}"
+                    />
+                <filter
+                        name="conventual_groupby"
+                        string="Conventual"
+                        context="{'group_by': 'conventual_id'}"
+                    />
+            </group>
+        </search>
+    </field>
+</record>
+
+<record id="mass_line_graph" model="ir.ui.view">
+    <field name="name">mass.line.graph</field>
+    <field name="model">mass.line</field>
+    <field name="arch" type="xml">
+        <graph>
+            <field name="celebrant_id" type="row" />
+            <field name="date" type="col" />
+        </graph>
+    </field>
+</record>
+
+<record id="mass_line_pivot" model="ir.ui.view">
+    <field name="name">mass.line.pivot</field>
+    <field name="model">mass.line</field>
+    <field name="arch" type="xml">
+        <pivot>
+            <field name="celebrant_id" type="row" />
+            <field name="date" type="col" />
+        </pivot>
+    </field>
+</record>
+
+
+<record id="mass_line_action" model="ir.actions.act_window">
+    <field name="name">Masses</field>
+    <field name="res_model">mass.line</field>
+    <field name="view_mode">tree,form,pivot,graph</field>
+    <field name="context">{'mass_line_main_view': True}</field>
+</record>
+
+<menuitem
+        id="mass_line_menu"
+        sequence="20"
+        action="mass_line_action"
+        parent="mass_title_menu"
+    />
+
+
+<!-- Masses Requests Transfer -->
+
+<record id="mass_request_transfer_form" model="ir.ui.view">
+    <field name="name">mass.request.transfer.form</field>
+    <field name="model">mass.request.transfer</field>
+    <field name="arch" type="xml">
+        <form>
+            <header>
+                <button
+                        name="validate"
+                        type="object"
+                        string="Validate"
+                        class="oe_highlight"
+                        states="draft"
+                    />
+                <button
+                        name="back_to_draft"
+                        type="object"
+                        string="Back to Draft"
+                        states="done"
+                    />
+                <button
+                        name="%(mass.report_mass_request_transfer)d"
+                        type="action"
+                        string="Print"
+                    />
+                <field name="state" widget="statusbar" />
+            </header>
+            <sheet>
+                <group name="main">
+                    <field name="number" />
+                    <field name="celebrant_id" />
+                    <field name="transfer_date" />
+                    <field name="company_id" groups="base.group_multi_company" />
+                    <field name="company_currency_id" invisible="1" />
+                    <field name="amount_total" />
+                    <field name="mass_total" />
+                    <field name="move_id" />
+                </group>
+                <group name="lines" string="Masses Requests">
+                    <button
+                            type="action"
+                            name="%(mass_requests_to_transfer_action)d"
+                            string="Select Mass Requests to Transfer"
+                            attrs="{'invisible': [('state', '=', 'done')]}"
+                            context="{'default_transfer_id': active_id}"
+                            colspan="2"
+                        />
+                    <newline />
+                    <field name="mass_request_ids" nolabel="1" colspan="2" />
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+
+<record id="mass_request_transfer_tree" model="ir.ui.view">
+    <field name="name">mass.request.transfer.tree</field>
+    <field name="model">mass.request.transfer</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="number" decoration-bf="1" />
+            <field name="celebrant_id" />
+            <field name="transfer_date" />
+            <field name="amount_total" />
+            <field name="mass_total" />
+            <field
+                    name="state"
+                    widget="badge"
+                    decoration-info="state == 'draft'"
+                    decoration-success="state == 'done'"
+                />
+        </tree>
+    </field>
+</record>
+
+<record id="mass_request_transfer_search" model="ir.ui.view">
+    <field name="name">mass.request.transfer.search</field>
+    <field name="model">mass.request.transfer</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="celebrant_id" />
+            <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]" />
+            <filter name="done" string="Done" domain="[('state', '=', 'done')]" />
+            <group string="Group By" name="groupby">
+                <filter
+                        name="celebrant_groupby"
+                        string="Celebrant"
+                        context="{'group_by': 'celebrant_id'}"
+                    />
+                <filter
+                        name="date_groupby"
+                        string="Transfer Date"
+                        context="{'group_by': 'transfer_date'}"
+                    />
+            </group>
+        </search>
+    </field>
+</record>
+
+<record id="mass_request_transfer_graph" model="ir.ui.view">
+    <field name="name">mass.request.transfer.graph</field>
+    <field name="model">mass.request.transfer</field>
+    <field name="arch" type="xml">
+        <graph>
+            <field name="mass_total" type="measure" />
+            <field name="amount_total" type="measure" />
+        </graph>
+    </field>
+</record>
+
+<record id="mass_request_transfer_pivot" model="ir.ui.view">
+    <field name="name">mass.request.transfer.pivot</field>
+    <field name="model">mass.request.transfer</field>
+    <field name="arch" type="xml">
+        <pivot>
+            <field name="mass_total" type="measure" />
+            <field name="amount_total" type="measure" />
+        </pivot>
+    </field>
+</record>
+
+
+<record id="mass_request_transfer_action" model="ir.actions.act_window">
+    <field name="name">Masses Requests Transfer</field>
+    <field name="res_model">mass.request.transfer</field>
+    <field name="view_mode">tree,form,pivot,graph</field>
+</record>
+
+<menuitem
+        id="mass_request_transfer_menu"
+        sequence="50"
+        action="mass_request_transfer_action"
+        parent="mass_title_menu"
+    />
+
+</odoo>

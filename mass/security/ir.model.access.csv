@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mass_request_viewer,Read access on mass.request to Mass Viewer,model_mass_request,group_mass_user,1,0,0,0
+access_mass_request_user,Full access on mass.request to Mass User,model_mass_request,group_mass_user,1,1,1,1
+access_mass_request_type_manager,Full access on mass.request.type to Mass Manager,model_mass_request_type,group_mass_manager,1,1,1,1
+access_mass_request_type_user,Read access on mass.request.type to everybody,model_mass_request_type,,1,0,0,0
+access_mass_line_viewer,Read access on mass.line to Mass Viewer,model_mass_line,group_mass_viewer,1,0,0,0
+access_mass_line_user,Full access on mass.line to Mass User,model_mass_line,group_mass_user,1,1,1,1
+access_mass_account_move,Full access on account.move,account.model_account_move,group_mass_user,1,1,1,1
+access_mass_account_move_line,Full access on account.move.line,account.model_account_move_line,group_mass_user,1,1,1,1
+access_mass_request_transfer_user,Full access on mass.request.transfer to Mass User,model_mass_request_transfer,group_mass_user,1,1,1,1
+access_mass_request_transfer_viewer,Read access on mass.request.transfer to Mass Viewer,model_mass_request_transfer,group_mass_viewer,1,0,0,0
+access_religious_community_manager,Full access on religious.community to Mass Manager,model_religious_community,group_mass_manager,1,1,1,1
+access_religious_community_user,Read access on religious.community to Mass Viewer,model_religious_community,group_mass_viewer,1,0,0,0
+access_mass_journal_generate,Full access on mass.journal.generate wizard,model_mass_journal_generate,group_mass_user,1,1,1,1
+access_mass_requests_to_transfer,Full access on mass.requests.to.transfer wizard,model_mass_requests_to_transfer,group_mass_user,1,1,1,1
+access_swap_celebrant,Full access on swap.celebrant wizard,model_swap_celebrant,group_mass_user,1,1,1,1
+access_mass_journal_validate,Full access on mass.journal.validate wizard,model_mass_journal_validate,group_mass_user,1,1,1,1
