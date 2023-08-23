@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+
+<record id="product_product_stay_donation" model="product.product">
+    <field name="name">Stay Donation</field>
+    <field name="default_code">STAYDON</field>
+    <field name="categ_id" ref="product.product_category_all" />
+    <field name="sale_ok">0</field>
+    <field name="list_price">0</field>
+    <field name="detailed_type">donation</field>
+    <field name="taxes_id" eval="False" />
+    <field name="supplier_taxes_id" eval="False" />
+</record>
+
+<record id="stay_campaign" model="donation.campaign">
+    <field name="name">Stay</field>
+</record>
+
+<record id="base.main_company" model="res.company">
+    <field name="donation_stay_product_id" ref="product_product_stay_donation" />
+    <field name="donation_stay_campaign_id" ref="stay_campaign" />
+</record>
+
+</odoo>
