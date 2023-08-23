@@ -14,13 +14,13 @@ Mass
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fvertical--abbey-lightgray.png?logo=github
-    :target: https://github.com/OCA/vertical-abbey/tree/14.0/mass
+    :target: https://github.com/OCA/vertical-abbey/tree/16.0/mass
     :alt: OCA/vertical-abbey
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/vertical-abbey-14-0/vertical-abbey-14-0-mass
+    :target: https://translation.odoo-community.org/projects/vertical-abbey-16-0/vertical-abbey-16-0-mass
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runbot-Try%20me-875A7B.png
-    :target: https://runbot.odoo-community.org/runbot/181/14.0
+    :target: https://runbot.odoo-community.org/runbot/181/16.0
     :alt: Try me on Runbot
 
 |badge1| |badge2| |badge3| |badge4| |badge5| 
@@ -33,7 +33,7 @@ This module has an impact on accounting:
 
 This module also allows to transfer masses to an external celebrant. When validating the mass transfer, a journal entry is created that moves the corresponding donation amount from the mass stock account to the payable account of the external celebrant.
 
-This module has been developped by the Barroux Abbey which is a Catholic Abbey. It is specific to the management of christian masses.
+This module has been developped by the `Barroux Abbey <https://www.barroux.org/>`_ which is a French Catholic Abbey. It is specific to the management of christian masses.
 
 **Table of contents**
 
@@ -64,7 +64,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/vertical-abbey/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us smashing it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/vertical-abbey/issues/new?body=module:%20mass%0Aversion:%2014.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/vertical-abbey/issues/new?body=module:%20mass%0Aversion:%2016.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -105,6 +105,6 @@ Current `maintainer <https://odoo-community.org/page/maintainer-role>`__:
 
 |maintainer-alexis-via| 
 
-This module is part of the `OCA/vertical-abbey <https://github.com/OCA/vertical-abbey/tree/14.0/mass>`_ project on GitHub.
+This module is part of the `OCA/vertical-abbey <https://github.com/OCA/vertical-abbey/tree/16.0/mass>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
