@@ -16,9 +16,8 @@ class TestDonationFromStay(TransactionCase):
             stay_product = self.env["product.product"].create(
                 {
                     "name": "Stay Donation",
-                    "donation": True,
+                    "detailed_type": "donation",
                     "categ_id": self.env.ref("product.product_category_all").id,
-                    "detailed_type": "service",
                     "taxes_id": False,
                     "supplier_taxes_id": False,
                 }
