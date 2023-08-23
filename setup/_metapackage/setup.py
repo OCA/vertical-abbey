@@ -9,7 +9,10 @@ setuptools.setup(
     version=version,
     install_requires=[
         'odoo-addon-donation_mass>=16.0dev,<16.1dev',
+        'odoo-addon-donation_stay>=16.0dev,<16.1dev',
         'odoo-addon-mass>=16.0dev,<16.1dev',
+        'odoo-addon-stay>=16.0dev,<16.1dev',
+        'odoo-addon-stay_report_py3o>=16.0dev,<16.1dev',
     ],
     classifiers=[
         'Programming Language :: Python',
