@@ -25,11 +25,6 @@ msgid "# of Stays"
 msgstr "住宿"
 
 #. module: stay
-#: model:mail.template,subject:stay.stay_notify
-msgid "${object.name} - Arrivals of ${format_date(ctx.get('date'))}"
-msgstr ""
-
-#. module: stay
 #: model:ir.actions.report,print_report_name:stay.report_stay_toclean
 msgid "'rooms_to_clean-%s' % str(object.create_date)[:10]"
 msgstr ""
@@ -71,28 +66,45 @@ msgid ""
 "Time</th>\n"
 "                <th style=\"padding: 5px; border: 1px solid black;\">Rooms</"
 "th>\n"
+"                <th style=\"padding: 5px; border: 1px solid black;\">Arrival "
+"Note</th>\n"
 "                <th style=\"padding: 5px; border: 1px solid black;"
 "\">Departure Date</th>\n"
 "            </tr>\n"
-"            % for o in ctx.get('stay_list'):\n"
+"            <t t-foreach=\"object._mail_template_get_stays()\" t-as=\"stay"
+"\">\n"
 "            <tr>\n"
 "                <td style=\"padding: 5px; border: 1px solid black; text-"
-"align: left;\">${o['partner_name']}</td>\n"
-"                <td style=\"padding: 5px; border: 1px solid black;\">"
-"${o['guest_qty']}</td>\n"
-"                <td style=\"padding: 5px; border: 1px solid black;\">"
-"${o['arrival_time']}</td>\n"
-"                <td style=\"padding: 5px; border: 1px solid black;\">"
-"${o['rooms']}</td>\n"
-"                <td style=\"padding: 5px; border: 1px solid black;\">"
-"${format_date(o['departure_date'])} (${o._fields['departure_time']."
-"convert_to_export(o.departure_time, o)})</td>\n"
+"align: left;\"><t t-out=\"stay.partner_name\"></t></td>\n"
+"                <td style=\"padding: 5px; border: 1px solid black;\"><t t-"
+"out=\"stay.guest_qty\"></t></td>\n"
+"                <td style=\"padding: 5px; border: 1px solid black;\"><t t-"
+"out=\"dict(stay.fields_get('arrival_time', 'selection')['arrival_time']"
+"['selection'])[stay.arrival_time]\"></t></td>\n"
+"                <td style=\"padding: 5px; border: 1px solid black;\"><t t-"
+"out=\"stay.rooms_display_name\"></t></td>\n"
+"                <td style=\"padding: 5px; border: 1px solid black; text-"
+"align: left;\"><t t-out=\"stay.arrival_note\"></t></td>\n"
+"                <td style=\"padding: 5px; border: 1px solid black;\"><t t-"
+"out=\"departure_date\"></t> <t t-esc=\"dict(stay."
+"fields_get('departure_time', 'selection')['departure_time']['selection'])"
+"[stay.departure_time]\"></t></td>\n"
 "            </tr>\n"
-"            % endfor\n"
+"    </t>\n"
 "        </table>\n"
 "    </p>\n"
 "</div>\n"
 "    "
+msgstr ""
+
+#. module: stay
+#: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
+msgid ""
+"<select id=\"title\" name=\"title\">\n"
+"                <option value=\"madam\">Madam</option>\n"
+"                <option value=\"mister\">Mister</option>\n"
+"                <option value=\"miss\">Miss</option>\n"
+"            </select>"
 msgstr ""
 
 #. module: stay
@@ -114,9 +126,12 @@ msgid "A room with this code already exists in this company."
 msgstr "此房号已存在。"
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/wizard/stay_multi_duplicate.py:0
 #, python-format
-msgid "A stay already exists for guest '%s' with arrival date %s (stay %s)."
+msgid ""
+"A stay already exists for guest '%(guest)s' with arrival date "
+"%(arival_date)s (stay %(stay)s)."
 msgstr ""
 
 #. module: stay
@@ -169,6 +184,7 @@ msgid "Additional Notes/your motivations"
 msgstr ""
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid "Af"
@@ -182,6 +198,7 @@ msgid "Afternoon"
 msgstr "下午"
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/wizard/stay_stay_xlsx.py:0
 #, python-format
 msgid "All"
@@ -189,7 +206,7 @@ msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room__allow_simultaneous
-msgid "Allow simultaneous"
+msgid "Allow Simultaneous"
 msgstr ""
 
 #. module: stay
@@ -258,10 +275,13 @@ msgid "Arrival Time :"
 msgstr "到达时间"
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/models/stay.py:0
-#, fuzzy, python-format
-msgid "Arrival date (%s) cannot be after departure date (%s)!"
-msgstr "到达日期 (%s) 必须早于离开日期 (%s)"
+#, python-format
+msgid ""
+"Arrival date (%(arrival_date)s) cannot be after departure date "
+"(%(departure_date)s)!"
+msgstr ""
 
 #. module: stay
 #: model:ir.actions.report,name:stay.report_stay_journal_arrival
@@ -270,6 +290,7 @@ msgid "Arrival list"
 msgstr "到达日期"
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid "Arrival time cannot be set to unknownif the stay is confirmed!"
@@ -348,6 +369,7 @@ msgid "Breakfasts"
 msgstr ""
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid "CONSTRUCTION"
@@ -378,6 +400,7 @@ msgid "Capacity"
 msgstr "桌数"
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/wizard/stay_stay_xlsx.py:0
 #, python-format
 msgid "Celebration"
@@ -439,11 +462,12 @@ msgid "Confirmed"
 msgstr ""
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid ""
-"Conflict in room %s: with stay '%s', we would have a total of %d guests on "
-"%s whereas that room only has %d beds."
+"Conflict in room %(room)s: with stay '%(stay)s', we would have a total of "
+"%(qty)d guests on %(date)s whereas that room only has %(bed_qty)d beds."
 msgstr ""
 
 #. module: stay
@@ -519,6 +543,7 @@ msgid "Current and Future Stays"
 msgstr ""
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/wizard/stay_stay_xlsx.py:0
 #: model:ir.model.fields,field_description:stay.field_stay_date_label__date
 #: model:ir.model.fields,field_description:stay.field_stay_journal_print__date
@@ -531,14 +556,7 @@ msgstr "日期"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_journal_print__date_label
-#: model_terms:ir.ui.view,arch_db:stay.stay_date_label_form
 msgid "Date Label"
-msgstr ""
-
-#. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_date_label_calendar
-#: model_terms:ir.ui.view,arch_db:stay.stay_date_label_tree
-msgid "Date Labels"
 msgstr ""
 
 #. module: stay
@@ -601,6 +619,7 @@ msgid "Departure Time :"
 msgstr "离开时间"
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid "Departure Time cannot be set to unknown if the stay is confirmed."
@@ -613,9 +632,6 @@ msgid "Dinners"
 msgstr "晚餐"
 
 #. module: stay
-#: model:ir.model.fields,field_description:stay.field_res_company__display_name
-#: model:ir.model.fields,field_description:stay.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:stay.field_res_partner__display_name
 #: model:ir.model.fields,field_description:stay.field_stay_date_label__display_name
 #: model:ir.model.fields,field_description:stay.field_stay_group__display_name
 #: model:ir.model.fields,field_description:stay.field_stay_journal_print__display_name
@@ -660,6 +676,7 @@ msgid "Error"
 msgstr ""
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid "Ev"
@@ -694,12 +711,6 @@ msgid "Followers"
 msgstr "随行人员"
 
 #. module: stay
-#: model:ir.model.fields,field_description:stay.field_stay_stay__message_channel_ids
-#, fuzzy
-msgid "Followers (Channels)"
-msgstr "随行人员"
-
-#. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_partner_ids
 #, fuzzy
 msgid "Followers (Partners)"
@@ -711,6 +722,7 @@ msgid "Font awesome icon e.g. fa-tasks"
 msgstr ""
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid ""
@@ -719,6 +731,7 @@ msgid ""
 msgstr ""
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid ""
@@ -727,6 +740,7 @@ msgid ""
 msgstr ""
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid ""
@@ -757,7 +771,6 @@ msgstr "生成住宿明细"
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__group_id
 #: model:ir.model.fields,field_description:stay.field_stay_room_mass_assign__group_id
 #: model:ir.model.fields,field_description:stay.field_stay_stay__group_id
-#: model_terms:ir.ui.view,arch_db:stay.stay_group_form
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_search
@@ -789,7 +802,6 @@ msgstr "客户姓名"
 #: model:ir.actions.act_window,name:stay.stay_group_action
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__group_ids
 #: model:ir.ui.menu,name:stay.stay_group_menu
-#: model_terms:ir.ui.view,arch_db:stay.stay_group_tree
 #, fuzzy
 msgid "Groups"
 msgstr "按分组"
@@ -851,6 +863,7 @@ msgid "Guest has Left"
 msgstr "客户列表"
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid "Guest has left before the end of his stay."
@@ -863,9 +876,11 @@ msgid "Guests"
 msgstr "客户"
 
 #. module: stay
-#: model:ir.model.fields,field_description:stay.field_res_company__id
-#: model:ir.model.fields,field_description:stay.field_res_config_settings__id
-#: model:ir.model.fields,field_description:stay.field_res_partner__id
+#: model:ir.model.fields,field_description:stay.field_stay_stay__has_message
+msgid "Has Message"
+msgstr ""
+
+#. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_date_label__id
 #: model:ir.model.fields,field_description:stay.field_stay_group__id
 #: model:ir.model.fields,field_description:stay.field_stay_journal_print__id
@@ -895,7 +910,6 @@ msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__message_needaction
-#: model:ir.model.fields,help:stay.field_stay_stay__message_unread
 #, fuzzy
 msgid "If checked, new messages require your attention."
 msgstr "如您需要实时反馈新消息您得关注它。"
@@ -945,9 +959,6 @@ msgid "Label"
 msgstr ""
 
 #. module: stay
-#: model:ir.model.fields,field_description:stay.field_res_company____last_update
-#: model:ir.model.fields,field_description:stay.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:stay.field_res_partner____last_update
 #: model:ir.model.fields,field_description:stay.field_stay_date_label____last_update
 #: model:ir.model.fields,field_description:stay.field_stay_group____last_update
 #: model:ir.model.fields,field_description:stay.field_stay_journal_print____last_update
@@ -1009,11 +1020,6 @@ msgid "Lunches"
 msgstr "午餐"
 
 #. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
-msgid "Madam"
-msgstr ""
-
-#. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_main_attachment_id
 msgid "Main Attachment"
 msgstr ""
@@ -1073,22 +1079,14 @@ msgid "Messages"
 msgstr "消息"
 
 #. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
-msgid "Miss"
-msgstr ""
-
-#. module: stay
+#. odoo-python
 #: code:addons/stay/models/stay.py:0
 #, python-format
-msgid "Missing refectory for guest '%s' on %s."
-msgstr "未发现客人'%s' 在 %s 的餐厅。"
-
-#. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
-msgid "Mister"
+msgid "Missing refectory for guest '%(guest)s' on %(date)s."
 msgstr ""
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid "Mo"
@@ -1134,6 +1132,13 @@ msgstr "名称"
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
 msgid "Name and Surname"
+msgstr ""
+
+#. module: stay
+#. odoo-python
+#: code:addons/stay/models/stay.py:0
+#, python-format
+msgid "New"
 msgstr ""
 
 #. module: stay
@@ -1197,12 +1202,14 @@ msgid "No Nights"
 msgstr "晚上"
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/wizard/stay_journal_print.py:0
 #, python-format
 msgid "No arrival on %s."
 msgstr ""
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/wizard/stay_journal_print.py:0
 #, python-format
 msgid "No departure on %s."
@@ -1254,12 +1261,6 @@ msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: stay
-#: model:ir.model.fields,help:stay.field_stay_stay__message_unread_counter
-#, fuzzy
-msgid "Number of unread messages"
-msgstr "床数"
-
-#. module: stay
 #: model:ir.actions.act_window,name:stay.stay_date_label_action
 #: model:ir.ui.menu,name:stay.stay_date_label_menu
 msgid "Ordo"
@@ -1294,11 +1295,6 @@ msgid "Print Stay Global view"
 msgstr "打印住宿账本"
 
 #. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_journal_print_form
-msgid "Print Stay Journal"
-msgstr "打印住宿账本"
-
-#. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_stay_xlsx_form
 #, fuzzy
 msgid "Print Stay XLSX"
@@ -1329,7 +1325,6 @@ msgstr ""
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_refectory_action
 #: model:ir.ui.menu,name:stay.stay_refectory_menu
-#: model_terms:ir.ui.view,arch_db:stay.stay_refectory_tree
 msgid "Refectories"
 msgstr "餐厅"
 
@@ -1338,7 +1333,6 @@ msgstr "餐厅"
 #: model:ir.model.fields,field_description:stay.field_stay_line__refectory_id
 #: model:ir.model.fields,field_description:stay.field_stay_stay__refectory_id
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_search
-#: model_terms:ir.ui.view,arch_db:stay.stay_refectory_form
 msgid "Refectory"
 msgstr "餐厅"
 
@@ -1390,22 +1384,23 @@ msgstr ""
 #. module: stay
 #: model:ir.model,name:stay.model_stay_room
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__room_id
-#: model_terms:ir.ui.view,arch_db:stay.stay_room_form
 msgid "Room"
 msgstr "房间"
 
 #. module: stay
+#. odoo-python
+#: code:addons/stay/models/stay.py:0
+#, python-format
+msgid "Room %(room)s only has %(bed_qty)d bed capacity, not %(guest_qty)d!"
+msgstr ""
+
+#. module: stay
+#. odoo-python
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid ""
 "Room %s has the option Allow simultaneous, but this option is only for rooms "
 "with several beds."
-msgstr ""
-
-#. module: stay
-#: code:addons/stay/models/stay.py:0
-#, python-format
-msgid "Room %s only has %d bed capacity, not %d!"
 msgstr ""
 
 #. module: stay
@@ -1428,7 +1423,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stay.field_stay_stay__rooms_display_name
 #: model:ir.ui.menu,name:stay.stay_room_menu
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalprint_document
-#: model_terms:ir.ui.view,arch_db:stay.stay_room_tree
 #: model_terms:ir.ui.view,arch_db:stay.stay_tree
 msgid "Rooms"
 msgstr "房间"
@@ -1503,24 +1497,27 @@ msgstr ""
 #: model:ir.model.fields,field_description:stay.field_stay_room_mass_assign__stay_id
 #: model:ir.module.category,name:stay.module_category_stay
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalprint_document
-#: model_terms:ir.ui.view,arch_db:stay.stay_form
 msgid "Stay"
 msgstr "住宿"
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid ""
-"Stay '%s' is linked to group '%s', but the room '%s' is linked to group '%s'."
+"Stay '%(stay)s' is linked to group '%(stay_group)s', but the room '%(room)s' "
+"is linked to group '%(room_group)s'."
 msgstr ""
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid "Stay '%s' is not in 'Current' state."
 msgstr ""
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/wizard/stay_room_mass_assign.py:0
 #, python-format
 msgid "Stay '%s' is not in Confirmed nor Current state."
@@ -1545,17 +1542,9 @@ msgid "Stay Journal"
 msgstr "住宿账本"
 
 #. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_line_form
-msgid "Stay Line"
-msgstr "住宿明细"
-
-#. module: stay
 #: model:ir.actions.act_window,name:stay.stay_line_action
 #: model:ir.model.fields,field_description:stay.field_stay_stay__line_ids
 #: model:ir.ui.menu,name:stay.stay_line_menu
-#: model_terms:ir.ui.view,arch_db:stay.stay_line_graph
-#: model_terms:ir.ui.view,arch_db:stay.stay_line_pivot
-#: model_terms:ir.ui.view,arch_db:stay.stay_line_tree
 msgid "Stay Lines"
 msgstr "住宿明细"
 
@@ -1575,16 +1564,19 @@ msgid "Stay Room Mass Assign"
 msgstr ""
 
 #. module: stay
+#: model:mail.template,name:stay.stay_notify
+msgid "Stay: Notify arrivals"
+msgstr ""
+
+#. module: stay
 #: model:ir.actions.server,name:stay.stay_arrival_notify_cron_ir_actions_server
 #: model:ir.cron,cron_name:stay.stay_arrival_notify_cron
-#: model:ir.cron,name:stay.stay_arrival_notify_cron
 msgid "Stay: notify arrivals"
 msgstr ""
 
 #. module: stay
 #: model:ir.actions.server,name:stay.stay_state_update_cron_ir_actions_server
 #: model:ir.cron,cron_name:stay.stay_state_update_cron
-#: model:ir.cron,name:stay.stay_state_update_cron
 msgid "Stay: update state"
 msgstr ""
 
@@ -1597,18 +1589,24 @@ msgstr ""
 #: model:ir.ui.menu,name:stay.stay_sub_menu
 #: model:ir.ui.menu,name:stay.stay_top_menu
 #: model_terms:ir.ui.view,arch_db:stay.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:stay.stay_calendar
-#: model_terms:ir.ui.view,arch_db:stay.stay_graph
-#: model_terms:ir.ui.view,arch_db:stay.stay_pivot
 #: model_terms:ir.ui.view,arch_db:stay.view_partner_form
 msgid "Stays"
 msgstr "住宿"
 
 #. module: stay
+#. odoo-python
+#: code:addons/stay/wizard/stay_stay_xlsx.py:0
+#, python-format
+msgid "Stays - %s"
+msgstr ""
+
+#. module: stay
+#. odoo-python
 #: code:addons/stay/wizard/stay_multi_duplicate.py:0
-#, fuzzy, python-format
-msgid "The end date (%s) must be after the start_date (%s)!"
-msgstr "到达日期 (%s) 必须早于离开日期 (%s)"
+#, python-format
+msgid ""
+"The end date (%(end_date)s) must be after the start date (%(start_date)s)!"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_room_assign_guest_qty_positive
@@ -1642,6 +1640,7 @@ msgid "The number of lunches must be positive or null."
 msgstr "午餐数值必须为正数或null。"
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/wizard/stay_multi_duplicate.py:0
 #, python-format
 msgid "The start date %s is in the past!"
@@ -1655,9 +1654,10 @@ msgid ""
 msgstr "从这里生成的住宿清单明细默认不含午餐晚餐在内。"
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/wizard/stay_journal_print.py:0
 #, python-format
-msgid "There are no stays on %s in company %s."
+msgid "There are no stays on %(date)s in company %(company)s."
 msgstr ""
 
 #. module: stay
@@ -1679,10 +1679,12 @@ msgid "This room has already been used in this stay."
 msgstr ""
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid ""
-"This stay conflicts with stay %s of '%s' from %s %s to %s %s in room %s."
+"This stay conflicts with stay %(stay)s of '%(guest)s' from %(arrival_date)s "
+"%(arrival_time)s to %(departure_date)s %(departure_time)s in room %(room)s."
 msgstr ""
 
 #. module: stay
@@ -1719,17 +1721,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__departure_time__unknown
 msgid "Unknown"
 msgstr ""
-
-#. module: stay
-#: model:ir.model.fields,field_description:stay.field_stay_stay__message_unread
-msgid "Unread Messages"
-msgstr "未读信息"
-
-#. module: stay
-#: model:ir.model.fields,field_description:stay.field_stay_stay__message_unread_counter
-#, fuzzy
-msgid "Unread Messages Counter"
-msgstr "未读信息"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
@@ -1793,12 +1784,14 @@ msgid ""
 msgstr ""
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid "You cannot delete stay '%s': you must cancel it first."
 msgstr ""
 
 #. module: stay
+#. odoo-python
 #: code:addons/stay/wizard/stay_line_mass_update.py:0
 #, python-format
 msgid ""
@@ -1851,6 +1844,44 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
 msgid "your email adress"
 msgstr ""
+
+#. module: stay
+#: model:mail.template,subject:stay.stay_notify
+msgid "{{object.name}} - Arrivals of {{format_date(ctx.get('today'))}}"
+msgstr ""
+
+#, fuzzy, python-format
+#~ msgid "Arrival date (%s) cannot be after departure date (%s)!"
+#~ msgstr "到达日期 (%s) 必须早于离开日期 (%s)"
+
+#, fuzzy
+#~ msgid "Followers (Channels)"
+#~ msgstr "随行人员"
+
+#, python-format
+#~ msgid "Missing refectory for guest '%s' on %s."
+#~ msgstr "未发现客人'%s' 在 %s 的餐厅。"
+
+#, fuzzy
+#~ msgid "Number of unread messages"
+#~ msgstr "床数"
+
+#~ msgid "Print Stay Journal"
+#~ msgstr "打印住宿账本"
+
+#~ msgid "Stay Line"
+#~ msgstr "住宿明细"
+
+#, fuzzy, python-format
+#~ msgid "The end date (%s) must be after the start_date (%s)!"
+#~ msgstr "到达日期 (%s) 必须早于离开日期 (%s)"
+
+#~ msgid "Unread Messages"
+#~ msgstr "未读信息"
+
+#, fuzzy
+#~ msgid "Unread Messages Counter"
+#~ msgstr "未读信息"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "记录上最后一条消息的日期。"
