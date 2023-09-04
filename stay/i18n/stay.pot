@@ -78,6 +78,16 @@ msgid ""
 msgstr ""
 
 #. module: stay
+#: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
+msgid ""
+"<select id=\"title\" name=\"title\">\n"
+"                <option value=\"madam\">Madam</option>\n"
+"                <option value=\"mister\">Mister</option>\n"
+"                <option value=\"miss\">Miss</option>\n"
+"            </select>"
+msgstr ""
+
+#. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_group_name_company_uniq
 msgid "A group with this name already exists in this company."
 msgstr ""
@@ -951,11 +961,6 @@ msgid "Lunches"
 msgstr ""
 
 #. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
-msgid "Madam"
-msgstr ""
-
-#. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_main_attachment_id
 msgid "Main Attachment"
 msgstr ""
@@ -1013,19 +1018,9 @@ msgid "Messages"
 msgstr ""
 
 #. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
-msgid "Miss"
-msgstr ""
-
-#. module: stay
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid "Missing refectory for guest '%s' on %s."
-msgstr ""
-
-#. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
-msgid "Mister"
 msgstr ""
 
 #. module: stay
