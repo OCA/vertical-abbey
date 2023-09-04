@@ -93,6 +93,16 @@ msgid ""
 msgstr ""
 
 #. module: stay
+#: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
+msgid ""
+"<select id=\"title\" name=\"title\">\n"
+"                <option value=\"madam\">Madam</option>\n"
+"                <option value=\"mister\">Mister</option>\n"
+"                <option value=\"miss\">Miss</option>\n"
+"            </select>"
+msgstr ""
+
+#. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_group_name_company_uniq
 msgid "A group with this name already exists in this company."
 msgstr "Un groupe avec ce nom existe déjà dans cette société."
@@ -982,11 +992,6 @@ msgid "Lunches"
 msgstr "Déjeuners"
 
 #. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
-msgid "Madam"
-msgstr "Madame"
-
-#. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_main_attachment_id
 msgid "Main Attachment"
 msgstr ""
@@ -1045,20 +1050,10 @@ msgid "Messages"
 msgstr ""
 
 #. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
-msgid "Miss"
-msgstr "Mademoiselle"
-
-#. module: stay
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid "Missing refectory for guest '%s' on %s."
 msgstr "Réfectoire manquant pour l'hôte '%s' le %s."
-
-#. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
-msgid "Mister"
-msgstr "Monsieur"
 
 #. module: stay
 #: code:addons/stay/models/stay.py:0
@@ -1813,6 +1808,15 @@ msgstr "Assistant pour reinitialiser toutes les lignes aux valeurs par défaut"
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
 msgid "your email adress"
 msgstr ""
+
+#~ msgid "Madam"
+#~ msgstr "Madame"
+
+#~ msgid "Miss"
+#~ msgstr "Mademoiselle"
+
+#~ msgid "Mister"
+#~ msgstr "Monsieur"
 
 #~ msgid ""
 #~ "Stay '%s' has %d guest(s), but its room assignment has a total of %d "
