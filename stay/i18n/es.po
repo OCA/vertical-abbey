@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-10-17 21:36+0000\n"
+"PO-Revision-Date: 2023-10-18 14:36+0000\n"
 "Last-Translator: Ivorra78 <informatica@totmaterial.es>\n"
 "Language-Team: none\n"
 "Language: es\n"
@@ -454,24 +454,24 @@ msgstr ""
 #. module: stay
 #: model:ir.model,name:stay.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Ajustes Configuración"
 
 #. module: stay
 #: model:ir.ui.menu,name:stay.stay_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "Configuración"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
 msgid "Confirm"
-msgstr ""
+msgstr "Confirmar"
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_multi_duplicate__create_state__confirm
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__state__confirm
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Confirmed"
-msgstr ""
+msgstr "Confirmado/a"
 
 #. module: stay
 #. odoo-python
@@ -481,23 +481,26 @@ msgid ""
 "Conflict in room %(room)s: with stay '%(stay)s', we would have a total of "
 "%(qty)d guests on %(date)s whereas that room only has %(bed_qty)d beds."
 msgstr ""
+"Conflicto en la habitación %(room)s: con estancia '%(stay)s', tendríamos un "
+"total de %(qty)d huéspedes en %(date)s mientras que esa habitación sólo "
+"tiene %(bed_qty)d camas."
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_construction_action
 #: model:ir.model.fields,field_description:stay.field_stay_stay__construction
 #: model:ir.ui.menu,name:stay.stay_construction_menu
 msgid "Construction"
-msgstr ""
+msgstr "Construcción"
 
 #. module: stay
 #: model:ir.model,name:stay.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Contacto"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_multi_duplicate__create_state
 msgid "Create State"
-msgstr ""
+msgstr "Crear Estado"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_date_label__create_uid
@@ -515,7 +518,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__create_uid
 #: model:ir.model.fields,field_description:stay.field_stay_toclean_print__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_date_label__create_date
@@ -533,24 +536,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__create_date
 #: model:ir.model.fields,field_description:stay.field_stay_toclean_print__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creado el"
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__state__current
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Current"
-msgstr ""
+msgstr "Vigente"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_search
 msgid "Current and Future Lines"
-msgstr ""
+msgstr "Líneas actuales y futuras"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Current and Future Stays"
-msgstr ""
+msgstr "Estancias Actuales y Futuras"
 
 #. module: stay
 #. odoo-python
@@ -562,30 +565,30 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_search
 #, python-format
 msgid "Date"
-msgstr ""
+msgstr "Fecha"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_journal_print__date_label
 msgid "Date Label"
-msgstr ""
+msgstr "Fecha Etiqueta"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.dates_selection_error
 msgid "Dates selection Error"
-msgstr ""
+msgstr "Selección de fechas Error"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_res_company__default_refectory_id
 #: model:ir.model.fields,field_description:stay.field_res_config_settings__stay_default_refectory_id
 #: model:ir.model.fields,field_description:stay.field_stay_group__default_refectory_id
 msgid "Default Refectory"
-msgstr ""
+msgstr "Refectorio por Defecto"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalprint_document
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
 msgid "Departure"
-msgstr ""
+msgstr "Salida"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__departure_date
@@ -593,35 +596,35 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Departure Date"
-msgstr ""
+msgstr "Fecha de Salida"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
 #: model_terms:ir.ui.view,arch_db:stay.stay_saved_iframe
 msgid "Departure Date :"
-msgstr ""
+msgstr "Fecha de Salida :"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__departure_datetime
 #: model:ir.model.fields,field_description:stay.field_stay_stay__departure_datetime
 msgid "Departure Date and Time"
-msgstr ""
+msgstr "Fecha y hora de Salida"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__departure_note
 msgid "Departure Note"
-msgstr ""
+msgstr "Nota de Salida"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__departure_time
 #: model:ir.model.fields,field_description:stay.field_stay_stay__departure_time
 msgid "Departure Time"
-msgstr ""
+msgstr "Hora de Salida"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_saved_iframe
 msgid "Departure Time :"
-msgstr ""
+msgstr "Hora de Salida :"
 
 #. module: stay
 #. odoo-python
@@ -629,12 +632,14 @@ msgstr ""
 #, python-format
 msgid "Departure Time cannot be set to unknown if the stay is confirmed."
 msgstr ""
+"La hora de salida no se puede establecer como desconocida si la estancia "
+"está confirmada."
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line__dinner_qty
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalprint_document
 msgid "Dinners"
-msgstr ""
+msgstr "Cenas"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_date_label__display_name
@@ -652,14 +657,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__display_name
 #: model:ir.model.fields,field_description:stay.field_stay_toclean_print__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Mostrar Nombre"
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_multi_duplicate__create_state__draft
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__state__draft
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Draft"
-msgstr ""
+msgstr "Borrador"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.dates_selection_error
@@ -667,62 +672,64 @@ msgid ""
 "Either the arrival date you've chosen is past, or the arrival date you've "
 "selected is after your departure date!"
 msgstr ""
+"¡O bien la fecha de llegada que ha elegido ya ha pasado, o bien la fecha de "
+"llegada que ha seleccionado es posterior a la fecha de salida!"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_multi_duplicate__end_date
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__end_date
 msgid "End Date"
-msgstr ""
+msgstr "Fecha Finalización"
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__assign_status__error
 msgid "Error"
-msgstr ""
+msgstr "Error"
 
 #. module: stay
 #. odoo-python
 #: code:addons/stay/models/stay.py:0
 #, python-format
 msgid "Ev"
-msgstr ""
+msgstr "Ev"
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__arrival_time__evening
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__departure_time__evening
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
 msgid "Evening"
-msgstr ""
+msgstr "Por la noche"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__file_xlsx
 msgid "File Xlsx"
-msgstr ""
+msgstr "Archivo Xlsx"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__filename
 msgid "Filename"
-msgstr ""
+msgstr "Nombre del fichero"
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__state__done
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Finished"
-msgstr ""
+msgstr "Terminado"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Seguidores/as"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Seguidores/as (Socios)"
 
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Icono de fuente impresionante, por ejemplo fa-tasks"
 
 #. module: stay
 #. odoo-python
@@ -732,6 +739,8 @@ msgid ""
 "For a stay without night, the departure time can only be afternoon or "
 "evening."
 msgstr ""
+"Para una estancia sin noche, la hora de salida sólo puede ser por la tarde o "
+"por la noche."
 
 #. module: stay
 #. odoo-python
@@ -741,6 +750,8 @@ msgid ""
 "For a stay without night, when the departure time is afternoon, the arrival "
 "time must be morning."
 msgstr ""
+"Para una estancia sin noche, cuando la hora de salida sea por la tarde, la "
+"hora de llegada deberá ser por la mañana."
 
 #. module: stay
 #. odoo-python
@@ -750,21 +761,23 @@ msgid ""
 "For a stay without night, when the departure time is evening, the arrival "
 "time must be morning or afternoon."
 msgstr ""
+"Para una estancia sin noche, cuando la hora de salida sea por la noche, la "
+"hora de llegada deberá ser por la mañana o por la tarde."
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_multi_duplicate__frequency
 msgid "Frequency"
-msgstr ""
+msgstr "Frecuencia"
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_journal_print__report_type__general
 msgid "General"
-msgstr ""
+msgstr "General"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_multi_duplicate_form
 msgid "Generate Stays"
-msgstr ""
+msgstr "Generar estancias"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line__group_id
@@ -777,31 +790,31 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Group"
-msgstr ""
+msgstr "Grupo"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Group By"
-msgstr ""
+msgstr "Agrupar Por"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__group_id_integer
 msgid "Group ID"
-msgstr ""
+msgstr "ID de Grupo"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_group__name
 msgid "Group Name"
-msgstr ""
+msgstr "Nombre Grupo"
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_group_action
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__group_ids
 #: model:ir.ui.menu,name:stay.stay_group_menu
 msgid "Groups"
-msgstr ""
+msgstr "Grupos"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line__partner_id
@@ -809,46 +822,46 @@ msgstr ""
 #: model:ir.model.fields,field_description:stay.field_stay_stay__partner_id
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_search
 msgid "Guest"
-msgstr ""
+msgstr "Invitado/a"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalprint_document
 msgid "Guest List"
-msgstr ""
+msgstr "Lista de invitados/as"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Guest Name"
-msgstr ""
+msgstr "Nombre del huésped"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Guest Name or Stay Number"
-msgstr ""
+msgstr "Nombre del Huésped o Número de Estancia"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line__partner_name
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__partner_name
 #: model:ir.model.fields,field_description:stay.field_stay_stay__partner_name
 msgid "Guest Names"
-msgstr ""
+msgstr "Nombres de los Huéspedes"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__guest_qty_to_assign
 msgid "Guest Qty To Assign"
-msgstr ""
+msgstr "Cantd de Huéspedes a Asignar"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__guest_qty
 #: model:ir.model.fields,field_description:stay.field_stay_stay__guest_qty
 msgid "Guest Quantity"
-msgstr ""
+msgstr "Cantidad de Huéspedes"
 
 #. module: stay
 #: model:ir.model,name:stay.model_stay_stay
 msgid "Guest Stay"
-msgstr ""
+msgstr "Estancia de Huéspedes"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
