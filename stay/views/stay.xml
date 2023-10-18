@@ -985,6 +985,12 @@ So I use the form view below by default -->
                 />
             <separator />
             <filter
+                    string="Today and Next 30 Days"
+                    name="today_next_30"
+                    domain="[('date', '&gt;=', (context_today().strftime('%Y-%m-%d'))), ('date', '&lt;=', (context_today() + datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"
+                />
+            <separator />
+            <filter
                     name="my_rooms"
                     string="My Rooms"
                     domain="[('user_id', '=', uid)]"
