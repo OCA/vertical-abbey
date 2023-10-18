@@ -1045,7 +1045,12 @@ So I use the form view below by default -->
     <field name="model">stay.line</field>
     <field name="arch" type="xml">
         <pivot string="Stay Lines">
-            <field name="date" interval="month" type="row" />
+            <field name="date" interval="day" type="row" />
+            <field
+                    name="breakfast_qty"
+                    type="measure"
+                    groups="stay.group_stay_breakfast"
+                />
             <field name="lunch_qty" type="measure" />
             <field name="dinner_qty" type="measure" />
             <field name="bed_night_qty" type="measure" />
