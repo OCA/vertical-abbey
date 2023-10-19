@@ -36,7 +36,9 @@ TIME2CODE = {
 class StayStay(models.Model):
     _name = "stay.stay"
     _description = "Guest Stay"
-    _order = "arrival_date desc"
+    # as we have the default filter "Current and Future Stays", it's better to have
+    # arrival_date asc and not arrival_date desc
+    _order = "arrival_date"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _check_company_auto = True
 
