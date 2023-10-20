@@ -1627,6 +1627,11 @@ msgid "To Clean Report"
 msgstr ""
 
 #. module: stay
+#: model_terms:ir.ui.view,arch_db:stay.stay_line_search
+msgid "Today and Next 30 Days"
+msgstr ""
+
+#. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr ""
