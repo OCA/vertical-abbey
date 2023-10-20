@@ -6,7 +6,7 @@
 
 {
     "name": "Stay",
-    "version": "16.0.1.0.0",
+    "version": "16.0.1.1.0",
     "category": "Lodging",
     "license": "AGPL-3",
     "summary": "Simple management of stays and meals",
