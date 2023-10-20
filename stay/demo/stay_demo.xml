@@ -32,7 +32,7 @@
 
 <record id="group2" model="stay.group">
     <field name="name">Hôtellerie familles</field>
-    <field name="default_refectory_id" ref="refectory_ste_francoise" />
+    <field name="default_no_meals" eval="True" />
 </record>
 
 <record id="room_st_cure_ars" model="stay.room">
