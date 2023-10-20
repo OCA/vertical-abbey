@@ -139,9 +139,13 @@ class StayStay(models.Model):
         readonly=False,
     )
     no_meals = fields.Boolean(
+        compute="_compute_refectory_id",
+        store=True,
+        precompute=True,
+        readonly=False,
         tracking=True,
         help="The stay lines generated from this stay will not have "
-        "lunchs nor dinners by default.",
+        "breakfast/lunch/dinner by default.",
     )
     construction = fields.Boolean()
     rooms_display_name = fields.Char(
@@ -464,6 +468,8 @@ class StayStay(models.Model):
             elif stay.company_id.default_refectory_id:
                 refectory_id = stay.company_id.default_refectory_id.id
             stay.refectory_id = refectory_id
+            if stay.group_id:
+                stay.no_meals = stay.group_id.default_no_meals
 
     def _prepare_stay_line(self, date):  # noqa: C901
         self.ensure_one()
@@ -1111,6 +1117,7 @@ class StayGroup(models.Model):
         ondelete="restrict",
         check_company=True,
     )
+    default_no_meals = fields.Boolean(string="No Meals by Default")
 
     _sql_constraints = [
         (
