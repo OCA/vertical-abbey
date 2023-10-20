@@ -1121,6 +1121,11 @@ msgid "No Meals"
 msgstr ""
 
 #. module: stay
+#: model:ir.model.fields,field_description:stay.field_stay_group__default_no_meals
+msgid "No Meals by Default"
+msgstr ""
+
+#. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__assign_status__no_night
 msgid "No Nights"
 msgstr ""
@@ -1570,8 +1575,8 @@ msgstr ""
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__no_meals
 msgid ""
-"The stay lines generated from this stay will not have lunchs nor dinners by "
-"default."
+"The stay lines generated from this stay will not have breakfast/lunch/dinner"
+" by default."
 msgstr ""
 
 #. module: stay
