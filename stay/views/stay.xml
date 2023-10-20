@@ -848,6 +848,7 @@ So I use the form view below by default -->
                     <field name="name" />
                     <field name="company_id" groups="base.group_multi_company" />
                     <field name="company_id" invisible="1" />
+                    <field name="default_no_meals" />
                     <field name="default_refectory_id" />
                     <field name="user_id" />
                     <field name="notify_user_ids" widget="many2many_tags" />
@@ -864,6 +865,7 @@ So I use the form view below by default -->
         <tree>
             <field name="sequence" widget="handle" />
             <field name="name" />
+            <field name="default_no_meals" optional="show" />
             <field name="default_refectory_id" optional="show" />
             <field name="user_id" />
             <field

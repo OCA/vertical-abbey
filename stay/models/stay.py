@@ -139,9 +139,13 @@ class StayStay(models.Model):
         readonly=False,
     )
     no_meals = fields.Boolean(
+        compute="_compute_refectory_id",
+        store=True,
+        precompute=True,
+        readonly=False,
         tracking=True,
         help="The stay lines generated from this stay will not have "
-        "lunchs nor dinners by default.",
+        "breakfast/lunch/dinner by default.",
     )
     construction = fields.Boolean()
     rooms_display_name = fields.Char(
@@ -464,6 +468,8 @@ class StayStay(models.Model):
             elif stay.company_id.default_refectory_id:
                 refectory_id = stay.company_id.default_refectory_id.id
             stay.refectory_id = refectory_id
+            if stay.group_id:
+                stay.no_meals = stay.group_id.default_no_meals
 
     def _prepare_stay_line(self, date):  # noqa: C901
         self.ensure_one()
@@ -907,11 +913,23 @@ class StayRoomAssign(models.Model):
 
     @api.depends("partner_name", "arrival_time", "departure_time", "room_id")
     def name_get(self):
+        # Mainly used in the timeline view
+        # So we can have a long label for long stays, and we need a short
+        # label for short stays
         res = []
+        days2size = {
+            1: 8,
+            2: 25,
+            3: 50,
+        }
         for assign in self:
+            max_name_size = 30
+            if assign.arrival_date and assign.departure_date:
+                days = (assign.departure_date - assign.arrival_date).days + 1
+                max_name_size = days2size.get(days, 120)
             name = "[%s] %s, %s, %d [%s]" % (
                 TIME2CODE[assign.arrival_time],
-                shorten(assign.partner_name, 20, placeholder="..."),
+                shorten(assign.partner_name, max_name_size, placeholder="..."),
                 assign.room_id.code or assign.room_id.name,
                 assign.guest_qty,
                 TIME2CODE[assign.departure_time],
@@ -1099,6 +1117,7 @@ class StayGroup(models.Model):
         ondelete="restrict",
         check_company=True,
     )
+    default_no_meals = fields.Boolean(string="No Meals by Default")
 
     _sql_constraints = [
         (
