@@ -943,7 +943,6 @@ msgstr "Si se comprueba, nuevos mensajes requieren su atención."
 
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__message_has_error
-#: model:ir.model.fields,help:stay.field_stay_stay__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "si está marcada, algunos mensajes tienen un error de entrega."
 
@@ -1456,11 +1455,6 @@ msgid "Rooms to clean"
 msgstr "Habitaciones para limpiar"
 
 #. module: stay
-#: model:ir.model.fields,field_description:stay.field_stay_stay__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "Error en la entrega de SMS"
-
-#. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_group__sequence
 #: model:ir.model.fields,field_description:stay.field_stay_refectory__sequence
 #: model:ir.model.fields,field_description:stay.field_stay_room__sequence
@@ -1882,6 +1876,9 @@ msgstr "su dirección de correo electrónico"
 #: model:mail.template,subject:stay.stay_notify
 msgid "{{object.name}} - Arrivals of {{format_date(ctx.get('today'))}}"
 msgstr "{{object.name}} - Llegadas de {{format_date(ctx.get('today'))}}"
+
+#~ msgid "SMS Delivery error"
+#~ msgstr "Error en la entrega de SMS"
 
 #~ msgid ""
 #~ "The stay lines generated from this stay will not have lunchs nor dinners "
