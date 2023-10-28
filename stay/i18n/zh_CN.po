@@ -1186,6 +1186,11 @@ msgid "No Meals"
 msgstr "无餐"
 
 #. module: stay
+#: model:ir.model.fields,field_description:stay.field_stay_group__default_no_meals
+msgid "No Meals by Default"
+msgstr ""
+
+#. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__assign_status__no_night
 #, fuzzy
 msgid "No Nights"
@@ -1651,9 +1656,9 @@ msgstr ""
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__no_meals
 msgid ""
-"The stay lines generated from this stay will not have lunchs nor dinners by "
-"default."
-msgstr "从这里生成的住宿清单明细默认不含午餐晚餐在内。"
+"The stay lines generated from this stay will not have breakfast/lunch/dinner "
+"by default."
+msgstr ""
 
 #. module: stay
 #: code:addons/stay/wizard/stay_journal_print.py:0
@@ -1708,6 +1713,11 @@ msgstr ""
 #: model:ir.ui.menu,name:stay.stay_toclean_print_menu
 #: model_terms:ir.ui.view,arch_db:stay.stay_toclean_print_form
 msgid "To Clean Report"
+msgstr ""
+
+#. module: stay
+#: model_terms:ir.ui.view,arch_db:stay.stay_line_search
+msgid "Today and Next 30 Days"
 msgstr ""
 
 #. module: stay
@@ -1852,6 +1862,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
 msgid "your email adress"
 msgstr ""
+
+#~ msgid ""
+#~ "The stay lines generated from this stay will not have lunchs nor dinners "
+#~ "by default."
+#~ msgstr "从这里生成的住宿清单明细默认不含午餐晚餐在内。"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "记录上最后一条消息的日期。"

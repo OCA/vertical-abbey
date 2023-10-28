@@ -1153,6 +1153,11 @@ msgid "No Meals"
 msgstr "Pas de repas"
 
 #. module: stay
+#: model:ir.model.fields,field_description:stay.field_stay_group__default_no_meals
+msgid "No Meals by Default"
+msgstr ""
+
+#. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__assign_status__no_night
 msgid "No Nights"
 msgstr "Pas de nuités"
@@ -1605,11 +1610,9 @@ msgstr ""
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__no_meals
 msgid ""
-"The stay lines generated from this stay will not have lunchs nor dinners by "
-"default."
+"The stay lines generated from this stay will not have breakfast/lunch/dinner "
+"by default."
 msgstr ""
-"Les lignes de séjour générées pour ce séjour n'auront pas de déjeuners ni de "
-"dîners par défaut"
 
 #. module: stay
 #: code:addons/stay/wizard/stay_journal_print.py:0
@@ -1669,6 +1672,11 @@ msgstr "A nettoyer"
 #: model_terms:ir.ui.view,arch_db:stay.stay_toclean_print_form
 msgid "To Clean Report"
 msgstr "Rapport ménage"
+
+#. module: stay
+#: model_terms:ir.ui.view,arch_db:stay.stay_line_search
+msgid "Today and Next 30 Days"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__activity_exception_decoration
@@ -1808,6 +1816,13 @@ msgstr "Assistant pour reinitialiser toutes les lignes aux valeurs par défaut"
 #: model_terms:ir.ui.view,arch_db:stay.stay_form_iframe
 msgid "your email adress"
 msgstr ""
+
+#~ msgid ""
+#~ "The stay lines generated from this stay will not have lunchs nor dinners "
+#~ "by default."
+#~ msgstr ""
+#~ "Les lignes de séjour générées pour ce séjour n'auront pas de déjeuners ni "
+#~ "de dîners par défaut"
 
 #~ msgid "Madam"
 #~ msgstr "Madame"
