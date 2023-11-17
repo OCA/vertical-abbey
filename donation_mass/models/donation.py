@@ -55,7 +55,7 @@ class DonationDonation(models.Model):
                                 ),
                             )
                         )
-                self.message_post(
+                donation.message_post(
                     body=_(
                         "%d related mass request(s) in waiting state "
                         "have been deleted."
