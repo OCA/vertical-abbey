@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-11-27 16:34+0000\n"
+"PO-Revision-Date: 2023-11-27 19:33+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -51,64 +51,64 @@ msgstr "Crea donazione"
 #. module: donation_stay
 #: model:ir.model,name:donation_stay.model_donation_stay_create
 msgid "Create Donation from a Stay"
-msgstr ""
+msgstr "Crea donazione da un soggiorno"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creato da"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creato il"
 
 #. module: donation_stay
 #: model:ir.actions.act_window,name:donation_stay.create_donation_stay_action
 msgid "Creation of Donation for a Guest Stay"
-msgstr ""
+msgstr "Crea donazione per un ospite soggiorno"
 
 #. module: donation_stay
 #: model_terms:ir.ui.view,arch_db:donation_stay.create_donation_stay_form
 msgid "Creation of a Donation for a Guest Stay"
-msgstr ""
+msgstr "Crea donazione per un ospite soggiorno"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome visualizzato"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_stay_stay__donation_id
 msgid "Donation"
-msgstr ""
+msgstr "Donazione"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__amount
 msgid "Donation Amount"
-msgstr ""
+msgstr "Valore donazione"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__date_donation
 msgid "Donation Date"
-msgstr ""
+msgstr "Data donazione"
 
 #. module: donation_stay
 #: model_terms:ir.ui.view,arch_db:donation_stay.stay_search
 msgid "Donation Recorded"
-msgstr ""
+msgstr "Donazione registrata"
 
 #. module: donation_stay
 #. odoo-python
 #: code:addons/donation_stay/wizard/create_donation_stay.py:0
 #, python-format
 msgid "Donation Stay Product not set on company '%s'."
-msgstr ""
+msgstr "Il prodotto donazione soggiorno non è impostato nell'azienda '%s'."
 
 #. module: donation_stay
 #. odoo-python
@@ -118,76 +118,78 @@ msgid ""
 "Donation created from stay <a href=# data-oe-model=stay.stay data-oe-"
 "id=%(stay_id)s>%(stay)s</a>."
 msgstr ""
+"Donazione creata da soggiorno <a href=# data-oe-model=stay.stay data-oe-"
+"id=%(stay_id)s>%(stay)s</a>."
 
 #. module: donation_stay
 #: model_terms:ir.ui.view,arch_db:donation_stay.res_config_settings_view_form
 msgid "Donation for a Stay"
-msgstr ""
+msgstr "Donazine per un soggiorno"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__partner_id
 msgid "Guest"
-msgstr ""
+msgstr "Ospite"
 
 #. module: donation_stay
 #: model:ir.model,name:donation_stay.model_stay_stay
 msgid "Guest Stay"
-msgstr ""
+msgstr "Soggiorno ospite"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Ultima modifica il"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultimo aggiornamento di"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultimo aggiornamento il"
 
 #. module: donation_stay
 #: model_terms:ir.ui.view,arch_db:donation_stay.stay_search
 msgid "No Donation"
-msgstr ""
+msgstr "Nssuna donazione"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__payment_mode_id
 msgid "Payment Mode"
-msgstr ""
+msgstr "Modo di pagamento"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__payment_ref
 msgid "Payment Reference"
-msgstr ""
+msgstr "Riferimento pagamento"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_res_company__donation_stay_product_id
 #: model:ir.model.fields,field_description:donation_stay.field_res_config_settings__donation_stay_product_id
 msgid "Product for Stay Donations"
-msgstr ""
+msgstr "Prodotto per donazione soggiorno"
 
 #. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__stay_id
 msgid "Stay"
-msgstr ""
+msgstr "Soggiorno"
 
 #. module: donation_stay
 #: model:product.template,name:donation_stay.product_product_stay_donation_product_template
 msgid "Stay Donation"
-msgstr ""
+msgstr "Donazione soggiorno"
 
 #. module: donation_stay
 #. odoo-python
 #: code:addons/donation_stay/wizard/create_donation_stay.py:0
 #, python-format
 msgid "The amount of the donation is not set or negative."
-msgstr ""
+msgstr "Il valore della donazione non è impostato o è negativo."
