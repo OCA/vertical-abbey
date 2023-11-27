@@ -6,25 +6,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2023-11-27 16:34+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.17\n"
 
 #. module: donation_mass
 #: model:ir.model.fields,field_description:donation_mass.field_donation_donation__mass_request_count
 msgid "# of Mass Requests"
-msgstr ""
+msgstr "N° di richieste messa"
 
 #. module: donation_mass
 #. odoo-python
 #: code:addons/donation_mass/models/donation.py:0
 #, python-format
 msgid "%d related mass request(s) in waiting state have been deleted."
-msgstr ""
+msgstr "%d richieste di messa relative in attesa sono state cancellate."
 
 #. module: donation_mass
 #. odoo-python
@@ -34,52 +36,54 @@ msgid ""
 "Cannot cancel the donation '%(donation)s' because it is linked to a mass "
 "request in %(mass_state)s state."
 msgstr ""
+"Non si può annullare la donazione '%(donation)s' perché è collegata ad una "
+"richiesta messa in stato %(mass_state)s."
 
 #. module: donation_mass
 #: model:ir.model.fields,field_description:donation_mass.field_donation_line__celebrant_id
 msgid "Celebrant"
-msgstr ""
+msgstr "Celebrante"
 
 #. module: donation_mass
 #: model:ir.model.fields,field_description:donation_mass.field_donation_line__mass_request_date
 msgid "Celebration Requested Date"
-msgstr ""
+msgstr "Data richiesta celebrazione"
 
 #. module: donation_mass
 #: model:ir.model,name:donation_mass.model_donation_donation
 msgid "Donation"
-msgstr ""
+msgstr "Donazione"
 
 #. module: donation_mass
 #: model:ir.model,name:donation_mass.model_donation_line
 msgid "Donation Lines"
-msgstr ""
+msgstr "Righe donazione"
 
 #. module: donation_mass
 #: model:ir.model.fields,field_description:donation_mass.field_donation_line__intention
 msgid "Intention"
-msgstr ""
+msgstr "Intenzione"
 
 #. module: donation_mass
 #: model:ir.model,name:donation_mass.model_mass_request
 msgid "Mass Request"
-msgstr ""
+msgstr "Richiesta messa"
 
 #. module: donation_mass
 #: model_terms:ir.ui.view,arch_db:donation_mass.donation_form
 msgid "Mass Requests"
-msgstr ""
+msgstr "Richieste messa"
 
 #. module: donation_mass
 #: model:ir.model.fields,field_description:donation_mass.field_mass_requests_to_transfer__request_ids
 msgid "Mass Requests to Transfer"
-msgstr ""
+msgstr "Richieste messa da trasferire"
 
 #. module: donation_mass
 #: model:ir.model.fields,field_description:donation_mass.field_donation_donation__mass_request_ids
 #: model:ir.model.fields,field_description:donation_mass.field_donation_line__mass_request_ids
 msgid "Masses"
-msgstr ""
+msgstr "Messe"
 
 #. module: donation_mass
 #. odoo-python
@@ -87,19 +91,19 @@ msgstr ""
 #: code:addons/donation_mass/models/donation.py:0
 #, python-format
 msgid "Missing mass stock account on company '%s'."
-msgstr ""
+msgstr "Conto giacenza messa non disponibile nell'azienda '%s'."
 
 #. module: donation_mass
 #: model:ir.model.fields,field_description:donation_mass.field_mass_request__donation_id
 msgid "Related Donation"
-msgstr ""
+msgstr "Donazione relativa"
 
 #. module: donation_mass
 #: model:ir.model.fields,field_description:donation_mass.field_mass_request__donation_line_id
 msgid "Related Donation Line"
-msgstr ""
+msgstr "Riga donazione relativa"
 
 #. module: donation_mass
 #: model:ir.model,name:donation_mass.model_mass_requests_to_transfer
 msgid "Select Mass Requests to Transfer"
-msgstr ""
+msgstr "Selezionare richieste di messa da trasferire"
