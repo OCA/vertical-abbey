@@ -931,6 +931,7 @@ msgstr ""
 
 #. module: mass
 #: code:addons/mass/wizard/mass_journal_generate.py:0
+#: code:addons/mass/wizard/mass_journal_generate.py:0
 #, python-format
 msgid "Warning"
 msgstr ""
