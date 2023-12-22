@@ -45,19 +45,15 @@ class MassJournalGenerate(models.TransientModel):
         default=lambda self: self._default_celebrants(),
     )
 
-    @api.model
-    def _multi_allowed_dates(self):
-        """We return only Christmas date"""
-        return ["%s-12-25" % fields.Date.context_today(self).year]
-
     @api.onchange("journal_date")
     def journal_date_on_change(self):
         line = self.env["mass.line"].search(
             [("date", "=", self.journal_date)], limit=1, order="date desc"
         )
         res = {"warning": {}}
-        if line:
-            if self.journal_date in self._multi_allowed_dates():
+        if line and self.journal_date:
+            # if Christmas
+            if self.journal_date.day == 25 and self.journal_date.month == 12:
                 res["warning"] = {
                     "title": _("Warning"),
                     "message": _(
@@ -67,14 +63,16 @@ class MassJournalGenerate(models.TransientModel):
                     % format_date(self.env, self.journal_date),
                 }
             else:
-                raise UserError(
-                    _(
+                res["warning"] = {
+                    "title": _("Warning"),
+                    "message": _(
                         "There is already a journal for %s. You cannot generate "
                         "another journal for that date. Odoo has reverted "
                         "to the default date."
                     )
-                    % format_date(self.env, self.journal_date)
-                )
+                    % format_date(self.env, self.journal_date),
+                }
+                self.journal_date = self._get_default_journal_date()
         return res
 
     @api.model
