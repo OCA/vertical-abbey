@@ -70,8 +70,8 @@ class MassJournalGenerate(models.TransientModel):
                         "another journal for that date. Odoo has reverted "
                         "to the default date."
                     )
-                    % format_date(self.env, self.journal_date)
-                    }
+                    % format_date(self.env, self.journal_date),
+                }
                 self.journal_date = self._get_default_journal_date()
         return res
 
