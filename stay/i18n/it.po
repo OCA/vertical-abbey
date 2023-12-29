@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-11-30 22:33+0000\n"
+"PO-Revision-Date: 2023-12-29 17:40+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -710,7 +710,7 @@ msgstr "File XLSX"
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__filename
 msgid "Filename"
-msgstr "Nome del file"
+msgstr "Nome file"
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__state__done
