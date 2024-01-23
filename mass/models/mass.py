@@ -131,7 +131,7 @@ class MassRequest(models.Model):
     transfer_id = fields.Many2one(
         "mass.request.transfer",
         string="Transfer Operation",
-        readonly=True,
+        copy=False,
         check_company=True,
     )
 
@@ -326,16 +326,15 @@ class MassRequestTransfer(models.Model):
     _description = "Transfered Mass Requests"
     _rec_name = "number"
     _check_company_auto = True
+    _order = "id desc"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
 
     def name_get(self):
-        state2label = dict(self.fields_get("state", "selection")["state"]["selection"])
         res = []
         for trf in self:
-            name = "%s %s (%s)" % (
-                trf.celebrant_id.display_name,
-                format_date(self.env, trf.transfer_date),
-                state2label.get(trf.state),
-            )
+            name = " ".join([trf.number, trf.celebrant_id.display_name])
+            if trf.state == "draft":
+                name = "%s (%s)" % (name, _("Draft"))
             res.append((trf.id, name))
         return res
 
@@ -345,16 +344,30 @@ class MassRequestTransfer(models.Model):
         "mass_request_ids.offering",
     )
     def _compute_transfer_totals(self):
+        rg_res = self.env["mass.request"].read_group(
+            [("transfer_id", "in", self.ids)],
+            ["transfer_id", "mass_quantity:sum", "offering:sum"],
+            ["transfer_id"],
+        )
+        mapped_data = {
+            x["transfer_id"][0]: {
+                "mass_quantity": x["mass_quantity"],
+                "offering": x["offering"],
+            }
+            for x in rg_res
+        }
         for trf in self:
-            amount_total = 0.0
-            mass_total = 0
-            for request in trf.mass_request_ids:
-                amount_total += request.offering
-                mass_total += request.mass_quantity
-            trf.amount_total = amount_total
-            trf.mass_total = mass_total
+            trf.amount_total = mapped_data.get(trf.id, {"offering": 0}).get("offering")
+            trf.mass_total = mapped_data.get(trf.id, {"mass_quantity": 0}).get(
+                "mass_quantity"
+            )
 
-    number = fields.Char(string="Transfer Number", readonly=True)
+    number = fields.Char(
+        string="Transfer Number",
+        default=lambda self: _("New"),
+        readonly=True,
+        copy=False,
+    )
     celebrant_id = fields.Many2one(
         "res.partner",
         required=True,
@@ -362,6 +375,7 @@ class MassRequestTransfer(models.Model):
         domain=[("celebrant", "=", "external")],
         states={"done": [("readonly", True)]},
         ondelete="restrict",
+        tracking=True,
     )
     company_id = fields.Many2one(
         "res.company",
@@ -369,6 +383,7 @@ class MassRequestTransfer(models.Model):
         ondelete="restrict",
         states={"done": [("readonly", True)]},
         default=lambda self: self.env.company,
+        tracking=True,
     )
     company_currency_id = fields.Many2one(
         "res.currency",
@@ -380,6 +395,7 @@ class MassRequestTransfer(models.Model):
         required=True,
         states={"done": [("readonly", True)]},
         default=fields.Date.context_today,
+        tracking=True,
     )
     mass_request_ids = fields.One2many(
         "mass.request",
@@ -392,12 +408,15 @@ class MassRequestTransfer(models.Model):
     )
     amount_total = fields.Monetary(
         compute="_compute_transfer_totals",
-        type="float",
         currency_field="company_currency_id",
         store=True,
+        tracking=True,
     )
     mass_total = fields.Integer(
-        compute="_compute_transfer_totals", string="Total Mass Quantity", store=True
+        compute="_compute_transfer_totals",
+        string="Total Mass Quantity",
+        store=True,
+        tracking=True,
     )
     state = fields.Selection(
         [
@@ -406,10 +425,22 @@ class MassRequestTransfer(models.Model):
         ],
         readonly=True,
         default="draft",
+        tracking=True,
     )
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if "company_id" in vals:
+                self = self.with_company(vals["company_id"])
+            if vals.get("number", _("New")) == _("New"):
+                vals["number"] = self.env["ir.sequence"].next_by_code(
+                    "mass.request.transfer", vals.get("transfer_date")
+                ) or _("New")
+        return super().create(vals_list)
+
     @api.model
-    def _prepare_mass_transfer_move(self, number):
+    def _prepare_mass_transfer_move(self):
         movelines = []
         stock_aml = defaultdict(float)  # key = account_id, value = amount
         for request in self.mass_request_ids:
@@ -456,7 +487,7 @@ class MassRequestTransfer(models.Model):
             "journal_id": self.company_id.mass_validation_journal_id.id,
             # Same journal as validation journal ?
             "date": self.transfer_date,
-            "ref": number,
+            "ref": self.number,
             "line_ids": movelines,
             "company_id": self.company_id.id,
         }
@@ -478,13 +509,9 @@ class MassRequestTransfer(models.Model):
             )
 
         transfer_vals = {"state": "done"}
-        number = self.number
-        if not number:
-            number = self.env["ir.sequence"].next_by_code("mass.request.transfer")
-            transfer_vals["number"] = number
 
         # Create account move
-        move_vals = self._prepare_mass_transfer_move(number)
+        move_vals = self._prepare_mass_transfer_move()
         move = self.env["account.move"].create(move_vals)
         if self.company_id.mass_post_move:
             move._post(soft=False)
@@ -495,9 +522,11 @@ class MassRequestTransfer(models.Model):
     def back_to_draft(self):
         self.ensure_one()
         if self.move_id:
-            self.move_id.button_cancel()
-            self.move_id.unlink()
-        self.state = "draft"
+            move = self.move_id
+            if move.state == "posted":
+                move.button_cancel()
+            move.with_context(force_delete=True).unlink()
+        self.write({"state": "draft"})
 
     def unlink(self):
         for trf in self:

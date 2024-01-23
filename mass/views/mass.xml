@@ -190,7 +190,9 @@
                         <field name="quantity" />
                         <field name="mass_quantity" />
                         <field name="mass_remaining_quantity" />
-                        <field name="transfer_id" states="transfered" />
+                        <!-- for field 'transfer_id', readonly=1 must be in the view not in the code
+                            because it has consequences on the behavior of lines in mass.transfer.request -->
+                        <field name="transfer_id" states="transfered" readonly="1" />
                     </group>
                 </group>
                 <notebook>
@@ -455,6 +457,9 @@
         <search>
             <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]" />
             <filter name="done" string="Done" domain="[('state', '=', 'done')]" />
+            <separator />
+            <filter name="date" string="Date" date="date" />
+            <separator />
             <field name="date" />
             <field name="partner_id" />
             <field name="celebrant_id" />
@@ -557,6 +562,7 @@
                         type="object"
                         string="Back to Draft"
                         states="done"
+                        confirm="Are you sure you want to go back to draft?"
                     />
                 <button
                         name="%(mass.report_mass_request_transfer)d"
@@ -566,29 +572,41 @@
                 <field name="state" widget="statusbar" />
             </header>
             <sheet>
+                <div class="oe_title">
+                    <label string="Mass Request Transfer" for="number" />
+                    <h1>
+                        <field name="number" />
+                     </h1>
+                </div>
                 <group name="main">
-                    <field name="number" />
+                <group name="main-left">
                     <field name="celebrant_id" />
                     <field name="transfer_date" />
-                    <field name="company_id" groups="base.group_multi_company" />
                     <field name="company_currency_id" invisible="1" />
                     <field name="amount_total" />
                     <field name="mass_total" />
+                </group>
+                <group name="main-right">
+                    <field name="company_id" groups="base.group_multi_company" />
+                    <field name="company_id" invisible="1" />
                     <field name="move_id" />
                 </group>
+                </group>
                 <group name="lines" string="Masses Requests">
-                    <button
-                            type="action"
-                            name="%(mass_requests_to_transfer_action)d"
-                            string="Select Mass Requests to Transfer"
-                            attrs="{'invisible': [('state', '=', 'done')]}"
-                            context="{'default_transfer_id': active_id}"
+                    <field
+                            name="mass_request_ids"
+                            nolabel="1"
                             colspan="2"
+                            widget="many2many"
+                            domain="[('state', '=', 'waiting'), ('celebrant_id', '=', False), ('request_date', '=', False), ('company_id', '=', company_id)]"
                         />
-                    <newline />
-                    <field name="mass_request_ids" nolabel="1" colspan="2" />
                 </group>
             </sheet>
+            <div class="oe_chatter">
+                <field name="message_follower_ids" widget="mail_followers" />
+                <field name="activity_ids" widget="mail_activity" />
+                <field name="message_ids" widget="mail_thread" />
+            </div>
         </form>
     </field>
 </record>
@@ -598,12 +616,18 @@
     <field name="name">mass.request.transfer.tree</field>
     <field name="model">mass.request.transfer</field>
     <field name="arch" type="xml">
-        <tree>
+        <tree decoration-info="state == 'draft'">
             <field name="number" decoration-bf="1" />
             <field name="celebrant_id" />
             <field name="transfer_date" />
             <field name="amount_total" />
+            <field name="company_currency_id" invisible="1" />
             <field name="mass_total" />
+            <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    optional="hide"
+                />
             <field
                     name="state"
                     widget="badge"
@@ -619,9 +643,12 @@
     <field name="model">mass.request.transfer</field>
     <field name="arch" type="xml">
         <search>
+            <field name="number" />
             <field name="celebrant_id" />
             <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]" />
             <filter name="done" string="Done" domain="[('state', '=', 'done')]" />
+            <separator />
+            <filter name="transfer_date" string="Transfer Date" date="transfer_date" />
             <group string="Group By" name="groupby">
                 <filter
                         name="celebrant_groupby"

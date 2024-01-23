@@ -18,7 +18,6 @@
         "report/report.xml",
         "report/report_massrequesttransfer.xml",
         "report/report_massline.xml",
-        "wizard/mass_requests_to_transfer_view.xml",
         "wizard/mass_journal_generate_view.xml",
         "wizard/mass_journal_validate_view.xml",
         "wizard/swap_celebrant_view.xml",
