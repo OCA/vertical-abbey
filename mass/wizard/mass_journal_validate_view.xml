@@ -12,7 +12,7 @@
     <field name="name">mass.journal.validate.form</field>
     <field name="model">mass.journal.validate</field>
     <field name="arch" type="xml">
-        <form string="Validate Masses Journal">
+        <form>
             <group name="main">
                 <field name="company_id" groups="base.group_multi_company" />
                 <field name="journal_date" />

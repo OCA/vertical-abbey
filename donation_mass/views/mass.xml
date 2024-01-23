@@ -29,5 +29,16 @@
     </field>
 </record>
 
+<record id="mass_request_transfer_form" model="ir.ui.view">
+    <field name="model">mass.request.transfer</field>
+    <field name="inherit_id" ref="mass.mass_request_transfer_form" />
+    <field name="arch" type="xml">
+        <field name="mass_request_ids" position="attributes">
+            <attribute
+                    name="domain"
+                >[('state', '=', 'waiting'), ('celebrant_id', '=', False), ('request_date', '=', False), ('company_id', '=', company_id), ('donation_line_id', '!=', False)]</attribute>
+        </field>
+    </field>
+</record>
 
 </odoo>
