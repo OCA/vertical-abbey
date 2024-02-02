@@ -12,7 +12,7 @@
     <field name="name">mass.request.type.form</field>
     <field name="model">mass.request.type</field>
     <field name="arch" type="xml">
-        <form string="Mass Request Type">
+        <form>
             <group name="main">
                 <field name="name" />
                 <field name="code" />
@@ -27,7 +27,7 @@
     <field name="name">mass.request.type.tree</field>
     <field name="model">mass.request.type</field>
     <field name="arch" type="xml">
-        <tree string="Mass Request Type">
+        <tree>
             <field name="name" />
             <field name="code" />
             <field name="quantity" />
@@ -89,7 +89,7 @@
     <field name="name">religious.community.form</field>
     <field name="model">religious.community</field>
     <field name="arch" type="xml">
-        <form string="Religious Community">
+        <form>
             <widget
                     name="web_ribbon"
                     title="Archived"
@@ -109,7 +109,7 @@
     <field name="name">religious.community.tree</field>
     <field name="model">religious.community</field>
     <field name="arch" type="xml">
-        <tree string="Religious Communities">
+        <tree>
             <field name="name" />
             <field name="long_name" optional="show" />
         </tree>
@@ -120,7 +120,7 @@
     <field name="name">religious.community.search</field>
     <field name="model">religious.community</field>
     <field name="arch" type="xml">
-        <search string="Religious Communities">
+        <search>
             <field
                     name="name"
                     filter_domain="['|', ('name', 'ilike', self), ('long_name', 'ilike', self)]"
@@ -154,7 +154,7 @@
     <field name="name">mass.request.form</field>
     <field name="model">mass.request</field>
     <field name="arch" type="xml">
-        <form string="Mass Request">
+        <form>
             <header>
                 <field name="state" widget="statusbar" />
             </header>
@@ -176,7 +176,9 @@
                         <field name="quantity" />
                         <field name="mass_quantity" />
                         <field name="mass_remaining_quantity" />
-                        <field name="transfer_id" states="transfered" />
+                        <!-- for field 'transfer_id', readonly=1 must be in the view not in the code
+                            because it has consequences on the behavior of lines in mass.transfer.request -->
+                        <field name="transfer_id" states="transfered" readonly="1" />
                     </group>
                 </group>
                 <notebook>
@@ -209,7 +211,7 @@
     <field name="name">mass.request.tree</field>
     <field name="model">mass.request</field>
     <field name="arch" type="xml">
-        <tree string="Mass Requests" multi_edit="1">
+        <tree multi_edit="1">
             <field name="partner_id" />
             <field name="donation_date" optional="show" />
             <field name="request_date" />
@@ -236,7 +238,7 @@
     <field name="name">mass.request.search</field>
     <field name="model">mass.request</field>
     <field name="arch" type="xml">
-        <search string="Mass Requests">
+        <search>
             <filter
                     name="waiting"
                     string="Waiting"
@@ -253,6 +255,8 @@
                     domain="[('state', '=', 'transfered')]"
                 />
             <filter name="done" string="Done" domain="[('state', '=', 'done')]" />
+            <separator />
+            <filter name="donation_date" string="Donation Date" date="donation_date" />
             <field name="partner_id" />
             <field name="celebrant_id" />
             <group string="Group By" name="groupby">
@@ -295,7 +299,7 @@
     <field name="name">mass.request.graph</field>
     <field name="model">mass.request</field>
     <field name="arch" type="xml">
-        <graph string="Mass Requests">
+        <graph>
             <field name="quantity" type="measure" />
         </graph>
     </field>
@@ -305,7 +309,7 @@
     <field name="name">mass.request.pivot</field>
     <field name="model">mass.request</field>
     <field name="arch" type="xml">
-        <pivot string="Mass Requests">
+        <pivot>
             <field name="quantity" type="measure" />
         </pivot>
     </field>
@@ -329,7 +333,7 @@
     <field name="name">mass.line.form</field>
     <field name="model">mass.line</field>
     <field name="arch" type="xml">
-        <form string="Mass Line">
+        <form>
             <header>
                 <field name="state" widget="statusbar" />
             </header>
@@ -374,12 +378,7 @@
     <field name="name">mass.line.tree</field>
     <field name="model">mass.line</field>
     <field name="arch" type="xml">
-        <tree
-                string="Mass Lines"
-                decoration-info="state == 'draft'"
-                editable="bottom"
-                multi_edit="1"
-            >
+        <tree decoration-info="state == 'draft'" editable="bottom" multi_edit="1">
             <header>
                 <button
                         name="%(mass.swap_celebrant_action)d"
@@ -427,9 +426,12 @@
     <field name="name">mass.line.search</field>
     <field name="model">mass.line</field>
     <field name="arch" type="xml">
-        <search string="Search Mass Lines">
+        <search>
             <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]" />
             <filter name="done" string="Done" domain="[('state', '=', 'done')]" />
+            <separator />
+            <filter name="date" string="Date" date="date" />
+            <separator />
             <field name="date" />
             <field name="partner_id" />
             <field name="celebrant_id" />
@@ -478,7 +480,7 @@
     <field name="name">mass.line.graph</field>
     <field name="model">mass.line</field>
     <field name="arch" type="xml">
-        <graph string="Mass Lines">
+        <graph>
             <field name="celebrant_id" type="row" />
             <field name="date" type="col" />
         </graph>
@@ -489,7 +491,7 @@
     <field name="name">mass.line.pivot</field>
     <field name="model">mass.line</field>
     <field name="arch" type="xml">
-        <pivot string="Mass Lines">
+        <pivot>
             <field name="celebrant_id" type="row" />
             <field name="date" type="col" />
         </pivot>
@@ -518,7 +520,7 @@
     <field name="name">mass.request.transfer.form</field>
     <field name="model">mass.request.transfer</field>
     <field name="arch" type="xml">
-        <form string="Mass Request Transfer">
+        <form>
             <header>
                 <button
                         name="validate"
@@ -532,6 +534,7 @@
                         type="object"
                         string="Back to Draft"
                         states="done"
+                        confirm="Are you sure you want to go back to draft?"
                     />
                 <button
                         name="%(mass.report_mass_request_transfer)d"
@@ -541,28 +544,39 @@
                 <field name="state" widget="statusbar" />
             </header>
             <sheet>
+                <div class="oe_title">
+                    <label string="Mass Request Transfer" for="number" />
+                    <h1>
+                        <field name="number" />
+                     </h1>
+                </div>
                 <group name="main">
-                    <field name="number" />
+                <group name="main-left">
                     <field name="celebrant_id" />
                     <field name="transfer_date" />
-                    <field name="company_id" groups="base.group_multi_company" />
                     <field name="company_currency_id" invisible="1" />
                     <field name="amount_total" />
                     <field name="mass_total" />
+                </group>
+                <group name="main-right">
+                    <field name="company_id" groups="base.group_multi_company" />
                     <field name="move_id" />
                 </group>
+                </group>
                 <group name="lines" string="Masses Requests">
-                    <button
-                            type="action"
-                            name="%(mass_requests_to_transfer_action)d"
-                            string="Select Mass Requests to Transfer"
-                            attrs="{'invisible': [('state', '=', 'done')]}"
-                            context="{'default_transfer_id': active_id}"
+                    <field
+                            name="mass_request_ids"
+                            nolabel="1"
+                            widget="many2many"
+                            domain="[('state', '=', 'waiting'), ('celebrant_id', '=', False), ('request_date', '=', False), ('company_id', '=', company_id)]"
                         />
-                    <newline />
-                    <field name="mass_request_ids" nolabel="1" />
                 </group>
             </sheet>
+            <div class="oe_chatter">
+                <field name="message_follower_ids" widget="mail_followers" />
+                <field name="activity_ids" widget="mail_activity" />
+                <field name="message_ids" widget="mail_thread" />
+            </div>
         </form>
     </field>
 </record>
@@ -572,13 +586,24 @@
     <field name="name">mass.request.transfer.tree</field>
     <field name="model">mass.request.transfer</field>
     <field name="arch" type="xml">
-        <tree string="Masses Requests Transfer" decoration-info="state == 'draft'">
-            <field name="number" />
+        <tree decoration-info="state == 'draft'">
+            <field name="number" decoration-bf="1" />
             <field name="celebrant_id" />
             <field name="transfer_date" />
             <field name="amount_total" />
+            <field name="company_currency_id" invisible="1" />
             <field name="mass_total" />
-            <field name="state" />
+            <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    optional="hide"
+                />
+            <field
+                    name="state"
+                    widget="badge"
+                    decoration-info="state == 'draft'"
+                    decoration-success="state == 'done'"
+                />
         </tree>
     </field>
 </record>
@@ -587,10 +612,13 @@
     <field name="name">mass.request.transfer.search</field>
     <field name="model">mass.request.transfer</field>
     <field name="arch" type="xml">
-        <search string="Masses Requests Transfer">
+        <search>
+            <field name="number" />
             <field name="celebrant_id" />
             <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]" />
             <filter name="done" string="Done" domain="[('state', '=', 'done')]" />
+            <separator />
+            <filter name="transfer_date" string="Transfer Date" date="transfer_date" />
             <group string="Group By" name="groupby">
                 <filter
                         name="celebrant_groupby"
@@ -611,7 +639,7 @@
     <field name="name">mass.request.transfer.graph</field>
     <field name="model">mass.request.transfer</field>
     <field name="arch" type="xml">
-        <graph string="Masses Requests Transfer">
+        <graph>
             <field name="mass_total" type="measure" />
             <field name="amount_total" type="measure" />
         </graph>
@@ -622,7 +650,7 @@
     <field name="name">mass.request.transfer.pivot</field>
     <field name="model">mass.request.transfer</field>
     <field name="arch" type="xml">
-        <pivot string="Masses Requests Transfer">
+        <pivot>
             <field name="mass_total" type="measure" />
             <field name="amount_total" type="measure" />
         </pivot>
