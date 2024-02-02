@@ -12,6 +12,5 @@ access_mass_request_transfer_viewer,Read access on mass.request.transfer to Mass
 access_religious_community_manager,Full access on religious.community to Mass Manager,model_religious_community,group_mass_manager,1,1,1,1
 access_religious_community_user,Read access on religious.community to Mass Viewer,model_religious_community,group_mass_viewer,1,0,0,0
 access_mass_journal_generate,Full access on mass.journal.generate wizard,model_mass_journal_generate,group_mass_user,1,1,1,1
-access_mass_requests_to_transfer,Full access on mass.requests.to.transfer wizard,model_mass_requests_to_transfer,group_mass_user,1,1,1,1
 access_swap_celebrant,Full access on swap.celebrant wizard,model_swap_celebrant,group_mass_user,1,1,1,1
 access_mass_journal_validate,Full access on mass.journal.validate wizard,model_mass_journal_validate,group_mass_user,1,1,1,1
