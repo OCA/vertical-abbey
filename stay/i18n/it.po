@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-01-05 10:38+0000\n"
+"PO-Revision-Date: 2024-02-12 10:47+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -1335,7 +1335,7 @@ msgstr "Refettorio"
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_journal_print__report_type
 msgid "Report Type"
-msgstr "Tipo di rendiconto"
+msgstr "Tipo resoconto"
 
 #. module: stay
 #: model:ir.ui.menu,name:stay.stay_report_menu
