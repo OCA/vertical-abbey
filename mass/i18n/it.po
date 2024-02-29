@@ -1,0 +1,952 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mass
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. module: mass
+#: code:addons/mass/wizard/mass_journal_generate.py:0
+#, python-format
+msgid "%s celebrants were not assigned."
+msgstr ""
+
+#. module: mass
+#: model:ir.actions.report,print_report_name:mass.report_mass_request_transfer
+msgid ""
+"'mass_request_transfer-%s%s' % (object.number or '-', object.state == "
+"'draft' and '-draft' or '')"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_line__move_id
+#: model:ir.model.fields,field_description:mass.field_mass_request_transfer__move_id
+msgid "Account Move"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_religious_community__active
+msgid "Active"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.mass_requests_to_transfer_form
+msgid "Add"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_request_transfer__amount_total
+msgid "Amount Total"
+msgstr ""
+
+#. module: mass
+#: code:addons/mass/models/res_partner.py:0
+#, python-format
+msgid "An internal celebrant cannot be a company."
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.religious_community_form
+#: model_terms:ir.ui.view,arch_db:mass.religious_community_search
+msgid "Archived"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.swap_celebrant_form
+msgid ""
+"Are you sure you want to swap the celebrants of the two selected masses?"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_form
+msgid "Back to Draft"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.mass_journal_generate_form
+#: model_terms:ir.ui.view,arch_db:mass.mass_journal_validate_form
+#: model_terms:ir.ui.view,arch_db:mass.mass_requests_to_transfer_form
+#: model_terms:ir.ui.view,arch_db:mass.swap_celebrant_form
+msgid "Cancel"
+msgstr ""
+
+#. module: mass
+#: code:addons/mass/models/mass.py:0
+#, python-format
+msgid ""
+"Cannot delete mass dated %s for %s because it is a %s which is an "
+"uninterrupted mass."
+msgstr ""
+
+#. module: mass
+#: code:addons/mass/models/mass.py:0
+#, python-format
+msgid "Cannot delete mass line dated %s for %s because it is in Done state."
+msgstr ""
+
+#. module: mass
+#: code:addons/mass/models/mass.py:0
+#, python-format
+msgid "Cannot delete mass request '%s' because it is not in Waiting state."
+msgstr ""
+
+#. module: mass
+#: code:addons/mass/models/mass.py:0
+#, python-format
+msgid ""
+"Cannot delete mass request transfer dated %s for %s because it is in Done "
+"state."
+msgstr ""
+
+#. module: mass
+#: code:addons/mass/models/mass.py:0
+#, python-format
+msgid ""
+"Cannot validate mass request transfer %s because it has no mass requests."
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_line__celebrant_id
+#: model:ir.model.fields,field_description:mass.field_mass_request__celebrant_id
+#: model:ir.model.fields,field_description:mass.field_mass_request_transfer__celebrant_id
+#: model:ir.model.fields,field_description:mass.field_res_partner__celebrant
+#: model:ir.model.fields,field_description:mass.field_res_users__celebrant
+#: model_terms:ir.ui.view,arch_db:mass.mass_line_search
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_search
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_search
+#: model_terms:ir.ui.view,arch_db:mass.report_massline
+msgid "Celebrant"
+msgstr ""
+
+#. module: mass
+#: model:ir.actions.act_window,name:mass.celebrant_partner_action
+#: model:ir.ui.menu,name:mass.mass_celebrants_menu
+#: model_terms:ir.ui.view,arch_db:mass.view_res_partner_filter
+msgid "Celebrants"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_line__date
+#: model_terms:ir.ui.view,arch_db:mass.report_massline
+msgid "Celebration Date"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_request__request_date
+msgid "Celebration Requested Date"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_religious_community__name
+msgid "Community Code"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_religious_community__long_name
+msgid "Community Name"
+msgstr ""
+
+#. module: mass
+#: model:ir.model,name:mass.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_journal_validate__company_id
+#: model:ir.model.fields,field_description:mass.field_mass_line__company_id
+#: model:ir.model.fields,field_description:mass.field_mass_request__company_id
+#: model:ir.model.fields,field_description:mass.field_mass_request_transfer__company_id
+#: model:ir.model.fields,field_description:mass.field_mass_requests_to_transfer__company_id
+msgid "Company"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_line__company_currency_id
+#: model:ir.model.fields,field_description:mass.field_mass_request__company_currency_id
+#: model:ir.model.fields,field_description:mass.field_mass_request_transfer__company_currency_id
+msgid "Company Currency"
+msgstr ""
+
+#. module: mass
+#: model:ir.model,name:mass.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: mass
+#: model:ir.ui.menu,name:mass.mass_config_menu
+msgid "Configuration"
+msgstr ""
+
+#. module: mass
+#: model:ir.model,name:mass.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_line__conventual_id
+#: model_terms:ir.ui.view,arch_db:mass.mass_line_search
+msgid "Conventual"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_journal_generate__create_uid
+#: model:ir.model.fields,field_description:mass.field_mass_journal_validate__create_uid
+#: model:ir.model.fields,field_description:mass.field_mass_line__create_uid
+#: model:ir.model.fields,field_description:mass.field_mass_request__create_uid
+#: model:ir.model.fields,field_description:mass.field_mass_request_transfer__create_uid
+#: model:ir.model.fields,field_description:mass.field_mass_request_type__create_uid
+#: model:ir.model.fields,field_description:mass.field_mass_requests_to_transfer__create_uid
+#: model:ir.model.fields,field_description:mass.field_religious_community__create_uid
+#: model:ir.model.fields,field_description:mass.field_swap_celebrant__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_journal_generate__create_date
+#: model:ir.model.fields,field_description:mass.field_mass_journal_validate__create_date
+#: model:ir.model.fields,field_description:mass.field_mass_line__create_date
+#: model:ir.model.fields,field_description:mass.field_mass_request__create_date
+#: model:ir.model.fields,field_description:mass.field_mass_request_transfer__create_date
+#: model:ir.model.fields,field_description:mass.field_mass_request_type__create_date
+#: model:ir.model.fields,field_description:mass.field_mass_requests_to_transfer__create_date
+#: model:ir.model.fields,field_description:mass.field_religious_community__create_date
+#: model:ir.model.fields,field_description:mass.field_swap_celebrant__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.mass_line_search
+msgid "Date"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_journal_generate__display_name
+#: model:ir.model.fields,field_description:mass.field_mass_journal_validate__display_name
+#: model:ir.model.fields,field_description:mass.field_mass_line__display_name
+#: model:ir.model.fields,field_description:mass.field_mass_request__display_name
+#: model:ir.model.fields,field_description:mass.field_mass_request_transfer__display_name
+#: model:ir.model.fields,field_description:mass.field_mass_request_type__display_name
+#: model:ir.model.fields,field_description:mass.field_mass_requests_to_transfer__display_name
+#: model:ir.model.fields,field_description:mass.field_product_product__display_name
+#: model:ir.model.fields,field_description:mass.field_product_template__display_name
+#: model:ir.model.fields,field_description:mass.field_religious_community__display_name
+#: model:ir.model.fields,field_description:mass.field_res_company__display_name
+#: model:ir.model.fields,field_description:mass.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:mass.field_res_partner__display_name
+#: model:ir.model.fields,field_description:mass.field_swap_celebrant__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_request__donation_date
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_search
+#: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
+msgid "Donation Date"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields.selection,name:mass.selection__mass_line__state__done
+#: model:ir.model.fields.selection,name:mass.selection__mass_request__state__done
+#: model:ir.model.fields.selection,name:mass.selection__mass_request_transfer__state__done
+#: model_terms:ir.ui.view,arch_db:mass.mass_line_search
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_search
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_search
+msgid "Done"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_line__partner_id
+#: model:ir.model.fields,field_description:mass.field_mass_request__partner_id
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_search
+#: model_terms:ir.ui.view,arch_db:mass.report_massline
+#: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
+msgid "Donor"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields.selection,name:mass.selection__mass_line__state__draft
+#: model:ir.model.fields.selection,name:mass.selection__mass_request_transfer__state__draft
+#: model_terms:ir.ui.view,arch_db:mass.mass_line_search
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_search
+msgid "Draft"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields.selection,name:mass.selection__res_partner__celebrant__external
+msgid "External"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.view_res_partner_filter
+msgid "External Celebrants"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.mass_journal_generate_form
+msgid "Generate Journal"
+msgstr ""
+
+#. module: mass
+#: model:ir.actions.act_window,name:mass.mass_journal_generate_action
+#: model:ir.model,name:mass.model_mass_journal_generate
+#: model:ir.ui.menu,name:mass.mass_journal_generate_menu
+msgid "Generate Masses Journal"
+msgstr ""
+
+#. module: mass
+#: model:product.product,name:mass.product_product_mass_gregorian
+#: model:product.template,name:mass.product_product_mass_gregorian_product_template
+msgid "Gregorian Mass"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.mass_line_search
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_search
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_search
+msgid "Group By"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_journal_generate__id
+#: model:ir.model.fields,field_description:mass.field_mass_journal_validate__id
+#: model:ir.model.fields,field_description:mass.field_mass_line__id
+#: model:ir.model.fields,field_description:mass.field_mass_request__id
+#: model:ir.model.fields,field_description:mass.field_mass_request_transfer__id
+#: model:ir.model.fields,field_description:mass.field_mass_request_type__id
+#: model:ir.model.fields,field_description:mass.field_mass_requests_to_transfer__id
+#: model:ir.model.fields,field_description:mass.field_product_product__id
+#: model:ir.model.fields,field_description:mass.field_product_template__id
+#: model:ir.model.fields,field_description:mass.field_religious_community__id
+#: model:ir.model.fields,field_description:mass.field_res_company__id
+#: model:ir.model.fields,field_description:mass.field_res_config_settings__id
+#: model:ir.model.fields,field_description:mass.field_res_partner__id
+#: model:ir.model.fields,field_description:mass.field_swap_celebrant__id
+msgid "ID"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,help:mass.field_mass_line__request_date
+#: model:ir.model.fields,help:mass.field_mass_request__request_date
+msgid ""
+"If the donor want the mass to be celebrated at a particular date, select it "
+"here. Otherwise, leave empty."
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,help:mass.field_mass_request__celebrant_id
+msgid ""
+"If the donor want the mass to be celebrated by a particular celebrant, "
+"select it here. Otherwise, leave empty."
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_request__analytic_account_id
+msgid "Income Analytic Account"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_line__intention
+#: model:ir.model.fields,field_description:mass.field_mass_request__intention
+#: model_terms:ir.ui.view,arch_db:mass.report_massline
+#: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
+msgid "Intention"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields.selection,name:mass.selection__res_partner__celebrant__internal
+msgid "Internal"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_product_product__mass
+#: model:ir.model.fields,field_description:mass.field_product_template__mass
+msgid "Is a Mass"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_journal_generate__journal_date
+#: model:ir.model.fields,field_description:mass.field_mass_journal_validate__journal_date
+msgid "Journal Date"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_journal_generate____last_update
+#: model:ir.model.fields,field_description:mass.field_mass_journal_validate____last_update
+#: model:ir.model.fields,field_description:mass.field_mass_line____last_update
+#: model:ir.model.fields,field_description:mass.field_mass_request____last_update
+#: model:ir.model.fields,field_description:mass.field_mass_request_transfer____last_update
+#: model:ir.model.fields,field_description:mass.field_mass_request_type____last_update
+#: model:ir.model.fields,field_description:mass.field_mass_requests_to_transfer____last_update
+#: model:ir.model.fields,field_description:mass.field_product_product____last_update
+#: model:ir.model.fields,field_description:mass.field_product_template____last_update
+#: model:ir.model.fields,field_description:mass.field_religious_community____last_update
+#: model:ir.model.fields,field_description:mass.field_res_company____last_update
+#: model:ir.model.fields,field_description:mass.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:mass.field_res_partner____last_update
+#: model:ir.model.fields,field_description:mass.field_swap_celebrant____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_journal_generate__write_uid
+#: model:ir.model.fields,field_description:mass.field_mass_journal_validate__write_uid
+#: model:ir.model.fields,field_description:mass.field_mass_line__write_uid
+#: model:ir.model.fields,field_description:mass.field_mass_request__write_uid
+#: model:ir.model.fields,field_description:mass.field_mass_request_transfer__write_uid
+#: model:ir.model.fields,field_description:mass.field_mass_request_type__write_uid
+#: model:ir.model.fields,field_description:mass.field_mass_requests_to_transfer__write_uid
+#: model:ir.model.fields,field_description:mass.field_religious_community__write_uid
+#: model:ir.model.fields,field_description:mass.field_swap_celebrant__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_journal_generate__write_date
+#: model:ir.model.fields,field_description:mass.field_mass_journal_validate__write_date
+#: model:ir.model.fields,field_description:mass.field_mass_line__write_date
+#: model:ir.model.fields,field_description:mass.field_mass_request__write_date
+#: model:ir.model.fields,field_description:mass.field_mass_request_transfer__write_date
+#: model:ir.model.fields,field_description:mass.field_mass_request_type__write_date
+#: model:ir.model.fields,field_description:mass.field_mass_requests_to_transfer__write_date
+#: model:ir.model.fields,field_description:mass.field_religious_community__write_date
+#: model:ir.model.fields,field_description:mass.field_swap_celebrant__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_journal_generate__celebrant_ids
+msgid "List of celebrants"
+msgstr ""
+
+#. module: mass
+#: model:ir.module.category,description:mass.module_category_mass
+msgid "Manage masses"
+msgstr ""
+
+#. module: mass
+#: model:res.groups,name:mass.group_mass_manager
+msgid "Manager"
+msgstr ""
+
+#. module: mass
+#: model:ir.module.category,name:mass.module_category_mass
+#: model:ir.ui.menu,name:mass.mass_title_menu
+#: model:ir.ui.menu,name:mass.mass_top_menu
+#: model_terms:ir.ui.view,arch_db:mass.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:mass.res_config_settings_view_form
+msgid "Mass"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.report_massline
+msgid "Mass Journal"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.mass_line_form
+msgid "Mass Line"
+msgstr ""
+
+#. module: mass
+#: model:ir.model,name:mass.model_mass_line
+#: model:ir.model.fields,field_description:mass.field_mass_request__line_ids
+#: model_terms:ir.ui.view,arch_db:mass.mass_line_graph
+#: model_terms:ir.ui.view,arch_db:mass.mass_line_pivot
+#: model_terms:ir.ui.view,arch_db:mass.mass_line_tree
+msgid "Mass Lines"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_swap_celebrant__line_ids
+msgid "Mass Lines to Swap"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_line__product_id
+#: model:ir.model.fields,field_description:mass.field_mass_request__product_id
+#: model_terms:ir.ui.view,arch_db:mass.mass_line_search
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_search
+msgid "Mass Product"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_request__mass_remaining_quantity
+msgid "Mass Remaining Quantity"
+msgstr ""
+
+#. module: mass
+#: model:ir.model,name:mass.model_mass_request
+#: model:ir.model.fields,field_description:mass.field_mass_line__request_id
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_form
+msgid "Mass Request"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_request_type__code
+#: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
+msgid "Mass Request Code"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_line__request_date
+msgid "Mass Request Date"
+msgstr ""
+
+#. module: mass
+#: model:ir.actions.report,name:mass.report_mass_request_transfer
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_form
+msgid "Mass Request Transfer"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_line__type_id
+#: model:ir.model.fields,field_description:mass.field_mass_request__type_id
+#: model:ir.model.fields,field_description:mass.field_mass_request_type__name
+#: model:ir.model.fields,field_description:mass.field_product_product__mass_request_type_id
+#: model:ir.model.fields,field_description:mass.field_product_template__mass_request_type_id
+#: model_terms:ir.ui.view,arch_db:mass.mass_line_search
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_search
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_type_form
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_type_tree
+#: model_terms:ir.ui.view,arch_db:mass.report_massline
+msgid "Mass Request Type"
+msgstr ""
+
+#. module: mass
+#: model:ir.actions.act_window,name:mass.mass_request_type_action
+#: model:ir.ui.menu,name:mass.mass_request_type_menu
+msgid "Mass Request Types"
+msgstr ""
+
+#. module: mass
+#: model:ir.actions.act_window,name:mass.mass_request_action
+#: model:ir.model.fields,field_description:mass.field_mass_request_transfer__mass_request_ids
+#: model:ir.ui.menu,name:mass.mass_request_menu
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_graph
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_pivot
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_search
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_tree
+msgid "Mass Requests"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_requests_to_transfer__request_ids
+msgid "Mass Requests to Transfer"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_res_company__mass_stock_account_id
+#: model:ir.model.fields,field_description:mass.field_res_config_settings__mass_stock_account_id
+msgid "Mass Stock Account"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_requests_to_transfer__transfer_id
+msgid "Mass Transfer"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_res_company__mass_validation_journal_id
+#: model:ir.model.fields,field_description:mass.field_res_config_settings__mass_validation_journal_id
+msgid "Mass Validation Journal"
+msgstr ""
+
+#. module: mass
+#: code:addons/mass/wizard/mass_journal_validate.py:0
+#: model:ir.actions.act_window,name:mass.mass_line_action
+#: model:ir.ui.menu,name:mass.mass_line_menu
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_form
+#: model_terms:ir.ui.view,arch_db:mass.res_config_settings_view_form
+#, python-format
+msgid "Masses"
+msgstr ""
+
+#. module: mass
+#: model:ir.actions.report,name:mass.report_mass_line
+#: model_terms:ir.ui.view,arch_db:mass.mass_journal_generate_form
+msgid "Masses Journal"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_form
+msgid "Masses Requests"
+msgstr ""
+
+#. module: mass
+#: model:ir.actions.act_window,name:mass.mass_request_transfer_action
+#: model:ir.ui.menu,name:mass.mass_request_transfer_menu
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_graph
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_pivot
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_search
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_tree
+msgid "Masses Requests Transfer"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
+msgid "Masses Transfer"
+msgstr ""
+
+#. module: mass
+#: code:addons/mass/wizard/mass_journal_validate.py:0
+#, python-format
+msgid "Missing Mass Validation Journal on company '%s'."
+msgstr ""
+
+#. module: mass
+#: code:addons/mass/models/mass.py:0
+#, python-format
+msgid "Missing stock account on mass request %s."
+msgstr ""
+
+#. module: mass
+#: code:addons/mass/wizard/mass_journal_generate.py:0
+#, python-format
+msgid ""
+"More than one mass are assigned to the same celebrant %s. Please, modify "
+"requests."
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.religious_community_search
+msgid "Name"
+msgstr ""
+
+#. module: mass
+#: code:addons/mass/wizard/mass_journal_generate.py:0
+#, python-format
+msgid "No celebrants were selected !"
+msgstr ""
+
+#. module: mass
+#: model:product.product,name:mass.product_product_mass_novena
+#: model:product.template,name:mass.product_product_mass_novena_product_template
+msgid "Novena Mass"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_line__unit_offering
+#: model:ir.model.fields,field_description:mass.field_mass_request__offering
+#: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
+msgid "Offering"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_request__unit_offering
+msgid "Offering per Mass"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_form
+msgid "Other Infos"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.mass_line_search
+msgid "Partner"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_res_company__mass_post_move
+#: model:ir.model.fields,field_description:mass.field_res_config_settings__mass_post_move
+msgid "Post Move"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_form
+msgid "Print"
+msgstr ""
+
+#. module: mass
+#: model:ir.model,name:mass.model_product_product
+msgid "Product"
+msgstr ""
+
+#. module: mass
+#: model:ir.model,name:mass.model_product_template
+msgid "Product Template"
+msgstr ""
+
+#. module: mass
+#: model:ir.actions.act_window,name:mass.mass_product_action
+#: model:ir.ui.menu,name:mass.mass_products_menu
+msgid "Products"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_request__quantity
+#: model:ir.model.fields,field_description:mass.field_mass_request_type__quantity
+#: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
+msgid "Quantity"
+msgstr ""
+
+#. module: mass
+#: model:ir.actions.act_window,name:mass.religious_community_action
+#: model:ir.ui.menu,name:mass.religious_community_menu
+#: model_terms:ir.ui.view,arch_db:mass.religious_community_search
+#: model_terms:ir.ui.view,arch_db:mass.religious_community_tree
+msgid "Religious Communities"
+msgstr ""
+
+#. module: mass
+#: model:ir.model,name:mass.model_religious_community
+#: model_terms:ir.ui.view,arch_db:mass.religious_community_form
+msgid "Religious Community"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_request__remaining_offering
+msgid "Remaining Offering"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.mass_line_search
+msgid "Search Mass Lines"
+msgstr ""
+
+#. module: mass
+#: model:ir.actions.act_window,name:mass.mass_requests_to_transfer_action
+#: model:ir.model,name:mass.model_mass_requests_to_transfer
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_form
+#: model_terms:ir.ui.view,arch_db:mass.mass_requests_to_transfer_form
+msgid "Select Mass Requests to Transfer"
+msgstr ""
+
+#. module: mass
+#: model:ir.actions.act_window,name:mass.mass_settings_action
+#: model:ir.ui.menu,name:mass.mass_settings_menu
+msgid "Settings"
+msgstr ""
+
+#. module: mass
+#: model:product.product,name:mass.product_product_mass_simple
+#: model:product.template,name:mass.product_product_mass_simple_product_template
+msgid "Simple Mass"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields.selection,name:mass.selection__mass_request__state__started
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_search
+msgid "Started"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_line__state
+#: model:ir.model.fields,field_description:mass.field_mass_request__state
+#: model:ir.model.fields,field_description:mass.field_mass_request_transfer__state
+#: model_terms:ir.ui.view,arch_db:mass.mass_line_search
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_search
+msgid "State"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_request__stock_account_id
+msgid "Stock Account"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.swap_celebrant_form
+msgid "Swap"
+msgstr ""
+
+#. module: mass
+#: model:ir.model,name:mass.model_swap_celebrant
+msgid "Swap Celebrant"
+msgstr ""
+
+#. module: mass
+#: model:ir.actions.act_window,name:mass.swap_celebrant_action
+#: model_terms:ir.ui.view,arch_db:mass.mass_line_tree
+#: model_terms:ir.ui.view,arch_db:mass.swap_celebrant_form
+msgid "Swap Celebrants"
+msgstr ""
+
+#. module: mass
+#: code:addons/mass/models/mass.py:0
+#, python-format
+msgid "The 'Mass Validation Journal' is not set on company '%s'."
+msgstr ""
+
+#. module: mass
+#: code:addons/mass/wizard/swap_celebrant.py:0
+#, python-format
+msgid ""
+"The 2 mass lines that you selected have different dates (%s and %s). You can"
+" swap celebrants only between 2 masses of the same date."
+msgstr ""
+
+#. module: mass
+#: code:addons/mass/wizard/mass_journal_generate.py:0
+#, python-format
+msgid ""
+"The celebrant %s has an assigned mass for %s, but he is not available today."
+msgstr ""
+
+#. module: mass
+#: code:addons/mass/wizard/mass_journal_generate.py:0
+#, python-format
+msgid ""
+"The number of requests for this day exceeds the number of celebrants. "
+"Please, modify requests."
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,help:mass.field_mass_request__offering
+msgid "The total offering amount in company currency."
+msgstr ""
+
+#. module: mass
+#: code:addons/mass/wizard/mass_journal_generate.py:0
+#, python-format
+msgid ""
+"There is already a journal for %s. You cannot generate another journal for "
+"that date. Odoo has reverted to the default date."
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,help:mass.field_mass_request__unit_offering
+msgid "This field is the offering amount per mass in company currency."
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
+msgid "Total Amount:"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_request__mass_quantity
+#: model:ir.model.fields,field_description:mass.field_mass_request_transfer__mass_total
+msgid "Total Mass Quantity"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
+msgid "Total Number of Masses:"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.mass_line_tree
+msgid "Total Offering"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_request_transfer__transfer_date
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_search
+msgid "Transfer Date"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
+msgid "Transfer Date:"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_request_transfer__number
+msgid "Transfer Number"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_request__transfer_id
+msgid "Transfer Operation"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
+msgid "Transfer To:"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields.selection,name:mass.selection__mass_request__state__transfered
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_search
+msgid "Transfered"
+msgstr ""
+
+#. module: mass
+#: model:ir.model,name:mass.model_mass_request_transfer
+msgid "Transfered Mass Requests"
+msgstr ""
+
+#. module: mass
+#: model:ir.model,name:mass.model_mass_request_type
+msgid "Types of Mass Requests"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields,field_description:mass.field_mass_request__uninterrupted
+#: model:ir.model.fields,field_description:mass.field_mass_request_type__uninterrupted
+msgid "Uninterrupted"
+msgstr ""
+
+#. module: mass
+#: model:product.product,uom_name:mass.product_product_mass_gregorian
+#: model:product.product,uom_name:mass.product_product_mass_novena
+#: model:product.product,uom_name:mass.product_product_mass_simple
+#: model:product.template,uom_name:mass.product_product_mass_gregorian_product_template
+#: model:product.template,uom_name:mass.product_product_mass_novena_product_template
+#: model:product.template,uom_name:mass.product_product_mass_simple_product_template
+msgid "Units"
+msgstr ""
+
+#. module: mass
+#: model:res.groups,name:mass.group_mass_user
+msgid "User"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_form
+msgid "Validate"
+msgstr ""
+
+#. module: mass
+#: model_terms:ir.ui.view,arch_db:mass.mass_journal_validate_form
+msgid "Validate Journal"
+msgstr ""
+
+#. module: mass
+#: model:ir.actions.act_window,name:mass.mass_journal_validate_action
+#: model:ir.model,name:mass.model_mass_journal_validate
+#: model:ir.ui.menu,name:mass.mass_journal_validate_menu
+#: model_terms:ir.ui.view,arch_db:mass.mass_journal_validate_form
+msgid "Validate Masses Journal"
+msgstr ""
+
+#. module: mass
+#: model:res.groups,name:mass.group_mass_viewer
+msgid "Viewer"
+msgstr ""
+
+#. module: mass
+#: model:ir.model.fields.selection,name:mass.selection__mass_request__state__waiting
+#: model_terms:ir.ui.view,arch_db:mass.mass_request_search
+msgid "Waiting"
+msgstr ""
+
+#. module: mass
+#: code:addons/mass/wizard/mass_journal_generate.py:0
+#: code:addons/mass/wizard/mass_journal_generate.py:0
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: mass
+#: code:addons/mass/wizard/mass_journal_generate.py:0
+#, python-format
+msgid ""
+"You are about to generate another journal for %s : it is allowed for that "
+"date."
+msgstr ""
+
+#. module: mass
+#: code:addons/mass/wizard/swap_celebrant.py:0
+#, python-format
+msgid "You should only select 2 mass lines (%d were selected)."
+msgstr ""
