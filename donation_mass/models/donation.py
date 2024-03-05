@@ -137,3 +137,10 @@ class DonationLine(models.Model):
                 )
             return self.company_id.mass_stock_account_id.id
         return super()._get_account_id()
+
+    def _get_analytic_account_id(self):
+        if self.product_id.mass:
+            analytic_account_id = False
+        else:
+            analytic_account_id = super()._get_analytic_account_id()
+        return analytic_account_id
