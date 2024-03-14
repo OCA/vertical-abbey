@@ -4,7 +4,7 @@
 
 {
     "name": "Mass",
-    "version": "14.0.1.0.0",
+    "version": "14.0.1.1.0",
     "category": "Christian Religion",
     "license": "AGPL-3",
     "summary": "Manage Mass",
