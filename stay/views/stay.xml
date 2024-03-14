@@ -638,7 +638,7 @@ So I use the form view below by default -->
     <field name="name">stay.refectory.tree</field>
     <field name="model">stay.refectory</field>
     <field name="arch" type="xml">
-        <tree string="Refectories">
+        <tree>
             <field name="sequence" widget="handle" />
             <field name="name" />
             <field name="code" optional="show" />
@@ -740,7 +740,7 @@ So I use the form view below by default -->
     <field name="name">stay.room.tree</field>
     <field name="model">stay.room</field>
     <field name="arch" type="xml">
-        <tree string="Rooms">
+        <tree>
             <header>
                 <button name="mark_as_cleaned" type="object" string="Mark as Cleaned" />
             </header>
@@ -854,7 +854,7 @@ So I use the form view below by default -->
     <field name="name">stay.group.tree</field>
     <field name="model">stay.group</field>
     <field name="arch" type="xml">
-        <tree string="Groups">
+        <tree>
             <field name="sequence" widget="handle" />
             <field name="name" />
             <field name="default_no_meals" optional="show" />
@@ -934,7 +934,7 @@ So I use the form view below by default -->
     <field name="name">stay.line.tree</field>
     <field name="model">stay.line</field>
     <field name="arch" type="xml">
-        <tree string="Stay Lines" editable="bottom">
+        <tree editable="bottom">
             <field name="stay_id" invisible="not context.get('stay_line_main_view')" />
             <field name="date" />
             <field
@@ -1103,7 +1103,7 @@ So I use the form view below by default -->
     <field name="name">stay.date.label.tree</field>
     <field name="model">stay.date.label</field>
     <field name="arch" type="xml">
-        <tree string="Date Labels">
+        <tree>
             <field name="date" />
             <field name="name" />
         </tree>
