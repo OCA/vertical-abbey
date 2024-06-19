@@ -19,11 +19,26 @@
                     string="Create Donation"
                     name="%(create_donation_stay_action)d"
                     groups="donation.group_donation_user"
-                    attrs="{'invisible': ['|', ('donation_id', '!=', False), ('state', 'in', ('cancel', 'draft'))]}"
+                    attrs="{'invisible': [('state', 'in', ('cancel', 'draft'))]}"
                 />
         </button>
-        <group name="left" position="inside">
-            <field name="donation_id" />
+        <div name="button_box" position="inside">
+            <button
+                    class="oe_stat_button"
+                    type="object"
+                    groups="donation.group_donation_viewer"
+                    name="show_donations"
+                    icon="fa-heart-o"
+                >
+                        <field
+                        string="Donations"
+                        name="donation_total"
+                        widget="statinfo"
+                    />
+            </button>
+        </div>
+        <group name="right" position="inside">
+                <field name="company_currency_id" invisible="1" />
         </group>
     </field>
 </record>
@@ -33,11 +48,13 @@
     <field name="model">stay.stay</field>
     <field name="inherit_id" ref="stay.stay_tree" />
     <field name="arch" type="xml">
-            <field name="assign_status" position="after">
-                    <field name="donation_id" optional="show" />
-            </field>
-            </field>
-    </record>
+        <field name="assign_status" position="after">
+            <field name="donation_total" optional="show" />
+            <field name="donation_count" optional="hide" />
+            <field name="company_currency_id" invisible="1" />
+        </field>
+    </field>
+</record>
 
 <record id="stay_search" model="ir.ui.view">
     <field name="name">donation.stay.search</field>
@@ -47,14 +64,14 @@
         <filter name="departure_date" position="after">
             <separator />
             <filter
-                    name="donation_todo"
-                    string="No Donation"
-                    domain="[('donation_id', '=', False)]"
+                    name="no_donations"
+                    string="No Donations"
+                    domain="[('donation_count', '=', 0)]"
                 />
             <filter
-                    name="donation_done"
-                    string="Donation Recorded"
-                    domain="[('donation_id', '!=', False)]"
+                    name="has_donations"
+                    string="Has Donation(s)"
+                    domain="[('donation_count', '>', 0)]"
                 />
         </filter>
     </field>

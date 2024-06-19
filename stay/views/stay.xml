@@ -64,6 +64,7 @@
             </div>
 
             <sheet>
+                <div class="oe_button_box" name="button_box" />
                 <div class="oe_title">
                     <h1>
                         <field name="name" readonly="1" />
