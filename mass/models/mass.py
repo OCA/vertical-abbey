@@ -37,7 +37,15 @@ class MassRequest(models.Model):
     _check_company_auto = True
 
     @api.depends(
-        "type_id", "type_id.quantity", "quantity", "line_ids.request_id", "transfer_id"
+        "type_id",
+        "type_id.quantity",
+        "quantity",
+        "line_ids.request_id",
+        "transfer_id",
+        # Adding transfer_id.number in @api.depends to workaround the following bug:
+        # if you delete a mass.request.transfer, _compute_state_mass_remaining_quantity()
+        # is not triggered ; with 'transfer_id.number' it is triggered
+        "transfer_id.number",
     )
     def _compute_state_mass_remaining_quantity(self):
         for req in self:
