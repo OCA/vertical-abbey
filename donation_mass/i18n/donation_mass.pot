@@ -70,11 +70,6 @@ msgid "Mass Requests"
 msgstr ""
 
 #. module: donation_mass
-#: model:ir.model.fields,field_description:donation_mass.field_mass_requests_to_transfer__request_ids
-msgid "Mass Requests to Transfer"
-msgstr ""
-
-#. module: donation_mass
 #: model:ir.model.fields,field_description:donation_mass.field_donation_donation__mass_request_ids
 #: model:ir.model.fields,field_description:donation_mass.field_donation_line__mass_request_ids
 msgid "Masses"
@@ -96,9 +91,4 @@ msgstr ""
 #. module: donation_mass
 #: model:ir.model.fields,field_description:donation_mass.field_mass_request__donation_line_id
 msgid "Related Donation Line"
-msgstr ""
-
-#. module: donation_mass
-#: model:ir.model,name:donation_mass.model_mass_requests_to_transfer
-msgid "Select Mass Requests to Transfer"
 msgstr ""
