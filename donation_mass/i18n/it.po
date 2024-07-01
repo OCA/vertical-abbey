@@ -75,11 +75,6 @@ msgid "Mass Requests"
 msgstr "Richieste messa"
 
 #. module: donation_mass
-#: model:ir.model.fields,field_description:donation_mass.field_mass_requests_to_transfer__request_ids
-msgid "Mass Requests to Transfer"
-msgstr "Richieste messa da trasferire"
-
-#. module: donation_mass
 #: model:ir.model.fields,field_description:donation_mass.field_donation_donation__mass_request_ids
 #: model:ir.model.fields,field_description:donation_mass.field_donation_line__mass_request_ids
 msgid "Masses"
@@ -87,7 +82,6 @@ msgstr "Messe"
 
 #. module: donation_mass
 #. odoo-python
-#: code:addons/donation_mass/models/donation.py:0
 #: code:addons/donation_mass/models/donation.py:0
 #, python-format
 msgid "Missing mass stock account on company '%s'."
@@ -103,7 +97,8 @@ msgstr "Donazione relativa"
 msgid "Related Donation Line"
 msgstr "Riga donazione relativa"
 
-#. module: donation_mass
-#: model:ir.model,name:donation_mass.model_mass_requests_to_transfer
-msgid "Select Mass Requests to Transfer"
-msgstr "Selezionare richieste di messa da trasferire"
+#~ msgid "Mass Requests to Transfer"
+#~ msgstr "Richieste messa da trasferire"
+
+#~ msgid "Select Mass Requests to Transfer"
+#~ msgstr "Selezionare richieste di messa da trasferire"
