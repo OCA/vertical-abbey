@@ -75,12 +75,6 @@ msgid "Mass Requests"
 msgstr "Demande de messe"
 
 #. module: donation_mass
-#: model:ir.model.fields,field_description:donation_mass.field_mass_requests_to_transfer__request_ids
-#, fuzzy
-msgid "Mass Requests to Transfer"
-msgstr "Demande de messe"
-
-#. module: donation_mass
 #: model:ir.model.fields,field_description:donation_mass.field_donation_donation__mass_request_ids
 #: model:ir.model.fields,field_description:donation_mass.field_donation_line__mass_request_ids
 msgid "Masses"
@@ -103,10 +97,9 @@ msgstr "Don associé"
 msgid "Related Donation Line"
 msgstr "Ligne de don associée"
 
-#. module: donation_mass
-#: model:ir.model,name:donation_mass.model_mass_requests_to_transfer
-msgid "Select Mass Requests to Transfer"
-msgstr ""
+#, fuzzy
+#~ msgid "Mass Requests to Transfer"
+#~ msgstr "Demande de messe"
 
 #, fuzzy, python-format
 #~ msgid ""
