@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-11-27 16:34+0000\n"
+"PO-Revision-Date: 2024-07-08 12:58+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17\n"
+"X-Generator: Weblate 5.6.2\n"
 
 #. module: mass
 #. odoo-python
@@ -50,7 +50,7 @@ msgstr ""
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Azione richiesta"
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_religious_community__active
@@ -60,22 +60,22 @@ msgstr "Attiva"
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "Attività"
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Decorazione eccezione attività"
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "Stato attività"
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Icona tipo attività"
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__amount_total
@@ -113,7 +113,7 @@ msgstr "In archivio"
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_form
 msgid "Are you sure you want to go back to draft?"
-msgstr ""
+msgstr "Si è sicuri di voler tornare a bozza?"
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.swap_celebrant_form
@@ -124,7 +124,7 @@ msgstr "Si è sicuri di voler scambiare i celebranti delle due messe?"
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Conteggio allegati"
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_transfer_form
@@ -363,17 +363,17 @@ msgstr "Celebrante esterno"
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Seguito da"
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Seguito da (partner)"
 
 #. module: mass
 #: model:ir.model.fields,help:mass.field_mass_request_transfer__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Icona Font Awesome es. fa-tasks"
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.mass_journal_generate_form
@@ -402,7 +402,7 @@ msgstr "Raggruppa per"
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Ha un messaggio"
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_journal_generate__id
@@ -419,22 +419,22 @@ msgstr "ID"
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__activity_exception_icon
 msgid "Icon"
-msgstr ""
+msgstr "Icona"
 
 #. module: mass
 #: model:ir.model.fields,help:mass.field_mass_request_transfer__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Icona per indicare un'attività eccezione."
 
 #. module: mass
 #: model:ir.model.fields,help:mass.field_mass_request_transfer__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Se selezionata, nuovi messaggi richiedono attenzione."
 
 #. module: mass
 #: model:ir.model.fields,help:mass.field_mass_request_transfer__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Se selezionata, alcuni messaggi hanno un errore di consegna."
 
 #. module: mass
 #: model:ir.model.fields,help:mass.field_mass_line__request_date
@@ -471,7 +471,7 @@ msgstr "Interna"
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Segue"
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_journal_generate__journal_date
@@ -529,7 +529,7 @@ msgstr "Elenco celebranti"
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Allegato principale"
 
 #. module: mass
 #: model:ir.module.category,description:mass.module_category_mass
@@ -675,12 +675,12 @@ msgstr "Trasferimento messe"
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Errore di consegna messaggio"
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Messaggi"
 
 #. module: mass
 #. odoo-python
@@ -710,7 +710,7 @@ msgstr ""
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Scadenza mia attività"
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.religious_community_search
@@ -727,22 +727,22 @@ msgstr "Nome o codice"
 #: code:addons/mass/models/mass.py:0
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "Nuova"
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Scadenza prossima attività"
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Riepilogo prossima attività"
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Tipo prossima attività"
 
 #. module: mass
 #. odoo-python
@@ -759,22 +759,22 @@ msgstr "Messa novena"
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Numero di azioni"
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Numero di errori"
 
 #. module: mass
 #: model:ir.model.fields,help:mass.field_mass_request_transfer__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Numero di messaggi che richiedono un'azione"
 
 #. module: mass
 #: model:ir.model.fields,help:mass.field_mass_request_transfer__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Numero di messaggi con errore di consegna"
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_line__unit_offering
@@ -852,7 +852,7 @@ msgstr "Offerte residue"
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "Utente responsabile"
 
 #. module: mass
 #: model:ir.actions.act_window,name:mass.mass_settings_action
@@ -888,6 +888,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Stato in base alle attività\n"
+"Scaduto: la data richiesta è trascorsa\n"
+"Oggi: la data attività è oggi\n"
+"Pianificato: attività future."
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request__stock_account_id
@@ -1032,7 +1036,7 @@ msgstr "Richieste messa trasferite"
 #. module: mass
 #: model:ir.model.fields,help:mass.field_mass_request_transfer__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Tipo di attività eccezione sul record."
 
 #. module: mass
 #: model:ir.model,name:mass.model_mass_request_type
@@ -1088,12 +1092,12 @@ msgstr "Attenzione"
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Messaggi sito web"
 
 #. module: mass
 #: model:ir.model.fields,help:mass.field_mass_request_transfer__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Cronologia comunicazioni sito web"
 
 #. module: mass
 #. odoo-python
