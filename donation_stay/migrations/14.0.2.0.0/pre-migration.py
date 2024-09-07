@@ -11,4 +11,7 @@ _column_renames = {
 
 @openupgrade.migrate()
 def migrate(env, version):
-    openupgrade.rename_columns(env.cr, _column_renames)
+    # The column donation_id doesn't exist on stay_stay if you upgrade
+    # directly from 10.0 to 14.0.2.0.0
+    if openupgrade.column_exists(env.cr, "stay_stay", "donation_id"):
+        openupgrade.rename_columns(env.cr, _column_renames)
