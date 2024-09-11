@@ -46,9 +46,19 @@ class MassJournalValidate(models.TransientModel):
             amount = line.unit_offering
             if not comp_cur.is_zero(amount):
                 stock_account_id = line.request_id.stock_account_id.id
+                if not stock_account_id:
+                    raise UserError(
+                        _("Stock account is not set on mass request '%s'.")
+                        % line.request_id.display_name
+                    )
                 stock_acc2amount[stock_account_id] += amount
 
                 income_account_id = line.product_id._get_product_accounts()["income"].id
+                if not income_account_id:
+                    raise UserError(
+                        _("Income account is not set for product '%s'.")
+                        % line.product_id.display_name
+                    )
                 key = (
                     income_account_id,
                     json.dumps(line.request_id.analytic_distribution),
