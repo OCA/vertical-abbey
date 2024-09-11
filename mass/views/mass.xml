@@ -414,7 +414,7 @@
                 />
             <field name="intention" optional="hide" />
             <field name="unit_offering" sum="Total Offering" optional="show" />
-            <field name="conventual_id" widget="selection" optional="show" />
+            <field name="conventual_id" optional="show" />
             <field name="move_id" optional="hide" />
             <field name="state" />
             <field name="company_currency_id" invisible="1" />
