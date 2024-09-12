@@ -746,14 +746,29 @@ class StayRoomAssign(models.Model):
     # The field group_id_integer is used for colors in timeline view
     group_id_integer = fields.Integer(related="room_id.group_id.id", string="Group ID")
     user_id = fields.Many2one(related="room_id.group_id.user_id", store=True)
-    arrival_date = fields.Date(related="stay_id.arrival_date", store=True)
-    arrival_time = fields.Selection(related="stay_id.arrival_time", store=True)
+    arrival_date = fields.Date(
+        related="stay_id.arrival_date", store=True, readonly=False
+    )
+    arrival_time = fields.Selection(
+        related="stay_id.arrival_time", store=True, readonly=False
+    )
     arrival_datetime = fields.Datetime(related="stay_id.arrival_datetime", store=True)
-    departure_date = fields.Date(related="stay_id.departure_date", store=True)
-    departure_time = fields.Selection(related="stay_id.departure_time", store=True)
+    arrival_note = fields.Char(
+        related="stay_id.arrival_note", store=True, readonly=False
+    )
+    departure_date = fields.Date(
+        related="stay_id.departure_date", store=True, readonly=False
+    )
+    departure_time = fields.Selection(
+        related="stay_id.departure_time", store=True, readonly=False
+    )
     departure_datetime = fields.Datetime(
         related="stay_id.departure_datetime", store=True
     )
+    departure_note = fields.Char(
+        related="stay_id.departure_note", store=True, readonly=False
+    )
+    notes = fields.Text(related="stay_id.notes", store=True, readonly=False)
     partner_id = fields.Many2one(related="stay_id.partner_id", store=True)
     partner_name = fields.Text(related="stay_id.partner_name", store=True)
     company_id = fields.Many2one(related="stay_id.company_id", store=True)
