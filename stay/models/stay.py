@@ -26,11 +26,6 @@ TIMEDICT = {
     "evening": "20:00",
     "unknown": "08:00",
 }
-TIME2CODE = {
-    "morning": _("Mo"),
-    "afternoon": _("Af"),
-    "evening": _("Ev"),
-}
 
 
 class StayStay(models.Model):
@@ -942,18 +937,18 @@ class StayRoomAssign(models.Model):
             2: 25,
             3: 50,
         }
+        with_room = self._context.get("display_name_with_room")
         for assign in self:
             max_name_size = 30
             if assign.arrival_date and assign.departure_date:
                 days = (assign.departure_date - assign.arrival_date).days + 1
                 max_name_size = days2size.get(days, 120)
-            name = "[%s] %s, %s, %d [%s]" % (
-                TIME2CODE[assign.arrival_time],
-                shorten(assign.partner_name, max_name_size, placeholder="..."),
-                assign.room_id.code or assign.room_id.name,
-                assign.guest_qty,
-                TIME2CODE[assign.departure_time],
+            partner_name = shorten(
+                assign.partner_name, max_name_size, placeholder="..."
             )
+            name = f"{partner_name} ({assign.guest_qty})"
+            if with_room:
+                name = f"{name} {assign.room_id.code or assign.room_id.name}"
             res.append((assign.id, name))
         return res
 
