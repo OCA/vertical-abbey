@@ -438,8 +438,11 @@ So I use the form view below by default -->
                 <field name="partner_name" />
                 <field name="arrival_date" />
                 <field name="arrival_time" />
+                <field name="arrival_note" />
                 <field name="departure_date" />
                 <field name="departure_time" />
+                <field name="departure_note" />
+                <field name="notes" />
                 <field name="room_id" />
                 <field name="guest_qty" />
                 <field name="room_domain_ids" invisible="1" />
