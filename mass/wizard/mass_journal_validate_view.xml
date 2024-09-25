@@ -15,7 +15,8 @@
         <form>
             <group name="main">
                 <field name="company_id" groups="base.group_multi_company" />
-                <field name="journal_date" />
+                <field name="start_date" />
+                <field name="end_date" />
             </group>
             <footer>
                 <button
