@@ -416,7 +416,12 @@
             <field name="unit_offering" sum="Total Offering" optional="show" />
             <field name="conventual_id" optional="show" />
             <field name="move_id" optional="hide" />
-            <field name="state" />
+            <field
+                    name="state"
+                    widget="badge"
+                    decoration-success="state == 'done'"
+                    decoration-info="state == 'draft'"
+                />
             <field name="company_currency_id" invisible="1" />
         </tree>
     </field>
