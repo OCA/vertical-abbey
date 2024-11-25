@@ -86,7 +86,7 @@ class TestDonationFromStay(TransactionCase):
         self.assertEqual(
             donation.campaign_id, stay.company_id.donation_stay_campaign_id
         )
-        self.assertEqual(stay.donation_id, donation)
+        self.assertEqual(donation.stay_id, stay)
         self.assertEqual(donation.amount_total, 200)
         self.assertEqual(donation.partner_id, stay.partner_id)
         donation.validate()
