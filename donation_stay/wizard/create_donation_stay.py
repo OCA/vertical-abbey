@@ -67,6 +67,7 @@ class DonationStayCreate(models.TransientModel):
             "unit_price": self.amount,
         }
         vals = {
+            "stay_id": self.stay_id.id,
             "partner_id": self.partner_id.id,
             "payment_mode_id": self.payment_mode_id.id,
             "currency_id": self.currency_id.id,
@@ -92,7 +93,6 @@ class DonationStayCreate(models.TransientModel):
                 stay=self.stay_id.display_name,
             )
         )
-        self.stay_id.write({"donation_id": donation.id})
         action = self.env["ir.actions.actions"]._for_xml_id("donation.donation_action")
         action.update(
             {

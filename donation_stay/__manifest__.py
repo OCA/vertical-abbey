@@ -5,7 +5,7 @@
 
 {
     "name": "Donation Stay",
-    "version": "16.0.1.0.0",
+    "version": "16.0.2.0.0",
     "category": "Lodging",
     "license": "AGPL-3",
     "summary": "Create donations from a stay",
@@ -17,6 +17,7 @@
         "security/ir.model.access.csv",
         "wizard/create_donation_stay_view.xml",
         "wizard/res_config_settings.xml",
+        "views/donation.xml",
         "views/stay.xml",
     ],
     "demo": ["demo/demo.xml"],
