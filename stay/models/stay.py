@@ -52,7 +52,14 @@ class StayStay(models.Model):
         ondelete="restrict",
         help="If guest is anonymous, leave this field empty.",
     )
-    partner_name = fields.Text("Guest Names", required=True, tracking=True)
+    partner_name = fields.Text(
+        string="Guest Names",
+        required=True,
+        tracking=True,
+        compute="_compute_partner_name",
+        readonly=False,
+        store=True,
+    )
     guest_qty = fields.Integer(string="Guest Quantity", default=1, tracking=True)
     arrival_date = fields.Date(
         string="Arrival Date", required=True, tracking=True, index=True
@@ -229,6 +236,14 @@ class StayStay(models.Model):
             stay.assign_status = assign_status
             stay.guest_qty_to_assign = guest_qty_to_assign
             stay.rooms_display_name = rooms_display_name
+
+    @api.depends("partner_id")
+    def _compute_partner_name(self):
+        for stay in self:
+            partner_name = False
+            if stay.partner_id:
+                partner_name = stay.partner_id._stay_get_partner_name()
+            stay.partner_name = partner_name
 
     @api.depends("group_id")
     def _compute_refectory_id(self):
@@ -481,19 +496,6 @@ class StayStay(models.Model):
                 name = "%s, %s" % (stay.name, state)
             res.append((stay.id, name))
         return res
-
-    @api.onchange("partner_id")
-    def partner_id_change(self):
-        if self.partner_id:
-            partner = self.partner_id
-            partner_name = partner.name
-            if partner.title and not partner.is_company:
-                partner_lg = partner
-                if partner.lang:
-                    partner_lg = partner.with_context(lang=partner.lang)
-                title = partner_lg.title.shortcut or partner_lg.title.name
-                partner_name = "%s %s" % (title, partner_name)
-            self.partner_name = partner_name
 
     def _prepare_stay_line(self, date):  # noqa: C901
         self.ensure_one()
@@ -1291,7 +1293,13 @@ class StayLine(models.Model):
         string="Guest",
         help="If guest is anonymous, leave this field empty.",
     )
-    partner_name = fields.Text("Guest Names", required=True)
+    partner_name = fields.Text(
+        "Guest Names",
+        required=True,
+        compute="_compute_partner_name",
+        store=True,
+        readonly=False,
+    )
     refectory_id = fields.Many2one(
         "stay.refectory",
         string="Refectory",
@@ -1306,6 +1314,16 @@ class StayLine(models.Model):
     my_stay_group = fields.Boolean(
         compute="_compute_my_stay_group", search="_search_my_stay_group"
     )
+
+    @api.depends("stay_id.partner_name", "partner_id")
+    def _compute_partner_name(self):
+        for line in self:
+            partner_name = False
+            if line.stay_id:
+                partner_name = line.stay_id.partner_name
+            elif line.partner_id:
+                partner_name = line.partner_id._stay_get_partner_name()
+            line.partner_name = partner_name
 
     @api.depends("stay_id")
     def _compute_group_id(self):
@@ -1360,19 +1378,6 @@ class StayLine(models.Model):
             "The number of bed nights must be positive or null.",
         ),
     ]
-
-    @api.onchange("partner_id")
-    def partner_id_change(self):
-        if self.partner_id:
-            partner = self.partner_id
-            partner_name = partner.name
-            if partner.title and not partner.is_company:
-                partner_lg = partner
-                if partner.lang:
-                    partner_lg = partner.with_context(lang=partner.lang)
-                title = partner_lg.title.shortcut or partner_lg.title.name
-                partner_name = "%s %s" % (title, partner_name)
-            self.partner_name = partner_name
 
 
 class StayDateLabel(models.Model):
