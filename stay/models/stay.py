@@ -1245,7 +1245,7 @@ class StayGroup(models.Model):
                             "departure_time": fields_get_time[stay.departure_time],
                         }
                     )
-                email_to_list = ",".join(
+                email_to_list = ", ".join(
                     [u.email for u in group.notify_user_ids if u.email]
                 )
                 email_from = (
@@ -1258,7 +1258,9 @@ class StayGroup(models.Model):
                     email_from=email_from,
                 ).send_mail(group.id)
                 logger.info(
-                    "Stay notification mail sent for group %s", group.display_name
+                    "Stay notification mail sent to %s for group %s",
+                    email_to_list,
+                    group.display_name,
                 )
             else:
                 logger.info("No arrivals on %s for group %s", today, group.display_name)
