@@ -35,6 +35,11 @@ msgid "Company"
 msgstr ""
 
 #. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_stay_stay__company_currency_id
+msgid "Company Currency"
+msgstr ""
+
+#. module: donation_stay
 #: model:ir.model,name:donation_stay.model_res_config_settings
 msgid "Config Settings"
 msgstr ""
@@ -81,7 +86,7 @@ msgid "Display Name"
 msgstr ""
 
 #. module: donation_stay
-#: model:ir.model.fields,field_description:donation_stay.field_stay_stay__donation_id
+#: model:ir.model,name:donation_stay.model_donation_donation
 msgid "Donation"
 msgstr ""
 
@@ -96,15 +101,15 @@ msgid "Donation Date"
 msgstr ""
 
 #. module: donation_stay
-#: model_terms:ir.ui.view,arch_db:donation_stay.stay_search
-msgid "Donation Recorded"
-msgstr ""
-
-#. module: donation_stay
 #. odoo-python
 #: code:addons/donation_stay/wizard/create_donation_stay.py:0
 #, python-format
 msgid "Donation Stay Product not set on company '%s'."
+msgstr ""
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_stay_stay__donation_total
+msgid "Donation Total"
 msgstr ""
 
 #. module: donation_stay
@@ -122,6 +127,12 @@ msgid "Donation for a Stay"
 msgstr ""
 
 #. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_stay_stay__donation_ids
+#: model_terms:ir.ui.view,arch_db:donation_stay.stay_add_donation_form
+msgid "Donations"
+msgstr ""
+
+#. module: donation_stay
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__partner_id
 msgid "Guest"
 msgstr ""
@@ -129,6 +140,11 @@ msgstr ""
 #. module: donation_stay
 #: model:ir.model,name:donation_stay.model_stay_stay
 msgid "Guest Stay"
+msgstr ""
+
+#. module: donation_stay
+#: model_terms:ir.ui.view,arch_db:donation_stay.stay_search
+msgid "Has Donation(s)"
 msgstr ""
 
 #. module: donation_stay
@@ -152,8 +168,23 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: donation_stay
+#: model_terms:ir.ui.view,arch_db:donation_stay.donation_search
+msgid "Linked to a Stay"
+msgstr ""
+
+#. module: donation_stay
 #: model_terms:ir.ui.view,arch_db:donation_stay.stay_search
-msgid "No Donation"
+msgid "No Donations"
+msgstr ""
+
+#. module: donation_stay
+#: model_terms:ir.ui.view,arch_db:donation_stay.donation_search
+msgid "Not Linked to a Stay"
+msgstr ""
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_stay_stay__donation_count
+msgid "Number of Donations"
 msgstr ""
 
 #. module: donation_stay
@@ -173,6 +204,7 @@ msgid "Product for Stay Donations"
 msgstr ""
 
 #. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_donation_donation__stay_id
 #: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__stay_id
 msgid "Stay"
 msgstr ""
@@ -187,4 +219,10 @@ msgstr ""
 #: code:addons/donation_stay/wizard/create_donation_stay.py:0
 #, python-format
 msgid "The amount of the donation is not set or negative."
+msgstr ""
+
+#. module: donation_stay
+#: model:ir.model.fields,help:donation_stay.field_stay_stay__donation_total
+msgid ""
+"Total donation amount for draft and valid donations in company currency."
 msgstr ""
