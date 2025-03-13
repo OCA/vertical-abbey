@@ -143,6 +143,8 @@
     </field>
 </record>
 
+<!-- WARNING: if you modify this tree view, don't forget to do the same modif
+in the 2nd tree view with reverse order -->
 <record id="stay_tree" model="ir.ui.view">
     <field name="name">stay.tree</field>
     <field name="model">stay.stay</field>
@@ -194,6 +196,62 @@
         </tree>
     </field>
 </record>
+
+<!-- WARNING: if you modify this tree view, don't forget to do the same modif
+in the 1st tree view with native order -->
+<record id="stay_tree_reverse_order" model="ir.ui.view">
+    <field name="name">stay.tree.reverse.order</field>
+    <field name="model">stay.stay</field>
+    <field name="priority">1000</field>
+    <field name="arch" type="xml">
+        <tree decoration-muted="state == 'cancel'" default_order="arrival_date desc">
+            <header>  <!-- v14+ Use same action as in the Action menu -->
+                <button
+                        name="guest_has_left"
+                        type="object"
+                        string="Guest has Left"
+                        groups="stay.group_stay_user"
+                        states="current"
+                    />
+            </header>
+            <field name="name" />
+            <field name="group_id" optional="show" />
+            <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    optional="hide"
+                />
+            <field name="guest_qty" />
+            <field name="partner_name" invisible="context.get('partner_view')" />
+            <field name="arrival_date" />
+            <field name="arrival_time" />
+            <field name="arrival_note" optional="show" />
+            <field name="departure_date" />
+            <field name="departure_time" />
+            <field name="departure_note" optional="show" />
+            <field name="refectory_id" optional="hide" />
+            <field name="rooms_display_name" string="Rooms" />
+            <field
+                    name="assign_status"
+                    decoration-success="assign_status in ('assigned', 'no_night')"
+                    decoration-danger="assign_status in ('over-assigned', 'error')"
+                    decoration-info="assign_status == 'none'"
+                    decoration-warning="assign_status == 'partial'"
+                    widget="badge"
+                />
+            <field
+                    name="state"
+                    decoration-info="state == 'draft'"
+                    decoration-success="state == 'confirm'"
+                    decoration-warning="state == 'current'"
+                    decoration-muted="state == 'cancel'"
+                    decoration-danger="state == 'done'"
+                    widget="badge"
+                />
+        </tree>
+    </field>
+</record>
+
 
 
 <record id="stay_search" model="ir.ui.view">

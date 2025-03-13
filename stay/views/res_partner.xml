@@ -14,7 +14,7 @@
     <field name="domain"> [('construction', '=', False)]</field>
     <field
             name="context"
-        >{'stay_name_get_partner_name_qty': True, 'default_construction': False, 'search_default_partner_id': active_id}</field>
+        >{'stay_name_get_partner_name_qty': True, 'default_construction': False, 'search_default_partner_id': active_id, 'tree_view_ref': 'stay.stay_tree_reverse_order'}</field>
 </record>
 
 <record id="view_partner_form" model="ir.ui.view">
