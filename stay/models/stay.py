@@ -1031,7 +1031,7 @@ class StayRefectory(models.Model):
     _rec_name = "display_name"
 
     sequence = fields.Integer(default=10)
-    code = fields.Char(string="Code", size=10)
+    code = fields.Char(string="Code")
     name = fields.Char(string="Name", required=True)
     capacity = fields.Integer(string="Capacity")
     active = fields.Boolean(default=True)
@@ -1078,7 +1078,7 @@ class StayRoom(models.Model):
     _order = "sequence, id"
     _check_company_auto = True
 
-    code = fields.Char(string="Code", size=10, copy=False)
+    code = fields.Char(string="Code", copy=False)
     name = fields.Char(string="Name", required=True, copy=False)
     company_id = fields.Many2one(
         "res.company",
