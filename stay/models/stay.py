@@ -215,7 +215,7 @@ class StayStay(models.Model):
                     guest_qty_to_assign -= assign.guest_qty
                     room_codes.append(assign.room_id.code or assign.room_id.name)
             if room_codes:
-                rooms_display_name = "-".join(room_codes)
+                rooms_display_name = ", ".join(room_codes)
             else:
                 rooms_display_name = "\u2205"
 
