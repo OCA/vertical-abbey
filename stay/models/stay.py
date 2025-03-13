@@ -985,25 +985,12 @@ class StayRoomAssign(models.Model):
 
     @api.depends("partner_name", "arrival_time", "departure_time", "room_id")
     def name_get(self):
-        # Mainly used in the timeline view
-        # So we can have a long label for long stays, and we need a short
-        # label for short stays
         res = []
-        days2size = {
-            1: 8,
-            2: 25,
-            3: 50,
-        }
         with_room = self._context.get("display_name_with_room")
         for assign in self:
-            max_name_size = 30
-            if assign.arrival_date and assign.departure_date:
-                days = (assign.departure_date - assign.arrival_date).days + 1
-                max_name_size = days2size.get(days, 120)
-            partner_name = shorten(
-                assign.partner_name, max_name_size, placeholder="..."
-            )
-            name = f"{partner_name} ({assign.guest_qty})"
+            name = assign.partner_name
+            if assign.guest_qty > 1:
+                name = f"({assign.guest_qty}) {name}"
             if with_room:
                 name = f"{name} {assign.room_id.code or assign.room_id.name}"
             res.append((assign.id, name))
