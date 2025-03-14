@@ -52,7 +52,14 @@ class StayStay(models.Model):
         ondelete="restrict",
         help="If guest is anonymous, leave this field empty.",
     )
-    partner_name = fields.Text("Guest Names", required=True, tracking=True)
+    partner_name = fields.Text(
+        string="Guest Names",
+        required=True,
+        tracking=True,
+        compute="_compute_partner_name",
+        readonly=False,
+        store=True,
+    )
     guest_qty = fields.Integer(string="Guest Quantity", default=1, tracking=True)
     arrival_date = fields.Date(
         string="Arrival Date", required=True, tracking=True, index=True
@@ -102,7 +109,7 @@ class StayStay(models.Model):
         "stay_id",
         string="Room Assignments",
         states={"draft": [("readonly", True)], "cancel": [("readonly", True)]},
-        copy=True,
+        copy=False,
     )
     # Here, group_id is not a related of room, because we want to be able
     # to first set the group and later set the room
@@ -114,11 +121,11 @@ class StayStay(models.Model):
         domain="[('company_id', '=', company_id)]",
         ondelete="restrict",
         check_company=True,
+        default=lambda self: self.env.user.context_stay_group_id.id or False,
     )
     # to workaround the bug https://github.com/OCA/web/issues/1446
     # in v12+, if this PR is merged https://github.com/OCA/web/issues/1446
     # the we could use color_field
-    user_id = fields.Many2one(related="group_id.user_id", store=True)
     line_ids = fields.One2many(
         "stay.line",
         "stay_id",
@@ -173,6 +180,10 @@ class StayStay(models.Model):
         tracking=True,
         copy=False,
     )
+    # for filter
+    my_stay_group = fields.Boolean(
+        compute="_compute_my_stay_group", search="_search_my_stay_group"
+    )
 
     _sql_constraints = [
         (
@@ -200,10 +211,11 @@ class StayStay(models.Model):
             guest_qty_to_assign = stay.guest_qty
             room_codes = []
             for assign in stay.room_assign_ids:
-                guest_qty_to_assign -= assign.guest_qty
-                room_codes.append(assign.room_id.code or assign.room_id.name)
+                if assign.room_id:
+                    guest_qty_to_assign -= assign.guest_qty
+                    room_codes.append(assign.room_id.code or assign.room_id.name)
             if room_codes:
-                rooms_display_name = "-".join(room_codes)
+                rooms_display_name = ", ".join(room_codes)
             else:
                 rooms_display_name = "\u2205"
 
@@ -225,6 +237,14 @@ class StayStay(models.Model):
             stay.guest_qty_to_assign = guest_qty_to_assign
             stay.rooms_display_name = rooms_display_name
 
+    @api.depends("partner_id")
+    def _compute_partner_name(self):
+        for stay in self:
+            partner_name = False
+            if stay.partner_id:
+                partner_name = stay.partner_id._stay_get_partner_name()
+            stay.partner_name = partner_name
+
     @api.depends("group_id")
     def _compute_refectory_id(self):
         for stay in self:
@@ -236,6 +256,27 @@ class StayStay(models.Model):
             stay.refectory_id = refectory_id
             if stay.group_id:
                 stay.no_meals = stay.group_id.default_no_meals
+
+    @api.depends_context("uid")
+    @api.depends("group_id")
+    def _compute_my_stay_group(self):
+        for stay in self:
+            my_stay_group = False
+            if (
+                self.env.user.context_stay_group_id
+                and stay.group_id == self.env.user.context_stay_group_id
+            ):
+                my_stay_group = True
+            stay.my_stay_group = my_stay_group
+
+    def _search_my_stay_group(self, operator, value):
+        if self.env.user.context_stay_group_id:
+            if operator == "=" and value:
+                return [("group_id", "=", self.env.user.context_stay_group_id.id)]
+            else:
+                return [("group_id", "!=", self.env.user.context_stay_group_id.id)]
+        else:
+            return []
 
     @api.model
     def create(self, vals):
@@ -455,19 +496,6 @@ class StayStay(models.Model):
                 name = "%s, %s" % (stay.name, state)
             res.append((stay.id, name))
         return res
-
-    @api.onchange("partner_id")
-    def partner_id_change(self):
-        if self.partner_id:
-            partner = self.partner_id
-            partner_name = partner.name
-            if partner.title and not partner.is_company:
-                partner_lg = partner
-                if partner.lang:
-                    partner_lg = partner.with_context(lang=partner.lang)
-                title = partner_lg.title.shortcut or partner_lg.title.name
-                partner_name = "%s %s" % (title, partner_name)
-            self.partner_name = partner_name
 
     def _prepare_stay_line(self, date):  # noqa: C901
         self.ensure_one()
@@ -740,7 +768,6 @@ class StayRoomAssign(models.Model):
     )
     # The field group_id_integer is used for colors in timeline view
     group_id_integer = fields.Integer(related="room_id.group_id.id", string="Group ID")
-    user_id = fields.Many2one(related="room_id.group_id.user_id", store=True)
     arrival_date = fields.Date(
         related="stay_id.arrival_date", store=True, readonly=False
     )
@@ -767,6 +794,10 @@ class StayRoomAssign(models.Model):
     partner_id = fields.Many2one(related="stay_id.partner_id", store=True)
     partner_name = fields.Text(related="stay_id.partner_name", store=True)
     company_id = fields.Many2one(related="stay_id.company_id", store=True)
+    # for filter
+    my_stay_group = fields.Boolean(
+        compute="_compute_my_stay_group", search="_search_my_stay_group"
+    )
 
     _sql_constraints = [
         (
@@ -780,6 +811,21 @@ class StayRoomAssign(models.Model):
             "This room has already been used in this stay.",
         ),
     ]
+
+    @api.depends_context("uid")
+    @api.depends("group_id")
+    def _compute_my_stay_group(self):
+        for assign in self:
+            my_stay_group = False
+            if (
+                self.env.user.context_stay_group_id
+                and assign.group_id == self.env.user.context_stay_group_id
+            ):
+                my_stay_group = True
+            assign.my_stay_group = my_stay_group
+
+    def _search_my_stay_group(self, operator, value):
+        return self.env["stay.stay"]._search_my_stay_group(operator, value)
 
     @api.constrains("room_id", "guest_qty", "arrival_datetime", "departure_datetime")
     def _check_room_assign(self):
@@ -799,24 +845,35 @@ class StayRoomAssign(models.Model):
                 else:
                     assign._check_reservation_conflict_single()
 
-    def _check_reservation_conflict_single(self):
+    def _get_base_conflict_domain(self):
         self.ensure_one()
-        assert self.room_id
+        room_transition = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("stay.room_transition", default="one_empty_period")
+        )
+        logger.debug("room_transition is %s", room_transition)
         # No conflict IF :
         # leaves before my arrival (or same day)
         # OR arrivers after my departure (or same day)
         # CONTRARY :
         # leaves after my arrival
         # AND arrives before my departure
-        conflict_assign = self.search(
-            [
-                ("id", "!=", self.id),
-                ("room_id", "=", self.room_id.id),
-                ("departure_datetime", ">=", self.arrival_datetime),
-                ("arrival_datetime", "<=", self.departure_datetime),
-            ],
-            limit=1,
-        )
+        equal = room_transition == "one_empty_period" and "=" or ""
+        # I use self.stay_id.arrival_datetime instead of self.arrival_datetime
+        # because self.arrival_datetime may not be recomputed yet
+        conflict_domain = [
+            ("departure_datetime", f">{equal}", self.stay_id.arrival_datetime),
+            ("arrival_datetime", f"<{equal}", self.stay_id.departure_datetime),
+        ]
+        return conflict_domain
+
+    def _check_reservation_conflict_single(self):
+        self.ensure_one()
+        assert self.room_id
+        conflict_domain = self._get_base_conflict_domain()
+        conflict_domain += [("id", "!=", self.id), ("room_id", "=", self.room_id.id)]
+        conflict_assign = self.search(conflict_domain, limit=1)
         if conflict_assign:
             conflict_stay = conflict_assign.stay_id
             raise ValidationError(
@@ -904,14 +961,14 @@ class StayRoomAssign(models.Model):
             potential_excl_room_ids = company_id2potential_excl_room_ids.get(
                 company_id, []
             )
-
-            conflict_domain = [
-                ("room_id", "in", potential_excl_room_ids),
-                ("departure_datetime", ">=", assign.arrival_datetime),
-                ("arrival_datetime", "<=", assign.departure_datetime),
-            ]
+            conflict_domain = assign._get_base_conflict_domain()
+            conflict_domain.append(("room_id", "in", potential_excl_room_ids))
             if assign._origin.id:
                 conflict_domain.append(("id", "!=", assign._origin.id))
+            # One potential cause of problem: if the user deletes an assign line
+            # and creates a new one (without save in between), Odoo will not
+            # propose the room of the deleted assign line (until a new "save")
+            # because the deleted assign line still exists in DB
             conflict_assigns = self.search_read(conflict_domain, ["room_id"])
             conflict_rooms = {x["room_id"][0]: True for x in conflict_assigns}
 
@@ -928,25 +985,12 @@ class StayRoomAssign(models.Model):
 
     @api.depends("partner_name", "arrival_time", "departure_time", "room_id")
     def name_get(self):
-        # Mainly used in the timeline view
-        # So we can have a long label for long stays, and we need a short
-        # label for short stays
         res = []
-        days2size = {
-            1: 8,
-            2: 25,
-            3: 50,
-        }
         with_room = self._context.get("display_name_with_room")
         for assign in self:
-            max_name_size = 30
-            if assign.arrival_date and assign.departure_date:
-                days = (assign.departure_date - assign.arrival_date).days + 1
-                max_name_size = days2size.get(days, 120)
-            partner_name = shorten(
-                assign.partner_name, max_name_size, placeholder="..."
-            )
-            name = f"{partner_name} ({assign.guest_qty})"
+            name = assign.partner_name
+            if assign.guest_qty > 1:
+                name = f"({assign.guest_qty}) {name}"
             if with_room:
                 name = f"{name} {assign.room_id.code or assign.room_id.name}"
             res.append((assign.id, name))
@@ -974,7 +1018,7 @@ class StayRefectory(models.Model):
     _rec_name = "display_name"
 
     sequence = fields.Integer(default=10)
-    code = fields.Char(string="Code", size=10)
+    code = fields.Char(string="Code")
     name = fields.Char(string="Name", required=True)
     capacity = fields.Integer(string="Capacity")
     active = fields.Boolean(default=True)
@@ -1021,7 +1065,7 @@ class StayRoom(models.Model):
     _order = "sequence, id"
     _check_company_auto = True
 
-    code = fields.Char(string="Code", size=10, copy=False)
+    code = fields.Char(string="Code", copy=False)
     name = fields.Char(string="Name", required=True, copy=False)
     company_id = fields.Many2one(
         "res.company",
@@ -1037,7 +1081,6 @@ class StayRoom(models.Model):
         check_company=True,
         domain="[('company_id', '=', company_id)]",
     )
-    user_id = fields.Many2one(related="group_id.user_id", store=True, readonly=True)
     bed_qty = fields.Integer(string="Number of beds", default=1)
     allow_simultaneous = fields.Boolean(
         string="Allow simultaneous",
@@ -1053,6 +1096,10 @@ class StayRoom(models.Model):
         "(when a stay is terminated, this field is auto-set with the "
         "stay description). When the room is cleaned, the field is emptied.",
     )
+    # for filter
+    my_stay_group = fields.Boolean(
+        compute="_compute_my_stay_group", search="_search_my_stay_group"
+    )
 
     _sql_constraints = [
         (
@@ -1066,6 +1113,21 @@ class StayRoom(models.Model):
             "The number of beds must be positive.",
         ),
     ]
+
+    @api.depends_context("uid")
+    @api.depends("group_id")
+    def _compute_my_stay_group(self):
+        for room in self:
+            my_stay_group = False
+            if (
+                self.env.user.context_stay_group_id
+                and room.group_id == self.env.user.context_stay_group_id
+            ):
+                my_stay_group = True
+            room.my_stay_group = my_stay_group
+
+    def _search_my_stay_group(self, operator, value):
+        return self.env["stay.stay"]._search_my_stay_group(operator, value)
 
     @api.constrains("allow_simultaneous", "bed_qty")
     def _check_room_config(self):
@@ -1122,7 +1184,6 @@ class StayGroup(models.Model):
         required=True,
         default=lambda self: self.env.company,
     )
-    user_id = fields.Many2one("res.users", string="In Charge")
     sequence = fields.Integer()
     room_ids = fields.One2many("stay.room", "group_id", string="Rooms")
     notify_user_ids = fields.Many2many("res.users", string="Users Notified by E-mail")
@@ -1171,7 +1232,7 @@ class StayGroup(models.Model):
                             "departure_time": fields_get_time[stay.departure_time],
                         }
                     )
-                email_to_list = ",".join(
+                email_to_list = ", ".join(
                     [u.email for u in group.notify_user_ids if u.email]
                 )
                 email_from = (
@@ -1184,7 +1245,9 @@ class StayGroup(models.Model):
                     email_from=email_from,
                 ).send_mail(group.id)
                 logger.info(
-                    "Stay notification mail sent for group %s", group.display_name
+                    "Stay notification mail sent to %s for group %s",
+                    email_to_list,
+                    group.display_name,
                 )
             else:
                 logger.info("No arrivals on %s for group %s", today, group.display_name)
@@ -1219,7 +1282,13 @@ class StayLine(models.Model):
         string="Guest",
         help="If guest is anonymous, leave this field empty.",
     )
-    partner_name = fields.Text("Guest Names", required=True)
+    partner_name = fields.Text(
+        "Guest Names",
+        required=True,
+        compute="_compute_partner_name",
+        store=True,
+        readonly=False,
+    )
     refectory_id = fields.Many2one(
         "stay.refectory",
         string="Refectory",
@@ -1227,8 +1296,48 @@ class StayLine(models.Model):
         default=lambda self: self.env.company.default_refectory_id,
     )
     rooms_display_name = fields.Char(related="stay_id.rooms_display_name", store=True)
-    group_id = fields.Many2one(related="stay_id.group_id", store=True)
-    user_id = fields.Many2one(related="stay_id.group_id.user_id", store=True)
+    group_id = fields.Many2one(
+        "stay.group", compute="_compute_group_id", store=True, readonly=False
+    )
+    # for filter
+    my_stay_group = fields.Boolean(
+        compute="_compute_my_stay_group", search="_search_my_stay_group"
+    )
+
+    @api.depends("stay_id.partner_name", "partner_id")
+    def _compute_partner_name(self):
+        for line in self:
+            partner_name = False
+            if line.stay_id:
+                partner_name = line.stay_id.partner_name
+            elif line.partner_id:
+                partner_name = line.partner_id._stay_get_partner_name()
+            line.partner_name = partner_name
+
+    @api.depends("stay_id")
+    def _compute_group_id(self):
+        for line in self:
+            group_id = False
+            if line.stay_id:
+                group_id = line.stay_id.group_id.id or False
+            else:
+                group_id = self.env.user.context_stay_group_id.id or False
+            line.group_id = group_id
+
+    @api.depends_context("uid")
+    @api.depends("group_id")
+    def _compute_my_stay_group(self):
+        for line in self:
+            my_stay_group = False
+            if (
+                self.env.user.context_stay_group_id
+                and line.group_id == self.env.user.context_stay_group_id
+            ):
+                my_stay_group = True
+            line.my_stay_group = my_stay_group
+
+    def _search_my_stay_group(self, operator, value):
+        return self.env["stay.stay"]._search_my_stay_group(operator, value)
 
     @api.constrains("refectory_id", "breakfast_qty", "lunch_qty", "dinner_qty")
     def _check_room_refectory(self):
@@ -1258,19 +1367,6 @@ class StayLine(models.Model):
             "The number of bed nights must be positive or null.",
         ),
     ]
-
-    @api.onchange("partner_id")
-    def partner_id_change(self):
-        if self.partner_id:
-            partner = self.partner_id
-            partner_name = partner.name
-            if partner.title and not partner.is_company:
-                partner_lg = partner
-                if partner.lang:
-                    partner_lg = partner.with_context(lang=partner.lang)
-                title = partner_lg.title.shortcut or partner_lg.title.name
-                partner_name = "%s %s" % (title, partner_name)
-            self.partner_name = partner_name
 
 
 class StayDateLabel(models.Model):

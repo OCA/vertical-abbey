@@ -20,23 +20,52 @@
                     groups="stay.group_stay_manager"
                 >
                 <h2>Stays</h2>
-                <div
-                        class='row mt16 o_settings_container'
-                        name="stay_setting_container"
-                    >
-                    <div class='col-12 col-lg-12 o_setting_box' id="stay_setting">
+                <div class='row mt16 o_settings_container' name="stay_room_transition">
+                    <div
+                            class='col-12 col-lg-12 o_setting_box'
+                            id="stay_room_transition"
+                        >
                         <div class="o_setting_left_pane" />
                         <div class="o_setting_right_pane">
-                            <div class="row">
-                                <label
-                                        for="stay_default_refectory_id"
-                                        class="col-md-3"
+                            <span class="o_form_label">Room Transition</span>
+                            <div class="text-muted">
+                                One Empty Period: when a guest leaves the room in the morning, the next guest can have the room in the afternoon the same day, but not in the morning. Immediate: the next guest can start his stay in the morning. The same applies for afternoon vs evening.
+                            </div>
+                            <div class="content-group">
+                                <field
+                                        name="stay_room_transition"
+                                        class="o_light_label mt16"
+                                        widget="radio"
                                     />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div
+                        class='row mt16 o_settings_container'
+                        name="stay_default_refectory"
+                    >
+                    <div
+                            class='col-12 col-lg-12 o_setting_box'
+                            id="stay_default_refectory"
+                        >
+                        <div class="o_setting_left_pane" />
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Default Refectory</span>
+                            <div class="content-group">
                                 <field name="stay_default_refectory_id" />
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='row mt16 o_settings_container' name="stay_breakfast">
+                    <div class='col-12 col-lg-12 o_setting_box' id="stay_breakfast">
+                        <div class="o_setting_left_pane">
+                            <field name="group_stay_breakfast" />
+                        </div>
+                        <div class="o_setting_right_pane">
                             <div class="row">
                                 <label for="group_stay_breakfast" class="col-md-3" />
-                                <field name="group_stay_breakfast" />
                             </div>
                         </div>
                     </div>

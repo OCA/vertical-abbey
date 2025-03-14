@@ -16,3 +16,11 @@ class ResConfigSettings(models.TransientModel):
     group_stay_breakfast = fields.Boolean(
         string="Manage Breakfast", implied_group="stay.group_stay_breakfast"
     )
+    stay_room_transition = fields.Selection(
+        [
+            ("one_empty_period", "One Empty Period"),
+            ("immediate", "Immediate"),
+        ],
+        string="Room Transition",
+        config_parameter="stay.room_transition",
+    )
