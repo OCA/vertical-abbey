@@ -28,13 +28,9 @@ class StayStayXlsx(models.TransientModel):
         company_id = self.env.company.id
         today_dt = fields.Date.context_today(self)
         end_date_dt = today_dt + relativedelta(months=6, days=-1)
-        groups = self.env["stay.group"].search(
-            [
-                ("user_id", "=", self.env.user.id),
-                ("company_id", "=", company_id),
-            ]
-        )
-        if not groups:
+        if self.env.user.context_stay_group_id:
+            groups = self.env.user.context_stay_group_id
+        else:
             groups = self.env["stay.group"].search([("company_id", "=", company_id)])
         res.update(
             {
