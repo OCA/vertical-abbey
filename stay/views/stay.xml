@@ -40,6 +40,14 @@
                         string="Update All Lines"
                         states="confirm,current"
                     />
+                <button
+                        name="%(stay_create_partner_action)d"
+                        type="action"
+                        string="Set Partner from Web Form Infos"
+                        attrs="{'invisible': ['|', ('partner_id', '!=', False), ('controller', '=', False)]}"
+                        groups="stay.group_stay_user"
+                        class="btn-primary"
+                    />
 
                 <button
                         name="cancel"
@@ -73,6 +81,8 @@
                 <group name="main">
                     <group name="left">
                         <field name="company_id" groups="base.group_multi_company" />
+                        <field name="company_id" invisible="1" />
+                        <field name="controller" invisible="1" />
                         <field
                                 name="partner_id"
                                 attrs="{'invisible': [('construction', '=', True)]}"
@@ -130,8 +140,28 @@
                     >
                     <field name="line_ids" nolabel="1" />
                 </group>
-                <group name="notes">
-                    <field name="notes" />
+                <group name="bottom">
+                    <group name="notes" string="Notes">
+                        <field name="notes" nolabel="1" colspan="2" />
+                    </group>
+                    <group
+                            name="controller"
+                            string="Web Form"
+                            attrs="{'invisible': [('controller', '=', False)]}"
+                        >
+
+                        <field name="controller_title" />
+                        <field name="controller_firstname" />
+                        <field name="controller_lastname" />
+                        <field name="controller_email" widget="email" />
+                        <field name="controller_mobile" />
+                        <field name="controller_street" />
+                        <field name="controller_street2" />
+                        <field name="controller_zip" />
+                        <field name="controller_city" />
+                        <field name="controller_country_id" />
+                        <field name="controller_notes" nolabel="1" colspan="2" />
+                    </group>
                 </group>
             </sheet>
             <div class="oe_chatter">

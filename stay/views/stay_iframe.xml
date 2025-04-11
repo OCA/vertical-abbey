@@ -11,13 +11,22 @@
 
             <div>
                 <input
-                        id="partner_name"
+                        id="firstname"
                         type="text"
-                        name="partner_name"
+                        name="firstname"
                         required="1"
-                        placeholder="Name and Surname"
-                        alt="Your Name and Surname"
+                        placeholder="Firstname"
+                        alt="Firstname"
                     />
+                <input
+                        id="lastname"
+                        type="text"
+                        name="lastname"
+                        required="1"
+                        placeholder="Lastname"
+                        alt="Lastname"
+                    />
+
             </div>
 
             <div>
@@ -41,6 +50,46 @@
                         alt="mobile phone number"
                     />
             </div>
+            <div>
+                <input
+                        id="street"
+                        type="text"
+                        name="street"
+                        placeholder="Street"
+                        alt="Address Line"
+                    />
+            </div>
+            <div>
+                <input
+                        id="street2"
+                        type="text"
+                        name="street2"
+                        placeholder="Street2"
+                        alt="Address Line 2"
+                    />
+            </div>
+            <div>
+                <input id="zip" type="text" name="zip" placeholder="ZIP" alt="ZIP" />
+            </div>
+            <div>
+                <input
+                        id="city"
+                        type="text"
+                        name="city"
+                        placeholder="City"
+                        alt="City"
+                    />
+            </div>
+                    <label for="country_code">Country</label>
+                    <select id="country_code" name="country_code">
+                            <option value="FR">France</option>
+                            <option value="CH">Suisse</option>
+                            <option value="IT">Italy</option>
+                            <option value="DE">Germany</option>
+                            <option value="LU">Luxembourg</option>
+                            <option value="BE">Belgium</option>
+                    </select>
+
             <label for="title">Title:</label>
             <select id="title" name="title">
                 <option value="madam">Madam</option>

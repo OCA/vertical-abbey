@@ -24,3 +24,8 @@ class ResConfigSettings(models.TransientModel):
         string="Room Transition",
         config_parameter="stay.room_transition",
     )
+    stay_controller_company_id = fields.Many2one(
+        "res.company",
+        config_parameter="stay.controller.company_id",
+        string="Default Company for Stays created from Web Form",
+    )

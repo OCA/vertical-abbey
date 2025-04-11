@@ -26,6 +26,7 @@
         "wizard/stay_line_mass_update_view.xml",
         "wizard/stay_line_reset_view.xml",
         "wizard/stay_room_mass_assign_view.xml",
+        "wizard/stay_create_partner_view.xml",
         "views/stay.xml",
         "views/stay_iframe.xml",
         "data/sequence.xml",
