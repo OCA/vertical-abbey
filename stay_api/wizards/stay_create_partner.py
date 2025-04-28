@@ -20,11 +20,11 @@ class StayCreatePartner(models.TransientModel):
             ("miss", "Miss"),
         ]
     )
-    email = fields.Char()
+    email = fields.Char(string="E-mail")
     mobile = fields.Char()
-    street = fields.Char()
-    street2 = fields.Char()
-    zip = fields.Char()
+    street = fields.Char(string="Address Line 1")
+    street2 = fields.Char(string="Address Line 2")
+    zip = fields.Char(string="ZIP")
     city = fields.Char()
     country_id = fields.Many2one("res.country")
     update_partner_id = fields.Many2one("res.partner", string="Partner to Update")
@@ -52,7 +52,10 @@ class StayCreatePartner(models.TransientModel):
         related="update_partner_id.country_id", string="Current Country"
     )
     update_email = fields.Boolean(
-        compute="_compute_update_bool", readonly=False, store=True
+        compute="_compute_update_bool",
+        readonly=False,
+        store=True,
+        string="Update E-mail",
     )
     update_mobile = fields.Boolean(
         compute="_compute_update_bool", readonly=False, store=True
@@ -170,7 +173,7 @@ class StayCreatePartner(models.TransientModel):
         if vals:
             self.update_partner_id.write(vals)
             self.update_partner_id.message_post(
-                body=_("Partner email and/or mobile updated from stay web form.")
+                body=_("Partner e-mail and/or mobile updated from stay web form.")
             )
         self.stay_id.write({"partner_id": self.update_partner_id.id})
         self.stay_id.message_post(body=_("Partner updated from stay web form."))

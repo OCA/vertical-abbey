@@ -1,2 +1,4 @@
 # generated from manifests external_dependencies
+fastapi
+pydantic<2
 xlsxwriter

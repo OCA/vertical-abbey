@@ -184,26 +184,6 @@ class StayStay(models.Model):
     my_stay_group = fields.Boolean(
         compute="_compute_my_stay_group", search="_search_my_stay_group"
     )
-    controller = fields.Boolean(readonly=True, string="Created from Web Form")
-    controller_firstname = fields.Char(tracking=True, string="Firstname")
-    controller_lastname = fields.Char(tracking=True, string="Lastname")
-    controller_title = fields.Selection(
-        [
-            ("mister", "Mister"),
-            ("madam", "Madam"),
-            ("miss", "Miss"),
-        ],
-        tracking=True,
-        string="Title",
-    )
-    controller_email = fields.Char(tracking=True, string="E-mail")
-    controller_mobile = fields.Char(tracking=True, string="Mobile")
-    controller_notes = fields.Text(string="Web Form Notes")
-    controller_street = fields.Char(string="Adresse Line 1")
-    controller_street2 = fields.Char(string="Adresse Line 2")
-    controller_zip = fields.Char(string="Zip")
-    controller_city = fields.Char(string="City")
-    controller_country_id = fields.Many2one("res.country", string="Country")
 
     _sql_constraints = [
         (
