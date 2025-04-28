@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2025 Akretion France (https://www.akretion.com/)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+
+<record id="stay_api_group" model="res.groups">
+  <field name="name">Stay API Group</field>
+  <field name="users" eval="[(4, ref('stay_api_user'))]" />
+  <field
+            name="implied_ids"
+            eval="[(4, ref('fastapi.group_fastapi_endpoint_runner'))]"
+        />
+</record>
+
+</odoo>

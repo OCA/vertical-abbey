@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stay_api_stay,Create and read access on stay.stay,stay.model_stay_stay,stay_api_group,1,0,1,0
+access_stay_api_ir_sequence,Read access on ir.sequence,base.model_ir_sequence,stay_api_group,1,0,0,0
+access_stay_api_res_country,Read access on res.country,base.model_res_country,stay_api_group,1,0,0,0
+access_stay_api_res_partner,Read access on res.partner,base.model_res_partner,stay_api_group,1,0,0,0
+access_stay_create_partner,Full access on stay.create.partner wizard,model_stay_create_partner,stay.group_stay_user,1,1,1,1
