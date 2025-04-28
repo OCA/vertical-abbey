@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2025 Akretion France (https://www.akretion.com/)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+
+                  <record id="stay_form" model="ir.ui.view">
+                          <field name="model">stay.stay</field>
+                          <field name="inherit_id" ref="stay.stay_form" />
+                          <field name="arch" type="xml">
+                                  <button name="draft2confirm" position="before">
+                                          <button
+                    name="%(stay_create_partner_action)d"
+                    type="action"
+                    string="Set Partner from Web Form Infos"
+                    attrs="{'invisible': ['|', ('partner_id', '!=', False), ('controller', '=', False)]}"
+                    groups="stay.group_stay_user"
+                    class="btn-primary"
+                />
+                                  </button>
+                                  <group name="notes" position="after">
+                                          <group
+                    name="controller"
+                    string="Web Form"
+                    attrs="{'invisible': [('controller', '=', False)]}"
+                >
+
+                        <field name="controller" invisible="1" />
+                        <field name="controller_title" />
+                        <field name="controller_firstname" />
+                        <field name="controller_lastname" />
+                        <field name="controller_email" widget="email" />
+                        <field name="controller_mobile" />
+                        <field name="controller_street" />
+                        <field name="controller_street2" />
+                        <field name="controller_zip" />
+                        <field name="controller_city" />
+                        <field name="controller_country_id" />
+                        <field name="controller_notes" nolabel="1" colspan="2" />
+                    </group>
+                                  </group>
+
+        </field>
+    </record>
+
+<record id="stay_search" model="ir.ui.view">
+                          <field name="model">stay.stay</field>
+                          <field name="inherit_id" ref="stay.stay_search" />
+                          <field name="arch" type="xml">
+                                  <group name="groupby" position="before">
+                                          <filter
+                    name="controller"
+                    domain="[('controller', '=', True)]"
+                    string="Created from Web Form"
+                />
+                                          <separator />
+                                  </group>
+                          </field>
+                  </record>
+
+          </odoo>
