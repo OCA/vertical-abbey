@@ -12,6 +12,7 @@ setuptools.setup(
         'odoo14-addon-donation_stay',
         'odoo14-addon-mass',
         'odoo14-addon-stay',
+        'odoo14-addon-stay_api',
         'odoo14-addon-stay_report_py3o',
     ],
     classifiers=[
