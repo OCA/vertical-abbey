@@ -27,7 +27,6 @@
         "wizard/stay_line_reset_view.xml",
         "wizard/stay_room_mass_assign_view.xml",
         "views/stay.xml",
-        "views/stay_iframe.xml",
         "data/sequence.xml",
         "security/ir.model.access.csv",
         "report/report.xml",

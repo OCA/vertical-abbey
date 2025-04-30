@@ -1,0 +1,416 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stay_api
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-04-29 22:46+0000\n"
+"PO-Revision-Date: 2025-04-29 22:46+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: stay_api
+#: model:mail.template,body_html:stay_api.stay_created_by_controller_notify
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"        <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">A new stay query has been sumbitted via the web form:</p>\n"
+"        <ul>\n"
+"                <li>Stay Number: ${object.name}</li>\n"
+"                <li>Guest: ${object.partner_name}</li>\n"
+"                <li>Guest Qty: ${object.guest_qty}</li>\n"
+"                <li>Arrival: ${format_date(object.arrival_date)} ${dict(object.fields_get('arrival_time', 'selection')['arrival_time']['selection'])[object.arrival_time]}</li>\n"
+"                % if object.arrival_note:\n"
+"                <li>Arrival Note: ${object.arrival_note}</li>\n"
+"                % endif\n"
+"                <li>Departure: ${format_date(object.departure_date)} ${dict(object.fields_get('departure_time', 'selection')['departure_time']['selection'])[object.departure_time]}</li>\n"
+"                % if object.departure_note:\n"
+"                <li>Departure Note: ${object.departure_note}</li>\n"
+"                % endif\n"
+"                % if object.group_id:\n"
+"                <li>Group: ${object.group_id.display_name}</li>\n"
+"                % endif\n"
+"                % if object.controller_country_id:\n"
+"                <li>Country: ${object.controller_country_id.name}</li>\n"
+"                % endif\n"
+"                % if object.controller_email:\n"
+"                <li>E-mail: ${object.controller_email}</li>\n"
+"                % endif\n"
+"                % if object.controller_mobile:\n"
+"                <li>Phone: ${object.controller_mobile}</li>\n"
+"                % endif\n"
+"                % if object.controller_notes:\n"
+"                <li>Notes: ${object.controller_notes}</li>\n"
+"                % endif\n"
+"            </ul>\n"
+"</div>\n"
+"    "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"        <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">Une nouvelle demande de séjour a été reçue par le formulaire web :</p>\n"
+"        <ul>\n"
+"                <li>N° de séjour : ${object.name}</li>\n"
+"                <li>Hôte : ${object.partner_name}</li>\n"
+"                <li>Nombre d'hôtes : ${object.guest_qty}</li>\n"
+"                <li>Arrivée : ${format_date(object.arrival_date)} ${dict(object.fields_get('arrival_time', 'selection')['arrival_time']['selection'])[object.arrival_time]}</li>\n"
+"                % if object.arrival_note:\n"
+"                <li>Note d'arrivée : ${object.arrival_note}</li>\n"
+"                % endif\n"
+"                <li>Départ : ${format_date(object.departure_date)} ${dict(object.fields_get('departure_time', 'selection')['departure_time']['selection'])[object.departure_time]}</li>\n"
+"                % if object.departure_note:\n"
+"                <li>Note de départ : ${object.departure_note}</li>\n"
+"                % endif\n"
+"                % if object.group_id:\n"
+"                <li>Groupe : ${object.group_id.display_name}</li>\n"
+"                % endif\n"
+"                % if object.controller_country_id:\n"
+"                <li>Pays : ${object.controller_country_id.name}</li>\n"
+"                % endif\n"
+"                % if object.controller_email:\n"
+"                <li>E-mail : ${object.controller_email}</li>\n"
+"                % endif\n"
+"                % if object.controller_mobile:\n"
+"                <li>Tél : ${object.controller_mobile}</li>\n"
+"                % endif\n"
+"                % if object.controller_notes:\n"
+"                <li>Notes : ${object.controller_notes}</li>\n"
+"                % endif\n"
+"            </ul>\n"
+"</div>\n"
+"    "
+
+#. module: stay_api
+#: model_terms:ir.ui.view,arch_db:stay_api.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Default Company for Stays created from Web "
+"Form</span>"
+msgstr ""
+"<span class=\"o_form_label\">Société par défaut pour les séjours créés à "
+"partir du formulaire web</span>"
+
+#. module: stay_api
+#: model_terms:ir.ui.view,arch_db:stay_api.stay_create_partner_form
+msgid "Address"
+msgstr "Adresse"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__street
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_street
+msgid "Address Line 1"
+msgstr "Adresse ligne 1"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__street2
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_street2
+msgid "Address Line 2"
+msgstr "Adresse ligne 2"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_fastapi_endpoint__app
+msgid "App"
+msgstr "Application"
+
+#. module: stay_api
+#: model_terms:ir.ui.view,arch_db:stay_api.stay_create_partner_form
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__city
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_city
+#: model_terms:ir.ui.view,arch_db:stay_api.stay_create_partner_form
+msgid "City"
+msgstr "Ville"
+
+#. module: stay_api
+#: model:ir.model,name:stay_api.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuration"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__country_id
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_country_id
+#: model_terms:ir.ui.view,arch_db:stay_api.stay_create_partner_form
+msgid "Country"
+msgstr "Pays"
+
+#. module: stay_api
+#: code:addons/stay_api/routers/stay.py:0
+#, python-format
+msgid "Country code %s doesn't exist in Odoo."
+msgstr "Le code pays %s n'existe pas dans Odoo."
+
+#. module: stay_api
+#: model_terms:ir.ui.view,arch_db:stay_api.stay_create_partner_form
+msgid "Create Partner"
+msgstr "Créer le partenaire"
+
+#. module: stay_api
+#: model:ir.actions.act_window,name:stay_api.stay_create_partner_action
+msgid "Create or Update Partner"
+msgstr "Créer ou mettre à jour le partenaire"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller
+#: model_terms:ir.ui.view,arch_db:stay_api.stay_search
+msgid "Created from Web Form"
+msgstr "Créé à partir du formulaire Web"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: stay_api
+#: model_terms:ir.ui.view,arch_db:stay_api.stay_create_partner_form
+msgid "Current Address"
+msgstr "Adresse actuelle"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__update_partner_city
+msgid "Current City"
+msgstr "Ville actuelle"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__update_partner_country_id
+msgid "Current Country"
+msgstr "Pays actuel"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__update_partner_email
+msgid "Current E-mail"
+msgstr "E-mail actuel"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__update_partner_mobile
+msgid "Current Mobile"
+msgstr "Portable actuel"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__update_partner_street
+msgid "Current Street"
+msgstr "Adresse ligne 1 actuelle"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__update_partner_street2
+msgid "Current Street2"
+msgstr "Adresse ligne 2 actuelle"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__update_partner_zip
+msgid "Current ZIP"
+msgstr "Code postal actuel"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_res_config_settings__stay_controller_company_id
+msgid "Default Company for Stays created from Web Form"
+msgstr "Société par défaut pour les séjours créés à partir du formulaire web"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_fastapi_endpoint__display_name
+#: model:ir.model.fields,field_description:stay_api.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__display_name
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__email
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_email
+msgid "E-mail"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model,name:stay_api.model_fastapi_endpoint
+msgid "FastAPI Endpoint"
+msgstr "Point de terminaison FastAPI"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__firstname
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_firstname
+msgid "Firstname"
+msgstr "Prénom"
+
+#. module: stay_api
+#: model:ir.model,name:stay_api.model_stay_stay
+msgid "Guest Stay"
+msgstr "Séjour de l'hôte"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_fastapi_endpoint__id
+#: model:ir.model.fields,field_description:stay_api.field_res_config_settings__id
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__id
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__id
+msgid "ID"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_fastapi_endpoint____last_update
+#: model:ir.model.fields,field_description:stay_api.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner____last_update
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__lastname
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_lastname
+msgid "Lastname"
+msgstr "Nom de famille"
+
+#. module: stay_api
+#: model:ir.model.fields.selection,name:stay_api.selection__stay_create_partner__title__madam
+#: model:ir.model.fields.selection,name:stay_api.selection__stay_stay__controller_title__madam
+msgid "Madam"
+msgstr "Madame"
+
+#. module: stay_api
+#: model:ir.model.fields.selection,name:stay_api.selection__stay_create_partner__title__miss
+#: model:ir.model.fields.selection,name:stay_api.selection__stay_stay__controller_title__miss
+msgid "Miss"
+msgstr "Mademoiselle"
+
+#. module: stay_api
+#: model:ir.model.fields.selection,name:stay_api.selection__stay_create_partner__title__mister
+#: model:ir.model.fields.selection,name:stay_api.selection__stay_stay__controller_title__mister
+msgid "Mister"
+msgstr "Monsieur"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__mobile
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_mobile
+msgid "Mobile"
+msgstr "Portable"
+
+#. module: stay_api
+#: code:addons/stay_api/wizards/stay_create_partner.py:0
+#, python-format
+msgid "New Partner"
+msgstr "Nouveau partenaire"
+
+#. module: stay_api
+#: model:mail.template,subject:stay_api.stay_created_by_controller_notify
+msgid ""
+"New stay query from ${object.partner_name} "
+"${format_date(object.arrival_date)} → ${format_date(object.departure_date)} "
+"x ${object.guest_qty}"
+msgstr ""
+"Nouvelle demande de séjour de ${object.partner_name} "
+"${format_date(object.arrival_date)} → ${format_date(object.departure_date)} "
+"x ${object.guest_qty}"
+
+#. module: stay_api
+#: code:addons/stay_api/wizards/stay_create_partner.py:0
+#: code:addons/stay_api/wizards/stay_create_partner.py:0
+#, python-format
+msgid "Partner created from stay web form."
+msgstr "Partenaire créé à partir du formulaire web de séjour."
+
+#. module: stay_api
+#: code:addons/stay_api/wizards/stay_create_partner.py:0
+#, python-format
+msgid "Partner e-mail and/or mobile updated from stay web form."
+msgstr ""
+"L'e-mail et/ou le téléphone portable du partenaire ont été mis à jour à "
+"partir du formulaire web de séjour."
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__update_partner_id
+msgid "Partner to Update"
+msgstr "Partenaire à mettre à jour"
+
+#. module: stay_api
+#: code:addons/stay_api/wizards/stay_create_partner.py:0
+#, python-format
+msgid "Partner updated from stay web form."
+msgstr "Partenaire mis à jour à partir du formulaire web de séjour."
+
+#. module: stay_api
+#: model_terms:ir.ui.view,arch_db:stay_api.stay_form
+msgid "Set Partner from Web Form Infos"
+msgstr "Renseigner le partenaire à partir des informations du formulaire web"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__stay_id
+#: model:ir.model.fields.selection,name:stay_api.selection__fastapi_endpoint__app__stay
+msgid "Stay"
+msgstr "Séjour"
+
+#. module: stay_api
+#: model:res.groups,name:stay_api.stay_api_group
+msgid "Stay API Group"
+msgstr "Groupe API Séjour"
+
+#. module: stay_api
+#: model:ir.model,name:stay_api.model_stay_create_partner
+msgid "Stay: Create Partner"
+msgstr "Séjour : créer un partenaire"
+
+#. module: stay_api
+#: code:addons/stay_api/wizards/stay_create_partner.py:0
+#, python-format
+msgid "The partner to update is not set."
+msgstr "Le partenaire à mettre à jour n'est pas défini."
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__title
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_title
+msgid "Title"
+msgstr "Titre"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__update_address
+msgid "Update Address"
+msgstr "Mettre à jour l'adresse"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__update_email
+msgid "Update E-mail"
+msgstr "Mettre à jour l'e-mail"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__update_mobile
+msgid "Update Mobile"
+msgstr "Mettre à jour le portable"
+
+#. module: stay_api
+#: model_terms:ir.ui.view,arch_db:stay_api.stay_create_partner_form
+msgid "Update Partner"
+msgstr "Partenaire à mettre à jour"
+
+#. module: stay_api
+#: model_terms:ir.ui.view,arch_db:stay_api.stay_form
+msgid "Web Form"
+msgstr "Formulaire web"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_notes
+msgid "Web Form Notes"
+msgstr "Notes sur le formulaire Web"
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_create_partner__zip
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_zip
+#: model_terms:ir.ui.view,arch_db:stay_api.stay_create_partner_form
+msgid "ZIP"
+msgstr "Code postal"
