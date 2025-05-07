@@ -13,7 +13,7 @@
     <field name="email_from">${object.company_id.email}</field>
     <field
             name="partner_to"
-        >${object.group_id and object.group_id.notify_user_ids and str(object.group_id.notify_user_ids.partner_id.ids)[1:-1] or object.company_id.partner_id.id}</field>
+        >${object.group_id and object.group_id.notify_user_ids and str(object.group_id.notify_user_ids.partner_id.ids)[1:-1] or (object.company_id.stay_notify_user_ids and str(object.company_id.stay_notify_user_ids.partner_id.ids)[1:-1])}</field>
     <field name="reply_to">${object.controller_email}</field>
     <field name="auto_delete" eval="False" />
     <field

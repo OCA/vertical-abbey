@@ -12,8 +12,10 @@
     <field name="arch" type="xml">
         <form string="Update All Stay Lines">
             <group name="main">
-                <field name="stay_id" />
-                <field name="no_breakfast" />
+                <field name="stay_id" invisible="1" />
+                <field name="start_date" />
+                <field name="end_date" />
+                <field name="no_breakfast" groups="stay.group_stay_breakfast" />
                 <field name="no_lunch" />
                 <field name="no_dinner" />
                 <field name="no_bed_night" />

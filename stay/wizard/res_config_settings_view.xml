@@ -29,7 +29,7 @@
                         <div class="o_setting_right_pane">
                             <span class="o_form_label">Room Transition</span>
                             <div class="text-muted">
-                                One Empty Period: when a guest leaves the room in the morning, the next guest can have the room in the afternoon the same day, but not in the morning. Immediate: the next guest can start his stay in the morning. The same applies for afternoon vs evening.
+                                One Empty Period: when a guest leaves the room in the morning, the next guest can have the room in the afternoon the same day, but not in the morning. Immediate: the next guest can start his stay in the morning. The same applies for afternoon vs evening. Night: when a guest leaves the room in the afternoon, the next guest can arrive in the morning: he will have the room for the night.
                             </div>
                             <div class="content-group">
                                 <field
@@ -54,6 +54,22 @@
                             <span class="o_form_label">Default Refectory</span>
                             <div class="content-group">
                                 <field name="stay_default_refectory_id" />
+                            </div>
+                        </div>
+                    </div>
+            </div>
+                <div class='row mt16 o_settings_container' name="stay_notify_users">
+                    <div class='col-12 col-lg-12 o_setting_box' id="stay_notify_users">
+                        <div class="o_setting_left_pane" />
+                        <div class="o_setting_right_pane">
+                            <span
+                                    class="o_form_label"
+                                >Users Notified by E-mail for Stays without Group</span>
+                            <div class="content-group">
+                                <field
+                                        name="stay_notify_user_ids"
+                                        widget="many2many_tags"
+                                    />
                             </div>
                         </div>
                     </div>

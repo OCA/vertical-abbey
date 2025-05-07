@@ -16,3 +16,6 @@ class ResCompany(models.Model):
         ondelete="restrict",
         check_company=True,
     )
+    stay_notify_user_ids = fields.Many2many(
+        "res.users", string="Users Notified by E-mail for Stays without Group"
+    )

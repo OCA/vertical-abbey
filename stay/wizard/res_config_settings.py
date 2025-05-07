@@ -20,7 +20,11 @@ class ResConfigSettings(models.TransientModel):
         [
             ("one_empty_period", "One Empty Period"),
             ("immediate", "Immediate"),
+            ("night", "Night"),
         ],
         string="Room Transition",
         config_parameter="stay.room_transition",
+    )
+    stay_notify_user_ids = fields.Many2many(
+        related="company_id.stay_notify_user_ids", readonly=False
     )

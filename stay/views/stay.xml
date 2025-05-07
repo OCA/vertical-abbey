@@ -28,6 +28,13 @@
                         states="cancel"
                     />
                 <button
+                        name="%(stay_room_mass_assign_action)d"
+                        type="action"
+                        string="Assign Rooms"
+                        states="draft,confirm,current"
+                        class="btn-primary"
+                    />
+                <button
                         name="guest_has_left"
                         type="object"
                         string="Guest has Left"
@@ -79,6 +86,11 @@
                         <field name="partner_name" />
                         <field name="guest_qty" />
                         <field
+                                name="tag_ids"
+                                widget="many2many_tags"
+                                options="{'color_field': 'color', 'no_create_edit': True}"
+                            />
+                        <field
                                 name="assign_status"
                                 states="confirm,current,done"
                                 decoration-success="assign_status in ('assigned', 'no_night')"
@@ -100,7 +112,7 @@
                         <field name="group_id" />
                         <field
                                 name="no_meals"
-                                attrs="{'invisible': ['|', ('construction', '=', True), ('state', '!=', 'draft')]}"
+                                attrs="{'invisible': [('construction', '=', True)], 'readonly': [('state', '!=', 'draft')]}"
                             />
                         <field name="construction" invisible="1" />
                         <field
@@ -110,7 +122,7 @@
                     </group>
                 </group>
 
-                <group name="rooms" states="confirm,current,done">
+                <group name="rooms" states="draft,confirm,current,done">
                     <field
                             name="room_assign_ids"
                             nolabel="1"
@@ -119,7 +131,7 @@
                         <tree editable="bottom">
                             <field name="room_id" />
                             <field name="guest_qty" />
-                            <field name="room_domain_ids" invisible="1" />
+                            <field name="conflict_room_ids" invisible="1" />
                         </tree>
                     </field>
                 </group>
@@ -177,6 +189,12 @@ in the 2nd tree view with reverse order -->
             <field name="departure_note" optional="show" />
             <field name="refectory_id" optional="hide" />
             <field name="rooms_display_name" string="Rooms" />
+            <field
+                    name="tag_ids"
+                    widget="many2many_tags"
+                    options="{'color_field': 'color', 'no_create_edit': True}"
+                    optional="hide"
+                />
             <field
                     name="assign_status"
                     decoration-success="assign_status in ('assigned', 'no_night')"
@@ -272,6 +290,7 @@ in the 1st tree view with native order -->
                     string="Arrivals and Departures on"
                     filter_domain="['|', ('arrival_date', '=', self), ('departure_date', '=', self)]"
                 />
+            <field name="tag_ids" />
             <separator />
             <filter
                     string="My Stay Group"
@@ -468,7 +487,7 @@ from the calendar view, the dates are not set -->
                     />
                 <field name="room_id" />
                 <field name="guest_qty" />
-                <field name="room_domain_ids" invisible="1" />
+                <field name="conflict_room_ids" invisible="1" />
                 <field name="stay_group_id" invisible="1" />
                 <field
                         name="company_id"
@@ -499,7 +518,7 @@ So I use the form view below by default -->
                 <field name="notes" />
                 <field name="room_id" />
                 <field name="guest_qty" />
-                <field name="room_domain_ids" invisible="1" />
+                <field name="conflict_room_ids" invisible="1" />
                 <field name="stay_group_id" invisible="1" />
                 <field
                         name="company_id"
@@ -518,6 +537,12 @@ So I use the form view below by default -->
     <field name="arch" type="xml">
         <tree create="0">
             <field name="stay_id" />
+            <button
+                    title="Open Stay"
+                    type="object"
+                    name="show_stay"
+                    icon="fa-arrow-right"
+                />
             <field name="arrival_date" />
             <field name="arrival_time" optional="show" />
             <field name="departure_date" />
@@ -559,7 +584,7 @@ So I use the form view below by default -->
                 default_group_by="room_id"
                 event_open_popup="true"
                 mode="week"
-                colors="#ec7063:group_id_integer == 1;#2ecb71:group_id_integer == 2;#f34242:group_id_integer == 3"
+                colors="#8bd0db:state == 'draft';#92d2a1:state == 'confirm';#ffe083:state == 'current';#ec99a1:state == 'done'"
                 zoomKey="ctrlKey"
             >
         </timeline>
