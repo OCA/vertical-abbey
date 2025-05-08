@@ -185,6 +185,7 @@ def stay_read(
                     "country_code": stay.partner_id.country_id
                     and stay.partner_id.country_id.code
                     or None,
+                    "phone": stay.partner_id.phone or None,
                     "mobile": stay.partner_id.mobile or None,
                     "email": stay.partner_id.email or None,
                 }

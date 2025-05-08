@@ -16,6 +16,7 @@
                                                   <field name="firstname" />
                                                   <field name="lastname" />
                                                   <field name="email" />
+                                                  <field name="phone" />
                                                   <field name="mobile" />
                                                   <label
                         for="street"
@@ -54,6 +55,11 @@
                                                   <field name="update_partner_id" />
                                                   <field
                         name="update_partner_email"
+                        attrs="{'invisible': [('update_partner_id', '=', False)]}"
+                    />
+
+                                                  <field
+                        name="update_partner_phone"
                         attrs="{'invisible': [('update_partner_id', '=', False)]}"
                     />
                                                   <field
@@ -96,6 +102,10 @@
                             </div>
                                                   <field
                         name="update_email"
+                        attrs="{'invisible': [('update_partner_id', '=', False)]}"
+                    />
+                                                  <field
+                        name="update_phone"
                         attrs="{'invisible': [('update_partner_id', '=', False)]}"
                     />
                                                   <field

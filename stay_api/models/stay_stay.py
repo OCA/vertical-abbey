@@ -38,6 +38,7 @@ class StayStay(models.Model):
         string="Title",
     )
     controller_email = fields.Char(tracking=True, string="E-mail")
+    controller_phone = fields.Char(tracking=True, string="Phone")
     controller_mobile = fields.Char(tracking=True, string="Mobile")
     controller_message = fields.Char(string="Guest Message")
     controller_notes = fields.Text(string="Web Form Other Information")
@@ -146,6 +147,7 @@ class StayStay(models.Model):
             "city",
             "country_code",
             "email",
+            "phone",
             "mobile",
             "departure_note",
             "arrival_note",
@@ -226,6 +228,7 @@ class StayStay(models.Model):
             "controller_firstname": firstname,
             "controller_lastname": lastname,
             "controller_email": email,
+            "controller_phone": cobject.phone,
             "controller_mobile": cobject.mobile,
             "controller_title": title,
             "controller_street": cobject.street,

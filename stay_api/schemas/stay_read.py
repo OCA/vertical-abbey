@@ -3,6 +3,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from datetime import date
+
 from pydantic import BaseModel
 
 
@@ -15,6 +16,7 @@ class StayRead(BaseModel):
     firstname: str = None
     title: str = None
     email: str = None
+    phone: str = None
     mobile: str = None
     arrival_time: str = None
     arrival_note: str = None

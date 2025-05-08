@@ -24,9 +24,8 @@
 <div style="margin: 0px; padding: 0px;">
         <p
                     style="margin: 0px; padding: 0px; font-size: 13px;"
-                >A new stay query has been sumbitted via the web form:</p>
+                >A new stay query ${object.name} has been sumbitted via the web form:</p>
         <ul>
-                <li>Stay Number: ${object.name}</li>
                 <li>Guest: ${object.partner_name}</li>
                 <li>Guest Qty: ${object.guest_qty}</li>
                 <li
@@ -48,8 +47,11 @@
                 % if object.controller_email:
                 <li>E-mail: ${object.controller_email}</li>
                 % endif
+                % if object.controller_phone:
+                <li>Phone: ${object.controller_phone}</li>
+                % endif
                 % if object.controller_mobile:
-                <li>Phone: ${object.controller_mobile}</li>
+                <li>Mobile: ${object.controller_mobile}</li>
                 % endif
                 % if object.controller_notes:
                 <li>Notes: ${object.controller_notes}</li>
