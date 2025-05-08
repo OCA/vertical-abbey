@@ -8,6 +8,7 @@ from odoo import fields, models
 class StayBuilding(models.Model):
     _name = "stay.building"
     _description = "Buildings"
+    _order = "sequence, id"
 
     sequence = fields.Integer()
     name = fields.Char(required=True)

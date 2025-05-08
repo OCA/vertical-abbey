@@ -10,7 +10,7 @@
     <field name="model">stay.room.mass.assign</field>
     <field name="arch" type="xml">
      <form>
-            <group name="main" string="Rooms">
+            <group name="main">
                 <field name="stay_id" invisible="1" />
                 <field name="company_id" invisible="1" />
                 <field
@@ -18,7 +18,8 @@
                         attrs="{'invisible': [('group_id', '=', False)]}"
                     />
                 <field name="conflict_room_ids" invisible="1" />
-                <field name="room_ids" nolabel="1" colspan="2" />
+                <field name="assign_type" widget="radio" />
+                <field name="room_ids" />
             </group>
             <footer>
                 <button

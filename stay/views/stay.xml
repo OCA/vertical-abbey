@@ -808,6 +808,10 @@ So I use the form view below by default -->
                         />
                 <field name="to_clean" />
                 <field name="fire_report_exclude" />
+                <field
+                            name="fire_report_sequence"
+                            attrs="{'invisible': [('fire_report_exclude', '=', True)]}"
+                        />
                 <field name="notes" />
                 <field name="active" invisible="1" />
             </group>
@@ -836,6 +840,11 @@ So I use the form view below by default -->
             <field name="bed_qty" />
             <field name="to_clean" />
             <field name="fire_report_exclude" optional="hide" />
+            <field
+                    name="fire_report_sequence"
+                    optional="hide"
+                    attrs="{'invisible': [('fire_report_exclude', '=', True)]}"
+                />
             <field
                     name="company_id"
                     groups="base.group_multi_company"

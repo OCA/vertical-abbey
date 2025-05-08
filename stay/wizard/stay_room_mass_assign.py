@@ -15,7 +15,7 @@ class StayRoomMassAssign(models.TransientModel):
         res = super().default_get(fields_list)
         assert self._context.get("active_model") == "stay.stay"
         stay = self.env["stay.stay"].browse(self._context.get("active_id"))
-        if stay.state not in ("confirm", "current"):
+        if stay.state not in ("draft", "confirm", "current"):
             raise UserError(
                 _("Stay '%s' is not in Confirmed nor Current state.")
                 % stay.display_name
@@ -26,6 +26,15 @@ class StayRoomMassAssign(models.TransientModel):
     stay_id = fields.Many2one("stay.stay", readonly=True)
     company_id = fields.Many2one(related="stay_id.company_id")
     group_id = fields.Many2one(related="stay_id.group_id")
+    assign_type = fields.Selection(
+        [
+            ("single", "One Guest per Room"),
+            ("full", "Maximum Capacity"),
+        ],
+        string="Assignation",
+        default="single",
+        required=True,
+    )
     conflict_room_ids = fields.Many2many(
         "stay.room", compute="_compute_conflict_room_ids", string="Conflict Rooms"
     )
@@ -65,11 +74,14 @@ class StayRoomMassAssign(models.TransientModel):
             conflict_room_ids = {cass["room_id"][0] for cass in conflict_assigns}
             wiz.conflict_room_ids = list(conflict_room_ids)
 
-    def _prepare_room_assign(self, room, qty_left_to_assign):
-        if qty_left_to_assign <= room.bed_qty:
-            guest_qty = qty_left_to_assign
+    def _prepare_room_assign(self, room, qty_left_to_assign, assign_type):
+        if assign_type == "full":
+            if qty_left_to_assign <= room.bed_qty:
+                guest_qty = qty_left_to_assign
+            else:
+                guest_qty = room.bed_qty
         else:
-            guest_qty = room.bed_qty
+            guest_qty = 1
         return {
             "room_id": room.id,
             "guest_qty": guest_qty,
@@ -83,9 +95,10 @@ class StayRoomMassAssign(models.TransientModel):
             existing_rooms[line.room_id.id] = True
         vals_list = []
         qty_left_to_assign = self.stay_id.guest_qty_to_assign
+        assign_type = self.assign_type
         for room in self.room_ids:
             if room.id not in existing_rooms and qty_left_to_assign > 0:
-                vals = self._prepare_room_assign(room, qty_left_to_assign)
+                vals = self._prepare_room_assign(room, qty_left_to_assign, assign_type)
                 qty_left_to_assign -= vals["guest_qty"]
                 vals_list.append(vals)
         self.env["stay.room.assign"].create(vals_list)

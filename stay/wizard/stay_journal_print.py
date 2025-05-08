@@ -6,8 +6,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
+from datetime import timedelta
+
 from babel.dates import format_date as babel_format_date
-from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -21,9 +22,7 @@ class StayJournalPrint(models.TransientModel):
 
     @api.model
     def _default_date(self):
-        today_str = fields.Date.context_today(self)
-        today_dt = fields.Date.from_string(today_str)
-        return today_dt + relativedelta(days=1)
+        return fields.Date.context_today(self) + timedelta(days=1)
 
     date = fields.Date(string="Date", required=True, default=_default_date)
     date_label = fields.Char(compute="_compute_date_label")
@@ -38,7 +37,6 @@ class StayJournalPrint(models.TransientModel):
             ("general", "General"),
             ("meal", "Meals"),
             ("arrival", "Arrivals"),
-            ("fire", "Fire Security"),
         ],
         default="general",
         required=True,
@@ -58,8 +56,6 @@ class StayJournalPrint(models.TransientModel):
             return self.print_journal_meal()
         elif self.report_type == "arrival":
             return self.print_journal_arrival()
-        elif self.report_type == "fire":
-            return self.print_fire()
         return
 
     def print_journal_general(self):
@@ -92,27 +88,6 @@ class StayJournalPrint(models.TransientModel):
     def print_journal_arrival(self):
         action = (
             self.env.ref("stay.report_stay_journal_arrival")
-            .with_context({"discard_logo_check": True})
-            .report_action(self)
-        )
-        return action
-
-    def print_fire(self):
-        self.ensure_one()
-        bad_rooms = self.env["stay.room"].search(
-            [
-                ("company_id", "=", self.company_id.id),
-                ("building_id", "=", False),
-                ("fire_report_exclude", "=", False),
-            ]
-        )
-        if bad_rooms:
-            raise UserError(
-                _("Rooms %s are not linked to a building.")
-                % " ,".join([r.display_name for r in bad_rooms])
-            )
-        action = (
-            self.env.ref("stay.report_stay_fire")
             .with_context({"discard_logo_check": True})
             .report_action(self)
         )
@@ -200,7 +175,7 @@ class StayJournalPrint(models.TransientModel):
             "arrival": self._report_move_date(day, "arrival"),
             "nomove": self._report_nomove(day),
         }
-        nextday = day + relativedelta(days=1)
+        nextday = day + timedelta(1)
         res[nextday] = {
             "date_label": babel_format_date(nextday, locale="fr", format="full"),
             "ordo": self.env["stay.date.label"]._get_date_label(nextday) or "",
@@ -216,36 +191,9 @@ class StayJournalPrint(models.TransientModel):
     def report_date_formatted(self):
         return babel_format_date(self.date, "full", locale=self.env.user.lang)
 
+    @api.model
     def report_edit_datetime(self):
         res = format_datetime(
             self.env, fields.Datetime.now(), lang_code=self.env.user.lang
         )
-        return res
-
-    def _report_fire_data(self):
-        buildings = self.env["stay.building"].search([])
-        res = {}
-        # key = building
-        # value = {'total_guest_qty': 4, 'rooms': [(room, assign_multi_recordset)]}
-        for building in buildings:
-            rooms = self.env["stay.room"].search(
-                [
-                    ("building_id", "=", building.id),
-                    ("company_id", "=", self.company_id.id),
-                    ("fire_report_exclude", "=", False),
-                ]
-            )
-            if rooms:
-                res[building] = {"total_guest_qty": 0, "rooms": []}
-                for room in rooms:
-                    assigns = self.env["stay.room.assign"].search(
-                        [
-                            ("arrival_date", "<=", self.date),
-                            ("departure_date", ">", self.date),
-                            ("room_id", "=", room.id),
-                        ]
-                    )
-                    guest_qty = sum([assign.guest_qty for assign in assigns])
-                    res[building]["rooms"].append((room, assigns))
-                    res[building]["total_guest_qty"] += guest_qty
         return res

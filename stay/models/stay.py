@@ -1150,6 +1150,7 @@ class StayRoom(models.Model):
         compute="_compute_my_stay_group", search="_search_my_stay_group"
     )
     fire_report_exclude = fields.Boolean(string="Exclude from Fire Report")
+    fire_report_sequence = fields.Integer(string="Order for Fire Report")
 
     _sql_constraints = [
         (
