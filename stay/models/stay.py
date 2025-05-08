@@ -574,7 +574,6 @@ class StayStay(models.Model):
                     "breakfast_qty": 0,
                     "lunch_qty": 0,
                     "dinner_qty": 0,
-                    "refectory_id": False,
                 }
             )
         return vals
