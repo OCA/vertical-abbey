@@ -28,6 +28,7 @@
         "wizard/stay_room_mass_assign_view.xml",
         "views/stay.xml",
         "views/stay_tag.xml",
+        "views/stay_building.xml",
         "data/sequence.xml",
         "security/ir.model.access.csv",
         "report/report.xml",

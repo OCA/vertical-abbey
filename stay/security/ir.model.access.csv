@@ -23,3 +23,5 @@ access_stay_stay_xlsx,Full access on stay.stay.xlsx wizard,model_stay_stay_xlsx,
 access_stay_room_mass_assign,Full access on stay.room.mass.assign wizard,model_stay_room_mass_assign,group_stay_user,1,1,1,1
 access_stay_tag_read,Read access on stay.tag to stay viewer,model_stay_tag,group_stay_viewer,1,0,0,0
 access_stay_tag_full,Full access on stay.tag to stay manager,model_stay_tag,group_stay_manager,1,1,1,1
+access_stay_building_read,Read access on stay.building to stay viewer,model_stay_building,group_stay_viewer,1,0,0,0
+access_stay_building_full,Full access on stay.building to stay manager,model_stay_building,group_stay_manager,1,1,1,1

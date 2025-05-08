@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!--
   Copyright 2025 Akretion France (https://www.akretion.com/)
   @author: Alexis de Lattre <alexis.delattre@akretion.com>
   License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 -->
-
 <odoo>
 
 <record id="stay_tag_form" model="ir.ui.view">
@@ -12,11 +11,16 @@
     <field name="arch" type="xml">
         <form>
             <sheet>
-                <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
                 <group name="main">
-                    <field name="name"/>
-                    <field name="active" invisible="1"/>
-                    <field name="color" widget="color_picker"/>
+                    <field name="name" />
+                    <field name="active" invisible="1" />
+                    <field name="color" widget="color_picker" />
                 </group>
             </sheet>
         </form>
@@ -27,8 +31,8 @@
     <field name="model">stay.tag</field>
     <field name="arch" type="xml">
         <tree>
-            <field name="sequence" widget="handle"/>
-            <field name="name"/>
+            <field name="sequence" widget="handle" />
+            <field name="name" />
         </tree>
     </field>
 </record>
@@ -37,9 +41,13 @@
     <field name="model">stay.tag</field>
     <field name="arch" type="xml">
         <search>
-            <field name="name"/>
-            <separator/>
-            <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            <field name="name" />
+            <separator />
+            <filter
+                    string="Archived"
+                    name="inactive"
+                    domain="[('active', '=', False)]"
+                />
         </search>
     </field>
 </record>
@@ -50,6 +58,11 @@
     <field name="view_mode">tree,form</field>
 </record>
 
-<menuitem id="stay_tag_menu" action="stay_tag_action" sequence="200" parent="stay.stay_configuration"/>
+<menuitem
+        id="stay_tag_menu"
+        action="stay_tag_action"
+        sequence="200"
+        parent="stay.stay_configuration"
+    />
 
 </odoo>

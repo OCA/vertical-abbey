@@ -2,6 +2,7 @@
 # @author: Alexis de Lattre <alexis.delattre@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+
 def migrate(cr, version):
     if not version:
         return
@@ -10,4 +11,5 @@ def migrate(cr, version):
         """
         UPDATE ir_model_data SET noupdate=null
         WHERE model='mail.template' AND module='stay' and name='stay_notify'
-        """)
+        """
+    )

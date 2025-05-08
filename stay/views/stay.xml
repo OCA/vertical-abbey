@@ -799,6 +799,7 @@ So I use the form view below by default -->
                 <field name="name" />
                 <field name="code" />
                 <field name="company_id" groups="base.group_multi_company" />
+                <field name="building_id" />
                 <field name="group_id" />
                 <field name="bed_qty" />
                 <field
@@ -825,6 +826,11 @@ So I use the form view below by default -->
             <field name="sequence" widget="handle" />
             <field name="name" />
             <field name="code" optional="show" />
+            <field
+                    name="building_id"
+                    optional="show"
+                    invisible="not context.get('stay_room_main_view')"
+                />
             <field name="group_id" optional="show" />
             <field name="bed_qty" />
             <field name="to_clean" />
@@ -846,6 +852,7 @@ So I use the form view below by default -->
                     name="name"
                     filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"
                 />
+            <field name="building_id" />
             <field name="group_id" />
             <separator />
             <filter
@@ -868,6 +875,11 @@ So I use the form view below by default -->
                 />
             <group name="groupby">
                 <filter
+                        name="building_groupby"
+                        string="Building"
+                        context="{'group_by': 'building_id'}"
+                    />
+                <filter
                         name="group_groupby"
                         string="Group"
                         context="{'group_by': 'group_id'}"
@@ -881,7 +893,9 @@ So I use the form view below by default -->
     <field name="name">Rooms</field>
     <field name="res_model">stay.room</field>
     <field name="view_mode">tree,form</field>
-    <field name="context">{'search_default_my_stay_group': True}</field>
+    <field
+            name="context"
+        >{'search_default_my_stay_group': True, 'stay_room_main_view': True}</field>
 </record>
 
 <record id="stay_room_to_clean_action" model="ir.actions.act_window">

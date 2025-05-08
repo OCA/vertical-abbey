@@ -1106,7 +1106,9 @@ class StayRoom(models.Model):
         string="Group",
         check_company=True,
         domain="[('company_id', '=', company_id)]",
+        index=True,
     )
+    building_id = fields.Many2one("stay.building", index=True, ondelete="restrict")
     bed_qty = fields.Integer(string="Number of beds", default=1)
     allow_simultaneous = fields.Boolean(
         string="Allow simultaneous",
