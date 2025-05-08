@@ -68,7 +68,24 @@
                 >
                 Special stay to mark rooms as unavailable due to construction works.
             </div>
-
+            <div
+                    class="alert alert-warning"
+                    role="alert"
+                    attrs="{'invisible': [('clash_time_preceding_stay_id', '=', False)]}"
+                >
+                Preceding stay <field
+                        name="clash_time_preceding_stay_id"
+                    /> leaves later than the arrival time of this stay in the same room(s).
+            </div>
+            <div
+                    class="alert alert-warning"
+                    role="alert"
+                    attrs="{'invisible': [('same_time_preceding_stay_id', '=', False)]}"
+                >
+                Preceding stay <field
+                        name="same_time_preceding_stay_id"
+                    /> leaves in the same time slot than the arrival of this stay in the same room(s).
+            </div>
             <sheet>
                 <div class="oe_button_box" name="button_box" />
                 <div class="oe_title">

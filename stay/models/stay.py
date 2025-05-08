@@ -191,6 +191,18 @@ class StayStay(models.Model):
     my_stay_group = fields.Boolean(
         compute="_compute_my_stay_group", search="_search_my_stay_group"
     )
+    same_time_preceding_stay_id = fields.Many2one(
+        "stay.stay",
+        compute="_compute_preceding_stay_id",
+        string="Preceding Stay which leaves on same time slot",
+        help="Preceding stay which leaves on the same time slot in the same room(s)",
+    )
+    clash_time_preceding_stay_id = fields.Many2one(
+        "stay.stay",
+        compute="_compute_preceding_stay_id",
+        string="Preceding Stay which leaves later",
+        help="Preceding stay which leaves later that the arrival in the same room(s)",
+    )
 
     _sql_constraints = [
         (
@@ -284,6 +296,41 @@ class StayStay(models.Model):
                 return [("group_id", "!=", self.env.user.context_stay_group_id.id)]
         else:
             return []
+
+    @api.depends("arrival_time", "arrival_date", "room_assign_ids.room_id")
+    def _compute_preceding_stay_id(self):
+        for stay in self:
+            clash_time_preceding_stay_id = False
+            same_time_preceding_stay_id = False
+            room_ids = stay.room_assign_ids.room_id.ids
+            domain = [
+                ("room_id", "in", room_ids),
+                ("company_id", "=", stay.company_id.id),
+                ("state", "in", ("draft", "confirm", "current")),
+                ("departure_date", "=", stay.arrival_date),
+                ("stay_id", "!=", False),
+            ]
+            if stay.arrival_time == "morning":
+                clash_domain = domain + [
+                    ("departure_time", "in", ("afternoon", "evening"))
+                ]
+            elif stay.arrival_time == "afternoon":
+                clash_domain = domain + [("departure_time", "=", "evening")]
+            else:
+                clash_domain = None
+            if clash_domain:
+                clash_assign = self.env["stay.room.assign"].search(
+                    clash_domain, limit=1
+                )
+                if clash_assign:
+                    clash_time_preceding_stay_id = clash_assign.stay_id.id
+            same_time_assign = self.env["stay.room.assign"].search(
+                domain + [("departure_time", "=", stay.arrival_time)], limit=1
+            )
+            if same_time_assign:
+                same_time_preceding_stay_id = same_time_assign.stay_id.id
+            stay.clash_time_preceding_stay_id = clash_time_preceding_stay_id
+            stay.same_time_preceding_stay_id = same_time_preceding_stay_id
 
     @api.model
     def create(self, vals):
