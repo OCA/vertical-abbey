@@ -13,6 +13,7 @@ class StayCreate(BaseModel):
     firstname: str = None
     title: str = None
     email: str
+    phone: str = None
     mobile: str = None
     arrival_date: date
     arrival_time: str

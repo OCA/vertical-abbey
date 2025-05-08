@@ -2,7 +2,6 @@
 # @author: Alexis de Lattre <alexis.delattre@akretion.com>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from datetime import date
 
 from pydantic import BaseModel
 
@@ -13,6 +12,7 @@ class StayUpdate(BaseModel):
     firstname: str = None
     title: str = None
     email: str
+    phone: str = None
     mobile: str = None
     arrival_time: str
     arrival_note: str = None

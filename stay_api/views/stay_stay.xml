@@ -32,6 +32,7 @@
                         <field name="controller_firstname" />
                         <field name="controller_lastname" />
                         <field name="controller_email" widget="email" />
+                        <field name="controller_phone" />
                         <field name="controller_mobile" />
                         <field name="controller_street" />
                         <field name="controller_street2" />
