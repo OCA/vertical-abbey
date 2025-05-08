@@ -29,7 +29,7 @@
 </record>
 
 <record id="stay_fire_print_action" model="ir.actions.act_window">
-    <field name="name">Print Fire Report</field>
+    <field name="name">Fire Report</field>
     <field name="res_model">stay.fire.print</field>
     <field name="view_mode">form</field>
     <field name="target">new</field>

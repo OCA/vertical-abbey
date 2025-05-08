@@ -12,7 +12,7 @@
     <field name="name">stay_journal_print.form</field>
     <field name="model">stay.journal.print</field>
     <field name="arch" type="xml">
-        <form string="Print Stay Journal">
+        <form>
             <group name="main">
                 <field name="report_type" widget="radio" />
                 <field name="date" />
@@ -33,7 +33,7 @@
 </record>
 
 <record id="stay_journal_print_action" model="ir.actions.act_window">
-    <field name="name">Print Journal</field>
+    <field name="name">Journals</field>
     <field name="res_model">stay.journal.print</field>
     <field name="view_mode">form</field>
     <field name="target">new</field>
