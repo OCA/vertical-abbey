@@ -787,6 +787,48 @@ class StayStay(models.Model):
             )
         return conflict_domain
 
+    def stay_notify_selection_button(self):
+        assert self._context.get("active_ids")
+        stays = self.browse(self._context["active_ids"])
+        time2label = dict(
+            self.fields_get("arrival_time", "selection")["arrival_time"]["selection"]
+        )
+        stay_list = [
+            {
+                "partner_name": stay.partner_name,
+                "guest_qty": stay.guest_qty,
+                "arrival_date": stay.arrival_date,
+                "arrival_time": time2label[stay.arrival_time],
+                "arrival_note": stay.arrival_note or "",
+                "departure_date": stay.departure_date,
+                "departure_time": time2label[stay.departure_time],
+                "departure_note": stay.departure_note or "",
+                "notes": stay.notes or "",
+                "rooms": stay.rooms_display_name,
+            }
+            for stay in stays
+        ]
+        company = self.env.company
+        ctx = {
+            "default_model": "res.company",
+            "default_res_id": company.id,
+            "default_use_template": True,
+            "default_template_id": self.env.ref("stay.stay_notify_selection").id,
+            "default_composition_mode": "comment",
+            "mark_so_as_sent": True,
+            "custom_layout": "mail.mail_notification_paynow",
+            "force_email": True,
+            "stay_list": stay_list,
+        }
+        action = {
+            "type": "ir.actions.act_window",
+            "view_mode": "form",
+            "res_model": "mail.compose.message",
+            "target": "new",
+            "context": ctx,
+        }
+        return action
+
 
 class StayRoomAssign(models.Model):
     _name = "stay.room.assign"
@@ -1318,9 +1360,12 @@ class StayGroup(models.Model):
                                 "partner_name": stay.partner_name,
                                 "guest_qty": stay.guest_qty,
                                 "arrival_time": fields_get_time[stay.arrival_time],
+                                "arrival_note": stay.arrival_note or "",
                                 "rooms": stay.rooms_display_name,
                                 "departure_date": stay.departure_date,
                                 "departure_time": fields_get_time[stay.departure_time],
+                                "departure_note": stay.departure_note or "",
+                                "notes": stay.notes or "",
                             }
                         )
                     self.env.ref("stay.stay_notify").with_context(

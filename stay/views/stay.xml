@@ -171,7 +171,12 @@ in the 2nd tree view with reverse order -->
                         type="object"
                         string="Guest has Left"
                         groups="stay.group_stay_user"
-                        states="current"
+                    />
+                <button
+                        name="stay_notify_selection_button"
+                        type="object"
+                        string="Notify by E-mail"
+                        groups="stay.group_stay_user"
                     />
             </header>
             <field name="name" />
@@ -335,6 +340,7 @@ in the 1st tree view with native order -->
                     name="in_out_tomorrow"
                     domain="['|', ('arrival_date', '=', (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')), ('departure_date', '=', (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"
                 />
+            <separator />
             <filter
                     string="Current and Future Stays"
                     name="current_and_future"
