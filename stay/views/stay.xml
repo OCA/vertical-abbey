@@ -132,6 +132,8 @@
                             <field name="room_id" />
                             <field name="guest_qty" />
                             <field name="conflict_room_ids" invisible="1" />
+                            <field name="company_id" invisible="1" />
+                            <field name="stay_group_id" invisible="1" />
                         </tree>
                     </field>
                 </group>

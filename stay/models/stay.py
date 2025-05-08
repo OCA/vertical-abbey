@@ -800,8 +800,8 @@ class StayRoomAssign(models.Model):
         ondelete="restrict",
         index=True,
         check_company=True,
-        domain="[('id', 'not in', conflict_room_ids), ('company_id', '=', parent.company_id), "
-        "('group_id', 'in', (False, parent.group_id))]",
+        domain="[('id', 'not in', conflict_room_ids), ('company_id', '=', company_id), "
+        "('group_id', 'in', (False, stay_group_id))]",
     )
     active = fields.Boolean(related="room_id.active", store=True)
     conflict_room_ids = fields.Many2many(
