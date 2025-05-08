@@ -49,5 +49,15 @@
                     <field name="print_report_name">'stay_meal-%s' % object.date</field>
             </record>
 
+    <record id="report_stay_fire" model="ir.actions.report">
+                <field name="name">Fire Security</field>
+    <field name="model">stay.journal.print</field>
+    <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stay.report_stayfire</field>
+            <field name="report_file">stay.report_stayfire</field>
+                    <field name="print_report_name">'fire-%s' % object.date</field>
+            </record>
+
+
 
 </odoo>

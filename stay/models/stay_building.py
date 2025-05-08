@@ -12,4 +12,4 @@ class StayBuilding(models.Model):
     sequence = fields.Integer()
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
-    room_ids = fields.One2many('stay.room', "building_id", string="Rooms")
+    room_ids = fields.One2many("stay.room", "building_id", string="Rooms")

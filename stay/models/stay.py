@@ -1036,6 +1036,28 @@ class StayRoomAssign(models.Model):
         )
         return action
 
+    def _report_fire_mobiles(self):
+        self.ensure_one()
+        res = set()
+        if self.stay_id.partner_id:
+            if "res.partner.phone" in self.env:
+                partner_phones = self.env["res.partner.phone"].search(
+                    [
+                        ("partner_id", "=", self.stay_id.partner_id.id),
+                        ("type", "in", ("5_mobile_primary", "6_mobile_secondary")),
+                        ("phone", "!=", False),
+                    ]
+                )
+                for partner_phone in partner_phones:
+                    mobile_str = partner_phone.phone
+                    if partner_phone.note:
+                        mobile_str = f"{mobile_str} ({partner_phone.note})"
+                    res.add(mobile_str)
+            else:
+                if self.stay_id.partner_id.mobile:
+                    res.add(self.stay_id.partner_id.mobile)
+        return res
+
 
 class StayRefectory(models.Model):
     _name = "stay.refectory"
@@ -1128,6 +1150,7 @@ class StayRoom(models.Model):
     my_stay_group = fields.Boolean(
         compute="_compute_my_stay_group", search="_search_my_stay_group"
     )
+    fire_report_exclude = fields.Boolean(string="Exclude from Fire Report")
 
     _sql_constraints = [
         (

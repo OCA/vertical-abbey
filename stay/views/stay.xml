@@ -807,6 +807,7 @@ So I use the form view below by default -->
                             attrs="{'invisible': [('bed_qty', '=', 1)]}"
                         />
                 <field name="to_clean" />
+                <field name="fire_report_exclude" />
                 <field name="notes" />
                 <field name="active" invisible="1" />
             </group>
@@ -834,6 +835,7 @@ So I use the form view below by default -->
             <field name="group_id" optional="show" />
             <field name="bed_qty" />
             <field name="to_clean" />
+            <field name="fire_report_exclude" optional="hide" />
             <field
                     name="company_id"
                     groups="base.group_multi_company"
@@ -872,6 +874,12 @@ So I use the form view below by default -->
                     string="Archived"
                     name="inactive"
                     domain="[('active', '=', False)]"
+                />
+            <separator />
+            <filter
+                    name="fire_report_exclude"
+                    string="Excluded from Fire Report"
+                    domain="[('fire_report_exclude', '=', True)]"
                 />
             <group name="groupby">
                 <filter
