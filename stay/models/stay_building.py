@@ -14,3 +14,5 @@ class StayBuilding(models.Model):
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
     room_ids = fields.One2many("stay.room", "building_id", string="Rooms")
+
+    _sql_constraints = [("name_uniq", "unique(name)", "This building already exists.")]

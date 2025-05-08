@@ -15,3 +15,5 @@ class StayTag(models.Model):
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
     color = fields.Integer(default=lambda self: randint(1, 11))
+
+    _sql_constraints = [("name_uniq", "unique(name)", "This tag already exists.")]
