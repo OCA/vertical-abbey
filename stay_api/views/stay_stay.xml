@@ -45,7 +45,7 @@
                                   </group>
 <group name="left" position="inside">
 <field name="type_id" />
-<field name="controller_uuid" groups="stay.group_stay_user" />
+<field name="controller_uuid" groups="base.group_system" />
 <field name="controller_update_url" groups="stay.group_stay_user" widget="url" />
                                   </group>
 
