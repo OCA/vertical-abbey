@@ -6,6 +6,7 @@ import logging
 from uuid import UUID, uuid4
 
 from fastapi import HTTPException, status
+from requests.models import PreparedRequest
 
 from odoo import _, api, fields, models
 
@@ -48,6 +49,26 @@ class StayStay(models.Model):
     controller_city = fields.Char(string="City")
     controller_country_id = fields.Many2one("res.country", string="Country")
     controller_uuid = fields.Char(string="UUID", readonly=True, copy=False)
+    type_id = fields.Many2one("stay.type", ondelete="restrict")
+    controller_update_url = fields.Char(
+        compute="_compute_controller_update_url", string="Update URL"
+    )
+
+    @api.depends("controller_uuid", "type_id", "company_id")
+    def _compute_controller_update_url(self):
+        for stay in self:
+            url = False
+            if (
+                stay.controller_uuid
+                and stay.type_id
+                and stay.type_id.code
+                and stay.company_id.stay_controller_update_url
+            ):
+                params = {"uuid": stay.controller_uuid, "form_type": stay.type_id.code}
+                req = PreparedRequest()
+                req.prepare_url(stay.company_id.stay_controller_update_url, params)
+                url = req.url
+            stay.controller_update_url = url
 
     @api.model_create_multi
     def create(self, vals_list):
