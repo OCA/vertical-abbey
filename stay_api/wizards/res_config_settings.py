@@ -13,3 +13,6 @@ class ResConfigSettings(models.TransientModel):
         config_parameter="stay.controller.company_id",
         string="Default Company for Stays created from Web Form",
     )
+    stay_controller_update_url = fields.Char(
+        related="company_id.stay_controller_update_url", readonly=False
+    )

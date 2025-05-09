@@ -44,7 +44,9 @@
                     </group>
                                   </group>
 <group name="left" position="inside">
+<field name="type_id" />
 <field name="controller_uuid" groups="stay.group_stay_user" />
+<field name="controller_update_url" groups="stay.group_stay_user" widget="url" />
                                   </group>
 
         </field>
@@ -79,6 +81,9 @@
                     name="filter_domain"
                 >['|', '|', '|', ('partner_name', 'ilike', self), ('partner_id', 'ilike', self), ('name', 'ilike', self), ('controller_uuid', '=', self)]</attribute>
 </field>
+                    <group name="groupby" position="inside">
+<filter name="type_groupby" string="Type" context="{'group_by': 'type_id'}" />
+</group>
                           </field>
                   </record>
 

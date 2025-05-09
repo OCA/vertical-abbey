@@ -31,7 +31,7 @@
                         name="%(stay_room_mass_assign_action)d"
                         type="action"
                         string="Assign Rooms"
-                        states="draft,confirm,current"
+                        attrs="{'invisible': ['|', ('state', 'not in', ('draft', 'confirm', 'current')), ('assign_status', 'not in', ('none', 'partial', 'no_night'))]}"
                         class="btn-primary"
                     />
                 <button
@@ -86,6 +86,25 @@
                         name="same_time_preceding_stay_id"
                     /> leaves in the same time slot than the arrival of this stay in the same room(s).
             </div>
+            <div
+                    class="alert alert-warning"
+                    role="alert"
+                    attrs="{'invisible': [('clash_time_next_stay_id', '=', False)]}"
+                >
+                Next stay <field
+                        name="clash_time_next_stay_id"
+                    /> arrives before the departure time of this stay in the same room(s).
+            </div>
+            <div
+                    class="alert alert-warning"
+                    role="alert"
+                    attrs="{'invisible': [('same_time_next_stay_id', '=', False)]}"
+                >
+                Next stay <field
+                        name="same_time_next_stay_id"
+                    /> arrives in the same time slot than the departure of this stay in the same room(s).
+            </div>
+
             <sheet>
                 <div class="oe_button_box" name="button_box" />
                 <div class="oe_title">
@@ -217,7 +236,7 @@ in the 2nd tree view with reverse order -->
                     name="tag_ids"
                     widget="many2many_tags"
                     options="{'color_field': 'color', 'no_create_edit': True}"
-                    optional="hide"
+                    optional="show"
                 />
             <field
                     name="assign_status"
@@ -495,6 +514,12 @@ from the calendar view, the dates are not set -->
                         invisible="not context.get('stay_room_assign_main_view')"
                     />
                 <field
+                        name="tag_ids"
+                        widget="many2many_tags"
+                        options="{'color_field': 'color', 'no_create_edit': True}"
+                        invisible="not context.get('stay_room_assign_main_view')"
+                    />
+                <field
                         name="arrival_date"
                         invisible="not context.get('stay_room_assign_main_view')"
                     />
@@ -534,6 +559,11 @@ So I use the form view below by default -->
             <group name="main">
                 <field name="stay_id" readonly="1" />
                 <field name="partner_name" />
+                <field
+                        name="tag_ids"
+                        widget="many2many_tags"
+                        options="{'color_field': 'color', 'no_create_edit': True}"
+                    />
                 <field name="arrival_date" />
                 <field name="arrival_time" />
                 <field name="arrival_note" />
