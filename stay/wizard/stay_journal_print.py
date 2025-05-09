@@ -5,17 +5,14 @@
 # @author: Brother Irénée
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from datetime import datetime
 
-from babel.dates import (
-    format_date as babel_format_date,
-    format_datetime as babel_format_datetime,
-)
-from dateutil.relativedelta import relativedelta
+from datetime import timedelta
+
+from babel.dates import format_date as babel_format_date
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.misc import format_date
+from odoo.tools.misc import format_date, format_datetime
 
 
 class StayJournalPrint(models.TransientModel):
@@ -25,9 +22,7 @@ class StayJournalPrint(models.TransientModel):
 
     @api.model
     def _default_date(self):
-        today_str = fields.Date.context_today(self)
-        today_dt = fields.Date.from_string(today_str)
-        return today_dt + relativedelta(days=1)
+        return fields.Date.context_today(self) + timedelta(days=1)
 
     date = fields.Date(string="Date", required=True, default=_default_date)
     date_label = fields.Char(compute="_compute_date_label")
@@ -180,7 +175,7 @@ class StayJournalPrint(models.TransientModel):
             "arrival": self._report_move_date(day, "arrival"),
             "nomove": self._report_nomove(day),
         }
-        nextday = day + relativedelta(days=1)
+        nextday = day + timedelta(1)
         res[nextday] = {
             "date_label": babel_format_date(nextday, locale="fr", format="full"),
             "ordo": self.env["stay.date.label"]._get_date_label(nextday) or "",
@@ -196,7 +191,9 @@ class StayJournalPrint(models.TransientModel):
     def report_date_formatted(self):
         return babel_format_date(self.date, "full", locale=self.env.user.lang)
 
+    @api.model
     def report_edit_datetime(self):
-        now = fields.Datetime.context_timestamp(self, datetime.now())
-        res = babel_format_datetime(now, "d MMMM yyyy hh:mm", locale=self.env.user.lang)
+        res = format_datetime(
+            self.env, fields.Datetime.now(), lang_code=self.env.user.lang
+        )
         return res

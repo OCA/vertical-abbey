@@ -19,12 +19,18 @@ from odoo.osv import expression
 from odoo.tools.misc import format_date
 
 logger = logging.getLogger(__name__)
+UNKNOWN_ARRIVAL_HOUR = "09"
+UNKNOWN_DEPARTURE_HOUR = "20"
+UNKNOWN_MINUTES = "01"
 
 TIMEDICT = {
     "morning": "09:00",
     "afternoon": "15:00",
     "evening": "20:00",
-    "unknown": "08:00",
+    # Update the code in _convert_to_date_and_time_selection if known hours
+    # are changed
+    "unknown_arrival": f"{UNKNOWN_ARRIVAL_HOUR}:{UNKNOWN_MINUTES}",
+    "unknown_departure": f"{UNKNOWN_DEPARTURE_HOUR}:{UNKNOWN_MINUTES}",
 }
 
 
@@ -108,7 +114,7 @@ class StayStay(models.Model):
         "stay.room.assign",
         "stay_id",
         string="Room Assignments",
-        states={"draft": [("readonly", True)], "cancel": [("readonly", True)]},
+        states={"cancel": [("readonly", True)]},
         copy=False,
     )
     # Here, group_id is not a related of room, because we want to be able
@@ -180,9 +186,22 @@ class StayStay(models.Model):
         tracking=True,
         copy=False,
     )
+    tag_ids = fields.Many2many("stay.tag", string="Tags")
     # for filter
     my_stay_group = fields.Boolean(
         compute="_compute_my_stay_group", search="_search_my_stay_group"
+    )
+    same_time_preceding_stay_id = fields.Many2one(
+        "stay.stay",
+        compute="_compute_preceding_stay_id",
+        string="Preceding Stay which leaves on same time slot",
+        help="Preceding stay which leaves on the same time slot in the same room(s)",
+    )
+    clash_time_preceding_stay_id = fields.Many2one(
+        "stay.stay",
+        compute="_compute_preceding_stay_id",
+        string="Preceding Stay which leaves later",
+        help="Preceding stay which leaves later that the arrival in the same room(s)",
     )
 
     _sql_constraints = [
@@ -219,7 +238,7 @@ class StayStay(models.Model):
             else:
                 rooms_display_name = "\u2205"
 
-            if stay.state in ("draft", "cancel"):
+            if stay.state == "cancel":
                 assign_status = False
             elif not guest_qty_to_assign:
                 assign_status = "assigned"
@@ -278,6 +297,41 @@ class StayStay(models.Model):
         else:
             return []
 
+    @api.depends("arrival_time", "arrival_date", "room_assign_ids.room_id")
+    def _compute_preceding_stay_id(self):
+        for stay in self:
+            clash_time_preceding_stay_id = False
+            same_time_preceding_stay_id = False
+            room_ids = stay.room_assign_ids.room_id.ids
+            domain = [
+                ("room_id", "in", room_ids),
+                ("company_id", "=", stay.company_id.id),
+                ("state", "in", ("draft", "confirm", "current")),
+                ("departure_date", "=", stay.arrival_date),
+                ("stay_id", "!=", False),
+            ]
+            if stay.arrival_time == "morning":
+                clash_domain = domain + [
+                    ("departure_time", "in", ("afternoon", "evening"))
+                ]
+            elif stay.arrival_time == "afternoon":
+                clash_domain = domain + [("departure_time", "=", "evening")]
+            else:
+                clash_domain = None
+            if clash_domain:
+                clash_assign = self.env["stay.room.assign"].search(
+                    clash_domain, limit=1
+                )
+                if clash_assign:
+                    clash_time_preceding_stay_id = clash_assign.stay_id.id
+            same_time_assign = self.env["stay.room.assign"].search(
+                domain + [("departure_time", "=", stay.arrival_time)], limit=1
+            )
+            if same_time_assign:
+                same_time_preceding_stay_id = same_time_assign.stay_id.id
+            stay.clash_time_preceding_stay_id = clash_time_preceding_stay_id
+            stay.same_time_preceding_stay_id = same_time_preceding_stay_id
+
     @api.model
     def create(self, vals):
         if vals.get("name", "/") == "/":
@@ -309,7 +363,15 @@ class StayStay(models.Model):
         date_aware_utc = pytz.utc.localize(date_naive_utc)
         tz = pytz.timezone(self.env.user.tz)
         date_aware_local = date_aware_utc.astimezone(tz)
-        if date_aware_local.hour < 12:
+        if date_aware_utc.hour == int(
+            UNKNOWN_ARRIVAL_HOUR
+        ) and date_aware_utc.minute == int(UNKNOWN_MINUTES):
+            time_selection = "unknown"
+        elif date_aware_utc.hour == int(
+            UNKNOWN_DEPARTURE_HOUR
+        ) and date_aware_utc.minute == int(UNKNOWN_MINUTES):
+            time_selection = "unknown"
+        elif date_aware_local.hour < 12:
             time_selection = "morning"
         elif date_aware_local.hour < 18:
             time_selection = "afternoon"
@@ -321,13 +383,12 @@ class StayStay(models.Model):
     def _compute_arrival_datetime(self):
         for stay in self:
             datetime_naive_utc = False
-            if (
-                stay.arrival_date
-                and stay.arrival_time
-                and stay.arrival_time != "unknown"
-            ):
+            if stay.arrival_date and stay.arrival_time:
+                arrival_time = stay.arrival_time
+                if arrival_time == "unknown":
+                    arrival_time = "unknown_arrival"
                 datetime_naive_utc = self._convert_to_datetime_naive_utc(
-                    stay.arrival_date, stay.arrival_time
+                    stay.arrival_date, arrival_time
                 )
             stay.arrival_datetime = datetime_naive_utc
 
@@ -335,13 +396,12 @@ class StayStay(models.Model):
     def _compute_departure_datetime(self):
         for stay in self:
             datetime_naive_utc = False
-            if (
-                stay.departure_date
-                and stay.departure_time
-                and stay.departure_time != "unknown"
-            ):
+            if stay.departure_date and stay.departure_time:
+                departure_time = stay.departure_time
+                if departure_time == "unknown":
+                    departure_time = "unknown_departure"
                 datetime_naive_utc = self._convert_to_datetime_naive_utc(
-                    stay.departure_date, stay.departure_time
+                    stay.departure_date, departure_time
                 )
             stay.departure_datetime = datetime_naive_utc
 
@@ -403,7 +463,7 @@ class StayStay(models.Model):
             if stay.arrival_time == "unknown" and stay.state not in ("draft", "cancel"):
                 raise ValidationError(
                     _(
-                        "Arrival time cannot be set to unknown"
+                        "Arrival time cannot be set to unknown "
                         "if the stay is confirmed!"
                     )
                 )
@@ -561,7 +621,6 @@ class StayStay(models.Model):
                     "breakfast_qty": 0,
                     "lunch_qty": 0,
                     "dinner_qty": 0,
-                    "refectory_id": False,
                 }
             )
         return vals
@@ -742,6 +801,81 @@ class StayStay(models.Model):
         to_cancel.write({"state": "cancel"})
         logger.info("End cron stay state update")
 
+    def _get_assign_base_conflict_domain(self):
+        self.ensure_one()
+        room_transition = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("stay.room_transition", default="one_empty_period")
+        )
+        logger.debug("room_transition is %s", room_transition)
+        # No conflict IF :
+        # leaves before my arrival (or same day)
+        # OR arrivers after my departure (or same day)
+        # CONTRARY :
+        # leaves after my arrival
+        # AND arrives before my departure
+        # I use self.stay_id.arrival_datetime instead of self.arrival_datetime
+        # because self.arrival_datetime may not be recomputed yet
+        if room_transition in ("one_empty_period", "immediate"):
+            equal = room_transition == "one_empty_period" and "=" or ""
+            conflict_domain = [
+                ("departure_datetime", f">{equal}", self.arrival_datetime),
+                ("arrival_datetime", f"<{equal}", self.departure_datetime),
+            ]
+        elif room_transition == "night":
+            conflict_domain = [
+                ("departure_date", ">", self.arrival_date),
+                ("arrival_date", "<", self.departure_date),
+            ]
+        else:
+            raise UserError(
+                _("Wrong value for config parameter 'stay.room_transition'.")
+            )
+        return conflict_domain
+
+    def stay_notify_selection_button(self):
+        assert self._context.get("active_ids")
+        stays = self.browse(self._context["active_ids"])
+        time2label = dict(
+            self.fields_get("arrival_time", "selection")["arrival_time"]["selection"]
+        )
+        stay_list = [
+            {
+                "partner_name": stay.partner_name,
+                "guest_qty": stay.guest_qty,
+                "arrival_date": stay.arrival_date,
+                "arrival_time": time2label[stay.arrival_time],
+                "arrival_note": stay.arrival_note or "",
+                "departure_date": stay.departure_date,
+                "departure_time": time2label[stay.departure_time],
+                "departure_note": stay.departure_note or "",
+                "notes": stay.notes or "",
+                "rooms": stay.rooms_display_name,
+            }
+            for stay in stays
+        ]
+        company = self.env.company
+        ctx = {
+            "default_model": "res.company",
+            "default_res_id": company.id,
+            "default_use_template": True,
+            "default_template_id": self.env.ref("stay.stay_notify_selection").id,
+            "default_composition_mode": "comment",
+            "mark_so_as_sent": True,
+            "custom_layout": "mail.mail_notification_paynow",
+            "force_email": True,
+            "stay_list": stay_list,
+        }
+        action = {
+            "type": "ir.actions.act_window",
+            "view_mode": "form",
+            "res_model": "mail.compose.message",
+            "target": "new",
+            "context": ctx,
+        }
+        return action
+
 
 class StayRoomAssign(models.Model):
     _name = "stay.room.assign"
@@ -755,10 +889,12 @@ class StayRoomAssign(models.Model):
         ondelete="restrict",
         index=True,
         check_company=True,
-        domain="[('id', 'in', room_domain_ids)]",
+        domain="[('id', 'not in', conflict_room_ids), ('company_id', '=', company_id), "
+        "('group_id', 'in', (False, stay_group_id))]",
     )
-    room_domain_ids = fields.Many2many(
-        "stay.room", compute="_compute_room_domain_ids", string="Available Rooms"
+    active = fields.Boolean(related="room_id.active", store=True)
+    conflict_room_ids = fields.Many2many(
+        "stay.room", compute="_compute_conflict_room_ids", string="Conflict Rooms"
     )
     guest_qty = fields.Integer(string="Guest Quantity", required=True)
     # Related fields
@@ -766,8 +902,7 @@ class StayRoomAssign(models.Model):
     stay_group_id = fields.Many2one(
         related="stay_id.group_id", store=True, string="Stay Group"
     )
-    # The field group_id_integer is used for colors in timeline view
-    group_id_integer = fields.Integer(related="room_id.group_id.id", string="Group ID")
+    state = fields.Selection(related="stay_id.state", store=True)
     arrival_date = fields.Date(
         related="stay_id.arrival_date", store=True, readonly=False
     )
@@ -845,33 +980,10 @@ class StayRoomAssign(models.Model):
                 else:
                     assign._check_reservation_conflict_single()
 
-    def _get_base_conflict_domain(self):
-        self.ensure_one()
-        room_transition = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("stay.room_transition", default="one_empty_period")
-        )
-        logger.debug("room_transition is %s", room_transition)
-        # No conflict IF :
-        # leaves before my arrival (or same day)
-        # OR arrivers after my departure (or same day)
-        # CONTRARY :
-        # leaves after my arrival
-        # AND arrives before my departure
-        equal = room_transition == "one_empty_period" and "=" or ""
-        # I use self.stay_id.arrival_datetime instead of self.arrival_datetime
-        # because self.arrival_datetime may not be recomputed yet
-        conflict_domain = [
-            ("departure_datetime", f">{equal}", self.stay_id.arrival_datetime),
-            ("arrival_datetime", f"<{equal}", self.stay_id.departure_datetime),
-        ]
-        return conflict_domain
-
     def _check_reservation_conflict_single(self):
         self.ensure_one()
         assert self.room_id
-        conflict_domain = self._get_base_conflict_domain()
+        conflict_domain = self.stay_id._get_assign_base_conflict_domain()
         conflict_domain += [("id", "!=", self.id), ("room_id", "=", self.room_id.id)]
         conflict_assign = self.search(conflict_domain, limit=1)
         if conflict_assign:
@@ -942,7 +1054,7 @@ class StayRoomAssign(models.Model):
         "arrival_datetime",
         "departure_datetime",
     )
-    def _compute_room_domain_ids(self):
+    def _compute_conflict_room_ids(self):
         # Current implementation:
         # we exlude ONLY single rooms and
         # multi-bed-rooms with allow_simultaneous = False
@@ -961,7 +1073,7 @@ class StayRoomAssign(models.Model):
             potential_excl_room_ids = company_id2potential_excl_room_ids.get(
                 company_id, []
             )
-            conflict_domain = assign._get_base_conflict_domain()
+            conflict_domain = assign.stay_id._get_assign_base_conflict_domain()
             conflict_domain.append(("room_id", "in", potential_excl_room_ids))
             if assign._origin.id:
                 conflict_domain.append(("id", "!=", assign._origin.id))
@@ -970,18 +1082,8 @@ class StayRoomAssign(models.Model):
             # propose the room of the deleted assign line (until a new "save")
             # because the deleted assign line still exists in DB
             conflict_assigns = self.search_read(conflict_domain, ["room_id"])
-            conflict_rooms = {x["room_id"][0]: True for x in conflict_assigns}
-
-            eligible_domain = [
-                ("company_id", "=", company_id),
-                ("id", "not in", list(conflict_rooms.keys())),
-            ]
-            if assign.stay_group_id:
-                eligible_domain += [
-                    ("group_id", "in", (False, assign.stay_group_id.id))
-                ]
-            eligible_rooms = sro.search(eligible_domain)
-            assign.room_domain_ids = eligible_rooms.ids
+            conflict_room_ids = {cass["room_id"][0] for cass in conflict_assigns}
+            assign.conflict_room_ids = list(conflict_room_ids)
 
     @api.depends("partner_name", "arrival_time", "departure_time", "room_id")
     def name_get(self):
@@ -1009,6 +1111,40 @@ class StayRoomAssign(models.Model):
                     self.guest_qty = self.stay_id.guest_qty_to_assign
                 else:
                     self.guest_qty = self.room_id.bed_qty
+
+    def show_stay(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("stay.stay_action")
+        action.update(
+            {
+                "view_mode": "form,tree,calendar,graph,pivot",
+                "res_id": self.stay_id.id,
+                "views": False,
+            }
+        )
+        return action
+
+    def _report_fire_mobiles(self):
+        self.ensure_one()
+        res = set()
+        if self.stay_id.partner_id:
+            if "res.partner.phone" in self.env:
+                partner_phones = self.env["res.partner.phone"].search(
+                    [
+                        ("partner_id", "=", self.stay_id.partner_id.id),
+                        ("type", "in", ("5_mobile_primary", "6_mobile_secondary")),
+                        ("phone", "!=", False),
+                    ]
+                )
+                for partner_phone in partner_phones:
+                    mobile_str = partner_phone.phone
+                    if partner_phone.note:
+                        mobile_str = f"{mobile_str} ({partner_phone.note})"
+                    res.add(mobile_str)
+            else:
+                if self.stay_id.partner_id.mobile:
+                    res.add(self.stay_id.partner_id.mobile)
+        return res
 
 
 class StayRefectory(models.Model):
@@ -1080,7 +1216,9 @@ class StayRoom(models.Model):
         string="Group",
         check_company=True,
         domain="[('company_id', '=', company_id)]",
+        index=True,
     )
+    building_id = fields.Many2one("stay.building", index=True, ondelete="restrict")
     bed_qty = fields.Integer(string="Number of beds", default=1)
     allow_simultaneous = fields.Boolean(
         string="Allow simultaneous",
@@ -1100,6 +1238,8 @@ class StayRoom(models.Model):
     my_stay_group = fields.Boolean(
         compute="_compute_my_stay_group", search="_search_my_stay_group"
     )
+    fire_report_exclude = fields.Boolean(string="Exclude from Fire Report")
+    fire_report_sequence = fields.Integer(string="Order for Fire Report")
 
     _sql_constraints = [
         (
@@ -1169,6 +1309,27 @@ class StayRoom(models.Model):
     def mark_as_cleaned(self):
         self.write({"to_clean": False})
 
+    def action_archive(self):
+        today = fields.Date.context_today(self)
+        assign = self.env["stay.room.assign"].search(
+            [
+                ("room_id", "in", self.ids),
+                ("departure_date", ">=", today),
+            ],
+            limit=1,
+        )
+        if assign:
+            raise UserError(
+                _(
+                    "The room '%(room)s' cannot be archived because the stay %(stay)s "
+                    "which ends on %(departure_date)s uses that room.",
+                    room=assign.room_id.display_name,
+                    stay=assign.stay_id.name,
+                    departure_date=format_date(self.env, assign.stay_id.departure_date),
+                )
+            )
+        return super().action_archive()
+
 
 class StayGroup(models.Model):
     _name = "stay.group"
@@ -1211,46 +1372,63 @@ class StayGroup(models.Model):
         fields_get_time = dict(
             sso.fields_get("arrival_time", "selection")["arrival_time"]["selection"]
         )
-        for group in self.search([("notify_user_ids", "!=", False)]):
-            stays = sso.search(
-                [
-                    ("arrival_date", "=", today),
-                    ("group_id", "=", group.id),
-                ],
-                order="partner_name",
+        for company in self.env["res.company"].search([]):
+            groups = self.search(
+                [("notify_user_ids", "!=", False), ("company_id", "=", company.id)]
             )
-            if stays:
-                stay_list = []
-                for stay in stays:
-                    stay_list.append(
-                        {
-                            "partner_name": stay.partner_name,
-                            "guest_qty": stay.guest_qty,
-                            "arrival_time": fields_get_time[stay.arrival_time],
-                            "rooms": stay.rooms_display_name,
-                            "departure_date": stay.departure_date,
-                            "departure_time": fields_get_time[stay.departure_time],
-                        }
-                    )
+            group2email_to_list = {}
+            for group in groups:
                 email_to_list = ", ".join(
                     [u.email for u in group.notify_user_ids if u.email]
                 )
-                email_from = (
-                    self.company_id and self.company_id.email or self.env.user.email
+                if email_to_list:
+                    group2email_to_list[group] = email_to_list
+            # Add stays without group
+            if company.stay_notify_user_ids:
+                email_to_list = ", ".join(
+                    [u.email for u in company.stay_notify_user_ids if u.email]
                 )
-                self.env.ref("stay.stay_notify").with_context(
-                    stay_list=stay_list,
-                    date=today,
-                    email_to_list=email_to_list,
-                    email_from=email_from,
-                ).send_mail(group.id)
-                logger.info(
-                    "Stay notification mail sent to %s for group %s",
-                    email_to_list,
-                    group.display_name,
+                if email_to_list:
+                    group2email_to_list[False] = email_to_list
+            for group, email_to_list in group2email_to_list.items():
+                group_id = group and group.id or False
+                stays = sso.search(
+                    [
+                        ("arrival_date", "=", today),
+                        ("group_id", "=", group_id),
+                    ],
+                    order="partner_name",
                 )
-            else:
-                logger.info("No arrivals on %s for group %s", today, group.display_name)
+                if stays:
+                    stay_list = []
+                    for stay in stays:
+                        stay_list.append(
+                            {
+                                "partner_name": stay.partner_name,
+                                "guest_qty": stay.guest_qty,
+                                "arrival_time": fields_get_time[stay.arrival_time],
+                                "arrival_note": stay.arrival_note or "",
+                                "rooms": stay.rooms_display_name,
+                                "departure_date": stay.departure_date,
+                                "departure_time": fields_get_time[stay.departure_time],
+                                "departure_note": stay.departure_note or "",
+                                "notes": stay.notes or "",
+                            }
+                        )
+                    self.env.ref("stay.stay_notify").with_context(
+                        stay_list=stay_list,
+                        date=today,
+                        email_to_list=email_to_list,
+                        email_from=company.email or self.env.user.email,
+                        group_name=group and group.name or False,
+                    ).send_mail(company.id)
+                    logger.info(
+                        "Stay notification mail sent to %s for group ID %s",
+                        email_to_list,
+                        group_id,
+                    )
+                else:
+                    logger.info("No arrivals on %s for group ID %s", today, group_id)
         logger.info("End stay arrival notify cron")
 
 

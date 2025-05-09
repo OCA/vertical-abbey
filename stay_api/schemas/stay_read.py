@@ -7,23 +7,21 @@ from datetime import date
 from pydantic import BaseModel
 
 
-class StayInput(BaseModel):
+class StayRead(BaseModel):
     guest_qty: int
-    lastname: str
+    arrival_date: date
+    departure_date: date
+    name: str
+    lastname: str = None
     firstname: str = None
     title: str = None
-    email: str
+    email: str = None
+    phone: str = None
     mobile: str = None
-    arrival_date: date
-    arrival_time: str
+    arrival_time: str = None
     arrival_note: str = None
-    departure_date: date
-    departure_time: str
+    departure_time: str = None
     departure_note: str = None
-    company_id: int = None
-    group_id: int = None
-    notes: str = None
-    notes_list: list = None
     country_code: str = None
     street: str = None
     street2: str = None

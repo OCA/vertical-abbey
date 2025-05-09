@@ -21,23 +21,22 @@ from odoo.addons.fastapi.dependencies import (
     authenticated_partner_env,
 )
 
-from ..schemas import StayCreated, StayInput
+from ..schemas import StayCreate, StayCreated, StayMatch, StayRead, StayUpdate
 
 logger = logging.getLogger(__name__)
-
 
 stay_api_router = APIRouter()
 
 
 @stay_api_router.post("/new", response_model=StayCreated, status_code=201)
-def stay_new(  # noqa: C901
+def stay_new(
     env: Annotated[api.Environment, Depends(authenticated_partner_env)],
     partner: Annotated[Partner, Depends(authenticated_partner)],
-    stayinput: StayInput,
+    staycreate: StayCreate,
 ) -> StayCreated:
-    logger.debug("Start stay create controller stayinput=%s", stayinput)
+    logger.debug("Start stay create controller staycreate=%s", staycreate)
     sso = env["stay.stay"]
-    company_id = stayinput.company_id
+    company_id = staycreate.company_id
     if not company_id:
         company_str = (
             env["ir.config_parameter"]
@@ -82,26 +81,12 @@ def stay_new(  # noqa: C901
         )
         raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS)
 
-    # strip all string values
-    to_strip_fields = [
-        "firstname",
-        "lastname",
-        "street",
-        "street2",
-        "zip",
-        "city",
-        "country_code",
-        "email",
-        "mobile",
-        "departure_note",
-        "arrival_note",
-    ]
-    for to_strip_field in to_strip_fields:
-        ini_value = getattr(stayinput, to_strip_field)
-        if isinstance(ini_value, str):
-            setattr(stayinput, to_strip_field, ini_value.strip() or False)
-    arrival_date = stayinput.arrival_date
-    departure_date = stayinput.departure_date
+    vals = sso._controller_prepare_create_update(staycreate)
+    if not vals:
+        return False
+
+    arrival_date = staycreate.arrival_date
+    departure_date = staycreate.departure_date
     if arrival_date < date.today():
         error_msg = f"Arrival date {arrival_date} cannot be in the past"
         logger.error(error_msg)
@@ -117,130 +102,150 @@ def stay_new(  # noqa: C901
         raise HTTPException(
             status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=error_msg
         )
-    time_values_allowed = ("morning", "afternoon", "evening")
-    arrival_time = stayinput.arrival_time
-    if arrival_time not in time_values_allowed:
-        error_msg = (
-            f"Wrong arrival time: {arrival_time}. "
-            f"Possible values: {', '.join(time_values_allowed)}."
-        )
-        logger.error(error_msg)
-        raise HTTPException(
-            status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=error_msg
-        )
-    departure_time = stayinput.departure_time
-    if departure_time not in time_values_allowed:
-        error_msg = (
-            f"Wrong departure time: {departure_time}. "
-            f"Possible values: {', '.join(time_values_allowed)}."
-        )
-        logger.error(error_msg)
-        raise HTTPException(
-            status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=error_msg
-        )
-    guest_qty = stayinput.guest_qty
+    guest_qty = staycreate.guest_qty
     if guest_qty < 1:
         error_msg = f"Guest quantity ({guest_qty}) must be strictly positive."
         logger.error(error_msg)
         raise HTTPException(
             status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=error_msg
         )
-    notes_list = stayinput.notes_list
-    if not isinstance(notes_list, list):
-        notes_list = []
-    lastname = stayinput.lastname
-    if not lastname:  # Should never happen because checked by fastapi
-        logger.error("Missing lastname in stay controller. Quitting.")
-        return False
-    partner_name = lastname
-    firstname = stayinput.firstname
-    if firstname:
-        partner_name = f"{firstname} {partner_name}"
-    title = stayinput.title
-    if title:
-        title2label = {
-            "mister": "M.",
-            "madam": "Mme",
-            "miss": "Mlle",
-        }
-        if title in title2label:
-            partner_name = f"{title2label[title]} {partner_name}"
-        else:
-            logger.warning("Bad value for title: %s", title)
-            title = False
-    email = stayinput.email
-    if not email:  # Should never happen because defined as required
-        logger.error("Missing email in stay controller. Quitting.")
-        return False
-    if "res.partner.phone" in env:  # module base_partner_one2many_phone
-        partner_phone = (
-            env["res.partner.phone"]
-            .sudo()
-            .search_read(
-                [
-                    ("type", "in", ("1_email_primary", "2_email_secondary")),
-                    ("email", "=ilike", email),
-                    ("partner_id", "!=", False),
-                ],
-                ["partner_id"],
-                limit=1,
-            )
-        )
-        partner_id = partner_phone and partner_phone[0]["partner_id"][0] or None
-    else:
-        partner = env["res.partner"].search_read(
-            [("email", "=ilike", email)], ["id"], limit=1
-        )
-        partner_id = partner and partner[0]["id"] or None
-    # country
-    country_id = False
-    if stayinput.country_code:
-        country_code = stayinput.country_code.upper()
-        country = env["res.country"].search_read(
-            [("code", "=", country_code)], ["id"], limit=1
-        )
-        if country:
-            country_id = country[0]["id"]
-        else:
-            logger.warning("Country code %s doesn't exist in Odoo.", country_code)
-            notes_list.append(
-                _("Country code %s doesn't exist in Odoo.") % country_code
-            )
 
-    vals = {
-        "controller": True,
-        "company_id": company_id,
-        "group_id": stayinput.group_id or False,
-        "guest_qty": guest_qty,
-        "partner_name": partner_name,
-        "partner_id": partner_id,
-        "arrival_date": arrival_date,
-        "arrival_time": arrival_time,
-        "arrival_note": stayinput.arrival_note,
-        "departure_date": departure_date,
-        "departure_time": departure_time,
-        "departure_note": stayinput.departure_note,
-        "controller_notes": stayinput.notes,
-        "controller_firstname": firstname,
-        "controller_lastname": lastname,
-        "controller_email": email,
-        "controller_mobile": stayinput.mobile,
-        "controller_title": title,
-        "controller_street": stayinput.street,
-        "controller_street2": stayinput.street2,
-        "controller_zip": stayinput.zip,
-        "controller_city": stayinput.city,
-        "controller_country_id": country_id,
-        "notes": "\n".join(notes_list),
-    }
+    vals.update(
+        {
+            "controller_mode": "created",
+            "company_id": company_id,
+            "group_id": staycreate.group_id or False,
+            "guest_qty": guest_qty,
+            "arrival_date": arrival_date,
+            "departure_date": departure_date,
+        }
+    )
     logger.debug("Creating new stay with vals=%s", vals)
     stay = sso.create(vals)
     logger.info("Create stay %s ID %d from controller", stay.display_name, stay.id)
     try:
-        env.ref("stay_api.stay_created_by_controller_notify").sudo().send_mail(stay.id)
-        logger.info("Mail sent for new stay notification")
+        env.ref("stay_api.stay_controller_notify").sudo().with_context(
+            action_description=_("created")
+        ).send_mail(stay.id)
+        logger.info("Mail sent for stay creation notification")
     except Exception as e:
-        logger.error("Failed to generate new stay email: %s", e)
+        logger.error("Failed to generate stay creation email: %s", e)
     return StayCreated(
-        name=stay.name, id=stay.id, company_id=company_id, partner_id=partner_id
+        name=stay.name,
+        id=stay.id,
+        company_id=vals["company_id"],
+        partner_id=vals["partner_id"],
+        uuid=stay.controller_uuid,
     )
+
+
+@stay_api_router.get("/cancel")
+def stay_cancel(
+    env: Annotated[api.Environment, Depends(authenticated_partner_env)],
+    partner: Annotated[Partner, Depends(authenticated_partner)],
+    staymatch: StayMatch,
+):
+    logger.debug("Start stay cancel controller staymatch=%s", staymatch)
+    stay = env["stay.stay"]._get_stay_from_uuid(
+        staymatch.uuid, "/cancel", ignore_states=("cancel", "done")
+    )
+    if stay:
+        logger.info("Cancelling stay %s currently in %s state", stay.name, stay.state)
+        stay.cancel()
+        stay.message_post(body=_("Stay cancelled by API call."))
+        try:
+            env.ref("stay_api.stay_controller_notify").sudo().with_context(
+                action_description=_("cancelled")
+            ).send_mail(stay.id)
+            logger.info("Mail sent for stay cancellation notification")
+        except Exception as e:
+            logger.error("Failed to generate stay cancellation email: %s", e)
+
+
+@stay_api_router.get("/read", response_model=StayRead)
+def stay_read(
+    env: Annotated[api.Environment, Depends(authenticated_partner_env)],
+    partner: Annotated[Partner, Depends(authenticated_partner)],
+    staymatch: StayMatch,
+) -> StayRead:
+    logger.debug("Start stay read controller staymatch=%s", staymatch)
+    stay = env["stay.stay"]._get_stay_from_uuid(
+        staymatch.uuid, "/read", raise_states=("cancel", "done")
+    )
+    if stay:
+        vals = {
+            "name": stay.name,
+            "guest_qty": stay.guest_qty,
+            "arrival_date": stay.arrival_date,
+            "departure_date": stay.departure_date,
+        }
+        if stay.arrival_time != "unknown":
+            vals["arrival_time"] = stay.arrival_time
+        if stay.departure_time != "unknown":
+            vals["departure_time"] = stay.departure_time
+        if stay.partner_id:
+            vals.update(
+                {
+                    "street": stay.partner_id.street or None,
+                    "street2": stay.partner_id.street2 or None,
+                    "zip": stay.partner_id.zip or None,
+                    "city": stay.partner_id.city or None,
+                    "country_code": stay.partner_id.country_id
+                    and stay.partner_id.country_id.code
+                    or None,
+                    "phone": stay.partner_id.phone or None,
+                    "mobile": stay.partner_id.mobile or None,
+                    "email": stay.partner_id.email or None,
+                }
+            )
+            if hasattr(stay.partner_id, "firstname"):
+                vals.update(
+                    {
+                        "firstname": stay.partner_id.firstname,
+                        "lastname": stay.partner_id.lastname,
+                    }
+                )
+                if stay.partner_id.title:
+                    title2key = {
+                        env.ref("base.res_partner_title_mister"): "mister",
+                        env.ref("base.res_partner_title_madam"): "madam",
+                        env.ref("base.res_partner_title_miss"): "miss",
+                    }
+                    if stay.partner_id.title in title2key:
+                        vals["title"] = title2key[stay.partner_id.title]
+        return StayRead(**vals)
+
+
+@stay_api_router.post("/update")
+def stay_update(
+    env: Annotated[api.Environment, Depends(authenticated_partner_env)],
+    partner: Annotated[Partner, Depends(authenticated_partner)],
+    stayupdate: StayUpdate,
+):
+    logger.debug("Start stay update controller stayupdate=%s", stayupdate)
+    stay = env["stay.stay"]._get_stay_from_uuid(
+        stayupdate.uuid, "/update", raise_states=("cancel", "done")
+    )
+    if stay:
+        try_match_partner = True
+        if stay.partner_id:
+            try_match_partner = False
+        vals = env["stay.stay"]._controller_prepare_create_update(
+            stayupdate, try_match_partner=try_match_partner
+        )
+        if not vals:
+            return False
+        vals.update(
+            {
+                "controller_mode": "updated",
+            }
+        )
+        logger.debug("Updating stay %s ID %s with vals=%s", stay.name, stay.id, vals)
+        stay.write(vals)
+        try:
+            env.ref("stay_api.stay_controller_notify").sudo().with_context(
+                action_description=_("updated")
+            ).send_mail(stay.id)
+            logger.info("Mail sent for stay update notification")
+        except Exception as e:
+            logger.error("Failed to generate stay update email: %s", e)

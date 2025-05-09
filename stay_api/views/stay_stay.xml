@@ -15,7 +15,7 @@
                     name="%(stay_create_partner_action)d"
                     type="action"
                     string="Set Partner from Web Form Infos"
-                    attrs="{'invisible': ['|', ('partner_id', '!=', False), ('controller', '=', False)]}"
+                    attrs="{'invisible': ['|', ('partner_id', '!=', False), ('controller_mode', '=', False)]}"
                     groups="stay.group_stay_user"
                     class="btn-primary"
                 />
@@ -24,22 +24,27 @@
                                           <group
                     name="controller"
                     string="Web Form"
-                    attrs="{'invisible': [('controller', '=', False)]}"
+                    attrs="{'invisible': [('controller_mode', '=', False)]}"
                 >
 
-                        <field name="controller" invisible="1" />
+<field name="controller_mode" invisible="1" />
                         <field name="controller_title" />
                         <field name="controller_firstname" />
                         <field name="controller_lastname" />
                         <field name="controller_email" widget="email" />
+                        <field name="controller_phone" />
                         <field name="controller_mobile" />
                         <field name="controller_street" />
                         <field name="controller_street2" />
                         <field name="controller_zip" />
                         <field name="controller_city" />
                         <field name="controller_country_id" />
+                        <field name="controller_message" nolabel="1" colspan="2" />
                         <field name="controller_notes" nolabel="1" colspan="2" />
                     </group>
+                                  </group>
+<group name="left" position="inside">
+<field name="controller_uuid" groups="stay.group_stay_user" />
                                   </group>
 
         </field>
@@ -51,12 +56,29 @@
                           <field name="arch" type="xml">
                                   <group name="groupby" position="before">
                                           <filter
-                    name="controller"
-                    domain="[('controller', '=', True)]"
+                    name="controller_created"
+                    domain="[('controller_mode', '=', 'created')]"
                     string="Created from Web Form"
                 />
+                                          <filter
+                    name="controller_updated"
+                    domain="[('controller_mode', '=', 'updated')]"
+                    string="Updated from Web Form"
+                />
+                                          <filter
+                    name="controller_none"
+                    domain="[('controller_mode', '=', False)]"
+                    string="Manual"
+                />
+
+
                                           <separator />
                                   </group>
+<field name="partner_name" position="attributes">
+<attribute
+                    name="filter_domain"
+                >['|', '|', '|', ('partner_name', 'ilike', self), ('partner_id', 'ilike', self), ('name', 'ilike', self), ('controller_uuid', '=', self)]</attribute>
+</field>
                           </field>
                   </record>
 

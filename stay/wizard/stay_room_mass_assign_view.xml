@@ -9,11 +9,16 @@
 <record id="stay_room_mass_assign_form" model="ir.ui.view">
     <field name="model">stay.room.mass.assign</field>
     <field name="arch" type="xml">
-        <form string="Stay Room Mass Assign">
+     <form>
             <group name="main">
-                <field name="stay_id" />
+                <field name="stay_id" invisible="1" />
                 <field name="company_id" invisible="1" />
-                <field name="group_id" />
+                <field
+                        name="group_id"
+                        attrs="{'invisible': [('group_id', '=', False)]}"
+                    />
+                <field name="conflict_room_ids" invisible="1" />
+                <field name="assign_type" widget="radio" />
                 <field name="room_ids" />
             </group>
             <footer>
@@ -30,12 +35,10 @@
 </record>
 
 <record id="stay_room_mass_assign_action" model="ir.actions.act_window">
-    <field name="name">Mass Assign</field>
+    <field name="name">Assign Rooms</field>
     <field name="res_model">stay.room.mass.assign</field>
     <field name="view_mode">form</field>
     <field name="target">new</field>
-    <field name="binding_model_id" ref="stay.model_stay_stay" />
-    <field name="binding_view_types">form</field>
 </record>
 
 

@@ -5,9 +5,5 @@
 from pydantic import BaseModel
 
 
-class StayCreated(BaseModel):
-    name: str
-    id: int
+class StayMatch(BaseModel):
     uuid: str
-    company_id: int
-    partner_id: int = None
