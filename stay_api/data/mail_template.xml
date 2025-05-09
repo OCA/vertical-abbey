@@ -7,8 +7,8 @@
 <odoo noupdate="0">
 
 
-<record id="stay_created_by_controller_notify" model="mail.template">
-    <field name="name">Stay: Notify stay from web form</field>
+<record id="stay_controller_notify" model="mail.template">
+    <field name="name">Stay: Notify stay creation/update/cancel from web form</field>
     <field name="model_id" ref="stay.model_stay_stay" />
     <field name="email_from">${object.company_id.email}</field>
     <field
@@ -18,13 +18,13 @@
     <field name="auto_delete" eval="False" />
     <field
             name="subject"
-        >New stay query from ${object.partner_name} ${format_date(object.arrival_date)} → ${format_date(object.departure_date)} x ${object.guest_qty}</field>
+        >Stay ${ctx.get('action_description')}: ${object.partner_name} ${format_date(object.arrival_date)} → ${format_date(object.departure_date)} x ${object.guest_qty}</field>
     <field name="lang">${object.company_id.partner_id.lang}</field>
     <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
         <p
                     style="margin: 0px; padding: 0px; font-size: 13px;"
-                >A new stay query ${object.name} has been sumbitted via the web form:</p>
+                >Stay ${object.name} has been ${ctx.get('action_description')} via the web form:</p>
         <ul>
                 <li>Guest: ${object.partner_name}</li>
                 <li>Guest Qty: ${object.guest_qty}</li>
@@ -41,9 +41,6 @@
                 % if object.group_id:
                 <li>Group: ${object.group_id.display_name}</li>
                 % endif
-                % if object.controller_country_id:
-                <li>Country: ${object.controller_country_id.name}</li>
-                % endif
                 % if object.controller_email:
                 <li>E-mail: ${object.controller_email}</li>
                 % endif
@@ -53,12 +50,19 @@
                 % if object.controller_mobile:
                 <li>Mobile: ${object.controller_mobile}</li>
                 % endif
+                % if object.controller_message:
+                <li>Guest message: ${object.controller_message}</li>
+                % endif
                 % if object.controller_notes:
-                <li>Notes: ${object.controller_notes}</li>
+                <li>Other information: ${object.controller_notes}</li>
+                % endif
+                % if object.controller_country_id:
+                <li>Country: ${object.controller_country_id.name}</li>
                 % endif
             </ul>
 </div>
     </field>
 </record>
+
 
 </odoo>

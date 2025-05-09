@@ -124,10 +124,12 @@ def stay_new(
     stay = sso.create(vals)
     logger.info("Create stay %s ID %d from controller", stay.display_name, stay.id)
     try:
-        env.ref("stay_api.stay_created_by_controller_notify").sudo().send_mail(stay.id)
-        logger.info("Mail sent for new stay notification")
+        env.ref("stay_api.stay_controller_notify").sudo().with_context(
+            action_description=_("created")
+        ).send_mail(stay.id)
+        logger.info("Mail sent for stay creation notification")
     except Exception as e:
-        logger.error("Failed to generate new stay email: %s", e)
+        logger.error("Failed to generate stay creation email: %s", e)
     return StayCreated(
         name=stay.name,
         id=stay.id,
@@ -151,7 +153,13 @@ def stay_cancel(
         logger.info("Cancelling stay %s currently in %s state", stay.name, stay.state)
         stay.cancel()
         stay.message_post(body=_("Stay cancelled by API call."))
-        # TODO add mail notification
+        try:
+            env.ref("stay_api.stay_controller_notify").sudo().with_context(
+                action_description=_("cancelled")
+            ).send_mail(stay.id)
+            logger.info("Mail sent for stay cancellation notification")
+        except Exception as e:
+            logger.error("Failed to generate stay cancellation email: %s", e)
 
 
 @stay_api_router.get("/read", response_model=StayRead)
@@ -234,3 +242,10 @@ def stay_update(
         )
         logger.debug("Updating stay %s ID %s with vals=%s", stay.name, stay.id, vals)
         stay.write(vals)
+        try:
+            env.ref("stay_api.stay_controller_notify").sudo().with_context(
+                action_description=_("updated")
+            ).send_mail(stay.id)
+            logger.info("Mail sent for stay update notification")
+        except Exception as e:
+            logger.error("Failed to generate stay update email: %s", e)
