@@ -27,6 +27,23 @@
                     </div>
                 </div>
             </div>
+            <div class='row mt16 o_settings_container' name="stay_">
+                <div
+                        class='col-12 col-lg-12 o_setting_box'
+                        id="stay_controller_update_url"
+                    >
+                    <div class="o_setting_left_pane" />
+                    <div class="o_setting_right_pane">
+                        <span
+                                class="o_form_label"
+                            >URL for Stay Update via Web Form</span>
+                        <div class="content-group">
+                            <field name="stay_controller_update_url" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </field>
 </record>
