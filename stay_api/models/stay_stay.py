@@ -29,15 +29,9 @@ class StayStay(models.Model):
     )
     controller_firstname = fields.Char(tracking=True, string="Firstname")
     controller_lastname = fields.Char(tracking=True, string="Lastname")
-    controller_title = fields.Selection(
-        [
-            ("mister", "Mister"),
-            ("madam", "Madam"),
-            ("miss", "Miss"),
-        ],
-        tracking=True,
-        string="Title",
-    )
+    controller_title_id = fields.Many2one(
+        "res.partner.title", domain=[('stay_code', '!=', False)],
+        string="Title", tracking=True)
     controller_email = fields.Char(tracking=True, string="E-mail")
     controller_phone = fields.Char(tracking=True, string="Phone")
     controller_mobile = fields.Char(tracking=True, string="Mobile")
@@ -209,18 +203,27 @@ class StayStay(models.Model):
         firstname = cobject.firstname
         if firstname:
             partner_name = f"{firstname} {partner_name}"
-        title = cobject.title
-        if title:
-            title2label = {
-                "mister": "M.",
-                "madam": "Mme",
-                "miss": "Mlle",
-            }
-            if title in title2label:
-                partner_name = f"{title2label[title]} {partner_name}"
+        title_code = cobject.title
+        title_id = False
+        if title_code:
+            # TODO set lang
+            title = self.env['res.partner.title'].search([('stay_code', '=', title_code)], limit=1)
+            if title:
+                title_id = title.id
+                partner_name = f"{title.shortcut or title.name} {partner_name}"
             else:
-                logger.warning("Bad value for title: %s", title)
-                title = False
+                avail_title_read = self.env['res.partner.title'].search_read([('stay_code', '!=', False)], ['stay_code'])
+                print('avail_title_read=', avail_title_read)
+                avail_title_list = [x['stay_code'] for x in avail_title_read]
+                print('avail_title_list=', avail_title_list)
+                error_msg = (
+                    f"Wrong title: {title_code}. "
+                    f"Possible values: {', '.join(avail_title_list)}."
+                )
+                logger.error(error_msg)
+                raise HTTPException(
+                    status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=error_msg
+                )
         email = cobject.email
         if not email:  # Should never happen because defined as required
             logger.error("Missing email in stay controller. Quitting.")
@@ -251,7 +254,7 @@ class StayStay(models.Model):
             "controller_email": email,
             "controller_phone": cobject.phone,
             "controller_mobile": cobject.mobile,
-            "controller_title": title,
+            "controller_title_id": title_id,
             "controller_street": cobject.street,
             "controller_street2": cobject.street2,
             "controller_zip": cobject.zip,

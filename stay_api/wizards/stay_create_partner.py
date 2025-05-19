@@ -13,13 +13,7 @@ class StayCreatePartner(models.TransientModel):
     stay_id = fields.Many2one("stay.stay", required=True)
     firstname = fields.Char()
     lastname = fields.Char(required=True)
-    title = fields.Selection(
-        [
-            ("mister", "Mister"),
-            ("madam", "Madam"),
-            ("miss", "Miss"),
-        ]
-    )
+    title_id = fields.Many2one("res.partner.title")
     email = fields.Char(string="E-mail")
     phone = fields.Char()
     mobile = fields.Char()
@@ -88,7 +82,7 @@ class StayCreatePartner(models.TransientModel):
                 "stay_id": stay_id,
                 "firstname": stay.controller_firstname,
                 "lastname": stay.controller_lastname,
-                "title": stay.controller_title,
+                "title_id": stay.controller_title_id.id or False,
                 "email": stay.controller_email and stay.controller_email.lower(),
                 "phone": stay.controller_phone,
                 "mobile": stay.controller_mobile,
@@ -114,6 +108,7 @@ class StayCreatePartner(models.TransientModel):
             "zip": self.zip,
             "city": self.city,
             "country_id": self.country_id.id or False,
+            "title": self.title_id.id or False,
         }
         # if OCA module partner_firstname is installed
         if hasattr(rpo, "firstname") and hasattr(rpo, "lastname"):
@@ -128,8 +123,6 @@ class StayCreatePartner(models.TransientModel):
             if self.firstname:
                 name = f"{self.firstname} {name}"
             vals["name"] = name
-        if self.title:
-            vals["title"] = self.env.ref(f"base.res_partner_title_{self.title}").id
         partner = self.env["res.partner"].create(vals)
         partner.message_post(body=_("Partner created from stay web form."))
         self.stay_id.write({"partner_id": partner.id})
