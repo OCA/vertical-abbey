@@ -12,7 +12,7 @@
                                   <form>
                                           <group name="main">
                                                   <field name="stay_id" invisible="1" />
-                                                  <field name="title" />
+                                                  <field name="title_id" />
                                                   <field name="firstname" />
                                                   <field name="lastname" />
                                                   <field name="email" />

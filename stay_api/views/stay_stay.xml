@@ -28,7 +28,7 @@
                 >
 
 <field name="controller_mode" invisible="1" />
-                        <field name="controller_title" />
+                        <field name="controller_title_id" />
                         <field name="controller_firstname" />
                         <field name="controller_lastname" />
                         <field name="controller_email" widget="email" />
