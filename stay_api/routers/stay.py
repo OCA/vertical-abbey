@@ -196,6 +196,7 @@ def stay_read(
                     "phone": stay.partner_id.phone or None,
                     "mobile": stay.partner_id.mobile or None,
                     "email": stay.partner_id.email or None,
+                    "partner_name": stay.partner_id.name,
                 }
             )
             if hasattr(stay.partner_id, "firstname"):
@@ -205,14 +206,8 @@ def stay_read(
                         "lastname": stay.partner_id.lastname,
                     }
                 )
-                if stay.partner_id.title:
-                    title2key = {
-                        env.ref("base.res_partner_title_mister"): "mister",
-                        env.ref("base.res_partner_title_madam"): "madam",
-                        env.ref("base.res_partner_title_miss"): "miss",
-                    }
-                    if stay.partner_id.title in title2key:
-                        vals["title"] = title2key[stay.partner_id.title]
+            if stay.partner_id.title and stay.partner_id.title.stay_code:
+                vals["title"] = stay.partner_id.title.stay_code
         return StayRead(**vals)
 
 
