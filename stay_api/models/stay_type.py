@@ -12,13 +12,9 @@ class StayType(models.Model):
 
     sequence = fields.Integer()
     name = fields.Char(required=True)
-    code = fields.Char(
-        string="Code (no not modify)",
-        help="This code is used as argument in the update URL.",
-    )
     active = fields.Boolean(default=True)
+    update_url = fields.Char()
 
     _sql_constraints = [
         ("name_uniq", "unique(name)", "This stay type already exists."),
-        ("code_uniq", "unique(code)", "This stay type code already exists."),
     ]

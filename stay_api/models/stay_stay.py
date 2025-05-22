@@ -52,15 +52,10 @@ class StayStay(models.Model):
     def _compute_controller_update_url(self):
         for stay in self:
             url = False
-            if (
-                stay.controller_uuid
-                and stay.type_id
-                and stay.type_id.code
-                and stay.company_id.stay_controller_update_url
-            ):
-                params = {"uuid": stay.controller_uuid, "form_type": stay.type_id.code}
+            if stay.controller_uuid and stay.type_id and stay.type_id.update_url:
+                params = {"uuid": stay.controller_uuid}
                 req = PreparedRequest()
-                req.prepare_url(stay.company_id.stay_controller_update_url, params)
+                req.prepare_url(stay.type_id.update_url, params)
                 url = req.url
             stay.controller_update_url = url
 

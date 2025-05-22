@@ -19,7 +19,7 @@
                     />
                 <group name="main">
                     <field name="name" />
-                    <field name="code" />
+                    <field name="update_url" />
                     <field name="active" invisible="1" />
                 </group>
             </sheet>
@@ -33,7 +33,7 @@
         <tree>
             <field name="sequence" widget="handle" />
             <field name="name" decoration-bf="1" />
-            <field name="code" />
+            <field name="update_url" optional="show" />
         </tree>
     </field>
 </record>
@@ -42,11 +42,7 @@
     <field name="model">stay.type</field>
     <field name="arch" type="xml">
         <search>
-            <field
-                    name="name"
-                    string="Name or Code"
-                    filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"
-                />
+            <field name="name" />
             <separator />
             <filter
                     string="Archived"
