@@ -30,8 +30,11 @@ class StayStay(models.Model):
     controller_firstname = fields.Char(tracking=True, string="Firstname")
     controller_lastname = fields.Char(tracking=True, string="Lastname")
     controller_title_id = fields.Many2one(
-        "res.partner.title", domain=[('stay_code', '!=', False)],
-        string="Title", tracking=True)
+        "res.partner.title",
+        domain=[("stay_code", "!=", False)],
+        string="Title",
+        tracking=True,
+    )
     controller_email = fields.Char(tracking=True, string="E-mail")
     controller_phone = fields.Char(tracking=True, string="Phone")
     controller_mobile = fields.Char(tracking=True, string="Mobile")
@@ -202,15 +205,17 @@ class StayStay(models.Model):
         title_id = False
         if title_code:
             # TODO set lang
-            title = self.env['res.partner.title'].search([('stay_code', '=', title_code)], limit=1)
+            title = self.env["res.partner.title"].search(
+                [("stay_code", "=", title_code)], limit=1
+            )
             if title:
                 title_id = title.id
                 partner_name = f"{title.shortcut or title.name} {partner_name}"
             else:
-                avail_title_read = self.env['res.partner.title'].search_read([('stay_code', '!=', False)], ['stay_code'])
-                print('avail_title_read=', avail_title_read)
-                avail_title_list = [x['stay_code'] for x in avail_title_read]
-                print('avail_title_list=', avail_title_list)
+                avail_title_read = self.env["res.partner.title"].search_read(
+                    [("stay_code", "!=", False)], ["stay_code"]
+                )
+                avail_title_list = [x["stay_code"] for x in avail_title_read]
                 error_msg = (
                     f"Wrong title: {title_code}. "
                     f"Possible values: {', '.join(avail_title_list)}."
