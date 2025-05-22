@@ -17,7 +17,6 @@
         "data/res_users.xml",
         "security/ir.model.access.csv",
         "wizards/stay_create_partner_view.xml",
-        "wizards/res_config_settings_view.xml",
         "views/stay_stay.xml",
         "views/stay_type.xml",
         "views/res_partner_title.xml",
