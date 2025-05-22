@@ -13,7 +13,7 @@ class StayType(models.Model):
     sequence = fields.Integer()
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
-    update_url = fields.Char()
+    update_url = fields.Char(string="Update URL")
 
     _sql_constraints = [
         ("name_uniq", "unique(name)", "This stay type already exists."),
