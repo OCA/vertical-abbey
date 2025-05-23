@@ -4,7 +4,7 @@
 
 {
     "name": "Stay",
-    "version": "14.0.3.0.0",
+    "version": "14.0.3.1.0",
     "category": "Lodging",
     "license": "AGPL-3",
     "summary": "API for stay module",
