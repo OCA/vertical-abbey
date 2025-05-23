@@ -17,10 +17,11 @@
         "data/res_users.xml",
         "security/ir.model.access.csv",
         "wizards/stay_create_partner_view.xml",
-        "wizards/res_config_settings_view.xml",
         "views/stay_stay.xml",
+        "views/stay_type.xml",
+        "views/res_partner_title.xml",
         "data/mail_template.xml",
     ],
-    "post_init_hook": "stay_set_uuid",
+    "post_init_hook": "stay_api_postinstall",
     "installable": True,
 }
