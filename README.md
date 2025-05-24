@@ -24,7 +24,7 @@ addon | version | maintainers | summary
 [donation_stay](donation_stay/) | 14.0.3.0.0 | [![alexis-via](https://github.com/alexis-via.png?size=30px)](https://github.com/alexis-via) | Create donations from a stay
 [mass](mass/) | 14.0.1.4.0 | [![alexis-via](https://github.com/alexis-via.png?size=30px)](https://github.com/alexis-via) | Manage Mass
 [stay](stay/) | 14.0.5.1.0 | [![alexis-via](https://github.com/alexis-via.png?size=30px)](https://github.com/alexis-via) | Simple management of stays and meals
-[stay_api](stay_api/) | 14.0.3.1.0 | [![alexis-via](https://github.com/alexis-via.png?size=30px)](https://github.com/alexis-via) | API for stay module
+[stay_api](stay_api/) | 14.0.3.2.0 | [![alexis-via](https://github.com/alexis-via.png?size=30px)](https://github.com/alexis-via) | API for stay module
 [stay_report_py3o](stay_report_py3o/) | 14.0.2.0.0 | [![alexis-via](https://github.com/alexis-via.png?size=30px)](https://github.com/alexis-via) | Replace Qweb report by Py3o report on stay module
 
 [//]: # (end addons)
