@@ -62,6 +62,7 @@ def stay_new(
             ("company_id", "=", company_id),
             ("create_date", ">=", limit_create_date),
             ("state", "=", "draft"),
+            ("controller_mode", "=", "created"),
         ]
     )
     recent_draft_stay_limit_str = (
