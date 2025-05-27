@@ -11,7 +11,7 @@
     "author": "Akretion, Odoo Community Association (OCA)",
     "maintainers": ["alexis-via"],
     "website": "https://github.com/OCA/vertical-abbey",
-    "depends": ["stay", "fastapi"],
+    "depends": ["stay", "fastapi", "phone_validation"],
     "external_dependencies": {"python": ["fastapi", "pydantic<2"]},
     "data": [
         "data/res_users.xml",
