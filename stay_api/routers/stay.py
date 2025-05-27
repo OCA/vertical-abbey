@@ -136,6 +136,8 @@ def stay_new(
         id=stay.id,
         company_id=vals["company_id"],
         partner_id=vals["partner_id"],
+        phone=vals["controller_phone"],
+        mobile=vals["controller_mobile"],
         uuid=stay.controller_uuid,
     )
 

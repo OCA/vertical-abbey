@@ -229,6 +229,7 @@ class StayStay(models.Model):
             logger.error("Missing email in stay controller. Quitting.")
         # country
         country_id = False
+        phone = cobject.phone
         mobile = cobject.mobile
         if cobject.country_code:
             country_code = cobject.country_code.upper()
@@ -237,6 +238,16 @@ class StayStay(models.Model):
             )
             if country:
                 country_id = country.id
+                if phone:
+                    phone = self.env["phone.validation.mixin"].phone_format(
+                        phone, country=country
+                    )
+                    logger.info(
+                        "Phone number reformatted from %s to %s (country %s)",
+                        cobject.phone,
+                        phone,
+                        country.name,
+                    )
                 if mobile:
                     mobile = self.env["phone.validation.mixin"].phone_format(
                         mobile, country=country
@@ -263,7 +274,7 @@ class StayStay(models.Model):
             "controller_firstname": firstname,
             "controller_lastname": lastname,
             "controller_email": email,
-            "controller_phone": cobject.phone,
+            "controller_phone": phone,
             "controller_mobile": mobile,
             "controller_title_id": title_id,
             "controller_street": cobject.street,
