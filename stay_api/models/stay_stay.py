@@ -229,13 +229,24 @@ class StayStay(models.Model):
             logger.error("Missing email in stay controller. Quitting.")
         # country
         country_id = False
+        mobile = cobject.mobile
         if cobject.country_code:
             country_code = cobject.country_code.upper()
-            country = self.env["res.country"].search_read(
-                [("code", "=", country_code)], ["id"], limit=1
+            country = self.env["res.country"].search(
+                [("code", "=", country_code)], limit=1
             )
             if country:
-                country_id = country[0]["id"]
+                country_id = country.id
+                if mobile:
+                    mobile = self.env["phone.validation.mixin"].phone_format(
+                        mobile, country=country
+                    )
+                    logger.info(
+                        "Mobile number reformatted from %s to %s (country %s)",
+                        cobject.mobile,
+                        mobile,
+                        country.name,
+                    )
             else:
                 logger.warning("Country code %s doesn't exist in Odoo.", country_code)
                 notes_list.append(
@@ -253,7 +264,7 @@ class StayStay(models.Model):
             "controller_lastname": lastname,
             "controller_email": email,
             "controller_phone": cobject.phone,
-            "controller_mobile": cobject.mobile,
+            "controller_mobile": mobile,
             "controller_title_id": title_id,
             "controller_street": cobject.street,
             "controller_street2": cobject.street2,
@@ -263,26 +274,63 @@ class StayStay(models.Model):
             "controller_notes": "\n".join(notes_list),
         }
         if try_match_partner:
+            vals["partner_id"] = self._controller_try_match_partner(vals)
+        return vals
+
+    def _controller_try_match_partner(self, vals):
+        email = vals["controller_email"]
+        mobile = vals["controller_mobile"]
+        partner_id = None
+        if "res.partner.phone" in self.env:  # module base_partner_one2many_phone
+            partner_phone = (
+                self.env["res.partner.phone"]
+                .sudo()
+                .search_read(
+                    [
+                        ("type", "in", ("1_email_primary", "2_email_secondary")),
+                        ("email", "=ilike", email),
+                        ("partner_id", "!=", False),
+                    ],
+                    ["partner_id"],
+                    limit=1,
+                )
+            )
+            if partner_phone:
+                partner_id = partner_phone[0]["partner_id"][0]
+        else:
+            partner = self.env["res.partner"].search_read(
+                [("email", "=ilike", email)], ["id"], limit=1
+            )
+            if partner:
+                partner_id = partner[0]["id"]
+        if partner_id:
+            logger.info("Match on email %s with partner ID %d", email, partner_id)
+        # 'and vals['controller_country_id'] to make sure the mobile phone has been reformatted
+        if not partner_id and mobile and vals["controller_country_id"]:
             if "res.partner.phone" in self.env:  # module base_partner_one2many_phone
                 partner_phone = (
                     self.env["res.partner.phone"]
                     .sudo()
                     .search_read(
                         [
-                            ("type", "in", ("1_email_primary", "2_email_secondary")),
-                            ("email", "=ilike", email),
+                            ("type", "in", ("5_mobile_primary", "6_mobile_secondary")),
+                            ("phone", "=", mobile),
                             ("partner_id", "!=", False),
                         ],
                         ["partner_id"],
                         limit=1,
                     )
                 )
-                vals["partner_id"] = (
-                    partner_phone and partner_phone[0]["partner_id"][0] or None
-                )
+                if partner_phone:
+                    partner_id = partner_phone[0]["partner_id"][0]
             else:
                 partner = self.env["res.partner"].search_read(
-                    [("email", "=ilike", email)], ["id"], limit=1
+                    [("mobile", "=", mobile)], ["id"], limit=1
                 )
-                vals["partner_id"] = partner and partner[0]["id"] or None
-        return vals
+                if partner:
+                    partner_id = partner[0]["id"]
+            if partner_id:
+                logger.info("Match on mobile %s with partner ID %d", mobile, partner_id)
+        if not partner_id:
+            logger.info("No match on an existing partner")
+        return partner_id
