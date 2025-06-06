@@ -62,6 +62,7 @@ def stay_new(
             ("company_id", "=", company_id),
             ("create_date", ">=", limit_create_date),
             ("state", "=", "draft"),
+            ("controller_mode", "=", "created"),
         ]
     )
     recent_draft_stay_limit_str = (
@@ -135,6 +136,8 @@ def stay_new(
         id=stay.id,
         company_id=vals["company_id"],
         partner_id=vals["partner_id"],
+        phone=vals["controller_phone"],
+        mobile=vals["controller_mobile"],
         uuid=stay.controller_uuid,
     )
 
