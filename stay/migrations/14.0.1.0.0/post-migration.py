@@ -17,7 +17,7 @@ def migrate(env, version):
             (
                 create_uid, create_date, write_uid, write_date,
                 stay_id, room_id, guest_qty,
-                group_id, user_id,
+                group_id,
                 stay_group_id,
                 arrival_date, arrival_time, arrival_datetime,
                 departure_date, departure_time, departure_datetime,
@@ -25,7 +25,7 @@ def migrate(env, version):
             )
             SELECT s.create_uid, s.create_date, s.write_uid, s.write_date,
             s.id, s.%s, s.guest_qty,
-            r.group_id, r.user_id,
+            r.group_id,
             s.group_id,
             s.arrival_date, s.arrival_time, s.arrival_datetime,
             s.departure_date, s.departure_time, s.departure_datetime,
