@@ -97,6 +97,11 @@ msgstr "Donazione relativa"
 msgid "Related Donation Line"
 msgstr "Riga donazione relativa"
 
+#. module: donation_mass
+#: model:ir.model,name:donation_mass.model_mass_request_transfer
+msgid "Transfered Mass Requests"
+msgstr ""
+
 #~ msgid "Mass Requests to Transfer"
 #~ msgstr "Richieste messa da trasferire"
 
