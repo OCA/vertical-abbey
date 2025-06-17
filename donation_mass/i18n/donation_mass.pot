@@ -92,3 +92,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:donation_mass.field_mass_request__donation_line_id
 msgid "Related Donation Line"
 msgstr ""
+
+#. module: donation_mass
+#: model:ir.model,name:donation_mass.model_mass_request_transfer
+msgid "Transfered Mass Requests"
+msgstr ""
