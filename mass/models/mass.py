@@ -72,6 +72,9 @@ class MassRequest(models.Model):
     )
     uninterrupted = fields.Boolean(related="type_id.uninterrupted")
     offering = fields.Monetary(
+        compute="_compute_offering",
+        store=True,
+        precompute=True,
         currency_field="company_currency_id",
         readonly=True,
         states={"waiting": [("readonly", False)]},
@@ -105,7 +108,7 @@ class MassRequest(models.Model):
     )
     # quantity = quantity in the donation line
     mass_quantity = fields.Integer(
-        compute="_compute_total_qty", string="Total Mass Quantity", store=True
+        compute="_compute_mass_quantity", string="Total Mass Quantity", store=True
     )
     intention = fields.Char()
     line_ids = fields.One2many("mass.line", "request_id", string="Mass Lines")
@@ -159,6 +162,16 @@ class MassRequest(models.Model):
             req.mass_remaining_quantity = remaining_qty
             req.remaining_offering = remaining_qty * req.unit_offering
 
+    @api.depends("quantity", "product_id", "company_id")
+    def _compute_offering(self):
+        for req in self:
+            offering = 0.0
+            if req.product_id and req.company_id:
+                offering = req.company_id.currency_id.round(
+                    req.quantity * req.product_id.list_price
+                )
+            req.offering = offering
+
     @api.depends("type_id", "type_id.quantity", "quantity", "offering")
     def _compute_unit_offering(self):
         for req in self:
@@ -169,7 +182,7 @@ class MassRequest(models.Model):
                 req.unit_offering = 0.0
 
     @api.depends("type_id", "type_id.quantity", "quantity")
-    def _compute_total_qty(self):
+    def _compute_mass_quantity(self):
         for req in self:
             req.mass_quantity = req.type_id.quantity * req.quantity
 
@@ -208,11 +221,6 @@ class MassRequest(models.Model):
                 )
             )
         return res
-
-    @api.onchange("product_id")
-    def product_id_change(self):
-        if self.product_id:
-            self.offering = self.product_id.list_price
 
     def unlink(self):
         for request in self:
