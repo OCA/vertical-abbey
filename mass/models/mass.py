@@ -544,7 +544,8 @@ class MassRequestTransfer(models.Model):
         self.ensure_one()
         if not self.celebrant_id:
             raise UserError(
-                _("Celebrant is not set on mass request '%s'.") % self.display_name
+                _("Celebrant is not set on mass request transfer '%s'.")
+                % self.display_name
             )
         if not self.mass_request_ids:
             raise UserError(
