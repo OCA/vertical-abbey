@@ -37,9 +37,16 @@ class TestGenerateMassJournal(TransactionCase):
                 "mass_stock_account_id": cls.stock_account.id,
             }
         )
+        cls.father1 = cls.env["res.partner"].create(
+            {"name": "Test Father1", "celebrant": "internal"}
+        )
+        cls.father2 = cls.env["res.partner"].create(
+            {"name": "Test Father2", "celebrant": "internal"}
+        )
+        cls.partner1 = cls.env["res.partner"].create({"name": "Test Partner1"})
         cls.massreq1 = cls.env["mass.request"].create(
             {
-                "partner_id": cls.env.ref("mass.partner1").id,
+                "partner_id": cls.partner1.id,
                 "donation_date": time.strftime("%Y-%m-%d"),
                 "product_id": cls.env.ref("mass.product_product_mass_simple").id,
                 "offering": 17.0,
@@ -48,9 +55,10 @@ class TestGenerateMassJournal(TransactionCase):
                 "intention": "for my childrens",
             }
         )
+        cls.partner2 = cls.env["res.partner"].create({"name": "Test Partner2"})
         cls.massreq2 = cls.env["mass.request"].create(
             {
-                "partner_id": cls.env.ref("mass.partner2").id,
+                "partner_id": cls.partner2.id,
                 "donation_date": time.strftime("%Y-%m-%d"),
                 "product_id": cls.env.ref("mass.product_product_mass_novena").id,
                 "offering": 170.0,
@@ -59,9 +67,10 @@ class TestGenerateMassJournal(TransactionCase):
                 "intention": "for my Grand-Father",
             }
         )
+        cls.partner3 = cls.env["res.partner"].create({"name": "Test Partner3"})
         cls.massreq3 = cls.env["mass.request"].create(
             {
-                "partner_id": cls.env.ref("mass.partner3").id,
+                "partner_id": cls.partner3.id,
                 "donation_date": time.strftime("%Y-%m-%d"),
                 "product_id": cls.env.ref("mass.product_product_mass_gregorian").id,
                 "offering": 540.0,
@@ -70,9 +79,10 @@ class TestGenerateMassJournal(TransactionCase):
                 "intention": "for my grand-mother",
             }
         )
+        cls.partner4 = cls.env["res.partner"].create({"name": "Test Partner4"})
         cls.massreq4 = cls.env["mass.request"].create(
             {
-                "partner_id": cls.env.ref("mass.partner4").id,
+                "partner_id": cls.partner4.id,
                 "donation_date": time.strftime("%Y-%m-%d"),
                 "product_id": cls.env.ref("mass.product_product_mass_simple").id,
                 "offering": 51.0,
@@ -92,7 +102,9 @@ class TestGenerateMassJournal(TransactionCase):
         for mass_line in mass_lines:
             self.assertEqual(mass_line.date, today)
             self.assertEqual(mass_line.state, "draft")
-        wiz_val = self.env["mass.journal.validate"].create({"journal_date": today})
+        wiz_val = self.env["mass.journal.validate"].create(
+            {"start_date": today, "end_date": today}
+        )
         action_val = wiz_val.validate_journal()
         val_mass_line_ids = action_val["domain"][0][2]
         val_mass_line_ids.sort()

@@ -5,9 +5,11 @@
 
 import json
 from collections import defaultdict
+from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.misc import format_date
 
 
 class MassJournalValidate(models.TransientModel):
@@ -15,7 +17,7 @@ class MassJournalValidate(models.TransientModel):
     _description = "Validate Masses Journal"
 
     @api.model
-    def _get_default_journal_date(self):
+    def _get_default_start_date(self):
         line = self.env["mass.line"].search(
             [("state", "=", "draft")], limit=1, order="date asc"
         )
@@ -30,10 +32,22 @@ class MassJournalValidate(models.TransientModel):
         default=lambda self: self.env.company,
         required=True,
     )
-    journal_date = fields.Date(
+    start_date = fields.Date(
         required=True,
-        default=lambda self: self._get_default_journal_date(),
+        default=lambda self: self._get_default_start_date(),
     )
+    end_date = fields.Date(
+        required=True,
+        compute="_compute_end_date",
+        readonly=False,
+        store=True,
+    )
+
+    @api.depends("start_date")
+    def _compute_end_date(self):
+        for wiz in self:
+            if wiz.start_date and (not wiz.end_date or wiz.end_date < wiz.start_date):
+                wiz.end_date = wiz.start_date
 
     def _prepare_mass_validation_move(self, lines):
         company = self.company_id
@@ -46,9 +60,19 @@ class MassJournalValidate(models.TransientModel):
             amount = line.unit_offering
             if not comp_cur.is_zero(amount):
                 stock_account_id = line.request_id.stock_account_id.id
+                if not stock_account_id:
+                    raise UserError(
+                        _("Stock account is not set on mass request '%s'.")
+                        % line.request_id.display_name
+                    )
                 stock_acc2amount[stock_account_id] += amount
 
                 income_account_id = line.product_id._get_product_accounts()["income"].id
+                if not income_account_id:
+                    raise UserError(
+                        _("Income account is not set for product '%s'.")
+                        % line.product_id.display_name
+                    )
                 key = (
                     income_account_id,
                     json.dumps(line.request_id.analytic_distribution),
@@ -93,7 +117,7 @@ class MassJournalValidate(models.TransientModel):
 
         vals = {
             "journal_id": company.mass_validation_journal_id.id,
-            "date": self.journal_date,
+            "date": lines[0].date,
             "ref": _("Masses"),
             "company_id": company.id,
             "line_ids": movelines,
@@ -102,29 +126,54 @@ class MassJournalValidate(models.TransientModel):
 
     def validate_journal(self):
         self.ensure_one()
-        date = self.journal_date
         company = self.company_id
-        # Search draft mass lines on the date of the wizard
-        lines = self.env["mass.line"].search(
-            [("date", "=", date), ("company_id", "=", company.id)]
-        )
-        vals = {"state": "done"}
         if not company.mass_validation_journal_id:
             raise UserError(
                 _("Missing Mass Validation Journal on company '%s'.")
                 % company.display_name
             )
-        # Create account move
-        move_vals = self._prepare_mass_validation_move(lines)
-        if move_vals:
-            move = self.env["account.move"].create(move_vals)
-            vals["move_id"] = move.id
-            if company.mass_post_move:
-                move.with_context(validate_analytic=True)._post(soft=False)
+        if self.start_date > self.end_date:
+            raise UserError(
+                _(
+                    "The start date (%(start_date)s) is after the end date (%(end_date)s).",
+                    start_date=format_date(self.env, self.start_date),
+                    end_date=format_date(self.env, self.end_date),
+                )
+            )
 
-        # Update mass lines
-        lines.write(vals)
+        # Search draft mass lines on the date of the wizard
+        line_ids = []
+        date = self.start_date
+        while date <= self.end_date:
+            vals = {"state": "done"}
+            lines = self.env["mass.line"].search(
+                [
+                    ("date", "=", date),
+                    ("company_id", "=", company.id),
+                ]
+            )
+            if lines:
+                # Create account move
+                move_vals = self._prepare_mass_validation_move(lines)
+                if move_vals:
+                    move = self.env["account.move"].create(move_vals)
+                    vals["move_id"] = move.id
+                    if company.mass_post_move:
+                        move.with_context(validate_analytic=True)._post(soft=False)
 
-        action = self.env.ref("mass.mass_line_action").sudo().read([])[0]
-        action["domain"] = [("id", "in", lines.ids)]
+                # Update mass lines
+                lines.write(vals)
+                line_ids += lines.ids
+            date += timedelta(1)
+
+        if not line_ids:
+            raise UserError(
+                _(
+                    "No mass to validate between %(start_date)s and %(end_date)s.",
+                    start_date=format_date(self.env, self.start_date),
+                    end_date=format_date(self.env, self.end_date),
+                )
+            )
+        action = self.env["ir.actions.actions"]._for_xml_id("mass.mass_line_action")
+        action["domain"] = [("id", "in", line_ids)]
         return action
