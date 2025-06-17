@@ -83,6 +83,7 @@ class MassRequest(models.Model):
     unit_offering = fields.Monetary(
         compute="_compute_unit_offering",
         store=True,
+        precompute=True,
         string="Offering per Mass",
         currency_field="company_currency_id",
         help="This field is the offering amount per mass in company currency.",
@@ -108,7 +109,10 @@ class MassRequest(models.Model):
     )
     # quantity = quantity in the donation line
     mass_quantity = fields.Integer(
-        compute="_compute_mass_quantity", string="Total Mass Quantity", store=True
+        compute="_compute_unit_offering",
+        string="Total Mass Quantity",
+        store=True,
+        precompute=True,
     )
     intention = fields.Char()
     line_ids = fields.One2many("mass.line", "request_id", string="Mass Lines")
@@ -139,10 +143,10 @@ class MassRequest(models.Model):
     )
 
     @api.depends(
-        "type_id",
-        "type_id.quantity",
+        "product_id",
         "quantity",
         "line_ids.request_id",
+        "offering",
         "transfer_id",
         # Adding transfer_id.number in @api.depends to workaround the following bug:
         # if you delete a mass.request.transfer, _compute_state_mass_remaining_quantity()
@@ -151,16 +155,26 @@ class MassRequest(models.Model):
     )
     def _compute_state_mass_remaining_quantity(self):
         for req in self:
-            total_qty = req.type_id.quantity * req.quantity
+            total_qty = req.product_id.mass_request_type_id.quantity * req.quantity
             remaining_qty = total_qty
+            remaining_offering = req.offering
+            if total_qty:
+                unit_offering = req.offering / total_qty
+            else:
+                unit_offering = 0
             if req.line_ids:
                 remaining_qty -= len(req.line_ids)
+                remaining_offering = req.company_id.currency_id.round(
+                    remaining_qty * unit_offering
+                )
             if remaining_qty < 0:
                 remaining_qty = 0
+                remaining_offering = 0
             state = "waiting"
             if req.transfer_id:
                 state = "transfered"
                 remaining_qty = 0
+                remaining_offering = 0
             elif total_qty:
                 if remaining_qty == 0:
                     state = "done"
@@ -168,7 +182,7 @@ class MassRequest(models.Model):
                     state = "started"
             req.state = state
             req.mass_remaining_quantity = remaining_qty
-            req.remaining_offering = remaining_qty * req.unit_offering
+            req.remaining_offering = remaining_offering
 
     @api.depends("quantity", "product_id", "company_id")
     def _compute_offering(self):
@@ -180,19 +194,19 @@ class MassRequest(models.Model):
                 )
             req.offering = offering
 
-    @api.depends("type_id", "type_id.quantity", "quantity", "offering")
+    @api.depends("product_id", "quantity", "offering")
     def _compute_unit_offering(self):
         for req in self:
-            total_qty = req.type_id.quantity * req.quantity
-            if total_qty:
-                req.unit_offering = req.offering / total_qty
-            else:
-                req.unit_offering = 0.0
-
-    @api.depends("type_id", "type_id.quantity", "quantity")
-    def _compute_mass_quantity(self):
-        for req in self:
-            req.mass_quantity = req.type_id.quantity * req.quantity
+            mass_quantity = 0
+            unit_offering = 0.0
+            if req.product_id:
+                mass_quantity = (
+                    req.product_id.mass_request_type_id.quantity * req.quantity
+                )
+            if mass_quantity:
+                unit_offering = req.offering / mass_quantity
+            req.unit_offering = unit_offering
+            req.mass_quantity = mass_quantity
 
     @api.depends("product_id")
     def _compute_analytic_distribution(self):
