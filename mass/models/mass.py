@@ -4,7 +4,7 @@
 
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.misc import format_date
 
@@ -226,6 +226,31 @@ class MassRequest(models.Model):
                 )
         return super().unlink()
 
+    def create_transfer_button(self):
+        for req in self:
+            if req.state != "waiting":
+                raise UserError(
+                    _(
+                        "Mass request '%s' cannot be transfered because it is not "
+                        "in waiting state."
+                    )
+                    % req.display_name
+                )
+        transfer = self.env["mass.request.transfer"].create(
+            {"mass_request_ids": [Command.set(self.ids)]}
+        )
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "mass.mass_request_transfer_action"
+        )
+        action.update(
+            {
+                "views": False,
+                "res_id": transfer.id,
+                "view_mode": "form,tree,pivot,graph",
+            }
+        )
+        return action
+
 
 class MassLine(models.Model):
     _name = "mass.line"
@@ -329,39 +354,6 @@ class MassRequestTransfer(models.Model):
     _order = "id desc"
     _inherit = ["mail.thread", "mail.activity.mixin"]
 
-    def name_get(self):
-        res = []
-        for trf in self:
-            name = " ".join([trf.number, trf.celebrant_id.display_name])
-            if trf.state == "draft":
-                name = "%s (%s)" % (name, _("Draft"))
-            res.append((trf.id, name))
-        return res
-
-    @api.depends(
-        "mass_request_ids",
-        "mass_request_ids.mass_quantity",
-        "mass_request_ids.offering",
-    )
-    def _compute_transfer_totals(self):
-        rg_res = self.env["mass.request"].read_group(
-            [("transfer_id", "in", self.ids)],
-            ["transfer_id", "mass_quantity:sum", "offering:sum"],
-            ["transfer_id"],
-        )
-        mapped_data = {
-            x["transfer_id"][0]: {
-                "mass_quantity": x["mass_quantity"],
-                "offering": x["offering"],
-            }
-            for x in rg_res
-        }
-        for trf in self:
-            trf.amount_total = mapped_data.get(trf.id, {"offering": 0}).get("offering")
-            trf.mass_total = mapped_data.get(trf.id, {"mass_quantity": 0}).get(
-                "mass_quantity"
-            )
-
     number = fields.Char(
         string="Transfer Number",
         default=lambda self: _("New"),
@@ -370,7 +362,9 @@ class MassRequestTransfer(models.Model):
     )
     celebrant_id = fields.Many2one(
         "res.partner",
-        required=True,
+        # required=False because when we create a transfer from mass.request list view
+        # celebrant_id is not set
+        required=False,
         index=True,
         domain=[("celebrant", "=", "external")],
         states={"done": [("readonly", True)]},
@@ -409,12 +403,14 @@ class MassRequestTransfer(models.Model):
     amount_total = fields.Monetary(
         compute="_compute_transfer_totals",
         currency_field="company_currency_id",
+        precompute=True,
         store=True,
         tracking=True,
     )
     mass_total = fields.Integer(
         compute="_compute_transfer_totals",
         string="Total Mass Quantity",
+        precompute=True,
         store=True,
         tracking=True,
     )
@@ -427,6 +423,41 @@ class MassRequestTransfer(models.Model):
         default="draft",
         tracking=True,
     )
+
+    @api.depends(
+        "mass_request_ids",
+        "mass_request_ids.mass_quantity",
+        "mass_request_ids.offering",
+    )
+    def _compute_transfer_totals(self):
+        rg_res = self.env["mass.request"].read_group(
+            [("transfer_id", "in", self.ids)],
+            ["transfer_id", "mass_quantity:sum", "offering:sum"],
+            ["transfer_id"],
+        )
+        mapped_data = {
+            x["transfer_id"][0]: {
+                "mass_quantity": x["mass_quantity"],
+                "offering": x["offering"],
+            }
+            for x in rg_res
+        }
+        for trf in self:
+            trf.amount_total = mapped_data.get(trf.id, {"offering": 0}).get("offering")
+            trf.mass_total = mapped_data.get(trf.id, {"mass_quantity": 0}).get(
+                "mass_quantity"
+            )
+
+    def name_get(self):
+        res = []
+        for trf in self:
+            name = trf.number
+            if trf.celebrant_id:
+                name = " ".join([name, trf.celebrant_id.display_name])
+            if trf.state == "draft":
+                name = "%s (%s)" % (name, _("Draft"))
+            res.append((trf.id, name))
+        return res
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -495,6 +526,10 @@ class MassRequestTransfer(models.Model):
 
     def validate(self):
         self.ensure_one()
+        if not self.celebrant_id:
+            raise UserError(
+                _("Celebrant is not set on mass request '%s'.") % self.display_name
+            )
         if not self.mass_request_ids:
             raise UserError(
                 _(
