@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-05-06 11:24+0000\n"
+"PO-Revision-Date: 2025-06-18 10:25+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -208,7 +208,7 @@ msgstr "Celebrante"
 #: code:addons/mass/models/mass.py:0
 #, python-format
 msgid "Celebrant is not set on mass request transfer '%s'."
-msgstr ""
+msgstr "Il celebrante non è impostato nel trasferimento richiesta messa '%s'."
 
 #. module: mass
 #: model:ir.actions.act_window,name:mass.celebrant_partner_action
@@ -360,7 +360,7 @@ msgstr "Bozza"
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_journal_validate__end_date
 msgid "End Date"
-msgstr ""
+msgstr "Data fine"
 
 #. module: mass
 #: model:ir.model.fields.selection,name:mass.selection__res_partner__celebrant__external
@@ -472,7 +472,7 @@ msgstr ""
 #: code:addons/mass/wizard/mass_journal_validate.py:0
 #, python-format
 msgid "Income account is not set for product '%s'."
-msgstr ""
+msgstr "Il conto ricavi non è impostato per il prodotto '%s'."
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_line__intention
@@ -665,6 +665,8 @@ msgstr "Registro validazione messa"
 msgid ""
 "Mass request '%s' cannot be transfered because it is not in waiting state."
 msgstr ""
+"La richiesta di messa '%s' non può essere trasferita perché non è nello "
+"stato in attesa."
 
 #. module: mass
 #. odoo-python
@@ -783,6 +785,7 @@ msgstr "Nessun celebrante selezionato!"
 #, python-format
 msgid "No mass to validate between %(start_date)s and %(end_date)s."
 msgstr ""
+"Nessuna messa da validare nel periodo dal %(start_date)s al %(end_date)s."
 
 #. module: mass
 #: model:product.template,name:mass.product_product_mass_novena_product_template
@@ -901,7 +904,7 @@ msgstr "Messa semplice"
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_journal_validate__start_date
 msgid "Start Date"
-msgstr ""
+msgstr "Data inizio"
 
 #. module: mass
 #: model:ir.model.fields.selection,name:mass.selection__mass_request__state__started
@@ -941,7 +944,7 @@ msgstr "Conto giacenza"
 #: code:addons/mass/wizard/mass_journal_validate.py:0
 #, python-format
 msgid "Stock account is not set on mass request '%s'."
-msgstr ""
+msgstr "Il conto magazzino non è impostato nella richiesta di messa '%s'."
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.swap_celebrant_form
@@ -1004,7 +1007,7 @@ msgstr ""
 #: code:addons/mass/wizard/mass_journal_validate.py:0
 #, python-format
 msgid "The start date (%(start_date)s) is after the end date (%(end_date)s)."
-msgstr ""
+msgstr "La data inizio (%(start_date)s) è dopo la data fine (%(end_date)s)."
 
 #. module: mass
 #: model:ir.model.fields,help:mass.field_mass_request__offering
@@ -1051,7 +1054,7 @@ msgstr "Offerta totale"
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.mass_request_tree
 msgid "Transfer"
-msgstr ""
+msgstr "Trasferimento"
 
 #. module: mass
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__transfer_date
