@@ -12,7 +12,12 @@
     <field name="inherit_id" ref="base.view_partner_title_tree" />
     <field name="arch" type="xml">
         <field name="shortcut" position="after">
-            <field name="stay_code" optional="hide" groups="stay.group_stay_manager" />
+            <field
+                    name="stay_code"
+                    optional="hide"
+                    groups="base.group_system"
+                    string="Stay Code (do not modify)"
+                />
         </field>
     </field>
 </record>
@@ -22,7 +27,11 @@
     <field name="inherit_id" ref="base.view_partner_title_form" />
     <field name="arch" type="xml">
         <field name="shortcut" position="after">
-            <field name="stay_code" groups="stay.group_stay_manager" />
+            <field
+                    name="stay_code"
+                    groups="base.group_system"
+                    string="Stay Code (do not modify)"
+                />
         </field>
     </field>
 </record>
