@@ -8,7 +8,7 @@ from odoo.exceptions import UserError
 
 class StayCreatePartner(models.TransientModel):
     _name = "stay.create.partner"
-    _description = "Stay: Create Partner"
+    _description = "Stay: wizard to create or update partner"
 
     stay_id = fields.Many2one("stay.stay", required=True)
     firstname = fields.Char()
