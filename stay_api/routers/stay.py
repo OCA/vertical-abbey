@@ -34,7 +34,7 @@ def stay_new(
     partner: Annotated[Partner, Depends(authenticated_partner)],
     staycreate: StayCreate,
 ) -> StayCreated:
-    logger.debug("Start stay create controller staycreate=%s", staycreate)
+    logger.info("Stay controller /new called with staycreate=%s", staycreate)
     sso = env["stay.stay"]
     company_id = staycreate.company_id
     if not company_id:
@@ -148,7 +148,7 @@ def stay_cancel(
     partner: Annotated[Partner, Depends(authenticated_partner)],
     staymatch: StayMatch,
 ):
-    logger.debug("Start stay cancel controller staymatch=%s", staymatch)
+    logger.info("Stay controller /cancel called with staymatch=%s", staymatch)
     stay = env["stay.stay"]._get_stay_from_uuid(
         staymatch.uuid, "/cancel", ignore_states=("cancel", "done")
     )
@@ -171,7 +171,7 @@ def stay_read(
     partner: Annotated[Partner, Depends(authenticated_partner)],
     staymatch: StayMatch,
 ) -> StayRead:
-    logger.debug("Start stay read controller staymatch=%s", staymatch)
+    logger.info("Stay controller /read called wih staymatch=%s", staymatch)
     stay = env["stay.stay"]._get_stay_from_uuid(
         staymatch.uuid, "/read", raise_states=("cancel", "done")
     )
@@ -220,7 +220,7 @@ def stay_update(
     partner: Annotated[Partner, Depends(authenticated_partner)],
     stayupdate: StayUpdate,
 ):
-    logger.debug("Start stay update controller stayupdate=%s", stayupdate)
+    logger.info("Stay controller /update called wih stayupdate=%s", stayupdate)
     stay = env["stay.stay"]._get_stay_from_uuid(
         stayupdate.uuid, "/update", raise_states=("cancel", "done")
     )
