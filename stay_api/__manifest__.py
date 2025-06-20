@@ -3,11 +3,11 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    "name": "Stay",
-    "version": "14.0.3.3.0",
+    "name": "Stay API",
+    "version": "14.0.4.0.0",
     "category": "Lodging",
     "license": "AGPL-3",
-    "summary": "API for stay module",
+    "summary": "REST API for stay module",
     "author": "Akretion, Odoo Community Association (OCA)",
     "maintainers": ["alexis-via"],
     "website": "https://github.com/OCA/vertical-abbey",
