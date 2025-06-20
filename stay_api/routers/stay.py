@@ -117,12 +117,22 @@ def stay_new(
         raise HTTPException(
             status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=error_msg
         )
+    group_id = staycreate.group_id or False
+    if group_id:
+        avail_groups = env["stay.group"].search_read([], ["id"])
+        avail_group_ids = [group["id"] for group in avail_groups]
+        if group_id not in avail_group_ids:
+            error_msg = f"Group ID {group_id} doesn't exist."
+            logger.error(error_msg)
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=error_msg
+            )
 
     vals.update(
         {
             "controller_mode": "created",
             "company_id": company_id,
-            "group_id": staycreate.group_id or False,
+            "group_id": group_id,
             "guest_qty": guest_qty,
             "arrival_date": arrival_date,
             "departure_date": departure_date,
