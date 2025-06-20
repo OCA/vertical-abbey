@@ -19,7 +19,6 @@ class StayUpdate(BaseModel):
     departure_time: str
     departure_note: str = None
     company_id: int = None
-    group_id: int = None
     message: str = None
     notes_list: list = None
     country_code: str = None
