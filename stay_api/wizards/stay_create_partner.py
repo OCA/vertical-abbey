@@ -8,7 +8,7 @@ from odoo.exceptions import UserError
 
 class StayCreatePartner(models.TransientModel):
     _name = "stay.create.partner"
-    _description = "Stay: Create Partner"
+    _description = "Stay: wizard to create or update partner"
 
     stay_id = fields.Many2one("stay.stay", required=True)
     firstname = fields.Char()
@@ -126,7 +126,14 @@ class StayCreatePartner(models.TransientModel):
         partner = self.env["res.partner"].create(vals)
         partner.message_post(body=_("Partner created from stay web form."))
         self.stay_id.write({"partner_id": partner.id})
-        self.stay_id.message_post(body=_("Partner created from stay web form."))
+        self.stay_id.message_post(
+            body=_(
+                "Partner <a href=# data-oe-model=res.partner data-oe-id=%(partner_id)d>"
+                "%(partner_name)s</a> created from web form information.",
+                partner_id=partner.id,
+                partner_name=partner.display_name,
+            )
+        )
         action = {
             "type": "ir.actions.act_window",
             "name": _("New Partner"),

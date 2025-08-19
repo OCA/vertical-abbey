@@ -21,7 +21,14 @@ from odoo.addons.fastapi.dependencies import (
     authenticated_partner_env,
 )
 
-from ..schemas import StayCreate, StayCreated, StayMatch, StayRead, StayUpdate
+from ..schemas import (
+    StayCreate,
+    StayCreated,
+    StayMatch,
+    StayRead,
+    StayUpdate,
+    StayUpdated,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +41,7 @@ def stay_new(
     partner: Annotated[Partner, Depends(authenticated_partner)],
     staycreate: StayCreate,
 ) -> StayCreated:
-    logger.debug("Start stay create controller staycreate=%s", staycreate)
+    logger.info("Stay controller /new called with staycreate=%s", staycreate)
     sso = env["stay.stay"]
     company_id = staycreate.company_id
     if not company_id:
@@ -110,12 +117,22 @@ def stay_new(
         raise HTTPException(
             status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=error_msg
         )
+    group_id = staycreate.group_id or False
+    if group_id:
+        avail_groups = env["stay.group"].search_read([], ["id"])
+        avail_group_ids = [group["id"] for group in avail_groups]
+        if group_id not in avail_group_ids:
+            error_msg = f"Group ID {group_id} doesn't exist."
+            logger.error(error_msg)
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=error_msg
+            )
 
     vals.update(
         {
             "controller_mode": "created",
             "company_id": company_id,
-            "group_id": staycreate.group_id or False,
+            "group_id": group_id,
             "guest_qty": guest_qty,
             "arrival_date": arrival_date,
             "departure_date": departure_date,
@@ -131,15 +148,17 @@ def stay_new(
         logger.info("Mail sent for stay creation notification")
     except Exception as e:
         logger.error("Failed to generate stay creation email: %s", e)
-    return StayCreated(
-        name=stay.name,
-        id=stay.id,
-        company_id=vals["company_id"],
-        partner_id=vals["partner_id"],
-        phone=vals["controller_phone"],
-        mobile=vals["controller_mobile"],
-        uuid=stay.controller_uuid,
-    )
+    answer_dict = {
+        "name": stay.name,
+        "id": stay.id,
+        "company_id": vals["company_id"],
+        "partner_id": vals["partner_id"],
+        "phone": vals["controller_phone"],
+        "mobile": vals["controller_mobile"],
+        "uuid": stay.controller_uuid,
+    }
+    logger.info("Stay controller /new answer: %s", answer_dict)
+    return StayCreated(**answer_dict)
 
 
 @stay_api_router.get("/cancel")
@@ -148,7 +167,7 @@ def stay_cancel(
     partner: Annotated[Partner, Depends(authenticated_partner)],
     staymatch: StayMatch,
 ):
-    logger.debug("Start stay cancel controller staymatch=%s", staymatch)
+    logger.info("Stay controller /cancel called with staymatch=%s", staymatch)
     stay = env["stay.stay"]._get_stay_from_uuid(
         staymatch.uuid, "/cancel", ignore_states=("cancel", "done")
     )
@@ -171,47 +190,47 @@ def stay_read(
     partner: Annotated[Partner, Depends(authenticated_partner)],
     staymatch: StayMatch,
 ) -> StayRead:
-    logger.debug("Start stay read controller staymatch=%s", staymatch)
+    logger.info("Stay controller /read called wih staymatch=%s", staymatch)
     stay = env["stay.stay"]._get_stay_from_uuid(
         staymatch.uuid, "/read", raise_states=("cancel", "done")
     )
-    if stay:
-        vals = {
-            "name": stay.name,
-            "guest_qty": stay.guest_qty,
-            "arrival_date": stay.arrival_date,
-            "departure_date": stay.departure_date,
-        }
-        if stay.arrival_time != "unknown":
-            vals["arrival_time"] = stay.arrival_time
-        if stay.departure_time != "unknown":
-            vals["departure_time"] = stay.departure_time
-        if stay.partner_id:
+    vals = {
+        "name": stay.name,
+        "guest_qty": stay.guest_qty,
+        "arrival_date": stay.arrival_date,
+        "departure_date": stay.departure_date,
+    }
+    if stay.arrival_time != "unknown":
+        vals["arrival_time"] = stay.arrival_time
+    if stay.departure_time != "unknown":
+        vals["departure_time"] = stay.departure_time
+    if stay.partner_id:
+        vals.update(
+            {
+                "street": stay.partner_id.street or None,
+                "street2": stay.partner_id.street2 or None,
+                "zip": stay.partner_id.zip or None,
+                "city": stay.partner_id.city or None,
+                "country_code": stay.partner_id.country_id
+                and stay.partner_id.country_id.code
+                or None,
+                "phone": stay.partner_id.phone or None,
+                "mobile": stay.partner_id.mobile or None,
+                "email": stay.partner_id.email or None,
+                "partner_name": stay.partner_id.name,
+            }
+        )
+        if hasattr(stay.partner_id, "firstname"):
             vals.update(
                 {
-                    "street": stay.partner_id.street or None,
-                    "street2": stay.partner_id.street2 or None,
-                    "zip": stay.partner_id.zip or None,
-                    "city": stay.partner_id.city or None,
-                    "country_code": stay.partner_id.country_id
-                    and stay.partner_id.country_id.code
-                    or None,
-                    "phone": stay.partner_id.phone or None,
-                    "mobile": stay.partner_id.mobile or None,
-                    "email": stay.partner_id.email or None,
-                    "partner_name": stay.partner_id.name,
+                    "firstname": stay.partner_id.firstname,
+                    "lastname": stay.partner_id.lastname,
                 }
             )
-            if hasattr(stay.partner_id, "firstname"):
-                vals.update(
-                    {
-                        "firstname": stay.partner_id.firstname,
-                        "lastname": stay.partner_id.lastname,
-                    }
-                )
-            if stay.partner_id.title and stay.partner_id.title.stay_code:
-                vals["title"] = stay.partner_id.title.stay_code
-        return StayRead(**vals)
+        if stay.partner_id.title and stay.partner_id.title.stay_code:
+            vals["title"] = stay.partner_id.title.stay_code
+    logger.info("Stay controller /read answer: %s", vals)
+    return StayRead(**vals)
 
 
 @stay_api_router.post("/update")
@@ -220,30 +239,34 @@ def stay_update(
     partner: Annotated[Partner, Depends(authenticated_partner)],
     stayupdate: StayUpdate,
 ):
-    logger.debug("Start stay update controller stayupdate=%s", stayupdate)
+    logger.info("Stay controller /update called wih stayupdate=%s", stayupdate)
     stay = env["stay.stay"]._get_stay_from_uuid(
         stayupdate.uuid, "/update", raise_states=("cancel", "done")
     )
-    if stay:
-        try_match_partner = True
-        if stay.partner_id:
-            try_match_partner = False
-        vals = env["stay.stay"]._controller_prepare_create_update(
-            stayupdate, try_match_partner=try_match_partner
-        )
-        if not vals:
-            return False
-        vals.update(
-            {
-                "controller_mode": "updated",
-            }
-        )
-        logger.debug("Updating stay %s ID %s with vals=%s", stay.name, stay.id, vals)
-        stay.write(vals)
-        try:
-            env.ref("stay_api.stay_controller_notify").sudo().with_context(
-                action_description=_("updated")
-            ).send_mail(stay.id)
-            logger.info("Mail sent for stay update notification")
-        except Exception as e:
-            logger.error("Failed to generate stay update email: %s", e)
+    try_match_partner = True
+    if stay.partner_id:
+        try_match_partner = False
+    vals = env["stay.stay"]._controller_prepare_create_update(
+        stayupdate, try_match_partner=try_match_partner
+    )
+    if not vals:
+        return False
+    vals["controller_mode"] = "updated"
+    logger.debug("Updating stay %s ID %s with vals=%s", stay.name, stay.id, vals)
+    stay.write(vals)
+    try:
+        env.ref("stay_api.stay_controller_notify").sudo().with_context(
+            action_description=_("updated")
+        ).send_mail(stay.id)
+        logger.info("Mail sent for stay update notification")
+    except Exception as e:
+        logger.error("Failed to generate stay update email: %s", e)
+    answer_dict = {
+        "name": stay.name,
+        "id": stay.id,
+        "phone": vals["controller_phone"],
+        "mobile": vals["controller_mobile"],
+        "partner_id": stay.partner_id.id or None,
+    }
+    logger.info("Stay controller /update answer: %s", answer_dict)
+    return StayUpdated(**answer_dict)

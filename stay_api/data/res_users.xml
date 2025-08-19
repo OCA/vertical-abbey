@@ -6,14 +6,14 @@
 -->
 <odoo noupdate="1">
 
-<record
-        id="stay_api_user"
-        model="res.users"
-        context="{'no_reset_password': True, 'no_reset_password': True}"
-    >
+<record id="stay_api_user" model="res.users" context="{'no_reset_password': True}">
   <field name="name">Stay API User</field>
   <field name="login">stay_api_user</field>
-  <field name="groups_id" eval="[(6, 0, [])]" />
+  <field name="email">stay_api_user@example.org</field>
+  <field
+            name="groups_id"
+            eval="[(6, 0, [ref('base.group_user'), ref('stay.group_stay_user'), ref('fastapi.group_fastapi_endpoint_runner')])]"
+        />
 </record>
 
 </odoo>

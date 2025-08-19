@@ -39,7 +39,7 @@ class StayStay(models.Model):
     controller_phone = fields.Char(tracking=True, string="Phone")
     controller_mobile = fields.Char(tracking=True, string="Mobile")
     controller_message = fields.Char(string="Guest Message")
-    controller_notes = fields.Text(string="Web Form Other Information")
+    controller_notes = fields.Html(string="Additional Questions")
     controller_street = fields.Char(string="Address Line 1")
     controller_street2 = fields.Char(string="Address Line 2")
     controller_zip = fields.Char(string="ZIP")
@@ -204,7 +204,6 @@ class StayStay(models.Model):
         title_code = cobject.title
         title_id = False
         if title_code:
-            # TODO set lang
             title = self.env["res.partner.title"].search(
                 [("stay_code", "=", title_code)], limit=1
             )
@@ -282,7 +281,7 @@ class StayStay(models.Model):
             "controller_zip": cobject.zip,
             "controller_city": cobject.city,
             "controller_country_id": country_id,
-            "controller_notes": "\n".join(notes_list),
+            "controller_notes": "<br>".join(notes_list),
         }
         if try_match_partner:
             vals["partner_id"] = self._controller_try_match_partner(vals)
