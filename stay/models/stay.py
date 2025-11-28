@@ -1279,6 +1279,19 @@ class StayRoom(models.Model):
     )
     fire_report_exclude = fields.Boolean(string="Exclude from Fire Report")
     fire_report_sequence = fields.Integer(string="Order for Fire Report")
+    # fields used in "Rooms to clean" list view
+    next_stay_id = fields.Many2one("stay.stay", compute="_compute_next_stay")
+    next_stay_partner_name = fields.Char(compute="_compute_next_stay")
+    next_stay_arrival_date = fields.Date(compute="_compute_next_stay")
+    next_stay_arrival_time = fields.Selection(
+        [
+            ("morning", "Morning"),
+            ("afternoon", "Afternoon"),
+            ("evening", "Evening"),
+            ("unknown", "Unknown"),
+        ],
+        compute="_compute_next_stay",
+    )
 
     _sql_constraints = [
         (
@@ -1325,6 +1338,27 @@ class StayRoom(models.Model):
         for room in self:
             if room.bed_qty <= 1:
                 room.allow_simultaneous = False
+
+    def _compute_next_stay(self):
+        today = fields.Date.context_today(self)
+        for room in self:
+            next_stay = False
+            stay_room_assign = self.env["stay.room.assign"].search(
+                [
+                    ("room_id", "=", room.id),
+                    ("state", "in", ("confirm", "current")),
+                    ("arrival_date", ">=", today),
+                    ("stay_id", "!=", False),
+                ],
+                limit=1,
+                order="arrival_date",
+            )
+            if stay_room_assign:
+                next_stay = stay_room_assign.stay_id
+            room.next_stay_id = next_stay
+            room.next_stay_partner_name = next_stay and next_stay.partner_name or False
+            room.next_stay_arrival_date = next_stay and next_stay.arrival_date or False
+            room.next_stay_arrival_time = next_stay and next_stay.arrival_time or False
 
     @api.depends("name", "code")
     def name_get(self):
