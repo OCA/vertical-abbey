@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2025 Akretion France (https://www.akretion.com/)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo noupdate="1">
+
+<record
+        id="room_transition_config_param"
+        model="ir.config_parameter"
+        forcecreate="True"
+    >
+    <field name="key">stay.room_transition</field>
+    <field name="value">one_empty_period</field>
+</record>
+
+</odoo>

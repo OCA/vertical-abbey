@@ -18,6 +18,7 @@
     <field
             name="subject"
         >{{object.name}} - Arrivals of {{format_date(ctx.get('today'))}}</field>
+    <field name="lang">${object.partner_id.lang}</field>
     <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -62,5 +63,52 @@
     </field>
 </record>
 
+<!--
+<record id="stay_notify_selection" model="mail.template">
+    <field name="name">Stay: Notify selected stays</field>
+    <field name="model_id" ref="base.model_res_company" />
+    <field name="email_from">${user.email_formatted | safe}</field>
+    <field name="auto_delete" eval="False" />
+    <field name="subject">Stays info</field>
+    <field name="lang">${object.partner_id.lang}</field>
+    <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p
+                    style="margin: 0px; padding: 0px; font-size: 13px;"
+                >The following stays may be of interest for you:</p>
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        <table
+                        style="border-spacing: 0; border-collapse: collapse; width: 100%; text-align: center;"
+                    >
+            <tr>
+                <th style="padding: 5px; border: 1px solid black;">Guest Name</th>
+                <th style="padding: 5px; border: 1px solid black;">Guest Qty</th>
+                <th style="padding: 5px; border: 1px solid black;">Arrival</th>
+                <th style="padding: 5px; border: 1px solid black;">Departure</th>
+                <th style="padding: 5px; border: 1px solid black;">Notes</th>
+            </tr>
+            % for o in ctx.get('stay_list'):
+            <tr>
+                <td
+                                style="padding: 5px; border: 1px solid black; text-align: left;"
+                            >${o['partner_name']}</td>
+                <td
+                                style="padding: 5px; border: 1px solid black;"
+                            >${o['guest_qty']}</td>
+                <td
+                                style="padding: 5px; border: 1px solid black;"
+                            >${format_date(o['arrival_date'])} ${o['arrival_time']}</td>
+                <td
+                                style="padding: 5px; border: 1px solid black;"
+                            >${format_date(o['departure_date'])} ${o['departure_time']}</td>
+                <td style="padding: 5px; border: 1px solid black;">${o['notes']}</td>
+            </tr>
+            % endfor
+        </table>
+    </p>
+</div>
+    </field>
+</record>
+-->
 
 </odoo>
