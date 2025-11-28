@@ -883,6 +883,10 @@ So I use the form view below by default -->
                             attrs="{'invisible': [('bed_qty', '=', 1)]}"
                         />
                 <field name="to_clean" />
+                <field
+                            name="next_stay_id"
+                            attrs="{'invisible': [('to_clean', '=', False)]}"
+                        />
                 <field name="fire_report_exclude" />
                 <field
                             name="fire_report_sequence"
@@ -901,9 +905,6 @@ So I use the form view below by default -->
     <field name="model">stay.room</field>
     <field name="arch" type="xml">
         <tree>
-            <header>
-                <button name="mark_as_cleaned" type="object" string="Mark as Cleaned" />
-            </header>
             <field name="sequence" widget="handle" />
             <field name="name" />
             <field name="code" optional="show" />
@@ -914,7 +915,6 @@ So I use the form view below by default -->
                 />
             <field name="group_id" optional="show" />
             <field name="bed_qty" />
-            <field name="to_clean" />
             <field name="fire_report_exclude" optional="hide" />
             <field
                     name="fire_report_sequence"
@@ -929,6 +929,30 @@ So I use the form view below by default -->
         </tree>
     </field>
 </record>
+
+<record id="stay_room_to_clean_tree" model="ir.ui.view">
+    <field name="name">stay.room.tree</field>
+    <field name="model">stay.room</field>
+    <field name="priority">1000</field>
+    <field name="arch" type="xml">
+         <tree
+                decoration-danger="next_stay_arrival_date == today"
+                decoration-warning="next_stay_arrival_date == (datetime.date.today() + datetime.timedelta(1)).strftime('%Y-%m-%d')"
+            >
+            <header>
+                <button name="mark_as_cleaned" type="object" string="Mark as Cleaned" />
+            </header>
+            <field name="display_name" string="Room" />
+            <field name="group_id" optional="show" />
+            <field name="to_clean" />
+            <field name="next_stay_id" optional="show" />
+            <field name="next_stay_partner_name" optional="show" />
+            <field name="next_stay_arrival_date" optional="show" />
+            <field name="next_stay_arrival_time" optional="show" />
+        </tree>
+    </field>
+</record>
+
 
 <record id="stay_room_search" model="ir.ui.view">
     <field name="name">stay.room.search</field>
@@ -995,6 +1019,7 @@ So I use the form view below by default -->
     <field name="name">Rooms to Clean</field>
     <field name="res_model">stay.room</field>
     <field name="view_mode">tree,form</field>
+    <field name="view_id" ref="stay_room_to_clean_tree" />
     <field name="domain">[('to_clean', '!=', False)]</field>
     <field name="context">{'search_default_my_stay_group': True}</field>
 </record>
