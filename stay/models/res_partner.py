@@ -35,5 +35,5 @@ class ResPartner(models.Model):
             if self.lang:
                 partner_lg = self.with_context(lang=self.lang)
             title = partner_lg.title.shortcut or partner_lg.title.name
-            partner_name = "%s %s" % (title, partner_name)
+            partner_name = f"{title} {partner_name}"
         return partner_name

@@ -5,7 +5,7 @@
 
 from datetime import timedelta
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.misc import format_date
 
@@ -49,8 +49,14 @@ class StayMultiDuplicate(models.TransientModel):
             content["arrival_note"] = False
             content["notes"] = False
 
-        if not self.keep_assignments or self.create_state == "draft":
-            content["room_assign_ids"] = False
+        # by default, room_assign_ids now has copy=False
+        if self.keep_assignments and self.create_state == "confirm":
+            content["room_assign_ids"] = [
+                Command.create(
+                    {"room_id": assign.room_id.id, "guest_qty": assign.guest_qty}
+                )
+                for assign in self.stay_id.room_assign_ids
+            ]
 
         return content
 
