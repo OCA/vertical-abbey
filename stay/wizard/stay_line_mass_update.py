@@ -6,6 +6,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.misc import format_date
 
 
 class StayLineMassUpdate(models.TransientModel):
@@ -18,12 +19,25 @@ class StayLineMassUpdate(models.TransientModel):
     no_lunch = fields.Boolean(string="No Lunches")
     no_dinner = fields.Boolean(string="No Dinners")
     no_bed_night = fields.Boolean(string="No Bed Nights")
+    start_date = fields.Date(required=True)
+    end_date = fields.Date(required=True)
 
     @api.model
     def default_get(self, fields_list):
         res = super().default_get(fields_list)
         assert self._context.get("active_model") == "stay.stay"
-        res["stay_id"] = self._context.get("active_id")
+        stay_id = self._context.get("active_id")
+        stay = self.env["stay.stay"].browse(stay_id)
+        today = fields.Date.context_today(self)
+        start_date = stay.arrival_date < today and today or stay.arrival_date
+        end_date = stay.departure_date
+        res.update(
+            {
+                "stay_id": stay_id,
+                "start_date": start_date,
+                "end_date": end_date,
+            }
+        )
         return res
 
     def _prepare_write_stay_line(self):
@@ -47,6 +61,15 @@ class StayLineMassUpdate(models.TransientModel):
         return vals
 
     def apply(self):
+        self.ensure_one()
+        if self.start_date > self.end_date:
+            raise UserError(
+                _(
+                    "The start date (%(start_date)s) is after the end date (%(end_date)s).",
+                    start_date=format_date(self.env, self.start_date),
+                    end_date=format_date(self.env, self.end_date),
+                )
+            )
         vals = self._prepare_write_stay_line()
         if not vals:
             raise UserError(
@@ -56,5 +79,14 @@ class StayLineMassUpdate(models.TransientModel):
                     "wizard if installed."
                 )
             )
-        self.stay_id.line_ids.write(vals)
+        lines = self.env["stay.line"].search(
+            [
+                ("stay_id", "=", self.stay_id.id),
+                ("date", ">=", self.start_date),
+                ("date", "<=", self.end_date),
+            ]
+        )
+        if not lines:
+            raise UserError(_("No stay lines to update."))
+        lines.write(vals)
         self.stay_id.write(self._prepare_write_stay())

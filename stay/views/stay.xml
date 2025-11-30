@@ -28,17 +28,24 @@
                         states="cancel"
                     />
                 <button
+                        name="%(stay_room_mass_assign_action)d"
+                        type="action"
+                        string="Assign Rooms"
+                        attrs="{'invisible': ['|', ('state', 'not in', ('draft', 'confirm', 'current')), ('assign_status', 'not in', ('none', 'partial', 'no_night'))]}"
+                        class="btn-primary"
+                    />
+                <button
                         name="guest_has_left"
                         type="object"
                         string="Guest has Left"
                         groups="stay.group_stay_user"
-                        states="current"
+                        attrs="{'invisible': ['|', ('state', '!=', 'current'), ('construction', '=', True)]}"
                     />
                 <button
                         name="%(stay_line_mass_update_action)d"
                         type="action"
                         string="Update All Lines"
-                        states="confirm,current"
+                        attrs="{'invisible': ['|', ('state', 'not in', ('confirm', 'current')), ('construction', '=', True)]}"
                     />
 
                 <button
@@ -61,6 +68,42 @@
                     attrs="{'invisible': [('construction', '=', False)]}"
                 >
                 Special stay to mark rooms as unavailable due to construction works.
+            </div>
+            <div
+                    class="alert alert-warning"
+                    role="alert"
+                    attrs="{'invisible': [('clash_time_preceding_stay_id', '=', False)]}"
+                >
+                Preceding stay <field
+                        name="clash_time_preceding_stay_id"
+                    /> leaves later than the arrival time of this stay in the same room(s).
+            </div>
+            <div
+                    class="alert alert-warning"
+                    role="alert"
+                    attrs="{'invisible': [('same_time_preceding_stay_id', '=', False)]}"
+                >
+                Preceding stay <field
+                        name="same_time_preceding_stay_id"
+                    /> leaves in the same time slot than the arrival of this stay in the same room(s).
+            </div>
+            <div
+                    class="alert alert-warning"
+                    role="alert"
+                    attrs="{'invisible': [('clash_time_next_stay_id', '=', False)]}"
+                >
+                Next stay <field
+                        name="clash_time_next_stay_id"
+                    /> arrives before the departure time of this stay in the same room(s).
+            </div>
+            <div
+                    class="alert alert-warning"
+                    role="alert"
+                    attrs="{'invisible': [('same_time_next_stay_id', '=', False)]}"
+                >
+                Next stay <field
+                        name="same_time_next_stay_id"
+                    /> arrives in the same time slot than the departure of this stay in the same room(s).
             </div>
 
             <sheet>
@@ -85,6 +128,11 @@
                         <field name="partner_name" />
                         <field name="guest_qty" />
                         <field
+                                name="tag_ids"
+                                widget="many2many_tags"
+                                options="{'color_field': 'color', 'no_create_edit': True}"
+                            />
+                        <field
                                 name="assign_status"
                                 states="confirm,current,done"
                                 decoration-success="assign_status in ('assigned', 'no_night')"
@@ -106,7 +154,7 @@
                         <field name="group_id" options="{'no_create': True}" />
                         <field
                                 name="no_meals"
-                                attrs="{'invisible': ['|', ('construction', '=', True), ('state', '!=', 'draft')]}"
+                                attrs="{'invisible': [('construction', '=', True)], 'readonly': [('state', '!=', 'draft')]}"
                             />
                         <field name="construction" invisible="1" />
                         <field
@@ -117,7 +165,7 @@
                     </group>
                 </group>
 
-                <group name="rooms" states="confirm,current,done">
+                <group name="rooms" states="draft,confirm,current,done">
                     <field
                             name="room_assign_ids"
                             nolabel="1"
@@ -127,7 +175,9 @@
                         <tree editable="bottom">
                             <field name="room_id" options="{'no_create': True}" />
                             <field name="guest_qty" />
-                            <field name="room_domain_ids" invisible="1" />
+                            <field name="conflict_room_ids" invisible="1" />
+                            <field name="company_id" invisible="1" />
+                            <field name="stay_group_id" invisible="1" />
                         </tree>
                     </field>
                 </group>
@@ -155,13 +205,19 @@
     <field name="model">stay.stay</field>
     <field name="arch" type="xml">
         <tree decoration-muted="state == 'cancel'">
-            <header>  <!-- v14+ Use same action as in the Action menu -->
+            <header>
                 <button
                         name="guest_has_left"
                         type="object"
                         string="Guest has Left"
                         groups="stay.group_stay_user"
                         states="current"
+                    />
+                <button
+                        name="stay_notify_selection_button"
+                        type="object"
+                        string="Notify by E-mail"
+                        groups="stay.group_stay_user"
                     />
             </header>
             <field name="name" decoration-bf="1" />
@@ -181,6 +237,12 @@
             <field name="departure_note" optional="show" />
             <field name="refectory_id" optional="hide" />
             <field name="rooms_display_name" string="Rooms" />
+            <field
+                    name="tag_ids"
+                    widget="many2many_tags"
+                    options="{'color_field': 'color', 'no_create_edit': True}"
+                    optional="show"
+                />
             <field
                     name="assign_status"
                     decoration-success="assign_status in ('assigned', 'no_night')"
@@ -202,6 +264,72 @@
     </field>
 </record>
 
+<!-- WARNING: if you modify this tree view, don't forget to do the same modif
+in the 1st tree view with native order -->
+<record id="stay_tree_reverse_order" model="ir.ui.view">
+    <field name="name">stay.tree.reverse.order</field>
+    <field name="model">stay.stay</field>
+    <field name="priority">1000</field>
+    <field name="arch" type="xml">
+        <tree decoration-muted="state == 'cancel'" default_order="arrival_date desc">
+            <header>  <!-- v14+ Use same action as in the Action menu -->
+                <button
+                        name="guest_has_left"
+                        type="object"
+                        string="Guest has Left"
+                        groups="stay.group_stay_user"
+                        states="current"
+                    />
+                <button
+                        name="stay_notify_selection_button"
+                        type="object"
+                        string="Notify by E-mail"
+                        groups="stay.group_stay_user"
+                    />
+            </header>
+            <field name="name" />
+            <field name="group_id" optional="show" />
+            <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    optional="hide"
+                />
+            <field name="guest_qty" />
+            <field name="partner_name" invisible="context.get('partner_view')" />
+            <field name="arrival_date" />
+            <field name="arrival_time" />
+            <field name="arrival_note" optional="show" />
+            <field name="departure_date" />
+            <field name="departure_time" />
+            <field name="departure_note" optional="show" />
+            <field name="refectory_id" optional="hide" />
+            <field name="rooms_display_name" string="Rooms" />
+            <field
+                    name="tag_ids"
+                    widget="many2many_tags"
+                    options="{'color_field': 'color', 'no_create_edit': True}"
+                    optional="show"
+                />
+            <field
+                    name="assign_status"
+                    decoration-success="assign_status in ('assigned', 'no_night')"
+                    decoration-danger="assign_status in ('over-assigned', 'error')"
+                    decoration-info="assign_status == 'none'"
+                    decoration-warning="assign_status == 'partial'"
+                    widget="badge"
+                />
+            <field
+                    name="state"
+                    decoration-info="state == 'draft'"
+                    decoration-success="state == 'confirm'"
+                    decoration-warning="state == 'current'"
+                    decoration-muted="state == 'cancel'"
+                    decoration-danger="state == 'done'"
+                    widget="badge"
+                />
+        </tree>
+    </field>
+</record>
 
 <record id="stay_search" model="ir.ui.view">
     <field name="name">stay.search</field>
@@ -220,11 +348,12 @@
                     string="Arrivals and Departures on"
                     filter_domain="['|', ('arrival_date', '=', self), ('departure_date', '=', self)]"
                 />
+            <field name="tag_ids" />
             <separator />
             <filter
-                    string="My Rooms"
-                    name="my_rooms"
-                    domain="[('user_id', '=', uid)]"
+                    string="My Stay Group"
+                    name="my_stay_group"
+                    domain="[('my_stay_group', '=', True)]"
                 />
             <separator />
             <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]" />
@@ -285,11 +414,6 @@
                         name="state_groupby"
                         string="State"
                         context="{'group_by': 'state'}"
-                    />
-                <filter
-                        name="user_groupby"
-                        string="Responsible"
-                        context="{'group_by': 'user_id'}"
                     />
                 <filter
                         name="partner_groupby"
@@ -364,7 +488,7 @@ from the calendar view, the dates are not set -->
     <field name="domain"> [('construction', '=', False)]</field>
     <field
             name="context"
-        >{'search_default_current_and_future': True, 'stay_name_get_partner_name_qty': True, 'default_construction': False}</field>
+        >{'search_default_current_and_future': True, 'search_default_my_stay_group': True, 'stay_name_get_partner_name_qty': True, 'default_construction': False}</field>
 </record>
 
 <record id="stay_construction_action" model="ir.actions.act_window">
@@ -374,7 +498,7 @@ from the calendar view, the dates are not set -->
     <field name="domain"> [('construction', '=', True)]</field>
     <field
             name="context"
-        >{'search_default_current_and_future': True, 'stay_name_get_partner_name_qty': True, 'default_construction': True}</field>
+        >{'search_default_current_and_future': True, 'search_default_my_stay_group': True, 'stay_name_get_partner_name_qty': True, 'default_construction': True}</field>
 </record>
 
 
@@ -403,6 +527,12 @@ from the calendar view, the dates are not set -->
                         invisible="not context.get('stay_room_assign_main_view')"
                     />
                 <field
+                        name="tag_ids"
+                        widget="many2many_tags"
+                        options="{'color_field': 'color', 'no_create_edit': True}"
+                        invisible="not context.get('stay_room_assign_main_view')"
+                    />
+                <field
                         name="arrival_date"
                         invisible="not context.get('stay_room_assign_main_view')"
                     />
@@ -420,8 +550,9 @@ from the calendar view, the dates are not set -->
                     />
                 <field name="room_id" />
                 <field name="guest_qty" />
-                <field name="room_domain_ids" invisible="1" />
+                <field name="conflict_room_ids" invisible="1" />
                 <field name="stay_group_id" invisible="1" />
+                <field name="company_id" invisible="1" />
                 <field
                         name="company_id"
                         groups="base.group_multi_company"
@@ -442,14 +573,23 @@ So I use the form view below by default -->
             <group name="main">
                 <field name="stay_id" readonly="1" />
                 <field name="partner_name" />
+                <field
+                        name="tag_ids"
+                        widget="many2many_tags"
+                        options="{'color_field': 'color', 'no_create_edit': True}"
+                    />
                 <field name="arrival_date" />
                 <field name="arrival_time" />
+                <field name="arrival_note" />
                 <field name="departure_date" />
                 <field name="departure_time" />
+                <field name="departure_note" />
+                <field name="notes" />
                 <field name="room_id" />
                 <field name="guest_qty" />
-                <field name="room_domain_ids" invisible="1" />
+                <field name="conflict_room_ids" invisible="1" />
                 <field name="stay_group_id" invisible="1" />
+                <field name="company_id" invisible="1" />
                 <field
                         name="company_id"
                         groups="base.group_multi_company"
@@ -467,6 +607,12 @@ So I use the form view below by default -->
     <field name="arch" type="xml">
         <tree create="0">
             <field name="stay_id" />
+            <button
+                    title="Open Stay"
+                    type="object"
+                    name="show_stay"
+                    icon="fa-arrow-right"
+                />
             <field name="arrival_date" />
             <field name="arrival_time" optional="show" />
             <field name="departure_date" />
@@ -508,7 +654,7 @@ So I use the form view below by default -->
                 default_group_by="room_id"
                 event_open_popup="true"
                 mode="week"
-                colors="#ec7063:group_id_integer == 1;#2ecb71:group_id_integer == 2;#f34242:group_id_integer == 3"
+                colors="#8bd0db:state == 'draft';#92d2a1:state == 'confirm';#ffe083:state == 'current';#ec99a1:state == 'done'"
                 zoomKey="ctrlKey"
             >
         </timeline>
@@ -541,9 +687,9 @@ So I use the form view below by default -->
                 />
             <separator />
             <filter
-                    string="My Rooms"
-                    name="my_rooms"
-                    domain="[('user_id', '=', uid)]"
+                    string="My Stay Group"
+                    name="my_stay_group"
+                    domain="[('my_stay_group', '=', True)]"
                 />
             <separator />
             <filter
@@ -576,9 +722,9 @@ So I use the form view below by default -->
                         context="{'group_by': 'group_id'}"
                     />
                 <filter
-                        name="user_groupby"
-                        string="Responsible"
-                        context="{'group_by': 'user_id'}"
+                        name="room_groupby"
+                        string="Room"
+                        context="{'group_by': 'room_id'}"
                     />
                 <filter
                         name="partner_groupby"
@@ -605,7 +751,7 @@ So I use the form view below by default -->
         because we want to have all rooms in the timeline view -->
     <field
             name="context"
-        >{'stay_name_get_partner_name_qty': True, 'stay_room_assign_main_view': True}</field>
+        >{'search_default_my_stay_group': True, 'stay_name_get_partner_name_qty': True, 'stay_room_assign_main_view': True}</field>
 </record>
 
 
@@ -636,7 +782,7 @@ So I use the form view below by default -->
                 <field name="company_id" groups="base.group_multi_company" />
                 <field name="active" invisible="1" />
             </group>
-    </sheet>
+            </sheet>
         </form>
     </field>
 </record>
@@ -729,6 +875,7 @@ So I use the form view below by default -->
                 <field name="code" />
                 <field name="company_id" groups="base.group_multi_company" />
                 <field name="company_id" invisible="1" />
+                <field name="building_id" />
                 <field name="group_id" />
                 <field name="bed_qty" />
                 <field
@@ -736,6 +883,15 @@ So I use the form view below by default -->
                             attrs="{'invisible': [('bed_qty', '=', 1)]}"
                         />
                 <field name="to_clean" />
+                <field
+                            name="next_stay_id"
+                            attrs="{'invisible': [('to_clean', '=', False)]}"
+                        />
+                <field name="fire_report_exclude" />
+                <field
+                            name="fire_report_sequence"
+                            attrs="{'invisible': [('fire_report_exclude', '=', True)]}"
+                        />
                 <field name="notes" />
                 <field name="active" invisible="1" />
             </group>
@@ -749,15 +905,22 @@ So I use the form view below by default -->
     <field name="model">stay.room</field>
     <field name="arch" type="xml">
         <tree>
-            <header>
-                <button name="mark_as_cleaned" type="object" string="Mark as Cleaned" />
-            </header>
             <field name="sequence" widget="handle" />
             <field name="name" />
             <field name="code" optional="show" />
+            <field
+                    name="building_id"
+                    optional="show"
+                    invisible="not context.get('stay_room_main_view')"
+                />
             <field name="group_id" optional="show" />
             <field name="bed_qty" />
-            <field name="to_clean" />
+            <field name="fire_report_exclude" optional="hide" />
+            <field
+                    name="fire_report_sequence"
+                    optional="hide"
+                    attrs="{'invisible': [('fire_report_exclude', '=', True)]}"
+                />
             <field
                     name="company_id"
                     groups="base.group_multi_company"
@@ -766,6 +929,30 @@ So I use the form view below by default -->
         </tree>
     </field>
 </record>
+
+<record id="stay_room_to_clean_tree" model="ir.ui.view">
+    <field name="name">stay.room.tree</field>
+    <field name="model">stay.room</field>
+    <field name="priority">1000</field>
+    <field name="arch" type="xml">
+         <tree
+                decoration-danger="next_stay_arrival_date == today"
+                decoration-warning="next_stay_arrival_date == (datetime.date.today() + datetime.timedelta(1)).strftime('%Y-%m-%d')"
+            >
+            <header>
+                <button name="mark_as_cleaned" type="object" string="Mark as Cleaned" />
+            </header>
+            <field name="display_name" string="Room" />
+            <field name="group_id" optional="show" />
+            <field name="to_clean" />
+            <field name="next_stay_id" optional="show" />
+            <field name="next_stay_partner_name" optional="show" />
+            <field name="next_stay_arrival_date" optional="show" />
+            <field name="next_stay_arrival_time" optional="show" />
+        </tree>
+    </field>
+</record>
+
 
 <record id="stay_room_search" model="ir.ui.view">
     <field name="name">stay.room.search</field>
@@ -776,12 +963,13 @@ So I use the form view below by default -->
                     name="name"
                     filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"
                 />
+            <field name="building_id" />
             <field name="group_id" />
             <separator />
             <filter
-                    name="my_rooms"
-                    string="My Rooms"
-                    domain="[('user_id', '=', uid)]"
+                    name="my_stay_group"
+                    string="My Stay Group"
+                    domain="[('my_stay_group', '=', True)]"
                 />
             <separator />
             <filter
@@ -796,16 +984,22 @@ So I use the form view below by default -->
                     name="inactive"
                     domain="[('active', '=', False)]"
                 />
+            <separator />
+            <filter
+                    name="fire_report_exclude"
+                    string="Excluded from Fire Report"
+                    domain="[('fire_report_exclude', '=', True)]"
+                />
             <group name="groupby">
+                <filter
+                        name="building_groupby"
+                        string="Building"
+                        context="{'group_by': 'building_id'}"
+                    />
                 <filter
                         name="group_groupby"
                         string="Group"
                         context="{'group_by': 'group_id'}"
-                    />
-                <filter
-                        name="user_groupby"
-                        string="Responsible"
-                        context="{'group_by': 'user_id'}"
                     />
             </group>
         </search>
@@ -816,13 +1010,18 @@ So I use the form view below by default -->
     <field name="name">Rooms</field>
     <field name="res_model">stay.room</field>
     <field name="view_mode">tree,form</field>
+    <field
+            name="context"
+        >{'search_default_my_stay_group': True, 'stay_room_main_view': True}</field>
 </record>
 
 <record id="stay_room_to_clean_action" model="ir.actions.act_window">
     <field name="name">Rooms to Clean</field>
     <field name="res_model">stay.room</field>
     <field name="view_mode">tree,form</field>
+    <field name="view_id" ref="stay_room_to_clean_tree" />
     <field name="domain">[('to_clean', '!=', False)]</field>
+    <field name="context">{'search_default_my_stay_group': True}</field>
 </record>
 
 <menuitem
@@ -851,7 +1050,6 @@ So I use the form view below by default -->
                     <field name="company_id" invisible="1" />
                     <field name="default_no_meals" />
                     <field name="default_refectory_id" />
-                    <field name="user_id" />
                     <field name="notify_user_ids" widget="many2many_tags" />
                 </group>
             </sheet>
@@ -868,7 +1066,6 @@ So I use the form view below by default -->
             <field name="name" />
             <field name="default_no_meals" optional="show" />
             <field name="default_refectory_id" optional="show" />
-            <field name="user_id" />
             <field
                     name="company_id"
                     groups="base.group_multi_company"
@@ -883,17 +1080,7 @@ So I use the form view below by default -->
     <field name="model">stay.group</field>
     <field name="arch" type="xml">
         <search>
-            <field
-                    name="name"
-                    filter_domain="['|', ('name', 'ilike', self), ('user_id', 'ilike', self)]"
-                />
-            <group name="groupby">
-                <filter
-                        name="user_groupby"
-                        string="Responsible"
-                        context="{'group_by': 'user_id'}"
-                    />
-            </group>
+            <field name="name" />
         </search>
     </field>
 </record>
@@ -931,8 +1118,10 @@ So I use the form view below by default -->
                 <field name="dinner_qty" />
                 <field name="bed_night_qty" />
                 <field name="refectory_id" />
-                <field name="group_id" />
-                <field name="user_id" />
+                <field
+                        name="group_id"
+                        attrs="{'readonly': [('stay_id', '!=', False)]}"
+                    />
                 <field name="company_id" groups="base.group_multi_company" />
                 <field name="company_id" invisible="1" />
             </group>
@@ -963,14 +1152,24 @@ So I use the form view below by default -->
                     optional="show"
                     groups="stay.group_stay_breakfast"
                 />
+            <field name="breakfast_qty" invisible="1" />
             <field name="lunch_qty" sum="1" />
             <field name="dinner_qty" sum="1" />
             <field name="bed_night_qty" sum="1" />
-            <field name="refectory_id" optional="show" />
+            <field
+                    name="refectory_id"
+                    optional="show"
+                    attrs="{'required': ['|', '|', ('breakfast_qty', '>', 0), ('lunch_qty', '>', 0), ('dinner_qty', '>', 0)]}"
+                />
             <field
                     name="rooms_display_name"
                     invisible="not context.get('stay_line_main_view')"
                     optional="show"
+                />
+            <field
+                    name="group_id"
+                    optional="hide"
+                    attrs="{'readonly': [('stay_id', '!=', False)]}"
                 />
             <field name="company_id" optional="hide" />
         </tree>
@@ -1001,9 +1200,9 @@ So I use the form view below by default -->
                 />
             <separator />
             <filter
-                    name="my_rooms"
-                    string="My Rooms"
-                    domain="[('user_id', '=', uid)]"
+                    name="my_stay_group"
+                    string="My Stay Group"
+                    domain="[('my_stay_group', '=', True)]"
                 />
             <separator />
             <group string="Group By" name="groupby">
@@ -1011,11 +1210,6 @@ So I use the form view below by default -->
                         name="group_groupby"
                         string="Group"
                         context="{'group_by': 'group_id'}"
-                    />
-                <filter
-                        name="user_groupby"
-                        string="Responsible"
-                        context="{'group_by': 'user_id'}"
                     />
                 <filter
                         name="date_groupby"
@@ -1075,7 +1269,7 @@ So I use the form view below by default -->
     <field name="view_mode">tree,form,graph,pivot</field>
     <field
             name="context"
-        >{'stay_line_main_view': True, 'search_default_current_and_future': True}</field>
+        >{'stay_line_main_view': True, 'search_default_my_stay_group': True, 'search_default_current_and_future': True}</field>
 </record>
 
 <menuitem

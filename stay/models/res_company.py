@@ -16,3 +16,13 @@ class ResCompany(models.Model):
         ondelete="restrict",
         check_company=True,
     )
+    # Warning: explicit definition of the relation table is needed here
+    # because many modules have a M2M fields from res.company to res.users
+    # and we must avoid a table name collision
+    stay_notify_user_ids = fields.Many2many(
+        "res.users",
+        relation="stay_notify_company_user_rel",
+        column1="res_company_id",
+        column2="res_users_id",
+        string="Users Notified by E-mail for Stays without Group",
+    )
