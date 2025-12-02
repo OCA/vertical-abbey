@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-12-01 18:42+0000\n"
+"PO-Revision-Date: 2025-12-02 15:42+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -25,7 +25,7 @@ msgstr "N° soggiorni"
 #. module: stay
 #: model:ir.actions.report,print_report_name:stay.report_stay_fire
 msgid "'fire-%s' % object.date"
-msgstr ""
+msgstr "'Antincendio-%s' % object.date"
 
 #. module: stay
 #: model:ir.actions.report,print_report_name:stay.report_stay_toclean
@@ -717,12 +717,12 @@ msgstr "Sera"
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room__fire_report_exclude
 msgid "Exclude from Fire Report"
-msgstr ""
+msgstr "Escludi da resoconto antincendio"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_search
 msgid "Excluded from Fire Report"
-msgstr ""
+msgstr "Escluse da resoconto antincendio"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__file_xlsx
@@ -744,12 +744,12 @@ msgstr "Finito"
 #: model:ir.actions.act_window,name:stay.stay_fire_print_action
 #: model:ir.ui.menu,name:stay.stay_fire_print_menu
 msgid "Fire Report"
-msgstr ""
+msgstr "Resoconto antincendio"
 
 #. module: stay
 #: model:ir.actions.report,name:stay.report_stay_fire
 msgid "Fire Security"
-msgstr ""
+msgstr "Sicurezza antincendio"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_follower_ids
@@ -1385,7 +1385,7 @@ msgstr "Soggiorno aperto"
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room__fire_report_sequence
 msgid "Order for Fire Report"
-msgstr ""
+msgstr "Ordinamento per resoconto antincendio"
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_date_label_action
@@ -1466,7 +1466,7 @@ msgstr "Stampa il resoconto <b>Da pulire</b>."
 #. module: stay
 #: model:ir.model,name:stay.model_stay_fire_print
 msgid "Print the Fire Report"
-msgstr ""
+msgstr "Stampa il resoconto antincendio"
 
 #. module: stay
 #: model:ir.model,name:stay.model_stay_journal_print
