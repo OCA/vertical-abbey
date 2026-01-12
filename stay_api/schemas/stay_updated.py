@@ -8,6 +8,6 @@ from pydantic import BaseModel
 class StayUpdated(BaseModel):
     name: str
     id: int
-    phone: str = None
-    mobile: str = None
-    partner_id: int = None
+    phone: str | None = None
+    mobile: str | None = None
+    partner_id: int | None = None

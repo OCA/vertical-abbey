@@ -227,8 +227,8 @@ def stay_read(
                     "lastname": stay.partner_id.lastname,
                 }
             )
-        if stay.partner_id.title and stay.partner_id.title.stay_code:
-            vals["title"] = stay.partner_id.title.stay_code
+        if stay.partner_id.title and stay.partner_id.title.api_code:
+            vals["title"] = stay.partner_id.title.api_code
     logger.info("Stay controller /read answer: %s", vals)
     return StayRead(**vals)
 

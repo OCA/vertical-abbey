@@ -10,6 +10,6 @@ class StayCreated(BaseModel):
     id: int
     uuid: str
     company_id: int
-    phone: str = None
-    mobile: str = None
-    partner_id: int = None
+    phone: str | None = None
+    mobile: str | None = None
+    partner_id: int | None = None

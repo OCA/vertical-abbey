@@ -10,6 +10,8 @@ from requests.models import PreparedRequest
 
 from odoo import _, api, fields, models
 
+from odoo.addons.phone_validation.tools import phone_validation
+
 logger = logging.getLogger(__name__)
 
 
@@ -31,7 +33,7 @@ class StayStay(models.Model):
     controller_lastname = fields.Char(tracking=True, string="Lastname")
     controller_title_id = fields.Many2one(
         "res.partner.title",
-        domain=[("stay_code", "!=", False)],
+        domain=[("api_code", "!=", False)],
         string="Title",
         tracking=True,
     )
@@ -76,11 +78,11 @@ class StayStay(models.Model):
         assert api_name
         try:
             UUID(uuid, version=UUID_VERSION)
-        except ValueError:
+        except ValueError as e:
             error_msg = f"uuid '{uuid}' is not a valid uuid version 4."
             raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=error_msg
-            )
+            ) from e
         stays = self.search([("controller_uuid", "=", uuid)], order="id desc")
         if not stays:
             error_msg = f"No stay with uuid '{uuid}' in the database."
@@ -205,16 +207,16 @@ class StayStay(models.Model):
         title_id = False
         if title_code:
             title = self.env["res.partner.title"].search(
-                [("stay_code", "=", title_code)], limit=1
+                [("api_code", "=", title_code)], limit=1
             )
             if title:
                 title_id = title.id
                 partner_name = f"{title.shortcut or title.name} {partner_name}"
             else:
                 avail_title_read = self.env["res.partner.title"].search_read(
-                    [("stay_code", "!=", False)], ["stay_code"]
+                    [("api_code", "!=", False)], ["api_code"]
                 )
-                avail_title_list = [x["stay_code"] for x in avail_title_read]
+                avail_title_list = [x["api_code"] for x in avail_title_read]
                 error_msg = (
                     f"Wrong title: {title_code}. "
                     f"Possible values: {', '.join(avail_title_list)}."
@@ -238,8 +240,8 @@ class StayStay(models.Model):
             if country:
                 country_id = country.id
                 if phone:
-                    phone = self.env["phone.validation.mixin"].phone_format(
-                        phone, country=country
+                    phone = phone_validation.phone_format(
+                        phone, country.code, country.phone_code
                     )
                     logger.info(
                         "Phone number reformatted from %s to %s (country %s)",
@@ -248,8 +250,8 @@ class StayStay(models.Model):
                         country.name,
                     )
                 if mobile:
-                    mobile = self.env["phone.validation.mixin"].phone_format(
-                        mobile, country=country
+                    mobile = phone_validation.phone_format(
+                        mobile, country.code, country.phone_code
                     )
                     logger.info(
                         "Mobile number reformatted from %s to %s (country %s)",
@@ -284,63 +286,7 @@ class StayStay(models.Model):
             "controller_notes": "<br>".join(notes_list),
         }
         if try_match_partner:
-            vals["partner_id"] = self._controller_try_match_partner(vals)
+            vals["partner_id"] = self.env["res.partner"]._controller_try_match_partner(
+                vals
+            )
         return vals
-
-    def _controller_try_match_partner(self, vals):
-        email = vals["controller_email"]
-        mobile = vals["controller_mobile"]
-        partner_id = None
-        if "res.partner.phone" in self.env:  # module base_partner_one2many_phone
-            partner_phone = (
-                self.env["res.partner.phone"]
-                .sudo()
-                .search_read(
-                    [
-                        ("type", "in", ("1_email_primary", "2_email_secondary")),
-                        ("email", "=ilike", email),
-                        ("partner_id", "!=", False),
-                    ],
-                    ["partner_id"],
-                    limit=1,
-                )
-            )
-            if partner_phone:
-                partner_id = partner_phone[0]["partner_id"][0]
-        else:
-            partner = self.env["res.partner"].search_read(
-                [("email", "=ilike", email)], ["id"], limit=1
-            )
-            if partner:
-                partner_id = partner[0]["id"]
-        if partner_id:
-            logger.info("Match on email %s with partner ID %d", email, partner_id)
-        # 'and vals['controller_country_id'] to make sure the mobile phone has been reformatted
-        if not partner_id and mobile and vals["controller_country_id"]:
-            if "res.partner.phone" in self.env:  # module base_partner_one2many_phone
-                partner_phone = (
-                    self.env["res.partner.phone"]
-                    .sudo()
-                    .search_read(
-                        [
-                            ("type", "in", ("5_mobile_primary", "6_mobile_secondary")),
-                            ("phone", "=", mobile),
-                            ("partner_id", "!=", False),
-                        ],
-                        ["partner_id"],
-                        limit=1,
-                    )
-                )
-                if partner_phone:
-                    partner_id = partner_phone[0]["partner_id"][0]
-            else:
-                partner = self.env["res.partner"].search_read(
-                    [("mobile", "=", mobile)], ["id"], limit=1
-                )
-                if partner:
-                    partner_id = partner[0]["id"]
-            if partner_id:
-                logger.info("Match on mobile %s with partner ID %d", mobile, partner_id)
-        if not partner_id:
-            logger.info("No match on an existing partner")
-        return partner_id
