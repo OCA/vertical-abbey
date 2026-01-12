@@ -9,20 +9,20 @@ from pydantic import BaseModel
 class StayUpdate(BaseModel):
     uuid: str
     lastname: str
-    firstname: str = None
-    title: str = None
+    firstname: str | None = None
+    title: str | None = None
     email: str
-    phone: str = None
-    mobile: str = None
+    phone: str | None = None
+    mobile: str | None = None
     arrival_time: str
-    arrival_note: str = None
+    arrival_note: str | None = None
     departure_time: str
-    departure_note: str = None
-    company_id: int = None
-    message: str = None
-    notes_list: list = None
-    country_code: str = None
-    street: str = None
-    street2: str = None
-    zip: str = None
-    city: str = None
+    departure_note: str | None = None
+    company_id: int | None = None
+    message: str | None = None
+    notes_list: list | None = None
+    country_code: str | None = None
+    street: str | None = None
+    street2: str | None = None
+    zip: str | None = None
+    city: str | None = None

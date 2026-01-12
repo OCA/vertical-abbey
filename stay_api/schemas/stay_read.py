@@ -12,18 +12,18 @@ class StayRead(BaseModel):
     arrival_date: date
     departure_date: date
     name: str
-    lastname: str = None
-    firstname: str = None
-    title: str = None
-    email: str = None
-    phone: str = None
-    mobile: str = None
-    arrival_time: str = None
-    arrival_note: str = None
-    departure_time: str = None
-    departure_note: str = None
-    country_code: str = None
-    street: str = None
-    street2: str = None
-    zip: str = None
-    city: str = None
+    lastname: str | None = None
+    firstname: str | None = None
+    title: str | None = None
+    email: str | None = None
+    phone: str | None = None
+    mobile: str | None = None
+    arrival_time: str | None = None
+    arrival_note: str | None = None
+    departure_time: str | None = None
+    departure_note: str | None = None
+    country_code: str | None = None
+    street: str | None = None
+    street2: str | None = None
+    zip: str | None = None
+    city: str | None = None
