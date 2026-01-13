@@ -55,7 +55,7 @@ class TestDonationFromStay(TransactionCase):
             {
                 "name": "Donation Payment account",
                 "code": "TESTDONPAY",
-                "company_ids": [Command.set(company.id)],
+                "company_ids": [Command.set([company.id])],
                 "account_type": "asset_current",
                 "reconcile": True,
             }
