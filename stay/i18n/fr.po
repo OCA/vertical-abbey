@@ -471,6 +471,7 @@ msgstr ""
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_construction_action
+#: model:ir.model.fields,field_description:stay.field_stay_room_assign__construction
 #: model:ir.model.fields,field_description:stay.field_stay_stay__construction
 #: model:ir.ui.menu,name:stay.stay_construction_menu
 msgid "Construction"
