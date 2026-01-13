@@ -12,7 +12,7 @@ class ResCompany(models.Model):
         "product.product",
         string="Product for Stay Donations",
         ondelete="restrict",
-        domain=[("detailed_type", "=", "donation")],
+        domain=[("donation_type", "=", "donation")],
     )
     donation_stay_campaign_id = fields.Many2one(
         "donation.campaign", string="Campaign for Stay Donations", ondelete="restrict"
