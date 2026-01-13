@@ -29,12 +29,15 @@
                     name="show_donations"
                     icon="fa-heart-o"
                 >
-                    <field string="Donations" name="donation_total" widget="statinfo" />
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="company_currency_id" invisible="1" />
+                            <field name="donation_total" widget="monetary" />
+                        </span>
+                        <span class="o_stat_text">Donations</span>
+                    </div>
                 </button>
             </div>
-            <group name="right" position="inside">
-                <field name="company_currency_id" invisible="1" />
-            </group>
         </field>
     </record>
 
