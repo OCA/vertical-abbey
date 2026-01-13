@@ -978,7 +978,8 @@ class StayRoomAssign(models.Model):
     notes = fields.Text(related="stay_id.notes", store=True, readonly=False)
     partner_id = fields.Many2one(related="stay_id.partner_id", store=True)
     partner_name = fields.Text(related="stay_id.partner_name", store=True)
-    company_id = fields.Many2one(related="stay_id.company_id", store=True)
+    company_id = fields.Many2one(related="stay_id.company_id", store=True, index=True)
+    construction = fields.Boolean(related="stay_id.construction", store=True)
     # for filter
     my_stay_group = fields.Boolean(
         compute="_compute_my_stay_group", search="_search_my_stay_group"

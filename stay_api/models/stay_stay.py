@@ -31,7 +31,7 @@ class StayStay(models.Model):
     controller_lastname = fields.Char(tracking=True, string="Lastname")
     controller_title_id = fields.Many2one(
         "res.partner.title",
-        domain=[("stay_code", "!=", False)],
+        domain=[("api_code", "!=", False)],
         string="Title",
         tracking=True,
     )
@@ -205,16 +205,16 @@ class StayStay(models.Model):
         title_id = False
         if title_code:
             title = self.env["res.partner.title"].search(
-                [("stay_code", "=", title_code)], limit=1
+                [("api_code", "=", title_code)], limit=1
             )
             if title:
                 title_id = title.id
                 partner_name = f"{title.shortcut or title.name} {partner_name}"
             else:
                 avail_title_read = self.env["res.partner.title"].search_read(
-                    [("stay_code", "!=", False)], ["stay_code"]
+                    [("api_code", "!=", False)], ["api_code"]
                 )
-                avail_title_list = [x["stay_code"] for x in avail_title_read]
+                avail_title_list = [x["api_code"] for x in avail_title_read]
                 error_msg = (
                     f"Wrong title: {title_code}. "
                     f"Possible values: {', '.join(avail_title_list)}."
@@ -284,63 +284,7 @@ class StayStay(models.Model):
             "controller_notes": "<br>".join(notes_list),
         }
         if try_match_partner:
-            vals["partner_id"] = self._controller_try_match_partner(vals)
+            vals["partner_id"] = self.env["res.partner"]._controller_try_match_partner(
+                vals
+            )
         return vals
-
-    def _controller_try_match_partner(self, vals):
-        email = vals["controller_email"]
-        mobile = vals["controller_mobile"]
-        partner_id = None
-        if "res.partner.phone" in self.env:  # module base_partner_one2many_phone
-            partner_phone = (
-                self.env["res.partner.phone"]
-                .sudo()
-                .search_read(
-                    [
-                        ("type", "in", ("1_email_primary", "2_email_secondary")),
-                        ("email", "=ilike", email),
-                        ("partner_id", "!=", False),
-                    ],
-                    ["partner_id"],
-                    limit=1,
-                )
-            )
-            if partner_phone:
-                partner_id = partner_phone[0]["partner_id"][0]
-        else:
-            partner = self.env["res.partner"].search_read(
-                [("email", "=ilike", email)], ["id"], limit=1
-            )
-            if partner:
-                partner_id = partner[0]["id"]
-        if partner_id:
-            logger.info("Match on email %s with partner ID %d", email, partner_id)
-        # 'and vals['controller_country_id'] to make sure the mobile phone has been reformatted
-        if not partner_id and mobile and vals["controller_country_id"]:
-            if "res.partner.phone" in self.env:  # module base_partner_one2many_phone
-                partner_phone = (
-                    self.env["res.partner.phone"]
-                    .sudo()
-                    .search_read(
-                        [
-                            ("type", "in", ("5_mobile_primary", "6_mobile_secondary")),
-                            ("phone", "=", mobile),
-                            ("partner_id", "!=", False),
-                        ],
-                        ["partner_id"],
-                        limit=1,
-                    )
-                )
-                if partner_phone:
-                    partner_id = partner_phone[0]["partner_id"][0]
-            else:
-                partner = self.env["res.partner"].search_read(
-                    [("mobile", "=", mobile)], ["id"], limit=1
-                )
-                if partner:
-                    partner_id = partner[0]["id"]
-            if partner_id:
-                logger.info("Match on mobile %s with partner ID %d", mobile, partner_id)
-        if not partner_id:
-            logger.info("No match on an existing partner")
-        return partner_id
