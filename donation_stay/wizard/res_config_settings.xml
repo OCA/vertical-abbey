@@ -13,7 +13,10 @@
             <app name="stay" position="inside">
                 <block title="Donation for a Stay" id="donation_stay">
                     <setting id="donation_stay_product_id">
-                        <field name="donation_stay_product_id" />
+                        <field
+                            name="donation_stay_product_id"
+                            context="{'default_type': 'service', 'default_donation_type': 'donation', 'default_purchase_ok': False}"
+                        />
                     </setting>
                     <setting id="donation_stay_campaign_id">
                         <field name="donation_stay_campaign_id" />
