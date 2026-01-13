@@ -4,7 +4,9 @@
 # @author: Alexis de Lattre <alexis.delattre@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _, api, fields, models
+from markupsafe import Markup
+
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -15,8 +17,8 @@ class DonationStayCreate(models.TransientModel):
     stay_id = fields.Many2one("stay.stay", string="Stay", required=True)
     company_id = fields.Many2one("res.company", string="Company", required=True)
     partner_id = fields.Many2one("res.partner", string="Guest", required=True)
-    payment_mode_id = fields.Many2one(
-        "account.payment.mode",
+    payment_method_line_id = fields.Many2one(
+        "account.payment.method.line",
         string="Payment Mode",
         required=True,
         domain="[('donation', '=', True), ('company_id', '=', company_id)]",
@@ -51,15 +53,19 @@ class DonationStayCreate(models.TransientModel):
 
     def _prepare_donation(self):
         if self.currency_id.compare_amounts(self.amount, 0) <= 0:
-            raise UserError(_("The amount of the donation is not set or negative."))
+            raise UserError(
+                self.env._("The amount of the donation is not set or negative.")
+            )
         company = self.company_id
         assert self.stay_id.company_id == company
-        campaign_id = company.donation_stay_campaign_id.id or False
+        commercial_partner = self.partner_id.commercial_partner_id
         stay_donation_product = company.donation_stay_product_id
         if not stay_donation_product:
             raise UserError(
-                _("Donation Stay Product not set on company '%s'.")
-                % company.display_name
+                self.env._(
+                    "Donation Stay Product not set on company '%s'.",
+                    company.display_name,
+                )
             )
         line_vals = {
             "product_id": stay_donation_product.id,
@@ -69,15 +75,15 @@ class DonationStayCreate(models.TransientModel):
         vals = {
             "stay_id": self.stay_id.id,
             "partner_id": self.partner_id.id,
-            "payment_mode_id": self.payment_mode_id.id,
+            "payment_method_line_id": self.payment_method_line_id.id,
             "currency_id": self.currency_id.id,
             "payment_ref": self.payment_ref,
             "check_total": self.amount,
             "donation_date": self.date_donation,
-            "campaign_id": campaign_id,
-            "line_ids": [(0, 0, line_vals)],
+            "campaign_id": company.donation_stay_campaign_id.id or False,
+            "line_ids": [Command.create(line_vals)],
             "company_id": self.company_id.id,
-            "tax_receipt_option": self.partner_id.commercial_partner_id.tax_receipt_option,
+            "tax_receipt_option": commercial_partner.tax_receipt_option,
         }
         return vals
 
@@ -86,18 +92,21 @@ class DonationStayCreate(models.TransientModel):
         donation_vals = self._prepare_donation()
         donation = self.env["donation.donation"].create(donation_vals)
         donation.message_post(
-            body=_(
-                "Donation created from stay "
-                "<a href=# data-oe-model=stay.stay data-oe-id=%(stay_id)s>%(stay)s</a>.",
-                stay_id=self.stay_id.id,
-                stay=self.stay_id.display_name,
+            body=Markup(
+                self.env._(
+                    "Donation created from stay "
+                    "<a href=# data-oe-model=stay.stay "
+                    "data-oe-id=%(stay_id)s>%(stay)s</a>.",
+                    stay_id=self.stay_id.id,
+                    stay=self.stay_id.display_name,
+                )
             )
         )
         action = self.env["ir.actions.actions"]._for_xml_id("donation.donation_action")
         action.update(
             {
                 "views": False,
-                "view_mode": "form,tree,pivot,graph",
+                "view_mode": "form,list,pivot,graph",
                 "res_id": donation.id,
             }
         )

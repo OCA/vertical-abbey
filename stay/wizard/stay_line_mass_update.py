@@ -65,7 +65,8 @@ class StayLineMassUpdate(models.TransientModel):
         if self.start_date > self.end_date:
             raise UserError(
                 _(
-                    "The start date (%(start_date)s) is after the end date (%(end_date)s).",
+                    "The start date (%(start_date)s) is after the "
+                    "end date (%(end_date)s).",
                     start_date=format_date(self.env, self.start_date),
                     end_date=format_date(self.env, self.end_date),
                 )

@@ -5,13 +5,10 @@
 import logging
 from uuid import uuid4
 
-from odoo import SUPERUSER_ID, api
-
 logger = logging.getLogger(__name__)
 
 
-def stay_api_postinstall(cr, registry):
-    env = api.Environment(cr, SUPERUSER_ID, {})
+def stay_api_postinstall(env):
     logger.info("Starting to write uuid on stays")
     stays = env["stay.stay"].search([("controller_uuid", "=", False)])
     for stay in stays:

@@ -143,7 +143,8 @@ class StayStay(models.Model):
         )
         stay.message_post(
             body=_(
-                "API call %(api_name)s accepted because stay is in %(state_label)s state.",
+                "API call %(api_name)s accepted because stay "
+                "is in %(state_label)s state.",
                 api_name=api_name,
                 state_label=state2label[stay.state],
             )

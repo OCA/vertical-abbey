@@ -6,13 +6,11 @@
   License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 -->
 <odoo noupdate="1">
-
-<record id="stay_seq" model="ir.sequence">
-    <field name="name">Stay</field>
-    <field name="code">stay.stay</field>
-    <field name="prefix">H</field>
-    <field name="padding">4</field>
-    <field name="company_id" eval="False" />
-</record>
-
+    <record id="stay_seq" model="ir.sequence">
+        <field name="name">Stay</field>
+        <field name="code">stay.stay</field>
+        <field name="prefix">H</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False" />
+    </record>
 </odoo>

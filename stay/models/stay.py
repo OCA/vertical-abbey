@@ -49,7 +49,6 @@ class StayStay(models.Model):
         required=True,
         default=lambda self: self.env.company,
         readonly=True,
-        states={"draft": [("readonly", False)]},
         index=True,
     )
     partner_id = fields.Many2one(
@@ -109,7 +108,6 @@ class StayStay(models.Model):
         "stay.room.assign",
         "stay_id",
         string="Room Assignments",
-        states={"cancel": [("readonly", True)]},
         copy=True,
     )
     # Here, group_id is not a related of room, because we want to be able
@@ -131,7 +129,6 @@ class StayStay(models.Model):
         "stay.line",
         "stay_id",
         string="Stay Lines",
-        states={"draft": [("readonly", True)], "cancel": [("readonly", True)]},
     )
     refectory_id = fields.Many2one(
         "stay.refectory",
@@ -387,7 +384,7 @@ class StayStay(models.Model):
     @api.model
     def _convert_to_datetime_naive_utc(self, date, time_sel):
         # Convert from local time to datetime naive UTC
-        datetime_str = "%s %s" % (date, TIMEDICT[time_sel])
+        datetime_str = f"{date} {TIMEDICT[time_sel]}"
         datetime_naive = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
         admin_user = self.env["res.users"].browse(SUPERUSER_ID)
         if admin_user.tz:
@@ -582,26 +579,31 @@ class StayStay(models.Model):
                                 )
                             )
 
+    @api.depends_context(
+        "stay_name_get_partner_name",
+        "stay_name_get_partner_name_qty",
+        "stay_name_get_partner_name_qty_room",
+    )
     @api.depends("partner_name", "name", "rooms_display_name", "state")
-    def name_get(self):
-        res = []
+    def _compute_display_name(self):
         state2label = dict(self.fields_get("state", "selection")["state"]["selection"])
         for stay in self:
             state = state2label.get(stay.state)
-            short_partner_name = shorten(stay.partner_name, 35)
+            short_partner_name = (
+                stay.partner_name and shorten(stay.partner_name, 35) or ""
+            )
             if self._context.get("stay_name_get_partner_name"):
-                name = "%s, %s" % (short_partner_name, state)
+                name = f"{short_partner_name}, {state}"
             elif self._context.get("stay_name_get_partner_name_qty"):
-                name = "%s (%d), %s" % (short_partner_name, stay.guest_qty, state)
+                name = f"{short_partner_name} ({stay.guest_qty}), {state}"
             elif self._context.get("stay_name_get_partner_name_qty_room"):
-                name = "%s (%d)" % (short_partner_name, stay.guest_qty)
+                name = f"{short_partner_name} ({stay.guest_qty})"
                 if stay.rooms_display_name:
-                    name += " [%s]" % stay.rooms_display_name
-                name += ", %s" % state
+                    name += f" [{stay.rooms_display_name}]"
+                name += f", {state}"
             else:
-                name = "%s, %s" % (stay.name, state)
-            res.append((stay.id, name))
-        return res
+                name = "{stay.name}, {state}"
+            stay.display_name = name
 
     def _prepare_stay_line(self, date):  # noqa: C901
         self.ensure_one()
@@ -1016,7 +1018,8 @@ class StayRoomAssign(models.Model):
             if assign.guest_qty > assign.room_id.bed_qty:
                 raise UserError(
                     _(
-                        "Room %(room)s only has %(bed_qty)d bed capacity, not %(guest_qty)d!",
+                        "Room %(room)s only has %(bed_qty)d bed capacity, "
+                        "not %(guest_qty)d!",
                         room=assign.room_id.display_name,
                         bed_qty=assign.room_id.bed_qty,
                         guest_qty=assign.guest_qty,
@@ -1066,17 +1069,16 @@ class StayRoomAssign(models.Model):
         date = self.arrival_date
         departure_date = self.departure_date
         while date < departure_date:
-            rg_res = self.read_group(
+            rg_res = self._read_group(
                 [
                     ("room_id", "=", self.room_id.id),
                     ("arrival_date", "<=", date),
                     ("departure_date", ">", date),
                 ],
-                ["guest_qty"],
-                [],
+                aggregates=["guest_qty:sum"],
             )
             # The result includes the current stay
-            qty = rg_res and rg_res[0]["guest_qty"] or 0
+            qty = rg_res and rg_res[0][0] or 0
             if qty > bed_qty:
                 raise ValidationError(
                     _(
@@ -1131,9 +1133,9 @@ class StayRoomAssign(models.Model):
             conflict_room_ids = {cass["room_id"][0] for cass in conflict_assigns}
             assign.conflict_room_ids = list(conflict_room_ids)
 
+    @api.depends_context("display_name_with_room")
     @api.depends("partner_name", "arrival_time", "departure_time", "room_id")
-    def name_get(self):
-        res = []
+    def _compute_display_name(self):
         with_room = self._context.get("display_name_with_room")
         for assign in self:
             name = assign.partner_name
@@ -1141,8 +1143,7 @@ class StayRoomAssign(models.Model):
                 name = f"({assign.guest_qty}) {name}"
             if with_room:
                 name = f"{name} {assign.room_id.code or assign.room_id.name}"
-            res.append((assign.id, name))
-        return res
+            assign.display_name = name
 
     @api.onchange("room_id")
     def room_id_change(self):
@@ -1163,7 +1164,7 @@ class StayRoomAssign(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("stay.stay_action")
         action.update(
             {
-                "view_mode": "form,tree,calendar,graph,pivot",
+                "view_mode": "form,list,calendar,graph,pivot",
                 "res_id": self.stay_id.id,
                 "views": False,
             }
@@ -1222,14 +1223,12 @@ class StayRefectory(models.Model):
     ]
 
     @api.depends("name", "code")
-    def name_get(self):
-        res = []
+    def _compute_display_name(self):
         for ref in self:
             name = ref.name
             if ref.code:
                 name = f"[{ref.code}] {name}"
-            res.append((ref.id, name))
-        return res
+            ref.display_name = name
 
 
 class StayRoom(models.Model):
@@ -1361,14 +1360,12 @@ class StayRoom(models.Model):
             room.next_stay_arrival_time = next_stay and next_stay.arrival_time or False
 
     @api.depends("name", "code")
-    def name_get(self):
-        res = []
+    def _compute_display_name(self):
         for room in self:
             name = room.name
             if room.code:
                 name = f"[{room.code}] {name}"
-            res.append((room.id, name))
-        return res
+            room.display_name = name
 
     def mark_as_cleaned(self):
         self.write({"to_clean": False})

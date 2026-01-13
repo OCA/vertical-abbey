@@ -12,10 +12,12 @@ class ResPartner(models.Model):
 
     @api.depends("stay_ids.partner_id")
     def _compute_stay_count(self):
-        rg_res = self.env["stay.stay"].read_group(
-            [("partner_id", "in", self.ids)], ["partner_id"], ["partner_id"]
+        rg_res = self.env["stay.stay"]._read_group(
+            [("partner_id", "in", self.ids)],
+            groupby=["partner_id"],
+            aggregates=["__count"],
         )
-        mapped_data = {x["partner_id"][0]: x["partner_id_count"] for x in rg_res}
+        mapped_data = {partner.id: stay_count for (partner, stay_count) in rg_res}
         for partner in self:
             partner.stay_count = mapped_data.get(partner.id, 0)
 
@@ -23,7 +25,6 @@ class ResPartner(models.Model):
     stay_count = fields.Integer(
         compute="_compute_stay_count",
         string="# of Stays",
-        readonly=True,
         compute_sudo=True,
     )
 

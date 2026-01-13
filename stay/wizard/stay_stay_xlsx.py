@@ -8,7 +8,7 @@ from io import BytesIO
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -36,7 +36,7 @@ class StayStayXlsx(models.TransientModel):
             {
                 "start_date": today_dt,
                 "end_date": end_date_dt,
-                "group_ids": groups and groups.ids or [],
+                "group_ids": [Command.set(groups.ids)],
                 "company_id": company_id,
             }
         )
@@ -191,7 +191,8 @@ class StayStayXlsx(models.TransientModel):
 
         workbook.close()
         file_data.seek(0)
-        filename = "Stay_%s.xlsx" % fields.Date.context_today(self)
+        today = fields.Date.context_today(self)
+        filename = f"Stay_{today}.xlsx"
         export_file_b64 = base64.encodebytes(file_data.read())
         self.write(
             {

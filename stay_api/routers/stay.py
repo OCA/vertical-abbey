@@ -3,13 +3,8 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import logging
-import sys
 from datetime import date, datetime, timedelta
-
-if sys.version_info >= (3, 9):
-    from typing import Annotated
-else:
-    from typing_extensions import Annotated
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
 

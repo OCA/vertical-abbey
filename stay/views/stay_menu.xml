@@ -7,9 +7,7 @@
   License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 -->
 <odoo>
-
-
-<menuitem
+    <menuitem
         id="stay_top_menu"
         sequence="5"
         name="Stays"
@@ -17,16 +15,20 @@
         web_icon="stay,static/description/icon.png"
     />
 
-<menuitem id="stay_sub_menu" sequence="10" name="Stays" parent="stay_top_menu" />
+    <menuitem id="stay_sub_menu" sequence="10" name="Stays" parent="stay_top_menu" />
 
-<menuitem id="stay_report_menu" sequence="20" name="Reports" parent="stay_top_menu" />
+    <menuitem
+        id="stay_report_menu"
+        sequence="20"
+        name="Reports"
+        parent="stay_top_menu"
+    />
 
-<menuitem
+    <menuitem
         id="stay_configuration"
         sequence="50"
         name="Configuration"
         parent="stay_top_menu"
         groups="group_stay_manager"
     />
-
 </odoo>

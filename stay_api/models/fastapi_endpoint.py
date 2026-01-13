@@ -29,7 +29,7 @@ class FastapiEndpoint(models.Model):
     def _get_app(self) -> FastAPI:
         app = super()._get_app()
         if self.app == "stay":
-            app.dependency_overrides[
-                authenticated_partner_impl
-            ] = authenticated_partner_from_basic_auth_user
+            app.dependency_overrides[authenticated_partner_impl] = (
+                authenticated_partner_from_basic_auth_user
+            )
         return app

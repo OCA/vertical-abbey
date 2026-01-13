@@ -5,14 +5,12 @@
   License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 -->
 <odoo noupdate="1">
-
-<record
+    <record
         id="room_transition_config_param"
         model="ir.config_parameter"
         forcecreate="True"
     >
-    <field name="key">stay.room_transition</field>
-    <field name="value">one_empty_period</field>
-</record>
-
+        <field name="key">stay.room_transition</field>
+        <field name="value">one_empty_period</field>
+    </record>
 </odoo>

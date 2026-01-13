@@ -26,17 +26,14 @@ class StayStay(models.Model):
 
     @api.depends("donation_ids.state", "donation_ids.amount_total_company_currency")
     def _compute_donation(self):
-        rg_res = self.env["donation.donation"].read_group(
+        rg_res = self.env["donation.donation"]._read_group(
             [("stay_id", "in", self.ids), ("state", "in", ("draft", "done"))],
-            ["stay_id", "amount_total_company_currency:sum"],
-            ["stay_id"],
+            aggregates=["__count", "amount_total_company_currency:sum"],
+            groupby=["stay_id"],
         )
         mapped_data = {
-            x["stay_id"][0]: {
-                "total": x["amount_total_company_currency"],
-                "count": x["stay_id_count"],
-            }
-            for x in rg_res
+            stay.id: {"count": stay_count, "total": amount_total}
+            for (stay, stay_count, amount_total) in rg_res
         }
         for stay in self:
             stay.donation_total = mapped_data.get(stay.id, {"total": 0})["total"]
@@ -51,7 +48,7 @@ class StayStay(models.Model):
                     "res_id": self.donation_ids.id,
                     "views": False,
                     "view_id": False,
-                    "view_mode": "form,tree,pivot,graph",
+                    "view_mode": "form,list,pivot,graph",
                 }
             )
         else:

@@ -6,6 +6,7 @@ from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
 
+from odoo import Command
 from odoo.tests.common import TransactionCase
 
 
@@ -50,15 +51,25 @@ class TestDonationFromStay(TransactionCase):
                 "company_id": company.id,
             }
         )
-        payment_mode = self.env["account.payment.mode"].create(
+        payment_account = self.env["account.account"].create(
+            {
+                "name": "Donation Payment account",
+                "code": "TESTDONPAY",
+                "company_ids": [Command.set(company.id)],
+                "account_type": "asset_current",
+                "reconcile": True,
+            }
+        )
+        payment_method_line = self.env["account.payment.method.line"].create(
             {
                 "name": "test_payment_mode",
                 "donation": True,
                 "bank_account_link": "fixed",
-                "fixed_journal_id": bank_journal.id,
+                "journal_id": bank_journal.id,
                 "payment_method_id": self.env.ref(
                     "account.account_payment_method_manual_in"
                 ).id,
+                "payment_account_id": payment_account.id,
                 "company_id": company.id,
             }
         )
@@ -69,7 +80,7 @@ class TestDonationFromStay(TransactionCase):
             active_model="stay.stay",
         ).create(
             {
-                "payment_mode_id": payment_mode.id,
+                "payment_method_line_id": payment_method_line.id,
                 "amount": 200,
                 "payment_ref": payment_ref,
             }
@@ -91,5 +102,5 @@ class TestDonationFromStay(TransactionCase):
         self.assertEqual(donation.partner_id, stay.partner_id)
         donation.validate()
         self.assertEqual(donation.move_id.state, "posted")
-        self.assertEqual(donation.payment_mode_id, payment_mode)
+        self.assertEqual(donation.payment_method_line_id, payment_method_line)
         self.assertEqual(donation.payment_ref, payment_ref)

@@ -7,75 +7,68 @@
   License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 -->
 <odoo>
-
-<record id="stay_add_donation_form" model="ir.ui.view">
-    <field name="name">add.donation.from.stay.form</field>
-    <field name="model">stay.stay</field>
-    <field name="inherit_id" ref="stay.stay_form" />
-    <field name="arch" type="xml">
-        <button name="cancel" position="before">
-            <button
+    <record id="stay_add_donation_form" model="ir.ui.view">
+        <field name="name">add.donation.from.stay.form</field>
+        <field name="model">stay.stay</field>
+        <field name="inherit_id" ref="stay.stay_form" />
+        <field name="arch" type="xml">
+            <button name="cancel" position="before">
+                <button
                     type="action"
                     string="Create Donation"
                     name="%(create_donation_stay_action)d"
                     groups="donation.group_donation_user"
-                    attrs="{'invisible': [('state', 'in', ('cancel', 'draft'))]}"
+                    invisible="state in ('cancel', 'draft')"
                 />
-        </button>
-        <div name="button_box" position="inside">
-            <button
+            </button>
+            <div name="button_box" position="inside">
+                <button
                     class="oe_stat_button"
                     type="object"
                     groups="donation.group_donation_viewer"
                     name="show_donations"
                     icon="fa-heart-o"
                 >
-                        <field
-                        string="Donations"
-                        name="donation_total"
-                        widget="statinfo"
-                    />
-            </button>
-        </div>
-        <group name="right" position="inside">
-            <field name="company_currency_id" invisible="1" />
-        </group>
-    </field>
-</record>
-
-<record id="stay_tree" model="ir.ui.view">
-    <field name="name">donation.stay.tree</field>
-    <field name="model">stay.stay</field>
-    <field name="inherit_id" ref="stay.stay_tree" />
-    <field name="arch" type="xml">
-        <field name="assign_status" position="after">
-            <field name="donation_total" optional="show" />
-            <field name="donation_count" optional="hide" />
-            <field name="company_currency_id" invisible="1" />
+                    <field string="Donations" name="donation_total" widget="statinfo" />
+                </button>
+            </div>
+            <group name="right" position="inside">
+                <field name="company_currency_id" invisible="1" />
+            </group>
         </field>
-    </field>
-</record>
+    </record>
 
-<record id="stay_search" model="ir.ui.view">
-    <field name="name">donation.stay.search</field>
-    <field name="model">stay.stay</field>
-    <field name="inherit_id" ref="stay.stay_search" />
-    <field name="arch" type="xml">
-        <filter name="departure_date" position="after">
-            <separator />
-            <filter
+    <record id="stay_tree" model="ir.ui.view">
+        <field name="name">donation.stay.tree</field>
+        <field name="model">stay.stay</field>
+        <field name="inherit_id" ref="stay.stay_tree" />
+        <field name="arch" type="xml">
+            <field name="assign_status" position="after">
+                <field name="donation_total" optional="show" />
+                <field name="donation_count" optional="hide" />
+                <field name="company_currency_id" column_invisible="1" />
+            </field>
+        </field>
+    </record>
+
+    <record id="stay_search" model="ir.ui.view">
+        <field name="name">donation.stay.search</field>
+        <field name="model">stay.stay</field>
+        <field name="inherit_id" ref="stay.stay_search" />
+        <field name="arch" type="xml">
+            <filter name="departure_date" position="after">
+                <separator />
+                <filter
                     name="no_donations"
                     string="No Donations"
                     domain="[('donation_count', '=', 0)]"
                 />
-            <filter
+                <filter
                     name="has_donations"
                     string="Has Donation(s)"
                     domain="[('donation_count', '>', 0)]"
                 />
-        </filter>
-    </field>
-</record>
-
-
+            </filter>
+        </field>
+    </record>
 </odoo>
