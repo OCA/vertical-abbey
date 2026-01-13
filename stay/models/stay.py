@@ -602,7 +602,7 @@ class StayStay(models.Model):
                     name += f" [{stay.rooms_display_name}]"
                 name += f", {state}"
             else:
-                name = "{stay.name}, {state}"
+                name = f"{stay.name}, {state}"
             stay.display_name = name
 
     def _prepare_stay_line(self, date):  # noqa: C901
