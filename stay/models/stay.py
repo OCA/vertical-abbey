@@ -1512,6 +1512,7 @@ class StayLine(models.Model):
     date = fields.Date(required=True, default=fields.Date.context_today, index=True)
     breakfast_qty = fields.Integer(string="Breakfast")
     lunch_qty = fields.Integer(string="Lunches")
+    picnic_lunch_qty = fields.Integer(string="Picnic")
     dinner_qty = fields.Integer(string="Dinners")
     bed_night_qty = fields.Integer(string="Bed Nights")
     partner_id = fields.Many2one(

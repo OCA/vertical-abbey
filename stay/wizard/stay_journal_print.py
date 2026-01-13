@@ -115,6 +115,7 @@ class StayJournalPrint(models.TransientModel):
             if refectory in res:
                 res[refectory]["breakfast_subtotal"] += line.breakfast_qty
                 res[refectory]["lunch_subtotal"] += line.lunch_qty
+                res[refectory]["picnic_lunch_subtotal"] += line.picnic_lunch_qty
                 res[refectory]["dinner_subtotal"] += line.dinner_qty
                 res[refectory]["bed_night_subtotal"] += line.bed_night_qty
                 res[refectory]["lines"].append(line)
@@ -122,6 +123,7 @@ class StayJournalPrint(models.TransientModel):
                 res[refectory] = {
                     "breakfast_subtotal": line.breakfast_qty,
                     "lunch_subtotal": line.lunch_qty,
+                    "picnic_lunch_subtotal": line.picnic_lunch_qty,
                     "dinner_subtotal": line.dinner_qty,
                     "bed_night_subtotal": line.bed_night_qty,
                     "lines": [line],

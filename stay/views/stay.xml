@@ -148,7 +148,11 @@
                             <field name="departure_time" />
                             <field name="departure_datetime" invisible="1" />
                             <field name="departure_note" />
-                            <field name="group_id" options="{'no_create': True}" />
+                            <field
+                                name="group_id"
+                                options="{'no_create': True}"
+                                groups="stay.group_stay_group"
+                            />
                             <field
                                 name="no_meals"
                                 invisible="construction"
@@ -222,7 +226,7 @@
                     />
                 </header>
                 <field name="name" decoration-bf="1" />
-                <field name="group_id" optional="show" />
+                <field name="group_id" optional="show" groups="stay.group_stay_group" />
                 <field
                     name="company_id"
                     groups="base.group_multi_company"
@@ -292,7 +296,7 @@ in the 1st list view with native order -->
                     />
                 </header>
                 <field name="name" />
-                <field name="group_id" optional="show" />
+                <field name="group_id" optional="show" groups="stay.group_stay_group" />
                 <field
                     name="company_id"
                     groups="base.group_multi_company"
@@ -346,7 +350,7 @@ in the 1st list view with native order -->
                     string="Guest Name or Stay Number"
                 />
                 <field name="partner_id" />
-                <field name="group_id" />
+                <field name="group_id" groups="stay.group_stay_group" />
                 <field
                     name="departure_date"
                     string="Arrivals and Departures on"
@@ -425,6 +429,7 @@ in the 1st list view with native order -->
                         name="group_groupby"
                         string="Group"
                         context="{'group_by': 'group_id'}"
+                        groups="stay.group_stay_group"
                     />
                     <filter
                         name="state_groupby"
@@ -693,7 +698,7 @@ So I use the form view below by default -->
             <search>
                 <field name="partner_name" />
                 <field name="partner_id" />
-                <field name="group_id" />
+                <field name="group_id" groups="stay.group_stay_group" />
                 <field name="room_id" />
                 <field
                     name="departure_date"
@@ -735,6 +740,7 @@ So I use the form view below by default -->
                         name="group_groupby"
                         string="Group"
                         context="{'group_by': 'group_id'}"
+                        groups="stay.group_stay_group"
                     />
                     <filter
                         name="room_groupby"
@@ -886,7 +892,7 @@ So I use the form view below by default -->
                         <field name="company_id" groups="base.group_multi_company" />
                         <field name="company_id" invisible="1" />
                         <field name="building_id" />
-                        <field name="group_id" />
+                        <field name="group_id" groups="stay.group_stay_group" />
                         <field name="bed_qty" />
                         <field name="allow_simultaneous" invisible="bed_qty == 1" />
                         <field name="to_clean" />
@@ -917,7 +923,7 @@ So I use the form view below by default -->
                     optional="show"
                     invisible="not context.get('stay_room_main_view')"
                 />
-                <field name="group_id" optional="show" />
+                <field name="group_id" optional="show" groups="stay.group_stay_group" />
                 <field name="bed_qty" />
                 <field name="fire_report_exclude" optional="hide" />
                 <field
@@ -951,7 +957,7 @@ So I use the form view below by default -->
                     />
                 </header>
                 <field name="display_name" string="Room" />
-                <field name="group_id" optional="show" />
+                <field name="group_id" optional="show" groups="stay.group_stay_group" />
                 <field name="to_clean" />
                 <field name="next_stay_id" optional="show" />
                 <field name="next_stay_partner_name" optional="show" />
@@ -971,7 +977,7 @@ So I use the form view below by default -->
                     filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"
                 />
                 <field name="building_id" />
-                <field name="group_id" />
+                <field name="group_id" groups="stay.group_stay_group" />
                 <separator />
                 <filter
                     name="my_stay_group"
@@ -1011,6 +1017,7 @@ So I use the form view below by default -->
                         name="group_groupby"
                         string="Group"
                         context="{'group_by': 'group_id'}"
+                        groups="stay.group_stay_group"
                     />
                 </group>
             </search>
@@ -1125,10 +1132,15 @@ So I use the form view below by default -->
                     <field name="partner_name" />
                     <field name="breakfast_qty" groups="stay.group_stay_breakfast" />
                     <field name="lunch_qty" />
+                    <field name="picnic_lunch_qty" groups="stay.group_stay_picnic" />
                     <field name="dinner_qty" />
                     <field name="bed_night_qty" />
                     <field name="refectory_id" />
-                    <field name="group_id" readonly="stay_id" />
+                    <field
+                        name="group_id"
+                        readonly="stay_id"
+                        groups="stay.group_stay_group"
+                    />
                     <field name="company_id" groups="base.group_multi_company" />
                     <field name="company_id" invisible="1" />
                 </group>
@@ -1164,6 +1176,12 @@ So I use the form view below by default -->
                 />
                 <field name="breakfast_qty" column_invisible="1" />
                 <field name="lunch_qty" sum="1" />
+                <field
+                    name="picnic_lunch_qty"
+                    groups="stay.group_stay_picnic"
+                    sum="1"
+                    optional="show"
+                />
                 <field name="dinner_qty" sum="1" />
                 <field name="bed_night_qty" sum="1" />
                 <field
@@ -1176,7 +1194,12 @@ So I use the form view below by default -->
                     invisible="not context.get('stay_line_main_view')"
                     optional="show"
                 />
-                <field name="group_id" optional="hide" readonly="stay_id" />
+                <field
+                    name="group_id"
+                    optional="hide"
+                    readonly="stay_id"
+                    groups="stay.group_stay_group"
+                />
                 <field name="company_id" optional="hide" />
             </list>
         </field>
@@ -1189,7 +1212,7 @@ So I use the form view below by default -->
             <search>
                 <field name="date" />
                 <field name="partner_name" />
-                <field name="group_id" />
+                <field name="group_id" groups="stay.group_stay_group" />
                 <separator />
                 <filter string="Date" name="date" date="date" />
                 <separator />
@@ -1216,6 +1239,7 @@ So I use the form view below by default -->
                         name="group_groupby"
                         string="Group"
                         context="{'group_by': 'group_id'}"
+                        groups="stay.group_stay_group"
                     />
                     <filter
                         name="date_groupby"
@@ -1262,6 +1286,11 @@ So I use the form view below by default -->
                     groups="stay.group_stay_breakfast"
                 />
                 <field name="lunch_qty" type="measure" />
+                <field
+                    name="picnic_lunch_qty"
+                    type="measure"
+                    groups="stay.group_stay_picnic"
+                />
                 <field name="dinner_qty" type="measure" />
                 <field name="bed_night_qty" type="measure" />
             </pivot>

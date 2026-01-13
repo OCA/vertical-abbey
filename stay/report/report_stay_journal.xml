@@ -6,7 +6,7 @@
   License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 -->
 <odoo>
-    <template id="stay.report_stayjournalprint_document">
+    <template id="stay.report_stayjournalmeal_document">
         <t t-call="web.internal_layout">
             <t t-set="doc" t-value="doc.with_context({'lang':user.partner_id.lang})" />
 
@@ -37,6 +37,10 @@
                                         groups="stay.group_stay_breakfast"
                                     >Breakfasts</th>
                                     <th class="text-center">Lunches</th>
+                                    <th
+                                        class="text-center"
+                                        groups="stay.group_stay_picnic"
+                                    >Picnic</th>
                                     <th class="text-center">Dinners</th>
                                     <th class="text-center">Nights</th>
                                 </tr>
@@ -74,6 +78,13 @@
                                         <td class="text-center">
                                             <span t-field="line.lunch_qty" />
                                         </td>
+                                        <td
+                                            class="text-center"
+                                            groups="stay.group_stay_picnic"
+                                        >
+                                            <span t-field="line.picnic_lunch_qty" />
+                                        </td>
+
                                         <td class="text-center">
                                             <span t-field="line.dinner_qty" />
                                         </td>
@@ -99,6 +110,12 @@
                                     <td class="text-center">
                                         <t t-esc="k[1]['lunch_subtotal']" />
                                     </td>
+                                    <td
+                                        class="text-center"
+                                        groups="stay.group_stay_picnic"
+                                    >
+                                        <t t-esc="k[1]['picnic_lunch_subtotal']" />
+                                    </td>
                                     <td class="text-center">
                                         <t t-esc="k[1]['dinner_subtotal']" />
                                     </td>
@@ -114,11 +131,11 @@
         </t>
     </template>
 
-    <template id="report_stayjournalprint">
+    <template id="report_stayjournalmeal">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="doc">
                 <t
-                    t-call="stay.report_stayjournalprint_document"
+                    t-call="stay.report_stayjournalmeal_document"
                     t-lang="user.partner_id.lang"
                 />
             </t>

@@ -16,6 +16,10 @@
                     <field name="end_date" />
                     <field name="no_breakfast" groups="stay.group_stay_breakfast" />
                     <field name="no_lunch" />
+                    <field
+                        name="convert_lunch_to_picnic"
+                        groups="stay.group_stay_picnic"
+                    />
                     <field name="no_dinner" />
                     <field name="no_bed_night" />
                     <field name="refectory_id" />

@@ -40,6 +40,12 @@
                         <setting id="stay_breakfast">
                             <field name="group_stay_breakfast" />
                         </setting>
+                        <setting id="stay_picnic">
+                            <field name="group_stay_picnic" />
+                        </setting>
+                        <setting id="stay_group">
+                            <field name="group_stay_group" />
+                        </setting>
                     </block>
                 </app>
             </xpath>

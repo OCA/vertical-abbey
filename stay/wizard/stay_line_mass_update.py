@@ -17,6 +17,7 @@ class StayLineMassUpdate(models.TransientModel):
     refectory_id = fields.Many2one("stay.refectory", string="New Refectory")
     no_breakfast = fields.Boolean(string="No Breakfasts")
     no_lunch = fields.Boolean(string="No Lunches")
+    convert_lunch_to_picnic = fields.Boolean(string="Convert Lunches to Picnics")
     no_dinner = fields.Boolean(string="No Dinners")
     no_bed_night = fields.Boolean(string="No Bed Nights")
     start_date = fields.Date(required=True)
@@ -62,6 +63,13 @@ class StayLineMassUpdate(models.TransientModel):
 
     def apply(self):
         self.ensure_one()
+        if self.convert_lunch_to_picnic and self.no_lunch:
+            raise UserError(
+                self.env._(
+                    "It doesn't make sense to enable both the options 'No Lunches' "
+                    "and 'Convert Lunches to Picnics'."
+                )
+            )
         if self.start_date > self.end_date:
             raise UserError(
                 _(
@@ -72,12 +80,12 @@ class StayLineMassUpdate(models.TransientModel):
                 )
             )
         vals = self._prepare_write_stay_line()
-        if not vals:
+        if not vals and not self.convert_lunch_to_picnic:
             raise UserError(
                 _(
                     "You must check at least one option! You didn't check any... "
-                    "To reset to default setttings, please use the appropriate "
-                    "wizard if installed."
+                    "To reset to default settings, please use the appropriate "
+                    "wizard 'Reset All Stay Lines'."
                 )
             )
         lines = self.env["stay.line"].search(
@@ -89,5 +97,9 @@ class StayLineMassUpdate(models.TransientModel):
         )
         if not lines:
             raise UserError(_("No stay lines to update."))
-        lines.write(vals)
+        if vals:
+            lines.write(vals)
+        if self.convert_lunch_to_picnic:
+            for line in lines:
+                line.write({"picnic_lunch_qty": line.lunch_qty, "lunch_qty": 0})
         self.stay_id.write(self._prepare_write_stay())
