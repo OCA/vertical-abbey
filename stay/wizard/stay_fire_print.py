@@ -68,6 +68,7 @@ class StayFirePrint(models.TransientModel):
                             ("arrival_date", "<=", self.date),
                             ("departure_date", ">", self.date),
                             ("room_id", "=", room.id),
+                            ("construction", "=", False),
                         ]
                     )
                     guest_qty = sum([assign.guest_qty for assign in assigns])
