@@ -15,9 +15,9 @@ class StayRoomMassAssign(models.TransientModel):
         res = super().default_get(fields_list)
         assert self._context.get("active_model") == "stay.stay"
         stay = self.env["stay.stay"].browse(self._context.get("active_id"))
-        if stay.state not in ("confirm", "current"):
+        if stay.state not in ("draft", "confirm", "current"):
             raise UserError(
-                _("Stay '%s' is not in Confirmed nor Current state.")
+                _("Stay '%s' is not in Draft, Confirmed nor Current state.")
                 % stay.display_name
             )
         res["stay_id"] = self._context.get("active_id")
