@@ -1369,7 +1369,7 @@ class StayRoom(models.Model):
             room.display_name = name
 
     def mark_as_cleaned(self):
-        self.write({"to_clean": False})
+        self.sudo().write({"to_clean": False})
 
     def action_archive(self):
         today = fields.Date.context_today(self)
