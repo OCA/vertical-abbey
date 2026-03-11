@@ -45,14 +45,14 @@ Configuration
 
 To configure this module, you need to:
 
-   -  create the Rooms,
-   -  create the Groups (optional),
-   -  create the Refectories,
+   - create the Rooms,
+   - create the Groups (optional),
+   - create the Refectories,
 
 Then, go to the Stay configuration page:
 
-   -  configure the default Refectory,
-   -  if you want to manage breakfast, check the corresponding option.
+   - configure the default Refectory,
+   - if you want to manage breakfast, check the corresponding option.
 
 Usage
 =====
@@ -87,9 +87,9 @@ Authors
 Contributors
 ------------
 
--  Brother Bernard <informatique - at - barroux.org>
--  Brother Irénée (Barroux Abbey)
--  Alexis de Lattre <alexis.delattre@akretion.com>
+- Brother Bernard <informatique - at - barroux.org>
+- Brother Irénée (Barroux Abbey)
+- Alexis de Lattre <alexis.delattre@akretion.com>
 
 Maintainers
 -----------
