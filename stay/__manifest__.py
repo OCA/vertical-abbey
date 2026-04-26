@@ -40,6 +40,12 @@
         "data/mail_template.xml",
         "data/ir_config_parameter.xml",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "stay/static/src/views/*.esm.js",
+            "stay/static/src/views/*.xml",
+        ],
+    },
     "demo": ["demo/stay_demo.xml"],
     "application": True,
     "installable": True,

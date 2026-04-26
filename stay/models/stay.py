@@ -7,11 +7,10 @@
 
 import logging
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 from textwrap import shorten
 
 import pytz
-from dateutil.relativedelta import relativedelta
 
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -729,7 +728,7 @@ class StayStay(models.Model):
                 vals = self._prepare_stay_line(date)
                 if vals:
                     slo.create(vals)
-            date += relativedelta(days=1)
+            date += timedelta(1)
 
     def write(self, vals):
         stay2previous_vals = {}
@@ -925,6 +924,65 @@ class StayStay(models.Model):
         }
         return action
 
+    @api.model
+    def get_dashboard_data(self):
+        today = fields.Date.context_today(self)
+        tomorrow = today + timedelta(1)
+        line_aggregates = [
+            "breakfast_qty:sum",
+            "lunch_qty:sum",
+            "dinner_qty:sum",
+            "bed_night_qty:sum",
+        ]
+        line_rg = self.env["stay.line"]._read_group(
+            ["|", ("date", "=", today), ("date", "=", tomorrow)],
+            groupby=["date:day"],
+            aggregates=line_aggregates,
+        )
+        line_map = {
+            x[0]: {"breakfast": x[1], "lunch": x[2], "dinner": x[3], "night": x[4]}
+            for x in line_rg
+        }
+        state_filter = ("state", "in", ("confirm", "current", "done"))
+        arrival_rg = self._read_group(
+            [
+                "|",
+                ("arrival_date", "=", today),
+                ("arrival_date", "=", tomorrow),
+                state_filter,
+            ],
+            groupby=["arrival_date:day"],
+            aggregates=["guest_qty:sum"],
+        )
+        arrival_map = {x[0]: x[1] for x in arrival_rg}
+        departure_rg = self._read_group(
+            [
+                "|",
+                ("departure_date", "=", today),
+                ("departure_date", "=", tomorrow),
+                state_filter,
+            ],
+            groupby=["departure_date:day"],
+            aggregates=["guest_qty:sum"],
+        )
+        departure_map = {x[0]: x[1] for x in departure_rg}
+
+        result = {
+            "today_breakfast": line_map.get(today, {}).get("breakfast", 0),
+            "today_lunch": line_map.get(today, {}).get("lunch", 0),
+            "today_dinner": line_map.get(today, {}).get("dinner", 0),
+            "today_night": line_map.get(today, {}).get("night", 0),
+            "today_arrival": arrival_map.get(today, 0),
+            "today_departure": departure_map.get(today, 0),
+            "tomorrow_breakfast": line_map.get(tomorrow, {}).get("breakfast", 0),
+            "tomorrow_lunch": line_map.get(tomorrow, {}).get("lunch", 0),
+            "tomorrow_dinner": line_map.get(tomorrow, {}).get("dinner", 0),
+            "tomorrow_night": line_map.get(tomorrow, {}).get("night", 0),
+            "tomorrow_arrival": arrival_map.get(tomorrow, 0),
+            "tomorrow_departure": departure_map.get(tomorrow, 0),
+        }
+        return result
+
 
 class StayRoomAssign(models.Model):
     _name = "stay.room.assign"
@@ -1093,7 +1151,7 @@ class StayRoomAssign(models.Model):
                         bed_qty=bed_qty,
                     )
                 )
-            date += relativedelta(days=1)
+            date += timedelta(1)
 
     @api.depends(
         "stay_id",

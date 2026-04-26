@@ -206,6 +206,8 @@
         </field>
     </record>
 
+    <!-- WARNING: there are 3 list views of stay.stay.
+    If you modify this view, don't forget to make the same change in the 2 other list views -->
     <record id="stay_tree" model="ir.ui.view">
         <field name="name">stay.list</field>
         <field name="model">stay.stay</field>
@@ -269,8 +271,74 @@
         </field>
     </record>
 
-    <!-- WARNING: if you modify this list view, don't forget to do the same modif
-in the 1st list view with native order -->
+    <!-- WARNING: there are 3 list views of stay.stay.
+    If you modify this view, don't forget to make the same change in the 2 other list views -->
+    <record id="stay_tree_with_kpis" model="ir.ui.view">
+        <field name="name">stay.list</field>
+        <field name="model">stay.stay</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state == 'cancel'" js_class="stay_dashboard_list">
+                <header>
+                    <button
+                        name="guest_has_left"
+                        type="object"
+                        string="Guest has Left"
+                        groups="stay.group_stay_user"
+                    />
+                    <button
+                        name="stay_notify_selection_button"
+                        type="object"
+                        string="Notify by E-mail"
+                        groups="stay.group_stay_user"
+                    />
+                </header>
+                <field name="name" decoration-bf="1" />
+                <field name="group_id" optional="show" groups="stay.group_stay_group" />
+                <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    optional="hide"
+                />
+                <field name="guest_qty" sum="1" />
+                <field name="partner_name" invisible="context.get('partner_view')" />
+                <field name="arrival_date" />
+                <field name="arrival_time" />
+                <field name="arrival_note" optional="show" />
+                <field name="departure_date" />
+                <field name="departure_time" />
+                <field name="departure_note" optional="show" />
+                <field name="refectory_id" optional="hide" />
+                <field name="rooms_display_name" string="Rooms" />
+                <field
+                    name="tag_ids"
+                    widget="many2many_tags"
+                    options="{'color_field': 'color', 'no_create_edit': True}"
+                    optional="show"
+                />
+                <field
+                    name="assign_status"
+                    decoration-success="assign_status in ('assigned', 'no_night')"
+                    decoration-danger="assign_status in ('over-assigned', 'error')"
+                    decoration-info="assign_status == 'none'"
+                    decoration-warning="assign_status == 'partial'"
+                    widget="badge"
+                />
+                <field
+                    name="state"
+                    decoration-info="state == 'draft'"
+                    decoration-success="state == 'confirm'"
+                    decoration-warning="state == 'current'"
+                    decoration-muted="state == 'cancel'"
+                    decoration-danger="state == 'done'"
+                    widget="badge"
+                />
+            </list>
+        </field>
+    </record>
+
+    <!-- WARNING: there are 3 list views of stay.stay.
+    If you modify this view, don't forget to make the same change in the 2 other list views -->
     <record id="stay_tree_reverse_order" model="ir.ui.view">
         <field name="name">stay.list.reverse.order</field>
         <field name="model">stay.stay</field>
@@ -506,6 +574,7 @@ from the calendar view, the dates are not set -->
         <field name="res_model">stay.stay</field>
         <field name="view_mode">list,form,calendar,graph,pivot</field>
         <field name="domain"> [('construction', '=', False)]</field>
+        <field name="view_id" ref="stay_tree_with_kpis" />
         <field
             name="context"
         >{'search_default_current_and_future': True, 'search_default_my_stay_group': True, 'stay_name_get_partner_name_qty': True, 'default_construction': False}</field>
@@ -1214,6 +1283,22 @@ So I use the form view below by default -->
                 <field name="partner_name" />
                 <field name="group_id" groups="stay.group_stay_group" />
                 <separator />
+                <filter
+                    name="today"
+                    string="Today"
+                    domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"
+                />
+                <filter
+                    name="tomorrow"
+                    string="Tomorrow"
+                    domain="[('date', '=', (context_today() + datetime.timedelta(1)).strftime('%Y-%m-%d'))]"
+                />
+                <filter
+                    string="Today and Next 30 Days"
+                    name="today_next_30"
+                    domain="[('date', '&gt;=', (context_today().strftime('%Y-%m-%d'))), ('date', '&lt;=', (context_today() + datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"
+                />
+                <separator />
                 <filter string="Date" name="date" date="date" />
                 <separator />
                 <filter
@@ -1222,11 +1307,6 @@ So I use the form view below by default -->
                     domain="[('date', '&gt;=', (context_today().strftime('%Y-%m-%d')))]"
                 />
                 <separator />
-                <filter
-                    string="Today and Next 30 Days"
-                    name="today_next_30"
-                    domain="[('date', '&gt;=', (context_today().strftime('%Y-%m-%d'))), ('date', '&lt;=', (context_today() + datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"
-                />
                 <separator />
                 <filter
                     name="my_stay_group"
