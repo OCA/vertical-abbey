@@ -34,11 +34,27 @@
         <field name="default_no_meals" eval="True" />
     </record>
 
+    <record id="building1" model="stay.building">
+        <field name="name">Hôtellerie 1er étage</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="building2" model="stay.building">
+        <field name="name">Hôtellerie 2ème étage</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="building_ext" model="stay.building">
+        <field name="name">Hors abbaye</field>
+        <field name="sequence">30</field>
+    </record>
+
     <record id="room_st_cure_ars" model="stay.room">
         <field name="name">St Curé d'Ars</field>
         <field name="code">211</field>
         <field name="bed_qty">1</field>
         <field name="group_id" ref="group1" />
+        <field name="building_id" ref="building1" />
     </record>
 
     <record id="room_st_jean_eudes" model="stay.room">
@@ -46,6 +62,7 @@
         <field name="code">213</field>
         <field name="bed_qty">1</field>
         <field name="group_id" ref="group1" />
+        <field name="building_id" ref="building1" />
     </record>
 
     <record id="room_st_bruno" model="stay.room">
@@ -53,6 +70,7 @@
         <field name="code">214</field>
         <field name="bed_qty">1</field>
         <field name="group_id" ref="group1" />
+        <field name="building_id" ref="building1" />
     </record>
 
     <record id="room_st_elie" model="stay.room">
@@ -60,6 +78,7 @@
         <field name="code">215</field>
         <field name="bed_qty">1</field>
         <field name="group_id" ref="group1" />
+        <field name="building_id" ref="building1" />
     </record>
 
     <record id="room_dortoir" model="stay.room">
@@ -67,6 +86,7 @@
         <field name="code">DOR</field>
         <field name="bed_qty">12</field>
         <field name="group_id" ref="group1" />
+        <field name="building_id" ref="building2" />
     </record>
 
     <record id="st_benoit_house" model="stay.room">
@@ -74,6 +94,7 @@
         <field name="code">BEN</field>
         <field name="bed_qty">5</field>
         <field name="group_id" ref="group2" />
+        <field name="building_id" ref="building_ext" />
     </record>
 
     <record id="stay1" model="stay.stay">

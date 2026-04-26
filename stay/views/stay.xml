@@ -180,6 +180,7 @@
                             <list editable="bottom">
                                 <field name="room_id" options="{'no_create': True}" />
                                 <field name="guest_qty" sum="1" />
+                                <field name="partner_name_room" />
                                 <field name="conflict_room_ids" column_invisible="1" />
                                 <field name="company_id" column_invisible="1" />
                                 <field name="stay_group_id" column_invisible="1" />
@@ -643,6 +644,7 @@ from the calendar view, the dates are not set -->
                     />
                     <field name="room_id" />
                     <field name="guest_qty" />
+                    <field name="partner_name_room" />
                     <field name="conflict_room_ids" invisible="1" />
                     <field name="stay_group_id" invisible="1" />
                     <field name="company_id" invisible="1" />
@@ -680,6 +682,7 @@ So I use the form view below by default -->
                     <field name="notes" />
                     <field name="room_id" />
                     <field name="guest_qty" />
+                    <field name="partner_name_room" />
                     <field name="conflict_room_ids" invisible="1" />
                     <field name="stay_group_id" invisible="1" />
                     <field name="company_id" invisible="1" />
@@ -710,6 +713,7 @@ So I use the form view below by default -->
                 <field name="departure_time" optional="show" />
                 <field name="room_id" />
                 <field name="guest_qty" sum="1" />
+                <field name="partner_name_room" />
                 <field name="stay_group_id" column_invisible="1" />
                 <field
                     name="company_id"
@@ -765,7 +769,10 @@ So I use the form view below by default -->
         <field name="model">stay.room.assign</field>
         <field name="arch" type="xml">
             <search>
-                <field name="partner_name" />
+                <field
+                    name="partner_name"
+                    filter_domain="['|', ('partner_name', 'ilike', self), ('partner_name_room', 'ilike', self)]"
+                />
                 <field name="partner_id" />
                 <field name="group_id" groups="stay.group_stay_group" />
                 <field name="room_id" />

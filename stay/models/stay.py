@@ -999,6 +999,7 @@ class StayRoomAssign(models.Model):
         domain="[('id', 'not in', conflict_room_ids), ('company_id', '=', company_id), "
         "('group_id', 'in', (False, stay_group_id))]",
     )
+    partner_name_room = fields.Char(string="Guest (optional)")
     active = fields.Boolean(related="room_id.active", store=True)
     conflict_room_ids = fields.Many2many(
         "stay.room", compute="_compute_conflict_room_ids", string="Conflict Rooms"
