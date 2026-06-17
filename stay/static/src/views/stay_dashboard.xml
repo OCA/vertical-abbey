@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates>
+    <t t-name="stay.StayDashboard">
+        <div class="container-fluid py-2 border-bottom bg-view">
+            <div class="row justify-content-between gap-3 gap-lg-0">
+                <div
+                    class="col-12 col-lg-12 col-xl-12 col-xxl-12 flex-grow-1 flex-lg-grow-0 flex-shrink-0"
+                >
+                    <div class="grid gap-4">
+                        <div
+                            class="g-col-2 g-col-sm-2 d-flex align-items-center py-2 justify-content-end text-end justify-content-lg-start text-lg-start"
+                        >
+                            Today
+                        </div>
+                        <div class="g-col-10 g-col-sm-10 grid gap-1">
+                            <div
+                                class="g-col-2 p-0 bg-primary text-center text-white w-100 h-100 border-0 rounded-0 text-capitalize text-break fw-normal"
+                                id="today_breakfast"
+                                groups="stay.group_stay_breakfast"
+                            >
+                                <div
+                                class="fs-2"
+                                t-out="stayData['today_breakfast']"
+                            />Breakfast
+                            </div>
+                            <div
+                                class="g-col-2 p-0 bg-primary text-center text-white w-100 h-100 border-0 rounded-0 text-capitalize text-break fw-normal"
+                                id="today_lunch"
+                            >
+                                <div
+                                class="fs-2"
+                                t-out="stayData['today_lunch']"
+                            />Lunch
+                            </div>
+                            <div
+                                class="g-col-2 p-0 bg-primary text-center text-white w-100 h-100 border-0 rounded-0 text-capitalize text-break fw-normal"
+                                id="today_dinner"
+                            >
+                                <div
+                                class="fs-2"
+                                t-out="stayData['today_dinner']"
+                            />Dinner
+                            </div>
+                            <div
+                                class="g-col-2 p-0 bg-primary text-center text-white w-100 h-100 border-0 rounded-0 text-capitalize text-break fw-normal"
+                                id="today_night"
+                            >
+                                <div
+                                class="fs-2"
+                                t-out="stayData['today_night']"
+                            />Bed Nights
+                            </div>
+                            <div
+                                class="g-col-2 p-0 bg-primary text-center text-white w-100 h-100 border-0 rounded-0 text-capitalize text-break fw-normal"
+                                id="today_arrival"
+                            >
+                                <div
+                                class="fs-2"
+                                t-out="stayData['today_arrival']"
+                            />Arrivals
+                            </div>
+                            <div
+                                class="g-col-2 p-0 bg-primary text-center text-white w-100 h-100 border-0 rounded-0 text-capitalize text-break fw-normal"
+                                id="today_departure"
+                            >
+                                <div
+                                class="fs-2"
+                                t-out="stayData['today_departure']"
+                            />Departures
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid gap-4">
+                        <div
+                            class="g-col-2 g-col-sm-2 d-flex align-items-center py-2 justify-content-end text-end justify-content-lg-start text-lg-start"
+                        >
+                            Tomorrow
+                        </div>
+                        <div class="g-col-10 g-col-sm-10 grid gap-2">
+                            <div
+                                class="g-col-2 p-0 text-center d-flex align-items-center w-100 h-100 p-0 border-0 bg-100 fw-normal"
+                                id="tomorrow_breakfast"
+                                groups="stay.group_stay_breakfast"
+                            >
+                                <div
+                                    class="w-100 p-2"
+                                    t-out="stayData['tomorrow_breakfast']"
+                                />
+                            </div>
+                            <div
+                                class="g-col-2 p-0 text-center d-flex align-items-center w-100 h-100 p-0 border-0 bg-100 fw-normal"
+                                id="tomorrow_lunch"
+                            >
+                                <div
+                                    class="w-100 p-2"
+                                    t-out="stayData['tomorrow_lunch']"
+                                />
+                            </div>
+                            <div
+                                class="g-col-2 p-0 text-center d-flex align-items-center w-100 h-100 p-0 border-0 bg-100 fw-normal"
+                                id="tomorrow_dinner"
+                            >
+                                <div
+                                    class="w-100 p-2"
+                                    t-out="stayData['tomorrow_dinner']"
+                                />
+                            </div>
+                            <div
+                                class="g-col-2 p-0 text-center d-flex align-items-center w-100 h-100 p-0 border-0 bg-100 fw-normal"
+                                id="tomorrow_night"
+                            >
+                                <div
+                                    class="w-100 p-2"
+                                    t-out="stayData['tomorrow_night']"
+                                />
+                            </div>
+                            <div
+                                class="g-col-2 p-0 text-center d-flex align-items-center w-100 h-100 p-0 border-0 bg-100 fw-normal"
+                                id="tomorrow_arrival"
+                            >
+                                <div
+                                    class="w-100 p-2"
+                                    t-out="stayData['tomorrow_arrival']"
+                                />
+                            </div>
+                            <div
+                                class="g-col-2 p-0 text-center d-flex align-items-center w-100 h-100 p-0 border-0 bg-100 fw-normal"
+                                id="tomorrow_departure"
+                            >
+                                <div
+                                    class="w-100 p-2"
+                                    t-out="stayData['tomorrow_departure']"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

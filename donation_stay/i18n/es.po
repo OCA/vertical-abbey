@@ -1,0 +1,239 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* donation_stay
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2023-10-28 13:12+0000\n"
+"Last-Translator: Ivorra78 <informatica@totmaterial.es>\n"
+"Language-Team: none\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.17\n"
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_res_company__donation_stay_campaign_id
+#: model:ir.model.fields,field_description:donation_stay.field_res_config_settings__donation_stay_campaign_id
+msgid "Campaign for Stay Donations"
+msgstr "Campaña de Donaciones para Estancias"
+
+#. module: donation_stay
+#: model_terms:ir.ui.view,arch_db:donation_stay.create_donation_stay_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: donation_stay
+#: model:ir.model,name:donation_stay.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__company_id
+msgid "Company"
+msgstr "Compañía"
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_stay_stay__company_currency_id
+msgid "Company Currency"
+msgstr ""
+
+#. module: donation_stay
+#: model:ir.model,name:donation_stay.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes Configuración"
+
+#. module: donation_stay
+#: model_terms:ir.ui.view,arch_db:donation_stay.create_donation_stay_form
+#: model_terms:ir.ui.view,arch_db:donation_stay.stay_add_donation_form
+msgid "Create Donation"
+msgstr "Crear Donación"
+
+#. module: donation_stay
+#: model:ir.model,name:donation_stay.model_donation_stay_create
+msgid "Create Donation from a Stay"
+msgstr "Crear Donación a partir de una Estancia"
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: donation_stay
+#: model:ir.actions.act_window,name:donation_stay.create_donation_stay_action
+msgid "Creation of Donation for a Guest Stay"
+msgstr "Creación de una Donación para una Estancia de Huésped"
+
+#. module: donation_stay
+#: model_terms:ir.ui.view,arch_db:donation_stay.create_donation_stay_form
+msgid "Creation of a Donation for a Guest Stay"
+msgstr "Creación de una Donación para una Estancia de Huésped"
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__currency_id
+msgid "Currency"
+msgstr "Divisa"
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__display_name
+msgid "Display Name"
+msgstr "Mostrar Nombre"
+
+#. module: donation_stay
+#: model:ir.model,name:donation_stay.model_donation_donation
+msgid "Donation"
+msgstr "Donación"
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__amount
+msgid "Donation Amount"
+msgstr "Importe de la Donación"
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__date_donation
+msgid "Donation Date"
+msgstr "Fecha de la Donación"
+
+#. module: donation_stay
+#. odoo-python
+#: code:addons/donation_stay/wizard/create_donation_stay.py:0
+#, python-format
+msgid "Donation Stay Product not set on company '%s'."
+msgstr "Donación Estancia Producto no establecido en la compañía '%s'."
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_stay_stay__donation_total
+msgid "Donation Total"
+msgstr ""
+
+#. module: donation_stay
+#. odoo-python
+#: code:addons/donation_stay/wizard/create_donation_stay.py:0
+#, python-format
+msgid ""
+"Donation created from stay <a href=# data-oe-model=stay.stay data-oe-"
+"id=%(stay_id)s>%(stay)s</a>."
+msgstr ""
+"Donación creada a partir de la estadía <a href=# data-oe-model=stay.stay "
+"data-oe-id=%(stay_id)s>%(stay)s</a>."
+
+#. module: donation_stay
+#: model_terms:ir.ui.view,arch_db:donation_stay.res_config_settings_view_form
+msgid "Donation for a Stay"
+msgstr "Donación para una Estancia"
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_stay_stay__donation_ids
+#: model_terms:ir.ui.view,arch_db:donation_stay.stay_add_donation_form
+msgid "Donations"
+msgstr ""
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__partner_id
+msgid "Guest"
+msgstr "Huésped"
+
+#. module: donation_stay
+#: model:ir.model,name:donation_stay.model_stay_stay
+msgid "Guest Stay"
+msgstr "Estancia de Huésped"
+
+#. module: donation_stay
+#: model_terms:ir.ui.view,arch_db:donation_stay.stay_search
+msgid "Has Donation(s)"
+msgstr ""
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__id
+msgid "ID"
+msgstr "ID (identificación)"
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create____last_update
+msgid "Last Modified on"
+msgstr "Última Modificación el"
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__write_date
+msgid "Last Updated on"
+msgstr "Última Actualización el"
+
+#. module: donation_stay
+#: model_terms:ir.ui.view,arch_db:donation_stay.donation_search
+msgid "Linked to a Stay"
+msgstr ""
+
+#. module: donation_stay
+#: model_terms:ir.ui.view,arch_db:donation_stay.stay_search
+msgid "No Donations"
+msgstr ""
+
+#. module: donation_stay
+#: model_terms:ir.ui.view,arch_db:donation_stay.donation_search
+msgid "Not Linked to a Stay"
+msgstr ""
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_stay_stay__donation_count
+msgid "Number of Donations"
+msgstr ""
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__payment_mode_id
+msgid "Payment Mode"
+msgstr "Modo de Pago"
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__payment_ref
+msgid "Payment Reference"
+msgstr "Referencia del Pago"
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_res_company__donation_stay_product_id
+#: model:ir.model.fields,field_description:donation_stay.field_res_config_settings__donation_stay_product_id
+msgid "Product for Stay Donations"
+msgstr "Producto para Donaciones de Estancia"
+
+#. module: donation_stay
+#: model:ir.model.fields,field_description:donation_stay.field_donation_donation__stay_id
+#: model:ir.model.fields,field_description:donation_stay.field_donation_stay_create__stay_id
+msgid "Stay"
+msgstr "Permanezca"
+
+#. module: donation_stay
+#: model:product.template,name:donation_stay.product_product_stay_donation_product_template
+msgid "Stay Donation"
+msgstr "Donación de Estancia"
+
+#. module: donation_stay
+#. odoo-python
+#: code:addons/donation_stay/wizard/create_donation_stay.py:0
+#, python-format
+msgid "The amount of the donation is not set or negative."
+msgstr "El importe de la donación no es fijo ni negativo."
+
+#. module: donation_stay
+#: model:ir.model.fields,help:donation_stay.field_stay_stay__donation_total
+msgid ""
+"Total donation amount for draft and valid donations in company currency."
+msgstr ""
+
+#~ msgid "Donation Recorded"
+#~ msgstr "Donación Registrada"
+
+#~ msgid "No Donation"
+#~ msgstr "Sin Donación"
