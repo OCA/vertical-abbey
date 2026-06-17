@@ -64,7 +64,6 @@ class TestDonationFromStay(TransactionCase):
             {
                 "name": "test_payment_mode",
                 "donation": True,
-                "bank_account_link": "fixed",
                 "journal_id": bank_journal.id,
                 "payment_method_id": self.env.ref(
                     "account.account_payment_method_manual_in"
