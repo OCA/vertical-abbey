@@ -1,0 +1,346 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stay_api
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. module: stay_api
+#: model:mail.template,body_html:stay_api.stay_controller_notify
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">Stay <t t-out=\"object.name\"/> has been <t t-out=\"ctx.get('action_description')\"/> via the web form:</p>\n"
+"                <ul>\n"
+"                    <li>Guest: <t t-out=\"object.partner_name\">Alexis de Lattre</t></li>\n"
+"                    <li>Guest Qty: <t t-out=\"object.guest_qty\">1</t></li>\n"
+"                    <li>Arrival: <t t-out=\"format_date(object.arrival_date)\">2026-02-15</t> <t t-out=\"dict(object.fields_get('arrival_time', 'selection')['arrival_time']['selection'])[object.arrival_time]\">Afternoon</t></li>\n"
+"                    <t t-if=\"object.arrival_note\">\n"
+"                        <li>Arrival Note: <t t-out=\"object.arrival_note\">TER 15h</t></li>\n"
+"                    </t>\n"
+"                    <li>Departure: <t t-out=\"format_date(object.departure_date)\">2026-02-19</t> <t t-out=\"dict(object.fields_get('departure_time', 'selection')['departure_time']['selection'])[object.departure_time]\">Evening</t></li>\n"
+"                    <t t-if=\"object.departure_note\">\n"
+"                        <li>Departure Note: <t t-out=\"object.departure_note\">TER 20h30</t></li>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.group_id\">\n"
+"                        <li>Group: <t t-out=\"object.group_id.display_name\">Hôtellerie du village</t></li>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.controller_email\">\n"
+"                        <li>E-mail: <t t-out=\"object.controller_email\">alexis@example.fr</t></li>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.controller_phone\">\n"
+"                        <li>Phone: <t t-out=\"object.controller_phone\">+33 4 78 55 66 77</t></li>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.controller_mobile\">\n"
+"                        <li>Mobile: <t t-out=\"object.controller_mobile\">+33 6 11 22 33 44</t></li>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.controller_message\">\n"
+"                        <li>Guest message: <t t-out=\"object.controller_message\">My motivation for this stay.</t></li>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.controller_notes\">\n"
+"                        <li>Other information: <t t-out=\"object.controller_notes\">Specific questions.</t></li>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.controller_country_id\">\n"
+"                        <li>Country: <t t-out=\"object.controller_country_id.name\">France</t></li>\n"
+"                    </t>\n"
+"                </ul>\n"
+"            </div>\n"
+"        "
+msgstr ""
+
+#. module: stay_api
+#. odoo-python
+#: code:addons/stay_api/models/stay_stay.py:0
+msgid ""
+"API call %(api_name)s accepted because stay is in %(state_label)s state."
+msgstr ""
+
+#. module: stay_api
+#. odoo-python
+#: code:addons/stay_api/models/stay_stay.py:0
+msgid ""
+"API call %(api_name)s ignored because the stay is in %(state_label)s state."
+msgstr ""
+
+#. module: stay_api
+#. odoo-python
+#: code:addons/stay_api/models/stay_stay.py:0
+msgid ""
+"API call %(api_name)s returned an error because the stay is in "
+"%(state_label)s state."
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_type__active
+msgid "Active"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_notes
+msgid "Additional Questions"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_street
+msgid "Address Line 1"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_street2
+msgid "Address Line 2"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_fastapi_endpoint__app
+msgid "App"
+msgstr ""
+
+#. module: stay_api
+#: model_terms:ir.ui.view,arch_db:stay_api.stay_type_form
+#: model_terms:ir.ui.view,arch_db:stay_api.stay_type_search
+msgid "Archived"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_city
+msgid "City"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model,name:stay_api.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_country_id
+msgid "Country"
+msgstr ""
+
+#. module: stay_api
+#. odoo-python
+#: code:addons/stay_api/models/stay_stay.py:0
+msgid "Country code %s doesn't exist in Odoo."
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields.selection,name:stay_api.selection__stay_stay__controller_mode__created
+msgid "Created"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_type__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: stay_api
+#: model_terms:ir.ui.view,arch_db:stay_api.stay_search
+msgid "Created from Web Form"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_type__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_res_config_settings__stay_controller_company_id
+msgid "Default Company for Stays created from Web Form"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_type__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_email
+msgid "E-mail"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model,name:stay_api.model_fastapi_endpoint
+msgid "FastAPI Endpoint"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_firstname
+msgid "Firstname"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_message
+msgid "Guest Message"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model,name:stay_api.model_stay_stay
+msgid "Guest Stay"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_type__id
+msgid "ID"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_type__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_type__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_lastname
+msgid "Lastname"
+msgstr ""
+
+#. module: stay_api
+#: model_terms:ir.ui.view,arch_db:stay_api.stay_search
+msgid "Manual"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_mobile
+msgid "Mobile"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_type__name
+msgid "Name"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_phone
+msgid "Phone"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_type__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: stay_api
+#: model_terms:ir.ui.view,arch_db:stay_api.stay_form
+msgid "Set Partner from Web Form Infos"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields.selection,name:stay_api.selection__fastapi_endpoint__app__stay
+msgid "Stay"
+msgstr ""
+
+#. module: stay_api
+#: model_terms:ir.ui.view,arch_db:stay_api.res_config_settings_view_form
+msgid "Stay API"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model,name:stay_api.model_stay_type
+msgid "Stay Type"
+msgstr ""
+
+#. module: stay_api
+#. odoo-python
+#: code:addons/stay_api/routers/stay.py:0
+msgid "Stay cancelled by API call."
+msgstr ""
+
+#. module: stay_api
+#: model:mail.template,subject:stay_api.stay_controller_notify
+msgid ""
+"Stay {{ctx.get('action_description')}}: {{object.partner_name}} "
+"{{format_date(object.arrival_date)}} → "
+"{{format_date(object.departure_date)}} x {{object.guest_qty}}"
+msgstr ""
+
+#. module: stay_api
+#: model:mail.template,name:stay_api.stay_controller_notify
+msgid "Stay: Notify stay creation/update/cancel from web form"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.constraint,message:stay_api.constraint_stay_type_name_uniq
+msgid "This stay type already exists."
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_title_id
+msgid "Title"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__type_id
+#: model_terms:ir.ui.view,arch_db:stay_api.stay_search
+msgid "Type"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.actions.act_window,name:stay_api.stay_type_action
+#: model:ir.ui.menu,name:stay_api.stay_type_menu
+msgid "Types"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_uuid
+msgid "UUID"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_update_url
+#: model:ir.model.fields,field_description:stay_api.field_stay_type__update_url
+msgid "Update URL"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields.selection,name:stay_api.selection__stay_stay__controller_mode__updated
+msgid "Updated"
+msgstr ""
+
+#. module: stay_api
+#: model_terms:ir.ui.view,arch_db:stay_api.stay_search
+msgid "Updated from Web Form"
+msgstr ""
+
+#. module: stay_api
+#: model_terms:ir.ui.view,arch_db:stay_api.stay_form
+msgid "Web Form"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_mode
+msgid "Web Form Mode"
+msgstr ""
+
+#. module: stay_api
+#: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_zip
+msgid "ZIP"
+msgstr ""
+
+#. module: stay_api
+#. odoo-python
+#: code:addons/stay_api/routers/stay.py:0
+msgid "cancelled"
+msgstr ""
+
+#. module: stay_api
+#. odoo-python
+#: code:addons/stay_api/routers/stay.py:0
+msgid "created"
+msgstr ""
+
+#. module: stay_api
+#. odoo-python
+#: code:addons/stay_api/routers/stay.py:0
+msgid "updated"
+msgstr ""
