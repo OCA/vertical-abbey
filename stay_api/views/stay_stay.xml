@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2025 Akretion France (https://www.akretion.com/)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+
+                  <record id="stay_form" model="ir.ui.view">
+                          <field name="model">stay.stay</field>
+                          <field name="inherit_id" ref="stay.stay_form" />
+                          <field name="arch" type="xml">
+                                  <button name="draft2confirm" position="before">
+                                          <button
+                    name="%(partner_match_or_create.partner_match_or_create_action)d"
+                    type="action"
+                    string="Set Partner from Web Form Infos"
+                    attrs="{'invisible': ['|', ('partner_id', '!=', False), ('controller_mode', '=', False)]}"
+                    groups="stay.group_stay_user"
+                    class="btn-primary"
+                />
+                                  </button>
+                                  <group name="notes" position="after">
+                                          <group
+                    name="controller"
+                    string="Web Form"
+                    attrs="{'invisible': [('controller_mode', '=', False)]}"
+                    col="1"
+                >
+
+                        <group name="controller-main">
+<field name="controller_mode" invisible="1" />
+                        <field name="controller_title_id" />
+                        <field name="controller_firstname" />
+                        <field name="controller_lastname" />
+                        <field name="controller_email" widget="email" />
+                        <field name="controller_phone" />
+                        <field name="controller_mobile" />
+                        <field name="controller_street" />
+                        <field name="controller_street2" />
+                        <field name="controller_zip" />
+                        <field name="controller_city" />
+                        <field name="controller_country_id" />
+                </group>
+                <group name="controller_message">
+                        <field name="controller_message" />
+                </group>
+                <group name="controller_notes">
+                        <field name="controller_notes" />
+                    </group>
+                    </group>
+                                  </group>
+<group name="left" position="inside">
+<field name="type_id" />
+<field name="controller_uuid" groups="base.group_system" />
+<field
+                    name="controller_update_url"
+                    groups="stay.group_stay_user"
+                    widget="url"
+                    attrs="{'invisible': [('type_id', '=', False)]}"
+                />
+                                  </group>
+
+        </field>
+    </record>
+
+<record id="stay_search" model="ir.ui.view">
+                          <field name="model">stay.stay</field>
+                          <field name="inherit_id" ref="stay.stay_search" />
+                          <field name="arch" type="xml">
+                                  <group name="groupby" position="before">
+                                          <filter
+                    name="controller_created"
+                    domain="[('controller_mode', '=', 'created')]"
+                    string="Created from Web Form"
+                />
+                                          <filter
+                    name="controller_updated"
+                    domain="[('controller_mode', '=', 'updated')]"
+                    string="Updated from Web Form"
+                />
+                                          <filter
+                    name="controller_none"
+                    domain="[('controller_mode', '=', False)]"
+                    string="Manual"
+                />
+
+
+                                          <separator />
+                                  </group>
+<field name="partner_name" position="attributes">
+<attribute
+                    name="filter_domain"
+                >['|', '|', '|', ('partner_name', 'ilike', self), ('partner_id', 'ilike', self), ('name', 'ilike', self), ('controller_uuid', '=', self)]</attribute>
+</field>
+                    <group name="groupby" position="inside">
+<filter name="type_groupby" string="Type" context="{'group_by': 'type_id'}" />
+</group>
+                          </field>
+                  </record>
+
+          </odoo>
