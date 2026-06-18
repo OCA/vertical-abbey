@@ -90,6 +90,7 @@ class DonationDonation(models.Model):
         we don't put analytic on stock accounts"""
         vals = super()._prepare_donation_move()
         ppo = self.env["product.product"]
+        aao = self.env["account.account"]
         if vals:
             for line in vals.get("line_ids", []):
                 lvals = line[2]
@@ -97,9 +98,14 @@ class DonationDonation(models.Model):
                     lvals.get("display_type") == "product"
                     and lvals.get("product_id")
                     and lvals.get("analytic_distribution")
+                    and lvals.get("account_id")
                 ):
                     product = ppo.browse(lvals["product_id"])
-                    if product.detailed_type == "donation_mass":
+                    account = aao.browse(lvals["account_id"])
+                    if (
+                        product.detailed_type == "donation_mass"
+                        and account.account_type not in ("income", "income_other")
+                    ):
                         lvals["analytic_distribution"] = False
         return vals
 
