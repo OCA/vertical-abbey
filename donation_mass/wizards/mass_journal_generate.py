@@ -208,6 +208,8 @@ class MassJournalGenerate(models.TransientModel):
             new_line = self.env["mass.line"].create(vals)
             new_line_ids.append(new_line.id)
 
-        action = self.env.ref("mass.mass_line_action").sudo().read([])[0]
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "donation_mass.mass_line_action"
+        )
         action["domain"] = [("id", "in", new_line_ids)]
         return action

@@ -4,7 +4,7 @@
 
 from collections import defaultdict
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.misc import format_date
 
@@ -59,7 +59,7 @@ class MassRequest(models.Model):
         string="Mass Product",
         check_company=True,
         domain="[('company_id', 'in', (False, company_id)), "
-        "('detailed_type', '=', 'donation_mass')]",
+        "('type', '=', 'service'), ('donation_type', '=', 'mass')]",
         required=True,
         readonly=True,
         ondelete="restrict",
@@ -90,7 +90,7 @@ class MassRequest(models.Model):
         "account.account",
         check_company=True,
         required=True,
-        domain="[('company_id', '=', company_id), ('deprecated', '=', False)]",
+        domain="[('company_ids', 'parent_of', company_id), ('deprecated', '=', False)]",
         default=lambda self: self.env.company.mass_stock_account_id,
     )
     company_id = fields.Many2one(
@@ -131,6 +131,15 @@ class MassRequest(models.Model):
         store=True,
         currency_field="company_currency_id",
     )
+    donation_line_id = fields.Many2one(
+        "donation.line",
+        string="Related Donation Line",
+        readonly=True,
+        check_company=True,
+    )
+    donation_id = fields.Many2one(
+        related="donation_line_id.donation_id", string="Related Donation", store=True
+    )
     transfer_id = fields.Many2one(
         "mass.request.transfer",
         string="Transfer Operation",
@@ -141,7 +150,7 @@ class MassRequest(models.Model):
     @api.depends(
         "product_id",
         "quantity",
-        "line_ids.request_id",
+        "line_ids",
         "offering",
         "transfer_id",
         # Adding transfer_id.number in @api.depends to workaround the following bug:
@@ -237,7 +246,7 @@ class MassRequest(models.Model):
         for request in self:
             if request.state != "waiting":
                 raise UserError(
-                    _(
+                    self.env._(
                         "Cannot delete mass request '%s' because "
                         "it is not in Waiting state.",
                         request.display_name,
@@ -249,7 +258,7 @@ class MassRequest(models.Model):
         for req in self:
             if req.state != "waiting":
                 raise UserError(
-                    _(
+                    self.env._(
                         "Mass request '%s' cannot be transfered because it is not "
                         "in waiting state.",
                         req.display_name,
@@ -259,7 +268,7 @@ class MassRequest(models.Model):
             {"mass_request_ids": [Command.set(self.ids)]}
         )
         action = self.env["ir.actions.actions"]._for_xml_id(
-            "mass.mass_request_transfer_action"
+            "donation_mass.mass_request_transfer_action"
         )
         action.update(
             {
@@ -338,7 +347,7 @@ class MassLine(models.Model):
             for mass in self:
                 if mass.state == "done":
                     raise UserError(
-                        _(
+                        self.env._(
                             "Cannot delete mass line dated %(date)s for %(partner)s "
                             "because it is in 'Done' state.",
                             date=format_date(self.env, mass.date),
@@ -347,7 +356,7 @@ class MassLine(models.Model):
                     )
                 if mass.type_id.uninterrupted and mass.date < last_date:
                     raise UserError(
-                        _(
+                        self.env._(
                             "Cannot delete mass dated %(date)s for %(partner)s "
                             "because it is a %(mass_type_name)s which is an "
                             "uninterrupted mass.",
@@ -369,7 +378,7 @@ class MassRequestTransfer(models.Model):
 
     number = fields.Char(
         string="Transfer Number",
-        default=lambda self: _("New"),
+        default=lambda self: self.env._("New"),
         readonly=True,
         copy=False,
     )
@@ -412,14 +421,12 @@ class MassRequestTransfer(models.Model):
     amount_total = fields.Monetary(
         compute="_compute_transfer_totals",
         currency_field="company_currency_id",
-        precompute=True,
         store=True,
         tracking=True,
     )
     mass_total = fields.Integer(
         compute="_compute_transfer_totals",
         string="Total Mass Quantity",
-        precompute=True,
         store=True,
         tracking=True,
     )
@@ -464,7 +471,7 @@ class MassRequestTransfer(models.Model):
             if trf.celebrant_id:
                 name = " ".join([name, trf.celebrant_id.display_name])
             if trf.state == "draft":
-                draft_label = _("Draft")
+                draft_label = self.env._("Draft")
                 name = f"{name} ({draft_label})"
             trf.display_name = name
 
@@ -473,10 +480,10 @@ class MassRequestTransfer(models.Model):
         for vals in vals_list:
             if "company_id" in vals:
                 self = self.with_company(vals["company_id"])
-            if vals.get("number", _("New")) == _("New"):
+            if vals.get("number", self.env._("New")) == self.env._("New"):
                 vals["number"] = self.env["ir.sequence"].next_by_code(
                     "mass.request.transfer", vals.get("transfer_date")
-                ) or _("New")
+                ) or self.env._("New")
         return super().create(vals_list)
 
     @api.model
@@ -487,7 +494,10 @@ class MassRequestTransfer(models.Model):
             stock_account_id = request.stock_account_id.id or False
             if not stock_account_id:
                 raise UserError(
-                    _("Missing stock account on mass request %s.", request.display_name)
+                    self.env._(
+                        "Missing stock account on mass request %s.",
+                        request.display_name,
+                    )
                 )
             if stock_account_id:
                 stock_aml[stock_account_id] += request.offering
@@ -495,23 +505,19 @@ class MassRequestTransfer(models.Model):
         partner_id = self.celebrant_id.id
         for stock_account_id, stock_amount in stock_aml.items():
             movelines.append(
-                (
-                    0,
-                    0,
+                Command.create(
                     {
                         "credit": 0,
                         "debit": stock_amount,
                         "account_id": stock_account_id,
                         "partner_id": partner_id,
-                    },
+                    }
                 )
             )
 
         # counter-part
         movelines.append(
-            (
-                0,
-                0,
+            Command.create(
                 {
                     "debit": 0,
                     "credit": self.amount_total,
@@ -536,36 +542,62 @@ class MassRequestTransfer(models.Model):
         self.ensure_one()
         if not self.celebrant_id:
             raise UserError(
-                _(
+                self.env._(
                     "Celebrant is not set on mass request transfer '%s'.",
                     self.display_name,
                 )
             )
         if not self.mass_request_ids:
             raise UserError(
-                _(
+                self.env._(
                     "Cannot validate mass request transfer %s because it has no "
                     "mass requests."
                 )
             )
         if not self.company_id.mass_validation_journal_id:
             raise UserError(
-                _(
+                self.env._(
                     "The 'Mass Validation Journal' is not set on company '%s'.",
                     self.company_id.display_name,
                 )
             )
 
-        transfer_vals = {"state": "done"}
-
         # Create account move
         move_vals = self._prepare_mass_transfer_move()
+        from pprint import pprint
+
+        pprint(move_vals)
         move = self.env["account.move"].create(move_vals)
         if self.company_id.mass_post_move:
             move._post(soft=False)
 
-        transfer_vals["move_id"] = move.id
+        transfer_vals = {
+            "state": "done",
+            "move_id": move.id,
+        }
         self.write(transfer_vals)
+        stock_account = self.company_id.mass_stock_account_id
+        if move.state == "posted" and stock_account.reconcile:
+            total = 0.0
+            to_rec = self.env["account.move.line"]
+            for line in move.line_ids:
+                if line.account_id == stock_account:
+                    total += line.balance
+                    to_rec |= line
+            for mass_req in self.mass_request_ids:
+                if (
+                    mass_req.donation_id.move_id
+                    and mass_req.donation_id.move_id.state == "posted"
+                ):
+                    for line in mass_req.donation_id.move_id.line_ids:
+                        # I add "line not in to_rec" because several mass requests can
+                        # be in the same donation and therefore have the
+                        # same account.move
+                        if line.account_id == stock_account and line not in to_rec:
+                            total += line.balance
+                            to_rec |= line
+            if self.company_id.currency_id.is_zero(total):
+                to_rec.reconcile()
 
     def back_to_draft(self):
         self.ensure_one()
@@ -580,7 +612,7 @@ class MassRequestTransfer(models.Model):
         for trf in self:
             if trf.state == "done":
                 raise UserError(
-                    _(
+                    self.env._(
                         "Cannot delete mass request transfer dated %(date)s for "
                         "%(celebrant)s because it is in 'Done' state.",
                         date=format_date(self.env, trf.transfer_date),

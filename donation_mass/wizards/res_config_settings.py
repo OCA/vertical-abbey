@@ -12,7 +12,7 @@ class ResConfigSettings(models.TransientModel):
     mass_stock_account_id = fields.Many2one(
         related="company_id.mass_stock_account_id",
         readonly=False,
-        domain="[('company_ids', 'in', company_id), ('deprecated', '=', False)]",
+        domain="[('company_ids', 'parent_of', company_id), ('deprecated', '=', False)]",
     )
     mass_validation_journal_id = fields.Many2one(
         related="company_id.mass_validation_journal_id",

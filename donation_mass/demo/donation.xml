@@ -32,7 +32,7 @@
         <field name="partner_id" ref="donor_mass1" />
         <field name="donation_date" eval="time.strftime('%Y-%m-01')" />
         <field
-            name="payment_mode_id"
+            name="payment_method_line_id"
             ref="account_payment_mode.payment_mode_inbound_ct1"
         />
         <field name="payment_ref">CHQ CA 229026</field>
@@ -51,7 +51,7 @@
         <field name="partner_id" ref="donor_mass2" />
         <field name="donation_date" eval="time.strftime('%Y-%m-01')" />
         <field
-            name="payment_mode_id"
+            name="payment_method_line_id"
             ref="account_payment_mode.payment_mode_inbound_ct1"
         />
         <field name="payment_ref">CHQ BP 9087123</field>
@@ -70,7 +70,7 @@
         <field name="partner_id" ref="donor_mass3" />
         <field name="donation_date" eval="time.strftime('%Y-%m-01')" />
         <field
-            name="payment_mode_id"
+            name="payment_method_line_id"
             ref="account_payment_mode.payment_mode_inbound_ct1"
         />
         <field name="payment_ref">CHQ HSBC 98302217</field>

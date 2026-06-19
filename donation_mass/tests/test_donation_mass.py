@@ -4,6 +4,7 @@
 
 import time
 
+from odoo import Command
 from odoo.tests.common import TransactionCase
 
 
@@ -25,7 +26,16 @@ class TestDonationMass(TransactionCase):
             {
                 "code": "MASSTOCK",
                 "name": "Mass Stock test",
-                "company_id": cls.company.id,
+                "company_ids": [Command.set([cls.company.id])],
+                "account_type": "asset_current",
+                "reconcile": True,
+            }
+        )
+        cls.payment_account = cls.env["account.account"].create(
+            {
+                "code": "PAYACC",
+                "name": "Donation Payment test",
+                "company_ids": [Command.set([cls.company.id])],
                 "account_type": "asset_current",
                 "reconcile": True,
             }
@@ -43,16 +53,16 @@ class TestDonationMass(TransactionCase):
                 "company_id": cls.company.id,
             }
         )
-        cls.payment_mode = cls.env["account.payment.mode"].create(
+        cls.payment_method_line = cls.env["account.payment.method.line"].create(
             {
                 "name": "test_payment_mode_donation_mass",
                 "donation": True,
-                "bank_account_link": "fixed",
-                "fixed_journal_id": cls.bank_journal.id,
+                "journal_id": cls.bank_journal.id,
                 "payment_method_id": cls.env.ref(
                     "account.account_payment_method_manual_in"
                 ).id,
-                "company_id": cls.company.id,
+                "payment_account_id": cls.payment_account.id,
+                # company_id is a related of journal
             }
         )
         today = time.strftime("%Y-%m-%d")
@@ -66,22 +76,20 @@ class TestDonationMass(TransactionCase):
                 "check_total": 17,
                 "partner_id": cls.donor1.id,
                 "donation_date": today,
-                "payment_mode_id": cls.payment_mode.id,
+                "payment_method_line_id": cls.payment_method_line.id,
                 "tax_receipt_option": "each",
                 "payment_ref": "CHQ CA 229026",
                 "company_id": cls.company.id,
                 "line_ids": [
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "product_id": cls.env.ref(
-                                "mass.product_product_mass_simple"
+                                "donation_mass.product_product_mass_simple"
                             ).id,
                             "quantity": 1,
                             "unit_price": 17,
                             "intention": "For my grand-mother",
-                        },
+                        }
                     )
                 ],
             }
@@ -91,22 +99,20 @@ class TestDonationMass(TransactionCase):
                 "check_total": 340,
                 "partner_id": cls.donor2.id,
                 "donation_date": today,
-                "payment_mode_id": cls.payment_mode.id,
+                "payment_method_line_id": cls.payment_method_line.id,
                 "tax_receipt_option": "each",
                 "payment_ref": "CHQ BP 9087123",
                 "company_id": cls.company.id,
                 "line_ids": [
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "product_id": cls.env.ref(
-                                "mass.product_product_mass_novena"
+                                "donation_mass.product_product_mass_novena"
                             ).id,
                             "quantity": 2,
                             "unit_price": 170,
                             "intention": "For my father",
-                        },
+                        }
                     )
                 ],
             }
@@ -116,23 +122,23 @@ class TestDonationMass(TransactionCase):
                 "check_total": 540,
                 "partner_id": cls.donor3.id,
                 "donation_date": today,
-                "payment_mode_id": cls.payment_mode.id,
+                "payment_method_line_id": cls.payment_method_line.id,
                 "tax_receipt_option": "each",
                 "payment_ref": "CHQ HSBC 98302217",
                 "company_id": cls.company.id,
                 "line_ids": [
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "product_id": cls.env.ref(
-                                "mass.product_product_mass_gregorian"
+                                "donation_mass.product_product_mass_gregorian"
                             ).id,
                             "quantity": 1,
                             "unit_price": 540,
                             "intention": "For my grand-father",
-                            "celebrant_id": cls.env.ref("mass.father_odilon").id,
-                        },
+                            "celebrant_id": cls.env.ref(
+                                "donation_mass.father_odilon"
+                            ).id,
+                        }
                     )
                 ],
             }
@@ -156,12 +162,16 @@ class TestDonationMass(TransactionCase):
             self.assertEqual(mass_req.offering, dline.amount)
             self.assertEqual(mass_req.partner_id.id, donation.partner_id.id)
             self.assertEqual(mass_req.donation_date, donation.donation_date)
-            if dline.product_id == self.env.ref("mass.product_product_mass_novena"):
+            if dline.product_id == self.env.ref(
+                "donation_mass.product_product_mass_novena"
+            ):
                 self.assertEqual(mass_req.mass_quantity, 9 * dline.quantity)
             elif dline.product_id == self.env.ref(
-                "mass.product_product_mass_gregorian"
+                "donation_mass.product_product_mass_gregorian"
             ):
                 self.assertEqual(mass_req.mass_quantity, 30 * dline.quantity)
-            elif dline.product_id == self.env.ref("mass.product_product_mass_simple"):
+            elif dline.product_id == self.env.ref(
+                "donation_mass.product_product_mass_simple"
+            ):
                 self.assertEqual(mass_req.mass_quantity, 1 * dline.quantity)
             self.assertEqual(mass_req.mass_quantity, mass_req.mass_remaining_quantity)

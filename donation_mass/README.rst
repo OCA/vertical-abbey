@@ -28,8 +28,15 @@ Donation Mass
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-This module adds the ability to create mass requests from donation
-lines.
+This module manages mass requests and the planning of masses. Mass
+requests can be created manually or from a donation.
+
+This module has an impact on accounting: \* a mass request in waiting or
+started state is considered as a stock from an accounting point of view.
+\* when a mass is celebrated, i.e. when the mass is validated in Odoo,
+an account move is automatically generated to move the amount of the
+donation associed to the mass line from the stock account to the revenue
+account.
 
 When a donation is validated with a mass in one of the donation lines, a
 new mass request is automatically created and the account move
@@ -37,6 +44,15 @@ associated to the donation will send the amount of that donation line to
 a stock account. When the mass is celebrated, i.e. when the mass is
 validated in Odoo, an accounting entry is generated from the stock
 account to a revenue account.
+
+This module also allows to transfer masses to an external celebrant.
+When validating the mass transfer, a journal entry is created that moves
+the corresponding donation amount from the mass stock account to the
+payable account of the external celebrant.
+
+This module has been developped by the `Barroux
+Abbey <https://www.barroux.org/>`__ which is a French Catholic Abbey. It
+is specific to the management of christian masses.
 
 **Table of contents**
 
@@ -46,13 +62,18 @@ account to a revenue account.
 Configuration
 =============
 
-Check that the mass products have the option *Is a Donation* active.
-
-On the Invoicing configuration page, in the *Mass* section, the *Mass
-Stock Account* is the account that is used when validating the donation.
-
-On the mass product, the *Income Account* is used when the mass journal
-is validated.
+-  create a partner for each celebrant with the option *Celebrant* set
+   to *Internal*.
+-  if you transfer masses to an external celebrant, create a
+   corresponding partner with *Celebrant* set to *External*.
+-  check the configuration of the Mass Request Types that have been
+   automatically created by the module.
+-  check the configuration of the Mass Products that have been
+   automatically created by the module. The revenue account of the mass
+   product is used when the mass journal is validated.
+-  on the Donation configuration page, configure the stock account for
+   the celebrated mass and the account journal that will be used for the
+   accounting entries generated when a mass is validated.
 
 Usage
 =====
@@ -68,6 +89,23 @@ empty).
 When the donation is validated, the mass request is automatically
 created. You can jump on it via an icon/button at the top right of the
 donation form view.
+
+You can also create mass requests manually from the menu *Donation >
+Mass > Mass Requests*.
+
+Then, start the wizard *Generate Masses Journal* to generate the masses
+for a particular date. You can print a report that display the list of
+masses with the associated celebrant, donor and intention. When it is
+confirmed that the masses for that day have been celebrated, start the
+wizard *Validate Masses Journal* to validate the masses ; you won't be
+able to modify the masses any more.
+
+If you want to transfer mass requests to an external celebrant with the
+associated donations, create a new mass requests transfer. When you
+validate the mass request transfer, it will generate the corresponding
+accounting entries ; with these accounting entries, you will be able to
+generate the payment of the corresponding donations to the external
+celebrant.
 
 Bug Tracker
 ===========

@@ -12,7 +12,6 @@ class ResCompany(models.Model):
 
     mass_stock_account_id = fields.Many2one(
         "account.account",
-        domain=[("deprecated", "!=", True)],
         check_company=True,
     )
     mass_validation_journal_id = fields.Many2one("account.journal", check_company=True)

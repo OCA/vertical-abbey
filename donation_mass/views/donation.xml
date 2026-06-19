@@ -36,16 +36,13 @@
             <field name="in_kind" position="after">
                 <field
                     name="celebrant_id"
-                    invisible="product_detailed_type != 'donation_mass'"
+                    invisible="product_donation_type != 'mass'"
                 />
                 <field
                     name="mass_request_date"
-                    invisible="product_detailed_type != 'donation_mass'"
+                    invisible="product_donation_type != 'mass'"
                 />
-                <field
-                    name="intention"
-                    invisible="product_detailed_type != 'donation_mass'"
-                />
+                <field name="intention" invisible="product_donation_type != 'mass'" />
             </field>
         </field>
     </record>
@@ -58,16 +55,13 @@
             <field name="amount" position="after">
                 <field
                     name="celebrant_id"
-                    invisible="product_detailed_type != 'donation_mass'"
+                    invisible="product_donation_type != 'mass'"
                 />
                 <field
                     name="mass_request_date"
-                    invisible="product_detailed_type != 'donation_mass'"
+                    invisible="product_donation_type != 'mass'"
                 />
-                <field
-                    name="intention"
-                    invisible="product_detailed_type != 'donation_mass'"
-                />
+                <field name="intention" invisible="product_donation_type != 'mass'" />
             </field>
         </field>
     </record>

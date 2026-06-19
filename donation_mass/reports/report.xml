@@ -10,8 +10,8 @@
         <field name="name">Mass Request Transfer</field>
         <field name="model">mass.request.transfer</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">mass.report_massrequesttransfer</field>
-        <field name="report_file">mass.report_massrequesttransfer</field>
+        <field name="report_name">donation_mass.report_massrequesttransfer</field>
+        <field name="report_file">donation_mass.report_massrequesttransfer</field>
         <field
             name="print_report_name"
         >'mass_request_transfer-%s%s' % (object.number or '-', object.state == 'draft' and '-draft' or '')</field>
@@ -22,8 +22,8 @@
         <field name="name">Masses Journal</field>
         <field name="model">mass.line</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">mass.report_massline</field>
-        <field name="report_file">mass.report_massline</field>
+        <field name="report_name">donation_mass.report_massline</field>
+        <field name="report_file">donation_mass.report_massline</field>
         <field name="binding_model_id" ref="model_mass_line" />
     </record>
 </odoo>

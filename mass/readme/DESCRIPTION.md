@@ -1,19 +1,3 @@
-This module manages mass requests and the planning of masses. If you
-want to be able to create a mass request from a donation, you should
-also install the module *donation_mass*.
+When porting the **mass** module to Odoo 18, it was decided to move the merge the mass module into the module **donation_mass**. The experience shows that the mass module is never used without the donation module and that users are always given the same access rights on the mass module and the donation module. One of the major advantage of this merge is that it allows to use the **donation_type** field on products to configure the mass products.
 
-This module has an impact on accounting: \* a mass request in waiting or
-started state is considered as a stock from an accounting point of view.
-\* when a mass is celebrated, i.e. when the mass is validated in Odoo,
-an account move is automatically generated to move the amount of the
-donation associed to the mass line from the stock account to the revenue
-account.
-
-This module also allows to transfer masses to an external celebrant.
-When validating the mass transfer, a journal entry is created that moves
-the corresponding donation amount from the mass stock account to the
-payable account of the external celebrant.
-
-This module has been developped by the [Barroux
-Abbey](https://www.barroux.org/) which is a French Catholic Abbey. It is
-specific to the management of christian masses.
+Once you have successfully migrated to Odoo 18, you can remove this module (make sure that none of your specific modules has a depenency on it).

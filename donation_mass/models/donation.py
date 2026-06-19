@@ -32,8 +32,8 @@ class DonationDonation(models.Model):
         mro = self.env["mass.request"]
         for donation in self:
             for line in donation.line_ids:
-                if line.product_id.detailed_type == "donation_mass":
-                    mro.sudo().create(line._prepare_mass_request())
+                if line.product_id.donation_type == "mass":
+                    mro.create(line._prepare_mass_request())
         return res
 
     def done2cancel(self):
@@ -55,7 +55,7 @@ class DonationDonation(models.Model):
                                 ].convert_to_export(mass_request.state, mass_request),
                             )
                         )
-                self.message_post(
+                donation.message_post(
                     body=self.env._(
                         "%d related mass request(s) in waiting state "
                         "have been deleted.",
@@ -68,7 +68,9 @@ class DonationDonation(models.Model):
     def goto_mass_requests(self):
         self.ensure_one()
         assert self.mass_request_ids
-        action = self.env["ir.actions.actions"]._for_xml_id("mass.mass_request_action")
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "donation_mass.mass_request_action"
+        )
         if len(self.mass_request_ids) == 1:
             action.update(
                 {
@@ -104,9 +106,9 @@ class DonationDonation(models.Model):
                 ):
                     product = ppo.browse(lvals["product_id"])
                     account = aao.browse(lvals["account_id"])
-                    if (
-                        product.detailed_type == "donation_mass"
-                        and account.account_type not in ("income", "income_other")
+                    if product.donation_type == "mass" and account.account_type not in (
+                        "income",
+                        "income_other",
                     ):
                         lvals["analytic_distribution"] = False
         return vals
@@ -153,7 +155,7 @@ class DonationLine(models.Model):
         return vals
 
     def _get_account(self):
-        if self.product_id.detailed_type == "donation_mass":
+        if self.product_id.donation_type == "mass":
             if not self.company_id.mass_stock_account_id:
                 raise UserError(
                     self.env._(

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2014-2021 Barroux Abbey (www.barroux.org)
+  Copyright 2014-2021 Akretion France (www.akretion.com)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo noupdate="1">
+    <!-- Multi-company Rules -->
+    <record id="mass_request_company_rule" model="ir.rule">
+        <field name="name">Mass Request Multi-company</field>
+        <field name="model_id" ref="model_mass_request" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="mass_request_transfer_company_rule" model="ir.rule">
+        <field name="name">Mass Request Transfer Multi-company</field>
+        <field name="model_id" ref="model_mass_request_transfer" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="mass_line_company_rule" model="ir.rule">
+        <field name="name">Mass Line Multi-company</field>
+        <field name="model_id" ref="model_mass_line" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

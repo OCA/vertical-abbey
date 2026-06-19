@@ -5,6 +5,7 @@
 import time
 from datetime import datetime
 
+from odoo import Command
 from odoo.tests.common import TransactionCase
 
 
@@ -26,7 +27,7 @@ class TestGenerateMassJournal(TransactionCase):
             {
                 "code": "MASSTOCK",
                 "name": "Mass Stock test",
-                "company_id": cls.company.id,
+                "company_ids": [Command.set([cls.company.id])],
                 "account_type": "asset_current",
                 "reconcile": True,
             }
@@ -48,7 +49,9 @@ class TestGenerateMassJournal(TransactionCase):
             {
                 "partner_id": cls.partner1.id,
                 "donation_date": time.strftime("%Y-%m-%d"),
-                "product_id": cls.env.ref("mass.product_product_mass_simple").id,
+                "product_id": cls.env.ref(
+                    "donation_mass.product_product_mass_simple"
+                ).id,
                 "offering": 17.0,
                 "company_id": cls.company.id,
                 "quantity": 1,
@@ -60,7 +63,9 @@ class TestGenerateMassJournal(TransactionCase):
             {
                 "partner_id": cls.partner2.id,
                 "donation_date": time.strftime("%Y-%m-%d"),
-                "product_id": cls.env.ref("mass.product_product_mass_novena").id,
+                "product_id": cls.env.ref(
+                    "donation_mass.product_product_mass_novena"
+                ).id,
                 "offering": 170.0,
                 "company_id": cls.company.id,
                 "quantity": 1,
@@ -72,7 +77,9 @@ class TestGenerateMassJournal(TransactionCase):
             {
                 "partner_id": cls.partner3.id,
                 "donation_date": time.strftime("%Y-%m-%d"),
-                "product_id": cls.env.ref("mass.product_product_mass_gregorian").id,
+                "product_id": cls.env.ref(
+                    "donation_mass.product_product_mass_gregorian"
+                ).id,
                 "offering": 540.0,
                 "company_id": cls.company.id,
                 "quantity": 1,
@@ -84,7 +91,9 @@ class TestGenerateMassJournal(TransactionCase):
             {
                 "partner_id": cls.partner4.id,
                 "donation_date": time.strftime("%Y-%m-%d"),
-                "product_id": cls.env.ref("mass.product_product_mass_simple").id,
+                "product_id": cls.env.ref(
+                    "donation_mass.product_product_mass_simple"
+                ).id,
                 "offering": 51.0,
                 "company_id": cls.company.id,
                 "quantity": 3,

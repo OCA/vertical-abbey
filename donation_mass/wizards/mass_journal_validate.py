@@ -177,6 +177,8 @@ class MassJournalValidate(models.TransientModel):
                     end_date=format_date(self.env, self.end_date),
                 )
             )
-        action = self.env["ir.actions.actions"]._for_xml_id("mass.mass_line_action")
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "donation_mass.mass_line_action"
+        )
         action["domain"] = [("id", "in", line_ids)]
         return action

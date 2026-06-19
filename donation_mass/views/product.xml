@@ -9,12 +9,12 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="donation_base.product_template_form_view" />
         <field name="arch" type="xml">
-            <!-- when Odoo will support 'not like' in attrs, we will update
-            the attrs in donation_base and remove this view -->
-            <field name="tax_receipt_ok" position="attributes">
-                <attribute
-                    name="attrs"
-                >{'invisible': [('detailed_type', 'not in', ('donation', 'donation_in_kind_service', 'donation_in_kind_consu', 'donation_mass'))]}</attribute>
+            <field name="donation_type" position="after">
+                <field
+                    name="mass_request_type_id"
+                    invisible="donation_type != 'mass'"
+                    required="donation_type == 'mass'"
+                />
             </field>
         </field>
     </record>
