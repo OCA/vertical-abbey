@@ -25,7 +25,8 @@ class MassRequestTransfer(models.Model):
                 ):
                     for line in mass_req.donation_id.move_id.line_ids:
                         # I add "line not in to_rec" because several mass requests can
-                        # be in the same donation and therefore have the same account.move
+                        # be in the same donation and therefore have the
+                        # same account.move
                         if line.account_id == stock_account and line not in to_rec:
                             total += line.balance
                             to_rec |= line

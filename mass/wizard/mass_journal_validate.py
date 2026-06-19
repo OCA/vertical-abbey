@@ -7,7 +7,7 @@ import json
 from collections import defaultdict
 from datetime import timedelta
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.misc import format_date
 
@@ -62,16 +62,20 @@ class MassJournalValidate(models.TransientModel):
                 stock_account_id = line.request_id.stock_account_id.id
                 if not stock_account_id:
                     raise UserError(
-                        _("Stock account is not set on mass request '%s'.")
-                        % line.request_id.display_name
+                        _(
+                            "Stock account is not set on mass request '%s'.",
+                            line.request_id.display_name,
+                        )
                     )
                 stock_acc2amount[stock_account_id] += amount
 
                 income_account_id = line.product_id._get_product_accounts()["income"].id
                 if not income_account_id:
                     raise UserError(
-                        _("Income account is not set for product '%s'.")
-                        % line.product_id.display_name
+                        _(
+                            "Income account is not set for product '%s'.",
+                            line.product_id.display_name,
+                        )
                     )
                 key = (
                     income_account_id,
@@ -84,15 +88,13 @@ class MassJournalValidate(models.TransientModel):
 
         for stock_account_id, amount in stock_acc2amount.items():
             movelines.append(
-                (
-                    0,
-                    0,
+                Command.create(
                     {
                         "display_type": "payment_term",
                         "credit": 0,
                         "debit": amount,
                         "account_id": stock_account_id,
-                    },
+                    }
                 )
             )
 
@@ -102,16 +104,14 @@ class MassJournalValidate(models.TransientModel):
         ), amount in income_acc2amount.items():
             income_analytic_distribution = json.loads(income_analytic_distribution_str)
             movelines.append(
-                (
-                    0,
-                    0,
+                Command.create(
                     {
                         "display_type": "product",
                         "debit": 0,
                         "credit": amount,
                         "account_id": income_account_id,
                         "analytic_distribution": income_analytic_distribution,
-                    },
+                    }
                 )
             )
 
@@ -129,13 +129,16 @@ class MassJournalValidate(models.TransientModel):
         company = self.company_id
         if not company.mass_validation_journal_id:
             raise UserError(
-                _("Missing Mass Validation Journal on company '%s'.")
-                % company.display_name
+                _(
+                    "Missing Mass Validation Journal on company '%s'.",
+                    company.display_name,
+                )
             )
         if self.start_date > self.end_date:
             raise UserError(
                 _(
-                    "The start date (%(start_date)s) is after the end date (%(end_date)s).",
+                    "The start date (%(start_date)s) is after "
+                    "the end date (%(end_date)s).",
                     start_date=format_date(self.env, self.start_date),
                     end_date=format_date(self.env, self.end_date),
                 )

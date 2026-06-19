@@ -6,72 +6,69 @@
   License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 -->
 <odoo>
-
-<record id="donation_form" model="ir.ui.view">
-    <field name="model">donation.donation</field>
-    <field name="inherit_id" ref="donation.donation_form" />
-    <field name="arch" type="xml">
-        <div name="button_box" position="inside">
-            <button
+    <record id="donation_form" model="ir.ui.view">
+        <field name="model">donation.donation</field>
+        <field name="inherit_id" ref="donation.donation_form" />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
                     class="oe_stat_button"
                     type="object"
                     name="goto_mass_requests"
-                    attrs="{'invisible': [('mass_request_count', '=', 0)]}"
+                    invisible="not mass_request_count"
                     icon="fa-plus-square"
                 >
-                <field
+                    <field
                         string="Mass Requests"
                         name="mass_request_count"
                         widget="statinfo"
                     />
-            </button>
-        </div>
-    </field>
-</record>
-
-<record id="donation_line_tree" model="ir.ui.view">
-    <field name="name">mass.donation.line.tree</field>
-    <field name="model">donation.line</field>
-    <field name="inherit_id" ref="donation.donation_line_tree" />
-    <field name="arch" type="xml">
-        <field name="in_kind" position="after">
-            <field
-                    name="celebrant_id"
-                    attrs="{'invisible': [('product_detailed_type', '!=', 'donation_mass')]}"
-                />
-            <field
-                    name="mass_request_date"
-                    attrs="{'invisible': [('product_detailed_type', '!=', 'donation_mass')]}"
-                />
-            <field
-                    name="intention"
-                    attrs="{'invisible': [('product_detailed_type', '!=', 'donation_mass')]}"
-                />
+                </button>
+            </div>
         </field>
-    </field>
-</record>
+    </record>
 
-<record id="donation_line_form" model="ir.ui.view">
-    <field name="name">mass.donation.line.form</field>
-    <field name="model">donation.line</field>
-    <field name="inherit_id" ref="donation.donation_line_form" />
-    <field name="arch" type="xml">
-        <field name="amount" position="after">
-            <field
+    <record id="donation_line_tree" model="ir.ui.view">
+        <field name="name">mass.donation.line.tree</field>
+        <field name="model">donation.line</field>
+        <field name="inherit_id" ref="donation.donation_line_tree" />
+        <field name="arch" type="xml">
+            <field name="in_kind" position="after">
+                <field
                     name="celebrant_id"
-                    attrs="{'invisible': [('product_detailed_type', '!=', 'donation_mass')]}"
+                    invisible="product_detailed_type != 'donation_mass'"
                 />
-            <field
+                <field
                     name="mass_request_date"
-                    attrs="{'invisible': [('product_detailed_type', '!=', 'donation_mass')]}"
+                    invisible="product_detailed_type != 'donation_mass'"
                 />
-            <field
+                <field
                     name="intention"
-                    attrs="{'invisible': [('product_detailed_type', '!=', 'donation_mass')]}"
+                    invisible="product_detailed_type != 'donation_mass'"
                 />
+            </field>
         </field>
-    </field>
-</record>
+    </record>
 
-
+    <record id="donation_line_form" model="ir.ui.view">
+        <field name="name">mass.donation.line.form</field>
+        <field name="model">donation.line</field>
+        <field name="inherit_id" ref="donation.donation_line_form" />
+        <field name="arch" type="xml">
+            <field name="amount" position="after">
+                <field
+                    name="celebrant_id"
+                    invisible="product_detailed_type != 'donation_mass'"
+                />
+                <field
+                    name="mass_request_date"
+                    invisible="product_detailed_type != 'donation_mass'"
+                />
+                <field
+                    name="intention"
+                    invisible="product_detailed_type != 'donation_mass'"
+                />
+            </field>
+        </field>
+    </record>
 </odoo>

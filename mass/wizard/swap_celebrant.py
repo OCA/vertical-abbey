@@ -3,7 +3,7 @@
 # @author: Alexis de Lattre <alexis.delattre@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.misc import format_date
 
@@ -21,13 +21,15 @@ class SwapCelebrant(models.TransientModel):
         line_ids = self._context["active_ids"]
         if len(line_ids) != 2:
             raise UserError(
-                _("You should only select 2 mass lines (%d were selected).")
-                % len(line_ids)
+                self.env._(
+                    "You should only select 2 mass lines (%d were selected).",
+                    len(line_ids),
+                )
             )
         lines = self.env["mass.line"].browse(line_ids)
         if lines[0].date != lines[1].date:
             raise UserError(
-                _(
+                self.env._(
                     "The 2 mass lines that you selected have different dates "
                     "(%(date1)s and %(date2)s). You can swap celebrants only between 2 "
                     "masses of the same date.",
@@ -35,7 +37,7 @@ class SwapCelebrant(models.TransientModel):
                     date2=format_date(self.env, lines[1].date),
                 )
             )
-        res["line_ids"] = [(6, 0, lines.ids)]
+        res["line_ids"] = [Command.set(lines.ids)]
         return res
 
     line_ids = fields.Many2many("mass.line", string="Mass Lines to Swap", readonly=True)

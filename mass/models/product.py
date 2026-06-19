@@ -16,10 +16,9 @@ class ProductTemplate(models.Model):
             "donation_mass": "set service",
         },
     )
+    mass_request_type_id = fields.Many2one("mass.request.type", ondelete="restrict")
 
     def _detailed_type_mapping(self):
         res = super()._detailed_type_mapping()
         res["donation_mass"] = "service"
         return res
-
-    mass_request_type_id = fields.Many2one("mass.request.type", ondelete="restrict")

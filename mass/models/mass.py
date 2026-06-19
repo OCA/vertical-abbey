@@ -63,7 +63,6 @@ class MassRequest(models.Model):
         required=True,
         readonly=True,
         ondelete="restrict",
-        states={"waiting": [("readonly", False)]},
     )
     type_id = fields.Many2one(
         related="product_id.mass_request_type_id",
@@ -76,8 +75,7 @@ class MassRequest(models.Model):
         store=True,
         precompute=True,
         currency_field="company_currency_id",
-        readonly=True,
-        states={"waiting": [("readonly", False)]},
+        readonly=False,
         help="The total offering amount in company currency.",
     )
     unit_offering = fields.Monetary(
@@ -104,9 +102,7 @@ class MassRequest(models.Model):
     company_currency_id = fields.Many2one(
         related="company_id.currency_id", string="Company Currency", store=True
     )
-    quantity = fields.Integer(
-        default=1, readonly=True, states={"waiting": [("readonly", False)]}
-    )
+    quantity = fields.Integer(default=1)
     # quantity = quantity in the donation line
     mass_quantity = fields.Integer(
         compute="_compute_unit_offering",
@@ -149,7 +145,8 @@ class MassRequest(models.Model):
         "offering",
         "transfer_id",
         # Adding transfer_id.number in @api.depends to workaround the following bug:
-        # if you delete a mass.request.transfer, _compute_state_mass_remaining_quantity()
+        # if you delete a mass.request.transfer,
+        # _compute_state_mass_remaining_quantity()
         # is not triggered ; with 'transfer_id.number' it is triggered
         "transfer_id.number",
     )
@@ -228,21 +225,13 @@ class MassRequest(models.Model):
                 )
                 req.analytic_distribution = distribution or req.analytic_distribution
 
-    def name_get(self):
-        res = []
+    @api.depends("partner_id", "quantity", "type_id")
+    def _compute_display_name(self):
         for request in self:
-            res.append(
-                (
-                    request.id,
-                    "[%dx%s] %s"
-                    % (
-                        request.quantity,
-                        request.type_id.code,
-                        request.partner_id.display_name,
-                    ),
-                )
-            )
-        return res
+            partner_name = request.partner_id.display_name
+            qty = request.quantity
+            type_code = request.type_id.code
+            request.display_name = f"[{qty}x{type_code}] {partner_name}"
 
     def unlink(self):
         for request in self:
@@ -250,9 +239,9 @@ class MassRequest(models.Model):
                 raise UserError(
                     _(
                         "Cannot delete mass request '%s' because "
-                        "it is not in Waiting state."
+                        "it is not in Waiting state.",
+                        request.display_name,
                     )
-                    % request.display_name
                 )
         return super().unlink()
 
@@ -262,9 +251,9 @@ class MassRequest(models.Model):
                 raise UserError(
                     _(
                         "Mass request '%s' cannot be transfered because it is not "
-                        "in waiting state."
+                        "in waiting state.",
+                        req.display_name,
                     )
-                    % req.display_name
                 )
         transfer = self.env["mass.request.transfer"].create(
             {"mass_request_ids": [Command.set(self.ids)]}
@@ -276,7 +265,7 @@ class MassRequest(models.Model):
             {
                 "views": False,
                 "res_id": transfer.id,
-                "view_mode": "form,tree,pivot,graph",
+                "view_mode": "form,list,pivot,graph",
             }
         )
         return action
@@ -291,12 +280,9 @@ class MassLine(models.Model):
         "mass.request",
         string="Mass Request",
         ondelete="cascade",
-        states={"done": [("readonly", True)]},
         index=True,
     )
-    date = fields.Date(
-        string="Celebration Date", required=True, states={"done": [("readonly", True)]}
-    )
+    date = fields.Date(string="Celebration Date", required=True)
     partner_id = fields.Many2one(
         "res.partner", related="request_id.partner_id", string="Donor", store=True
     )
@@ -320,7 +306,6 @@ class MassLine(models.Model):
     unit_offering = fields.Monetary(
         string="Offering",
         currency_field="company_currency_id",
-        states={"done": [("readonly", True)]},
     )
     celebrant_id = fields.Many2one(
         "res.partner",
@@ -328,14 +313,12 @@ class MassLine(models.Model):
         index=True,
         domain=[("celebrant", "=", "internal")],
         ondelete="restrict",
-        states={"done": [("readonly", True)]},
     )
     conventual_id = fields.Many2one(
         "religious.community",
         string="Conventual",
         ondelete="restrict",
         index=True,
-        states={"done": [("readonly", True)]},
     )
     move_id = fields.Many2one("account.move", string="Journal Entry", readonly=True)
     state = fields.Selection(
@@ -397,7 +380,6 @@ class MassRequestTransfer(models.Model):
         required=False,
         index=True,
         domain=[("celebrant", "=", "external")],
-        states={"done": [("readonly", True)]},
         ondelete="restrict",
         tracking=True,
     )
@@ -405,7 +387,6 @@ class MassRequestTransfer(models.Model):
         "res.company",
         required=True,
         ondelete="restrict",
-        states={"done": [("readonly", True)]},
         default=lambda self: self.env.company,
         tracking=True,
     )
@@ -417,7 +398,6 @@ class MassRequestTransfer(models.Model):
     )
     transfer_date = fields.Date(
         required=True,
-        states={"done": [("readonly", True)]},
         default=fields.Date.context_today,
         tracking=True,
     )
@@ -425,7 +405,6 @@ class MassRequestTransfer(models.Model):
         "mass.request",
         "transfer_id",
         string="Mass Requests",
-        states={"done": [("readonly", True)]},
     )
     move_id = fields.Many2one(
         "account.move", string="Journal Entry", readonly=True, check_company=True
@@ -460,17 +439,17 @@ class MassRequestTransfer(models.Model):
         "mass_request_ids.offering",
     )
     def _compute_transfer_totals(self):
-        rg_res = self.env["mass.request"].read_group(
+        rg_res = self.env["mass.request"]._read_group(
             [("transfer_id", "in", self.ids)],
-            ["transfer_id", "mass_quantity:sum", "offering:sum"],
-            ["transfer_id"],
+            groupby=["transfer_id"],
+            aggregates=["mass_quantity:sum", "offering:sum"],
         )
         mapped_data = {
-            x["transfer_id"][0]: {
-                "mass_quantity": x["mass_quantity"],
-                "offering": x["offering"],
+            trf.id: {
+                "mass_quantity": mass_qty_total,
+                "offering": offering_total,
             }
-            for x in rg_res
+            for (trf, mass_qty_total, offering_total) in rg_res
         }
         for trf in self:
             trf.amount_total = mapped_data.get(trf.id, {"offering": 0}).get("offering")
@@ -478,16 +457,16 @@ class MassRequestTransfer(models.Model):
                 "mass_quantity"
             )
 
-    def name_get(self):
-        res = []
+    @api.depends("number", "celebrant_id", "state")
+    def _compute_display_name(self):
         for trf in self:
             name = trf.number
             if trf.celebrant_id:
                 name = " ".join([name, trf.celebrant_id.display_name])
             if trf.state == "draft":
-                name = "%s (%s)" % (name, _("Draft"))
-            res.append((trf.id, name))
-        return res
+                draft_label = _("Draft")
+                name = f"{name} ({draft_label})"
+            trf.display_name = name
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -508,8 +487,7 @@ class MassRequestTransfer(models.Model):
             stock_account_id = request.stock_account_id.id or False
             if not stock_account_id:
                 raise UserError(
-                    _("Missing stock account on mass request %s.")
-                    % request.display_name
+                    _("Missing stock account on mass request %s.", request.display_name)
                 )
             if stock_account_id:
                 stock_aml[stock_account_id] += request.offering
@@ -558,8 +536,10 @@ class MassRequestTransfer(models.Model):
         self.ensure_one()
         if not self.celebrant_id:
             raise UserError(
-                _("Celebrant is not set on mass request transfer '%s'.")
-                % self.display_name
+                _(
+                    "Celebrant is not set on mass request transfer '%s'.",
+                    self.display_name,
+                )
             )
         if not self.mass_request_ids:
             raise UserError(
@@ -570,8 +550,10 @@ class MassRequestTransfer(models.Model):
             )
         if not self.company_id.mass_validation_journal_id:
             raise UserError(
-                _("The 'Mass Validation Journal' is not set on company '%s'.")
-                % self.company_id.display_name
+                _(
+                    "The 'Mass Validation Journal' is not set on company '%s'.",
+                    self.company_id.display_name,
+                )
             )
 
         transfer_vals = {"state": "done"}

@@ -3,7 +3,7 @@
 # @author: Alexis de Lattre <alexis.delattre@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 
@@ -18,10 +18,12 @@ class DonationDonation(models.Model):
     )
 
     def _compute_mass_request_count(self):
-        rg_res = self.env["mass.request"].read_group(
-            [("donation_id", "in", self.ids)], ["donation_id"], ["donation_id"]
+        rg_res = self.env["mass.request"]._read_group(
+            [("donation_id", "in", self.ids)],
+            groupby=["donation_id"],
+            aggregates=["__count"],
         )
-        mapped_data = {x["donation_id"][0]: x["donation_id_count"] for x in rg_res}
+        mapped_data = {donation.id: count for (donation, count) in rg_res}
         for donation in self:
             donation.mass_request_count = mapped_data.get(donation.id, 0)
 
@@ -43,7 +45,7 @@ class DonationDonation(models.Model):
                 for mass_request in mass_requests:
                     if mass_request.state != "waiting":
                         raise UserError(
-                            _(
+                            self.env._(
                                 "Cannot cancel the donation '%(donation)s' "
                                 "because it is linked to a mass request in "
                                 "%(mass_state)s state.",
@@ -54,11 +56,11 @@ class DonationDonation(models.Model):
                             )
                         )
                 self.message_post(
-                    body=_(
+                    body=self.env._(
                         "%d related mass request(s) in waiting state "
-                        "have been deleted."
+                        "have been deleted.",
+                        len(mass_requests),
                     )
-                    % len(mass_requests)
                 )
                 mass_requests.sudo().unlink()
         return super().done2cancel()
@@ -70,7 +72,7 @@ class DonationDonation(models.Model):
         if len(self.mass_request_ids) == 1:
             action.update(
                 {
-                    "view_mode": "form,tree,pivot,graph",
+                    "view_mode": "form,list,pivot,graph",
                     "views": False,
                     "res_id": self.mass_request_ids.id,
                 }
@@ -78,7 +80,7 @@ class DonationDonation(models.Model):
         else:
             action.update(
                 {
-                    "view_mode": "tree,form,pivot,graph",
+                    "view_mode": "list,form,pivot,graph",
                     "views": False,
                     "domain": [("donation_id", "=", self.id)],
                 }
@@ -130,7 +132,9 @@ class DonationLine(models.Model):
         company = donation.company_id
         if not company.mass_stock_account_id:
             raise UserError(
-                _("Missing mass stock account on company '%s'.") % company.display_name
+                self.env._(
+                    "Missing mass stock account on company '%s'.", company.display_name
+                )
             )
         vals = {
             "partner_id": donation.partner_id.id,
@@ -152,8 +156,10 @@ class DonationLine(models.Model):
         if self.product_id.detailed_type == "donation_mass":
             if not self.company_id.mass_stock_account_id:
                 raise UserError(
-                    _("Missing mass stock account on company '%s'.")
-                    % self.company_id.display_name
+                    self.env._(
+                        "Missing mass stock account on company '%s'.",
+                        self.company_id.display_name,
+                    )
                 )
             return self.company_id.mass_stock_account_id
         return super()._get_account()

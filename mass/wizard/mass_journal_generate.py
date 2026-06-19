@@ -47,7 +47,8 @@ class MassJournalGenerate(models.TransientModel):
     @api.model
     def _multi_allowed_dates(self):
         """We return only Christmas date"""
-        return ["%s-12-25" % fields.Date.context_today(self).year]
+        year = fields.Date.context_today(self).year
+        return [f"{year}-12-25"]
 
     @api.onchange("journal_date")
     def journal_date_on_change(self):
@@ -61,18 +62,18 @@ class MassJournalGenerate(models.TransientModel):
                     "title": _("Warning"),
                     "message": _(
                         "You are about to generate another journal "
-                        "for %s : it is allowed for that date."
-                    )
-                    % format_date(self.env, self.journal_date),
+                        "for %s : it is allowed for that date.",
+                        format_date(self.env, self.journal_date),
+                    ),
                 }
             else:
                 raise UserError(
                     _(
                         "There is already a journal for %s. You cannot generate "
                         "another journal for that date. Odoo has reverted "
-                        "to the default date."
+                        "to the default date.",
+                        format_date(self.env, self.journal_date),
                     )
-                    % format_date(self.env, self.journal_date)
                 )
         return res
 
@@ -187,9 +188,9 @@ class MassJournalGenerate(models.TransientModel):
                     raise UserError(
                         _(
                             "More than one mass are assigned "
-                            "to the same celebrant %s. Please, modify requests."
+                            "to the same celebrant %s. Please, modify requests.",
+                            line["request"].celebrant_id.display_name,
                         )
-                        % line["request"].celebrant_id.display_name
                     )
         # Second loop to assign a celebrant for the rest of mass lines
         for line in mass_lines:
@@ -198,7 +199,7 @@ class MassJournalGenerate(models.TransientModel):
                 celebrant_id = celebrant_ids.pop(0)
                 line["celebrant_id"] = celebrant_id
         if len(celebrant_ids) != 0:
-            raise UserError(_("%s celebrants were not assigned.") % len(celebrant_ids))
+            raise UserError(_("%s celebrants were not assigned.", len(celebrant_ids)))
 
         # Create mass lines
         new_line_ids = []
