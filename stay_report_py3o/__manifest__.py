@@ -4,7 +4,7 @@
 
 {
     "name": "Stay Report Py3o",
-    "version": "16.0.2.0.0",
+    "version": "16.0.2.1.0",
     "category": "Lodging",
     "license": "AGPL-3",
     "summary": "Replace Qweb report by Py3o report on stay module",
