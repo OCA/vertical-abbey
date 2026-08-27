@@ -1,8 +1,10 @@
 [project]
 name = "odoo-addons-oca-vertical-abbey"
-version = "18.0.20260617.0"
+version = "18.0.20260827.0"
 dependencies = [
+    "odoo-addon-donation_mass==18.0.*",
     "odoo-addon-donation_stay==18.0.*",
+    "odoo-addon-mass==18.0.*",
     "odoo-addon-stay==18.0.*",
     "odoo-addon-stay_api==18.0.*",
     "odoo-addon-stay_report_py3o==18.0.*",
