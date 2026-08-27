@@ -764,7 +764,7 @@ class StayStay(models.Model):
     def _set_to_clean(self):
         for stay in self:
             for aline in stay.room_assign_ids:
-                aline.room_id.write({"to_clean": stay._prepare_to_clean_info()})
+                aline.room_id.sudo().write({"to_clean": stay._prepare_to_clean_info()})
 
     def _update_state(self, today):
         self.ensure_one()
