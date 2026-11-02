@@ -56,3 +56,25 @@ class TestStay(TransactionCase):
         stay1.cancel()
         self.assertEqual(len(stay1.line_ids), 0)
         stay1.unlink()
+
+    def test_notify_selection(self):
+        today = datetime.now().date()
+        stay = self.env["stay.stay"].create(
+            {
+                "arrival_date": today,
+                "arrival_time": "afternoon",
+                "departure_date": today + relativedelta(days=2),
+                "departure_time": "morning",
+                "partner_name": "Toto",
+                "guest_qty": 3,
+            }
+        )
+        action = stay.with_context(active_ids=stay.ids).stay_notify_selection_button()
+        composer = (
+            self.env[action["res_model"]].with_context(**action["context"]).create({})
+        )
+        self.assertIn("Toto", composer.body)
+        composer.partner_ids = self.env["res.partner"].create({"name": "Guest Master"})
+        message = composer._action_send_mail()[1]
+        self.assertEqual(message.subject, "Stays info")
+        self.assertIn("Toto", message.body)
