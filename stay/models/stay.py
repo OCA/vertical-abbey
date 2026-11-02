@@ -906,7 +906,7 @@ class StayStay(models.Model):
         company = self.env.company
         ctx = {
             "default_model": "res.company",
-            "default_res_id": company.id,
+            "default_res_ids": company.ids,
             "default_use_template": True,
             "default_template_id": self.env.ref("stay.stay_notify_selection").id,
             "default_composition_mode": "comment",
