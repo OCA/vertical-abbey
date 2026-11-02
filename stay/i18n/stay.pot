@@ -93,6 +93,45 @@ msgid ""
 msgstr ""
 
 #. module: stay
+#: model:mail.template,body_html:stay.stay_notify_selection
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">The following stays may be of interest for you:</p>\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    </p><table style=\"border-spacing: 0; border-collapse: collapse; width: 100%; text-align: center;\">\n"
+"                        <tr>\n"
+"                            <th style=\"padding: 5px; border: 1px solid black;\">Guest Name</th>\n"
+"                            <th style=\"padding: 5px; border: 1px solid black;\">Guest Qty</th>\n"
+"                            <th style=\"padding: 5px; border: 1px solid black;\">Arrival</th>\n"
+"                            <th style=\"padding: 5px; border: 1px solid black;\">Departure</th>\n"
+"                            <th style=\"padding: 5px; border: 1px solid black;\">Notes</th>\n"
+"                        </tr>\n"
+"                        <tr t-foreach=\"ctx.get('stay_list') or []\" t-as=\"o\">\n"
+"                            <td style=\"padding: 5px; border: 1px solid black; text-align: left;\">\n"
+"                                <t t-out=\"o['partner_name']\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 5px; border: 1px solid black;\">\n"
+"                                <t t-out=\"o['guest_qty']\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 5px; border: 1px solid black;\">\n"
+"                                <t t-out=\"format_date(o['arrival_date'])\"/>\n"
+"                                <t t-out=\"o['arrival_time']\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 5px; border: 1px solid black;\">\n"
+"                                <t t-out=\"format_date(o['departure_date'])\"/>\n"
+"                                <t t-out=\"o['departure_time']\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 5px; border: 1px solid black;\">\n"
+"                                <t t-out=\"o['notes']\"/>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                \n"
+"            </div>\n"
+"        "
+msgstr ""
+
+#. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_group_name_company_uniq
 msgid "A group with this name already exists in this company."
 msgstr ""
@@ -1654,6 +1693,11 @@ msgid "Stay: Notify arrivals"
 msgstr ""
 
 #. module: stay
+#: model:mail.template,name:stay.stay_notify_selection
+msgid "Stay: Notify selected stays"
+msgstr ""
+
+#. module: stay
 #: model:ir.actions.server,name:stay.stay_arrival_notify_cron_ir_actions_server
 msgid "Stay: notify arrivals"
 msgstr ""
@@ -1680,6 +1724,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/stay/wizard/stay_stay_xlsx.py:0
 msgid "Stays - %s"
+msgstr ""
+
+#. module: stay
+#: model:mail.template,subject:stay.stay_notify_selection
+msgid "Stays info"
 msgstr ""
 
 #. module: stay
