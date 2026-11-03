@@ -7,18 +7,18 @@ msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-29 22:46+0000\n"
-"PO-Revision-Date: 2025-04-29 22:46+0000\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2026-11-04 01:47+0000\n"
+"Last-Translator: Alexis de Lattre <alexis@via.ecp.fr>\n"
 "Language-Team: \n"
-"Language: \n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: stay_api
 #: model:mail.template,body_html:stay_api.stay_controller_notify
-#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                <p style=\"margin: 0px; padding: 0px; font-size: 13px;"
@@ -77,42 +77,62 @@ msgid ""
 "        "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"        <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">Une "
-"nouvelle demande de séjour a été reçue par le formulaire web :</p>\n"
-"        <ul>\n"
-"                <li>N° de séjour : ${object.name}</li>\n"
-"                <li>Hôte : ${object.partner_name}</li>\n"
-"                <li>Nombre d'hôtes : ${object.guest_qty}</li>\n"
-"                <li>Arrivée : ${format_date(object.arrival_date)} "
-"${dict(object.fields_get('arrival_time', 'selection')['arrival_time']"
-"['selection'])[object.arrival_time]}</li>\n"
-"                % if object.arrival_note:\n"
-"                <li>Note d'arrivée : ${object.arrival_note}</li>\n"
-"                % endif\n"
-"                <li>Départ : ${format_date(object.departure_date)} "
-"${dict(object.fields_get('departure_time', 'selection')['departure_time']"
-"['selection'])[object.departure_time]}</li>\n"
-"                % if object.departure_note:\n"
-"                <li>Note de départ : ${object.departure_note}</li>\n"
-"                % endif\n"
-"                % if object.group_id:\n"
-"                <li>Groupe : ${object.group_id.display_name}</li>\n"
-"                % endif\n"
-"                % if object.controller_country_id:\n"
-"                <li>Pays : ${object.controller_country_id.name}</li>\n"
-"                % endif\n"
-"                % if object.controller_email:\n"
-"                <li>E-mail : ${object.controller_email}</li>\n"
-"                % endif\n"
-"                % if object.controller_mobile:\n"
-"                <li>Tél : ${object.controller_mobile}</li>\n"
-"                % endif\n"
-"                % if object.controller_notes:\n"
-"                <li>Notes : ${object.controller_notes}</li>\n"
-"                % endif\n"
-"            </ul>\n"
-"</div>\n"
-"    "
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">Le "
+"séjour <t t-out=\"object.name\"/> a été réservé via le formulaire en ligne à "
+"l'adresse <t t-out=\"ctx.get('action_description')\"/>:</p>\n"
+"                <ul>\n"
+"                    <li>Hôte : <t t-out=\"object.partner_name\">Alexis de "
+"Lattre</t></li>\n"
+"                    <li>Nb de personnes : <t t-out=\"object.guest_qty\">1</t>"
+"</li>\n"
+"                    <li>Arrivée : <t t-out=\"format_date(object.arrival_date)"
+"\">15 février 2026</t>, <t t-out=\"dict(object.fields_get('arrival_time', "
+"'selection')['arrival_time']['selection'])[object.arrival_time]\">dans "
+"l'après-midi</t></li>\n"
+"                    <t t-if=\"object.arrival_note\">\n"
+"                        <li>Note d'arrivée : <t t-"
+"out=\"object.arrival_note\">TER 15 h</t></li>\n"
+"                    </t>\n"
+"                    <li>Départ : <t t-out=\"format_date"
+"(object.departure_date)\">19 février 2026</t>, <t t-out=\"dict"
+"(object.fields_get('departure_time', 'selection')"
+"['departure_time']['selection'])[object.departure_time]\">en soirée</t></li>"
+"\n"
+"                    <t t-if=\"object.departure_note\">\n"
+"                        <li>Note de départ : <t t-"
+"out=\"object.departure_note\">TER 20 h 30</t></li>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.group_id\">\n"
+"                        <li>Groupe : <t t-"
+"out=\"object.group_id.display_name\">Hôtellerie du village</t></li>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.controller_email\">\n"
+"                        <li>E-mail : <t t-out=\"object.controller_email\">"
+"alexis@example.fr</t></li>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.controller_phone\">\n"
+"                        <li>Téléphone : <t t-out=\"object.controller_phone\">"
+"+33 4 78 55 66 77</t></li>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.controller_mobile\">\n"
+"                        <li>Portable : <t t-out=\"object.controller_mobile\">"
+"+33 6 11 22 33 44</t></li>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.controller_message\">\n"
+"                        <li>Message de l'hôte : <t t-"
+"out=\"object.controller_message\">Ma motivation pour ce séjour.</t></li>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.controller_notes\">\n"
+"                        <li>Autres informations : <t t-"
+"out=\"object.controller_notes\">Questions spécifiques.</t></li>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.controller_country_id\">\n"
+"                        <li>Pays : <t t-"
+"out=\"object.controller_country_id.name\">France</t></li>\n"
+"                    </t>\n"
+"                </ul>\n"
+"            </div>\n"
+"        "
 
 #. module: stay_api
 #. odoo-python
@@ -120,6 +140,8 @@ msgstr ""
 msgid ""
 "API call %(api_name)s accepted because stay is in %(state_label)s state."
 msgstr ""
+"L'appel API %(api_name)s a été accepté car le séjour est à l'état '%"
+"(state_label)s'."
 
 #. module: stay_api
 #. odoo-python
@@ -127,6 +149,8 @@ msgstr ""
 msgid ""
 "API call %(api_name)s ignored because the stay is in %(state_label)s state."
 msgstr ""
+"L'appel API %(api_name)s a été ignoré car le séjour est à l'état '%"
+"(state_label)s'."
 
 #. module: stay_api
 #. odoo-python
@@ -135,16 +159,18 @@ msgid ""
 "API call %(api_name)s returned an error because the stay is in "
 "%(state_label)s state."
 msgstr ""
+"L'appel API %(api_name)s a renvoyé une erreur car le séjour est à l'état '%"
+"(state_label)s'."
 
 #. module: stay_api
 #: model:ir.model.fields,field_description:stay_api.field_stay_type__active
 msgid "Active"
-msgstr ""
+msgstr "Actif"
 
 #. module: stay_api
 #: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_notes
 msgid "Additional Questions"
-msgstr ""
+msgstr "Questions supplémentaires"
 
 #. module: stay_api
 #: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_street
@@ -165,7 +191,7 @@ msgstr "Application"
 #: model_terms:ir.ui.view,arch_db:stay_api.stay_type_form
 #: model_terms:ir.ui.view,arch_db:stay_api.stay_type_search
 msgid "Archived"
-msgstr ""
+msgstr "Archivé"
 
 #. module: stay_api
 #: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_city
@@ -190,9 +216,8 @@ msgstr "Le code pays %s n'existe pas dans Odoo."
 
 #. module: stay_api
 #: model:ir.model.fields.selection,name:stay_api.selection__stay_stay__controller_mode__created
-#, fuzzy
 msgid "Created"
-msgstr "Créé par"
+msgstr "Créé"
 
 #. module: stay_api
 #: model:ir.model.fields,field_description:stay_api.field_stay_type__create_uid
@@ -222,7 +247,7 @@ msgstr "Nom affiché"
 #. module: stay_api
 #: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_email
 msgid "E-mail"
-msgstr ""
+msgstr "E-mail"
 
 #. module: stay_api
 #: model:ir.model,name:stay_api.model_fastapi_endpoint
@@ -236,9 +261,8 @@ msgstr "Prénom"
 
 #. module: stay_api
 #: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_message
-#, fuzzy
 msgid "Guest Message"
-msgstr "Séjour de l'hôte"
+msgstr "Message de l'hôte"
 
 #. module: stay_api
 #: model:ir.model,name:stay_api.model_stay_stay
@@ -248,7 +272,7 @@ msgstr "Séjour de l'hôte"
 #. module: stay_api
 #: model:ir.model.fields,field_description:stay_api.field_stay_type__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: stay_api
 #: model:ir.model.fields,field_description:stay_api.field_stay_type__write_uid
@@ -268,7 +292,7 @@ msgstr "Nom de famille"
 #. module: stay_api
 #: model_terms:ir.ui.view,arch_db:stay_api.stay_search
 msgid "Manual"
-msgstr ""
+msgstr "Manuel"
 
 #. module: stay_api
 #: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_mobile
@@ -278,17 +302,17 @@ msgstr "Portable"
 #. module: stay_api
 #: model:ir.model.fields,field_description:stay_api.field_stay_type__name
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #. module: stay_api
 #: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_phone
 msgid "Phone"
-msgstr ""
+msgstr "Téléphone"
 
 #. module: stay_api
 #: model:ir.model.fields,field_description:stay_api.field_stay_type__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Séquence"
 
 #. module: stay_api
 #: model_terms:ir.ui.view,arch_db:stay_api.stay_form
@@ -302,42 +326,42 @@ msgstr "Séjour"
 
 #. module: stay_api
 #: model_terms:ir.ui.view,arch_db:stay_api.res_config_settings_view_form
-#, fuzzy
 msgid "Stay API"
-msgstr "Groupe API Séjour"
+msgstr "API Séjour"
 
 #. module: stay_api
 #: model:ir.model,name:stay_api.model_stay_type
-#, fuzzy
 msgid "Stay Type"
-msgstr "Séjour"
+msgstr "Type de séjour"
 
 #. module: stay_api
 #. odoo-python
 #: code:addons/stay_api/routers/stay.py:0
 msgid "Stay cancelled by API call."
-msgstr ""
+msgstr "Séjour annulé par un appel API."
 
 #. module: stay_api
 #: model:mail.template,subject:stay_api.stay_controller_notify
-#, fuzzy
 msgid ""
 "Stay {{ctx.get('action_description')}}: {{object.partner_name}} "
 "{{format_date(object.arrival_date)}} → {{format_date(object."
 "departure_date)}} x {{object.guest_qty}}"
 msgstr ""
-"Nouvelle demande de séjour de ${object.partner_name} ${format_date(object."
-"arrival_date)} → ${format_date(object.departure_date)} x ${object.guest_qty}"
+"Séjour {{ctx.get('action_description')}}: {{object.partner_name}} {"
+"{format_date(object.arrival_date)}} → {{format_date(object.departure_date)}} "
+"x {{object.guest_qty}}"
 
 #. module: stay_api
 #: model:mail.template,name:stay_api.stay_controller_notify
 msgid "Stay: Notify stay creation/update/cancel from web form"
 msgstr ""
+"Séjour : notifier la création, la modification ou l'annulation d'un séjour "
+"via le formulaire web"
 
 #. module: stay_api
 #: model:ir.model.constraint,message:stay_api.constraint_stay_type_name_uniq
 msgid "This stay type already exists."
-msgstr ""
+msgstr "Ce type de séjour existe déjà."
 
 #. module: stay_api
 #: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_title_id
@@ -348,37 +372,34 @@ msgstr "Titre"
 #: model:ir.model.fields,field_description:stay_api.field_stay_stay__type_id
 #: model_terms:ir.ui.view,arch_db:stay_api.stay_search
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #. module: stay_api
 #: model:ir.actions.act_window,name:stay_api.stay_type_action
 #: model:ir.ui.menu,name:stay_api.stay_type_menu
 msgid "Types"
-msgstr ""
+msgstr "Types"
 
 #. module: stay_api
 #: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_uuid
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #. module: stay_api
 #: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_update_url
 #: model:ir.model.fields,field_description:stay_api.field_stay_type__update_url
-#, fuzzy
 msgid "Update URL"
-msgstr "Mettre à jour l'e-mail"
+msgstr "URL de mise à jour"
 
 #. module: stay_api
 #: model:ir.model.fields.selection,name:stay_api.selection__stay_stay__controller_mode__updated
-#, fuzzy
 msgid "Updated"
-msgstr "Mettre à jour l'adresse"
+msgstr "Mis à jour"
 
 #. module: stay_api
 #: model_terms:ir.ui.view,arch_db:stay_api.stay_search
-#, fuzzy
 msgid "Updated from Web Form"
-msgstr "Créé à partir du formulaire Web"
+msgstr "Mise à jour à partir du formulaire web"
 
 #. module: stay_api
 #: model_terms:ir.ui.view,arch_db:stay_api.stay_form
@@ -387,9 +408,8 @@ msgstr "Formulaire web"
 
 #. module: stay_api
 #: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_mode
-#, fuzzy
 msgid "Web Form Mode"
-msgstr "Notes sur le formulaire Web"
+msgstr "Mode du formulaire web"
 
 #. module: stay_api
 #: model:ir.model.fields,field_description:stay_api.field_stay_stay__controller_zip
@@ -399,22 +419,20 @@ msgstr "Code postal"
 #. module: stay_api
 #. odoo-python
 #: code:addons/stay_api/routers/stay.py:0
-#, fuzzy
 msgid "cancelled"
-msgstr "Annuler"
+msgstr "annulé"
 
 #. module: stay_api
 #. odoo-python
 #: code:addons/stay_api/routers/stay.py:0
-#, fuzzy
 msgid "created"
-msgstr "Créé par"
+msgstr "créé"
 
 #. module: stay_api
 #. odoo-python
 #: code:addons/stay_api/routers/stay.py:0
 msgid "updated"
-msgstr ""
+msgstr "mis à jour"
 
 #~ msgid ""
 #~ "<span class=\"o_form_label\">Default Company for Stays created from Web "
