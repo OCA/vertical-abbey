@@ -9,7 +9,7 @@
         <field name="name">stay_toclean_print.form</field>
         <field name="model">stay.toclean.print</field>
         <field name="arch" type="xml">
-            <form string="To Clean Report">
+            <form>
                 <p>Print the <b>To Clean</b> report.</p>
                 <group name="main">
                     <field name="company_id" groups="base.group_multi_company" />
@@ -18,7 +18,7 @@
                     <button
                         type="action"
                         name="%(stay.report_stay_toclean)d"
-                        string="Print"
+                        string="Get Report"
                         class="btn-primary"
                     />
                     <button special="cancel" string="Cancel" />

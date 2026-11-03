@@ -45,7 +45,7 @@
     </record>
 
     <record id="report_stay_fire" model="ir.actions.report">
-        <field name="name">Fire Security</field>
+        <field name="name">Fire Report</field>
         <field name="model">stay.fire.print</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">stay.report_stayfire</field>
