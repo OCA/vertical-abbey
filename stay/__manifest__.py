@@ -22,7 +22,6 @@
         "wizard/res_config_settings_view.xml",
         "wizard/stay_journal_print_view.xml",
         "wizard/stay_toclean_print_view.xml",
-        "wizard/stay_fire_print_view.xml",
         "wizard/stay_stay_xlsx_view.xml",
         "wizard/stay_multi_duplicate_view.xml",
         "wizard/stay_line_mass_update_view.xml",
