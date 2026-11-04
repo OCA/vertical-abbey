@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-01 15:25+0000\n"
-"PO-Revision-Date: 2026-11-04 01:47+0000\n"
+"PO-Revision-Date: 2026-11-04 19:46+0000\n"
 "Last-Translator: Alexis de Lattre <alexis@via.ecp.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -409,7 +409,7 @@ msgstr "Note d'arrivée"
 #: model:ir.actions.act_window,name:stay.stay_arrival_journal_print_action
 #: model:ir.ui.menu,name:stay.stay_arrival_journal_print_menu
 msgid "Arrival Report"
-msgstr ""
+msgstr "Rapport des arrivées"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__arrival_time
@@ -540,7 +540,7 @@ msgstr "EN TRAVAUX"
 #: model:ir.actions.act_window,name:stay.stay_stay_xlsx_action
 #: model:ir.ui.menu,name:stay.stay_stay_xlsx_menu
 msgid "Calendar XLSX"
-msgstr ""
+msgstr "Calendrier Excel"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
@@ -854,7 +854,7 @@ msgstr "Soir"
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room__fire_report_exclude
 msgid "Exclude from Fire Report"
-msgstr "Exclut du rapport incendie"
+msgstr "Exclure du rapport incendie"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_search
@@ -880,7 +880,7 @@ msgstr "Terminé"
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_journal_print__report_type__fire
 msgid "Fire"
-msgstr ""
+msgstr "Incendie"
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_fire_journal_print_action
@@ -948,7 +948,7 @@ msgstr "Général"
 #: model:ir.actions.act_window,name:stay.stay_general_journal_print_action
 #: model:ir.ui.menu,name:stay.stay_general_journal_print_menu
 msgid "General Report"
-msgstr ""
+msgstr "Rapport général"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_multi_duplicate_form
@@ -1263,7 +1263,7 @@ msgstr "Repas"
 #: model:ir.actions.act_window,name:stay.stay_meal_journal_print_action
 #: model:ir.ui.menu,name:stay.stay_meal_journal_print_menu
 msgid "Meals Report"
-msgstr ""
+msgstr "Rapport des repas"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_has_error
