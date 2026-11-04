@@ -1198,7 +1198,7 @@ class StayRoomAssign(models.Model):
     def _compute_display_name(self):
         with_room = self._context.get("display_name_with_room")
         for assign in self:
-            name = assign.partner_name
+            name = assign.partner_name and assign.partner_name.splitlines()[0]
             if assign.guest_qty > 1:
                 name = f"({assign.guest_qty}) {name}"
             if with_room:
@@ -1562,6 +1562,7 @@ class StayLine(models.Model):
     _check_company_auto = True
 
     stay_id = fields.Many2one("stay.stay", check_company=True, ondelete="cascade")
+    state = fields.Selection(related="stay_id.state", store=True)
     company_id = fields.Many2one(
         "res.company",
         required=True,

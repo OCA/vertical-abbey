@@ -19,11 +19,7 @@ class StayJournalPrint(models.TransientModel):
     _description = "Print the Stay Lines"
     _rec_name = "date"
 
-    @api.model
-    def _default_date(self):
-        return fields.Date.context_today(self) + timedelta(days=1)
-
-    date = fields.Date(required=True, default=_default_date)
+    date = fields.Date(required=True)
     date_label = fields.Char(compute="_compute_date_label")
     company_id = fields.Many2one(
         "res.company",
@@ -39,6 +35,16 @@ class StayJournalPrint(models.TransientModel):
         ],
         required=True,
     )
+
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if res.get("report_type") == "fire":
+            date = fields.Date.context_today(self)
+        else:
+            date = fields.Date.context_today(self) + timedelta(1)
+        res["date"] = date
+        return res
 
     @api.depends("date")
     def _compute_date_label(self):
