@@ -811,6 +811,32 @@ So I use the form view below by default -->
                     date="departure_date"
                 />
                 <separator />
+                <filter
+                    string="Draft"
+                    name="draft"
+                    domain="[('state', '=', 'draft')]"
+                />
+                <filter
+                    string="Confirmed"
+                    name="confirm"
+                    domain="[('state', '=', 'confirm')]"
+                />
+                <filter
+                    string="Current"
+                    name="current"
+                    domain="[('state', '=', 'current')]"
+                />
+                <filter
+                    string="Finished"
+                    name="done"
+                    domain="[('state', '=', 'done')]"
+                />
+                <filter
+                    string="Cancel"
+                    name="cancel"
+                    domain="[('state', '=', 'cancel')]"
+                />
+                <separator />
                 <group string="Group By" name="groupby">
                     <filter
                         name="group_groupby"
@@ -822,6 +848,11 @@ So I use the form view below by default -->
                         name="room_groupby"
                         string="Room"
                         context="{'group_by': 'room_id'}"
+                    />
+                    <filter
+                        name="state_groupby"
+                        string="State"
+                        context="{'group_by': 'state'}"
                     />
                     <filter
                         name="partner_groupby"
@@ -1323,6 +1354,27 @@ So I use the form view below by default -->
                     domain="[('my_stay_group', '=', True)]"
                 />
                 <separator />
+                <filter
+                    string="Confirmed"
+                    name="confirm"
+                    domain="[('state', '=', 'confirm')]"
+                />
+                <filter
+                    string="Current"
+                    name="current"
+                    domain="[('state', '=', 'current')]"
+                />
+                <filter
+                    string="Finished"
+                    name="done"
+                    domain="[('state', '=', 'done')]"
+                />
+                <filter
+                    string="Cancel"
+                    name="cancel"
+                    domain="[('state', '=', 'cancel')]"
+                />
+                <separator />
                 <group string="Group By" name="groupby">
                     <filter
                         name="group_groupby"
@@ -1334,6 +1386,11 @@ So I use the form view below by default -->
                         name="date_groupby"
                         string="Date"
                         context="{'group_by': 'date'}"
+                    />
+                    <filter
+                        name="state_groupby"
+                        string="State"
+                        context="{'group_by': 'state'}"
                     />
                     <filter
                         name="refectory_id"
