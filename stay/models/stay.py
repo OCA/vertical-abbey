@@ -1562,6 +1562,7 @@ class StayLine(models.Model):
     _check_company_auto = True
 
     stay_id = fields.Many2one("stay.stay", check_company=True, ondelete="cascade")
+    state = fields.Selection(related="stay_id.state", store=True)
     company_id = fields.Many2one(
         "res.company",
         required=True,
