@@ -187,10 +187,8 @@ msgstr "Una camera con questo codice esiste già in questa azienda."
 #: code:addons/stay/wizard/stay_multi_duplicate.py:0
 msgid ""
 "A stay already exists for guest '%(guest)s' with arrival date %"
-"(arival_date)s (stay %(stay)s)."
+"(arrival_date)s (%(stay)s)."
 msgstr ""
-"Esiste già un soggiorno per l'ospite '%(guest)s' con data arrivo %"
-"(arival_date)s (soggiorno %(stay)s)."
 
 #. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_stay_name_company_uniq
@@ -300,6 +298,12 @@ msgstr "Data e ora arrivo"
 #: model:ir.model.fields,field_description:stay.field_stay_stay__arrival_note
 msgid "Arrival Note"
 msgstr "Note arrivo"
+
+#. module: stay
+#: model:ir.actions.act_window,name:stay.stay_arrival_journal_print_action
+#: model:ir.ui.menu,name:stay.stay_arrival_journal_print_menu
+msgid "Arrival Report"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__arrival_time
@@ -425,7 +429,12 @@ msgid "CONSTRUCTION"
 msgstr "COSTRUZIONE"
 
 #. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_fire_print_form
+#: model:ir.actions.act_window,name:stay.stay_stay_xlsx_action
+#: model:ir.ui.menu,name:stay.stay_stay_xlsx_menu
+msgid "Calendar XLSX"
+msgstr ""
+
+#. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
 #: model_terms:ir.ui.view,arch_db:stay.stay_journal_print_form
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_mass_update_form
@@ -477,7 +486,6 @@ msgid "Companies"
 msgstr "Aziende"
 
 #. module: stay
-#: model:ir.model.fields,field_description:stay.field_stay_fire_print__company_id
 #: model:ir.model.fields,field_description:stay.field_stay_group__company_id
 #: model:ir.model.fields,field_description:stay.field_stay_journal_print__company_id
 #: model:ir.model.fields,field_description:stay.field_stay_line__company_id
@@ -556,7 +564,6 @@ msgstr "Crea stato"
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_building__create_uid
 #: model:ir.model.fields,field_description:stay.field_stay_date_label__create_uid
-#: model:ir.model.fields,field_description:stay.field_stay_fire_print__create_uid
 #: model:ir.model.fields,field_description:stay.field_stay_group__create_uid
 #: model:ir.model.fields,field_description:stay.field_stay_journal_print__create_uid
 #: model:ir.model.fields,field_description:stay.field_stay_line__create_uid
@@ -577,7 +584,6 @@ msgstr "Creato da"
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_building__create_date
 #: model:ir.model.fields,field_description:stay.field_stay_date_label__create_date
-#: model:ir.model.fields,field_description:stay.field_stay_fire_print__create_date
 #: model:ir.model.fields,field_description:stay.field_stay_group__create_date
 #: model:ir.model.fields,field_description:stay.field_stay_journal_print__create_date
 #: model:ir.model.fields,field_description:stay.field_stay_line__create_date
@@ -616,7 +622,6 @@ msgstr "Soggiorni attuali e futurI"
 #. odoo-python
 #: code:addons/stay/wizard/stay_stay_xlsx.py:0
 #: model:ir.model.fields,field_description:stay.field_stay_date_label__date
-#: model:ir.model.fields,field_description:stay.field_stay_fire_print__date
 #: model:ir.model.fields,field_description:stay.field_stay_journal_print__date
 #: model:ir.model.fields,field_description:stay.field_stay_line__date
 #: model_terms:ir.ui.view,arch_db:stay.stay_date_label_search
@@ -695,7 +700,6 @@ msgstr "Pranzi"
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_building__display_name
 #: model:ir.model.fields,field_description:stay.field_stay_date_label__display_name
-#: model:ir.model.fields,field_description:stay.field_stay_fire_print__display_name
 #: model:ir.model.fields,field_description:stay.field_stay_group__display_name
 #: model:ir.model.fields,field_description:stay.field_stay_journal_print__display_name
 #: model:ir.model.fields,field_description:stay.field_stay_line__display_name
@@ -766,14 +770,15 @@ msgid "Finished"
 msgstr "Finito"
 
 #. module: stay
-#: model:ir.actions.act_window,name:stay.stay_fire_print_action
-#: model:ir.ui.menu,name:stay.stay_fire_print_menu
-msgid "Fire Report"
+#: model:ir.model.fields.selection,name:stay.selection__stay_journal_print__report_type__fire
+msgid "Fire"
 msgstr ""
 
 #. module: stay
+#: model:ir.actions.act_window,name:stay.stay_fire_journal_print_action
 #: model:ir.actions.report,name:stay.report_stay_fire
-msgid "Fire Security"
+#: model:ir.ui.menu,name:stay.stay_fire_journal_print_menu
+msgid "Fire Report"
 msgstr ""
 
 #. module: stay
@@ -832,12 +837,20 @@ msgid "General"
 msgstr "Generale"
 
 #. module: stay
+#: model:ir.actions.act_window,name:stay.stay_general_journal_print_action
+#: model:ir.ui.menu,name:stay.stay_general_journal_print_menu
+msgid "General Report"
+msgstr ""
+
+#. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_multi_duplicate_form
 msgid "Generate Stays"
 msgstr "Genera soggiorni"
 
 #. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_fire_print_form
+#: model_terms:ir.ui.view,arch_db:stay.stay_journal_print_form
+#: model_terms:ir.ui.view,arch_db:stay.stay_stay_xlsx_form
+#: model_terms:ir.ui.view,arch_db:stay.stay_toclean_print_form
 msgid "Get Report"
 msgstr ""
 
@@ -953,7 +966,6 @@ msgstr "Ha un messaggio"
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_building__id
 #: model:ir.model.fields,field_description:stay.field_stay_date_label__id
-#: model:ir.model.fields,field_description:stay.field_stay_fire_print__id
 #: model:ir.model.fields,field_description:stay.field_stay_group__id
 #: model:ir.model.fields,field_description:stay.field_stay_journal_print__id
 #: model:ir.model.fields,field_description:stay.field_stay_line__id
@@ -1034,7 +1046,6 @@ msgstr "Etichetta"
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_building__write_uid
 #: model:ir.model.fields,field_description:stay.field_stay_date_label__write_uid
-#: model:ir.model.fields,field_description:stay.field_stay_fire_print__write_uid
 #: model:ir.model.fields,field_description:stay.field_stay_group__write_uid
 #: model:ir.model.fields,field_description:stay.field_stay_journal_print__write_uid
 #: model:ir.model.fields,field_description:stay.field_stay_line__write_uid
@@ -1055,7 +1066,6 @@ msgstr "Ultimo aggiornamento di"
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_building__write_date
 #: model:ir.model.fields,field_description:stay.field_stay_date_label__write_date
-#: model:ir.model.fields,field_description:stay.field_stay_fire_print__write_date
 #: model:ir.model.fields,field_description:stay.field_stay_group__write_date
 #: model:ir.model.fields,field_description:stay.field_stay_journal_print__write_date
 #: model:ir.model.fields,field_description:stay.field_stay_line__write_date
@@ -1138,6 +1148,12 @@ msgstr "Piano pasto"
 #: model:ir.model.fields.selection,name:stay.selection__stay_journal_print__report_type__meal
 msgid "Meals"
 msgstr "Pasti"
+
+#. module: stay
+#: model:ir.actions.act_window,name:stay.stay_meal_journal_print_action
+#: model:ir.ui.menu,name:stay.stay_meal_journal_print_menu
+msgid "Meals Report"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_has_error
@@ -1449,42 +1465,14 @@ msgid "Preceding stay which leaves on the same time slot in the same room(s)"
 msgstr ""
 
 #. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_toclean_print_form
-msgid "Print"
-msgstr "Stampa"
-
-#. module: stay
-#: model:ir.actions.act_window,name:stay.stay_journal_print_action
-#: model:ir.ui.menu,name:stay.stay_journal_print_menu
-#: model_terms:ir.ui.view,arch_db:stay.stay_journal_print_form
-msgid "Print Journal"
-msgstr "Stampa registro"
-
-#. module: stay
 #: model:ir.model,name:stay.model_stay_stay_xlsx
 msgid "Print Stay Global view"
 msgstr "Stampa vista globale soggiorno"
 
 #. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_stay_xlsx_form
-msgid "Print Stay XLSX"
-msgstr "Stampa XLSX soggiorno"
-
-#. module: stay
-#: model:ir.actions.act_window,name:stay.stay_stay_xlsx_action
-#: model:ir.ui.menu,name:stay.stay_stay_xlsx_menu
-msgid "Print Stays"
-msgstr "Stampa soggiorni"
-
-#. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_toclean_print_form
 msgid "Print the <b>To Clean</b> report."
 msgstr "Stampa il resoconto <b>Da pulire</b>."
-
-#. module: stay
-#: model:ir.model,name:stay.model_stay_fire_print
-msgid "Print the Fire Report"
-msgstr ""
 
 #. module: stay
 #: model:ir.model,name:stay.model_stay_journal_print
@@ -1601,7 +1589,7 @@ msgstr "Camere"
 
 #. module: stay
 #. odoo-python
-#: code:addons/stay/wizard/stay_fire_print.py:0
+#: code:addons/stay/wizard/stay_journal_print.py:0
 msgid "Rooms %s are not linked to a building."
 msgstr ""
 
@@ -1630,11 +1618,6 @@ msgstr "Sequenza"
 #: model:ir.ui.menu,name:stay.stay_settings_menu
 msgid "Settings"
 msgstr "Impostazioni"
-
-#. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_stay_xlsx_form
-msgid "Show"
-msgstr "Mostra"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
@@ -1927,7 +1910,6 @@ msgstr "Da pulire"
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_toclean_print_action
 #: model:ir.ui.menu,name:stay.stay_toclean_print_menu
-#: model_terms:ir.ui.view,arch_db:stay.stay_toclean_print_form
 msgid "To Clean Report"
 msgstr "Resoconto da pulire"
 
@@ -2089,6 +2071,28 @@ msgstr "procedura guidata per resettare tutte le righe a valori predefiniti"
 #: model:mail.template,subject:stay.stay_notify
 msgid "{{object.name}} - Arrivals of {{format_date(ctx.get('today'))}}"
 msgstr "{{object.name}} - Arrivi del {{format_date(ctx.get('today'))}}"
+
+#~ msgid ""
+#~ "A stay already exists for guest '%(guest)s' with arrival date %"
+#~ "(arival_date)s (stay %(stay)s)."
+#~ msgstr ""
+#~ "Esiste già un soggiorno per l'ospite '%(guest)s' con data arrivo %"
+#~ "(arival_date)s (soggiorno %(stay)s)."
+
+#~ msgid "Print"
+#~ msgstr "Stampa"
+
+#~ msgid "Print Journal"
+#~ msgstr "Stampa registro"
+
+#~ msgid "Print Stay XLSX"
+#~ msgstr "Stampa XLSX soggiorno"
+
+#~ msgid "Print Stays"
+#~ msgstr "Stampa soggiorni"
+
+#~ msgid "Show"
+#~ msgstr "Mostra"
 
 #~ msgid ""
 #~ "<div style=\"margin: 0px; padding: 0px;\">\n"
