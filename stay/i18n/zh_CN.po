@@ -452,7 +452,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stay.stay_journal_print_form
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_mass_update_form
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_reset
+#: model_terms:ir.ui.view,arch_db:stay.stay_line_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_multi_duplicate_form
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_mass_assign_form
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_stay_xlsx_form
@@ -533,8 +535,15 @@ msgstr "配置"
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_multi_duplicate__create_state__confirm
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__state__confirm
+#: model_terms:ir.ui.view,arch_db:stay.stay_line_search
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Confirmed"
+msgstr ""
+
+#. module: stay
+#: model_terms:ir.ui.view,arch_db:stay.stay_line_search
+msgid "Confirmed and Current Lines"
 msgstr ""
 
 #. module: stay
@@ -618,19 +627,10 @@ msgstr "创建于"
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__state__current
-#: model_terms:ir.ui.view,arch_db:stay.stay_search
-msgid "Current"
-msgstr ""
-
-#. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_search
-msgid "Current and Future Lines"
-msgstr ""
-
-#. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
-msgid "Current and Future Stays"
+msgid "Current"
 msgstr ""
 
 #. module: stay
@@ -737,8 +737,14 @@ msgstr "显示名称"
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_multi_duplicate__create_state__draft
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__state__draft
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Draft"
+msgstr ""
+
+#. module: stay
+#: model_terms:ir.ui.view,arch_db:stay.stay_search
+msgid "Draft, Confirmed and Current Stays"
 msgstr ""
 
 #. module: stay
@@ -783,6 +789,8 @@ msgstr ""
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__state__done
+#: model_terms:ir.ui.view,arch_db:stay.stay_line_search
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Finished"
 msgstr ""
@@ -1467,6 +1475,11 @@ msgid "Partial"
 msgstr ""
 
 #. module: stay
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
+msgid "Past Month, Current and Future"
+msgstr ""
+
+#. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line__picnic_lunch_qty
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalmeal_document
 msgid "Picnic"
@@ -1664,8 +1677,11 @@ msgid "Start Date"
 msgstr "离开日期"
 
 #. module: stay
+#: model:ir.model.fields,field_description:stay.field_stay_line__state
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__state
 #: model:ir.model.fields,field_description:stay.field_stay_stay__state
+#: model_terms:ir.ui.view,arch_db:stay.stay_line_search
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "State"
 msgstr ""

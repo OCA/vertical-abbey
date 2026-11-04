@@ -439,7 +439,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stay.stay_journal_print_form
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_mass_update_form
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_reset
+#: model_terms:ir.ui.view,arch_db:stay.stay_line_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_multi_duplicate_form
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_mass_assign_form
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_stay_xlsx_form
@@ -517,9 +519,16 @@ msgstr "Conferma"
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_multi_duplicate__create_state__confirm
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__state__confirm
+#: model_terms:ir.ui.view,arch_db:stay.stay_line_search
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Confirmed"
 msgstr "Confermato"
+
+#. module: stay
+#: model_terms:ir.ui.view,arch_db:stay.stay_line_search
+msgid "Confirmed and Current Lines"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__conflict_room_ids
@@ -603,20 +612,11 @@ msgstr "Creato il"
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__state__current
+#: model_terms:ir.ui.view,arch_db:stay.stay_line_search
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Current"
 msgstr "Attuale"
-
-#. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_line_search
-msgid "Current and Future Lines"
-msgstr "Righe attuali e future"
-
-#. module: stay
-#: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
-#: model_terms:ir.ui.view,arch_db:stay.stay_search
-msgid "Current and Future Stays"
-msgstr "Soggiorni attuali e futurI"
 
 #. module: stay
 #. odoo-python
@@ -720,9 +720,15 @@ msgstr "Nome visualizzato"
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_multi_duplicate__create_state__draft
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__state__draft
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Draft"
 msgstr "Bozza"
+
+#. module: stay
+#: model_terms:ir.ui.view,arch_db:stay.stay_search
+msgid "Draft, Confirmed and Current Stays"
+msgstr ""
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line_mass_update__end_date
@@ -765,6 +771,8 @@ msgstr "Nome file"
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__state__done
+#: model_terms:ir.ui.view,arch_db:stay.stay_line_search
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Finished"
 msgstr "Finito"
@@ -1434,6 +1442,11 @@ msgid "Partial"
 msgstr "Parziale"
 
 #. module: stay
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
+msgid "Past Month, Current and Future"
+msgstr ""
+
+#. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line__picnic_lunch_qty
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalmeal_document
 msgid "Picnic"
@@ -1634,8 +1647,11 @@ msgid "Start Date"
 msgstr "Data inizio"
 
 #. module: stay
+#: model:ir.model.fields,field_description:stay.field_stay_line__state
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__state
 #: model:ir.model.fields,field_description:stay.field_stay_stay__state
+#: model_terms:ir.ui.view,arch_db:stay.stay_line_search
+#: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "State"
 msgstr "Stato"
@@ -2071,6 +2087,12 @@ msgstr "procedura guidata per resettare tutte le righe a valori predefiniti"
 #: model:mail.template,subject:stay.stay_notify
 msgid "{{object.name}} - Arrivals of {{format_date(ctx.get('today'))}}"
 msgstr "{{object.name}} - Arrivi del {{format_date(ctx.get('today'))}}"
+
+#~ msgid "Current and Future Lines"
+#~ msgstr "Righe attuali e future"
+
+#~ msgid "Current and Future Stays"
+#~ msgstr "Soggiorni attuali e futurI"
 
 #~ msgid ""
 #~ "A stay already exists for guest '%(guest)s' with arrival date %"
