@@ -97,7 +97,7 @@ class StayMultiDuplicate(models.TransientModel):
                 raise UserError(
                     _(
                         "A stay already exists for guest '%(guest)s' "
-                        "with arrival date %(arival_date)s (stay %(stay)s).",
+                        "with arrival date %(arrival_date)s (%(stay)s).",
                         guest=self.stay_id.partner_id.display_name,
                         arrival_date=format_date(self.env, cur_arrival_date),
                         stay=existing_stay.name,

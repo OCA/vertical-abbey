@@ -35,8 +35,8 @@ class StayJournalPrint(models.TransientModel):
             ("general", "General"),
             ("meal", "Meals"),
             ("arrival", "Arrivals"),
+            ("fire", "Fire"),
         ],
-        default="general",
         required=True,
     )
 
@@ -48,13 +48,10 @@ class StayJournalPrint(models.TransientModel):
 
     def print_journal(self):
         self.ensure_one()
-        if self.report_type == "general":
-            return self.print_journal_general()
-        elif self.report_type == "meal":
-            return self.print_journal_meal()
-        elif self.report_type == "arrival":
-            return self.print_journal_arrival()
-        return
+        assert self.report_type
+        method_name = f"print_journal_{self.report_type}"
+        method = getattr(self, method_name)
+        return method()
 
     def print_journal_general(self):
         lines = self.env["stay.line"].search(
@@ -89,6 +86,28 @@ class StayJournalPrint(models.TransientModel):
     def print_journal_arrival(self):
         action = (
             self.env.ref("stay.report_stay_journal_arrival")
+            .with_context(discard_logo_check=True)
+            .report_action(self)
+        )
+        return action
+
+    def print_journal_fire(self):
+        bad_rooms = self.env["stay.room"].search(
+            [
+                ("company_id", "=", self.company_id.id),
+                ("building_id", "=", False),
+                ("fire_report_exclude", "=", False),
+            ]
+        )
+        if bad_rooms:
+            raise UserError(
+                _(
+                    "Rooms %s are not linked to a building.",
+                    " ,".join([r.display_name for r in bad_rooms]),
+                )
+            )
+        action = (
+            self.env.ref("stay.report_stay_fire")
             .with_context(discard_logo_check=True)
             .report_action(self)
         )
@@ -198,4 +217,40 @@ class StayJournalPrint(models.TransientModel):
         res = format_datetime(
             self.env, fields.Datetime.now(), lang_code=self.env.user.lang
         )
+        return res
+
+    def _report_fire_date_title(self):
+        self.ensure_one()
+        start_night_date = format_date(self.env, self.date)
+        end_night_date = format_date(self.env, self.date + timedelta(1))
+        return f"{start_night_date} → {end_night_date}"
+
+    def _report_fire_data(self):
+        buildings = self.env["stay.building"].search([])
+        res = {}
+        # key = building
+        # value = {'total_guest_qty': 4, 'rooms': [(room, assign_multi_recordset)]}
+        for building in buildings:
+            rooms = self.env["stay.room"].search(
+                [
+                    ("building_id", "=", building.id),
+                    ("company_id", "=", self.company_id.id),
+                    ("fire_report_exclude", "=", False),
+                ],
+                order="fire_report_sequence, sequence, id",
+            )
+            if rooms:
+                res[building] = {"total_guest_qty": 0, "rooms": []}
+                for room in rooms:
+                    assigns = self.env["stay.room.assign"].search(
+                        [
+                            ("arrival_date", "<=", self.date),
+                            ("departure_date", ">", self.date),
+                            ("room_id", "=", room.id),
+                            ("construction", "=", False),
+                        ]
+                    )
+                    guest_qty = sum([assign.guest_qty for assign in assigns])
+                    res[building]["rooms"].append((room, assigns))
+                    res[building]["total_guest_qty"] += guest_qty
         return res

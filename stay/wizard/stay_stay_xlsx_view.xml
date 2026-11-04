@@ -9,7 +9,7 @@
         <field name="name">stay.stay.xlsx.form</field>
         <field name="model">stay.stay.xlsx</field>
         <field name="arch" type="xml">
-            <form string="Print Stay XLSX">
+            <form>
                 <group name="main">
                     <field name="company_id" groups="base.group_multi_company" />
                     <field name="company_id" invisible="1" />
@@ -25,7 +25,7 @@
                     <button
                         type="object"
                         name="run"
-                        string="Show"
+                        string="Get Report"
                         class="btn-primary"
                     />
                     <button special="cancel" string="Cancel" />
@@ -35,7 +35,7 @@
     </record>
 
     <record id="stay_stay_xlsx_action" model="ir.actions.act_window">
-        <field name="name">Print Stays</field>
+        <field name="name">Calendar XLSX</field>
         <field name="res_model">stay.stay.xlsx</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>

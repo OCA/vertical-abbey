@@ -842,11 +842,12 @@ So I use the form view below by default -->
         <field name="name">Room Assignments</field>
         <field name="res_model">stay.room.assign</field>
         <field name="view_mode">timeline,list,calendar,pivot</field>
-        <!-- We don't put search_default_current_and_future: True on stay.room.assign
-        because we want to have all rooms in the timeline view -->
+        <!-- We put search_default_current_and_future: True on stay.room.assign
+        for perf reasons: otherwise, it loads by default ALL says, which may be
+        a very high volume after several years of usage -->
         <field
             name="context"
-        >{'search_default_my_stay_group': True, 'stay_name_get_partner_name_qty': True, 'stay_room_assign_main_view': True}</field>
+        >{'search_default_my_stay_group': True, 'search_default_current_and_future': True, 'stay_name_get_partner_name_qty': True, 'stay_room_assign_main_view': True}</field>
     </record>
 
     <menuitem
@@ -990,7 +991,7 @@ So I use the form view below by default -->
         <field name="name">stay.room.list</field>
         <field name="model">stay.room</field>
         <field name="arch" type="xml">
-            <list>
+            <list multi_edit="1">
                 <field name="sequence" widget="handle" />
                 <field name="name" />
                 <field name="code" optional="show" />

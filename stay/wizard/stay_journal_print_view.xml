@@ -13,7 +13,7 @@
         <field name="arch" type="xml">
             <form>
                 <group name="main">
-                    <field name="report_type" widget="radio" />
+                    <field name="report_type" invisible="1" />
                     <field name="date" />
                     <field name="date_label" />
                     <field name="company_id" groups="base.group_multi_company" />
@@ -22,7 +22,7 @@
                     <button
                         type="object"
                         name="print_journal"
-                        string="Print Journal"
+                        string="Get Report"
                         class="btn-primary"
                     />
                     <button special="cancel" string="Cancel" />
@@ -31,17 +31,63 @@
         </field>
     </record>
 
-    <record id="stay_journal_print_action" model="ir.actions.act_window">
-        <field name="name">Print Journal</field>
+    <record id="stay_fire_journal_print_action" model="ir.actions.act_window">
+        <field name="name">Fire Report</field>
         <field name="res_model">stay.journal.print</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
+        <field name="context">{'default_report_type': 'fire'}</field>
+    </record>
+
+    <record id="stay_general_journal_print_action" model="ir.actions.act_window">
+        <field name="name">General Report</field>
+        <field name="res_model">stay.journal.print</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': 'general'}</field>
+    </record>
+
+    <record id="stay_meal_journal_print_action" model="ir.actions.act_window">
+        <field name="name">Meals Report</field>
+        <field name="res_model">stay.journal.print</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': 'meal'}</field>
+    </record>
+
+    <record id="stay_arrival_journal_print_action" model="ir.actions.act_window">
+        <field name="name">Arrival Report</field>
+        <field name="res_model">stay.journal.print</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': 'arrival'}</field>
     </record>
 
     <menuitem
-        id="stay_journal_print_menu"
-        sequence="20"
-        action="stay_journal_print_action"
+        id="stay_fire_journal_print_menu"
+        action="stay_fire_journal_print_action"
         parent="stay_report_menu"
+        sequence="20"
+    />
+
+    <menuitem
+        id="stay_general_journal_print_menu"
+        action="stay_general_journal_print_action"
+        parent="stay_report_menu"
+        sequence="30"
+    />
+
+    <menuitem
+        id="stay_meal_journal_print_menu"
+        action="stay_meal_journal_print_action"
+        parent="stay_report_menu"
+        sequence="40"
+    />
+
+    <menuitem
+        id="stay_arrival_journal_print_menu"
+        action="stay_arrival_journal_print_action"
+        parent="stay_report_menu"
+        sequence="50"
     />
 </odoo>
