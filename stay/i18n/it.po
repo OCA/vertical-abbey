@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-06-21 13:27+0000\n"
+"PO-Revision-Date: 2026-11-06 13:47+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10.4\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_res_partner__stay_count
@@ -25,7 +25,7 @@ msgstr "N° soggiorni"
 #. module: stay
 #: model:ir.actions.report,print_report_name:stay.report_stay_fire
 msgid "'fire-%s' % object.date"
-msgstr ""
+msgstr "'fire-%s' % object.date"
 
 #. module: stay
 #: model:ir.actions.report,print_report_name:stay.report_stay_toclean
@@ -112,6 +112,62 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    </p><table style=\"border-spacing: 0; border-collapse: "
+"collapse; width: 100%; text-align: center;\">\n"
+"                        <tr>\n"
+"                            <th style=\"padding: 5px; border: 1px solid "
+"black;\">Nome ospite</th>\n"
+"                            <th style=\"padding: 5px; border: 1px solid "
+"black;\">Numero ospiti</th>\n"
+"                            <th style=\"padding: 5px; border: 1px solid "
+"black;\">Ora di arrivo</th>\n"
+"                            <th style=\"padding: 5px; border: 1px solid "
+"black;\">Camere</th>\n"
+"                            <th style=\"padding: 5px; border: 1px solid "
+"black;\">Note di arrivo</th>\n"
+"                            <th style=\"padding: 5px; border: 1px solid "
+"black;\">Data di partenza</th>\n"
+"                        </tr>\n"
+"                        <t t-foreach=\"object._mail_template_get_stays()\" t-"
+"as=\"stay\">\n"
+"                            <tr>\n"
+"                                <td style=\"padding: 5px; border: 1px solid "
+"black; text-align: left;\">\n"
+"                                    <t t-out=\"stay.partner_name\"/>\n"
+"                                </td>\n"
+"                                <td style=\"padding: 5px; border: 1px solid "
+"black;\">\n"
+"                                    <t t-out=\"stay.guest_qty\"/>\n"
+"                                </td>\n"
+"                                <td style=\"padding: 5px; border: 1px solid "
+"black;\">\n"
+"                                    <t t-out=\"dict(stay.fields_get"
+"('arrival_time', 'selection')['arrival_time']['selection'])"
+"[stay.arrival_time]\"/>\n"
+"                                </td>\n"
+"                                <td style=\"padding: 5px; border: 1px solid "
+"black;\">\n"
+"                                    <t t-out=\"stay.rooms_display_name\"/>\n"
+"                                </td>\n"
+"                                <td style=\"padding: 5px; border: 1px solid "
+"black; text-align: left;\">\n"
+"                                    <t t-out=\"stay.arrival_note\"/>\n"
+"                                </td>\n"
+"                                <td style=\"padding: 5px; border: 1px solid "
+"black;\">\n"
+"                                    <t t-out=\"departure_date\"/>\n"
+"                                    <t t-esc=\"dict(stay.fields_get"
+"('departure_time', 'selection')['departure_time']['selection'])"
+"[stay.departure_time]\"/>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </t>\n"
+"                    </table>\n"
+"                \n"
+"            </div>\n"
+"        "
 
 #. module: stay
 #: model:mail.template,body_html:stay.stay_notify_selection
@@ -166,6 +222,55 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">I "
+"seguenti soggiorni potrebbero interessarti:</p>\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    </p><table style=\"border-spacing: 0; border-collapse: "
+"collapse; width: 100%; text-align: center;\">\n"
+"                        <tr>\n"
+"                            <th style=\"padding: 5px; border: 1px solid "
+"black;\">Nome ospite</th>\n"
+"                            <th style=\"padding: 5px; border: 1px solid "
+"black;\">Numero ospiti</th>\n"
+"                            <th style=\"padding: 5px; border: 1px solid "
+"black;\">Arrivo</th>\n"
+"                            <th style=\"padding: 5px; border: 1px solid "
+"black;\">Partenza</th>\n"
+"                            <th style=\"padding: 5px; border: 1px solid "
+"black;\">Note</th>\n"
+"                        </tr>\n"
+"                        <tr t-foreach=\"ctx.get('stay_list') or []\" t-"
+"as=\"o\">\n"
+"                            <td style=\"padding: 5px; border: 1px solid "
+"black; text-align: left;\">\n"
+"                                <t t-out=\"o['partner_name']\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 5px; border: 1px solid "
+"black;\">\n"
+"                                <t t-out=\"o['guest_qty']\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 5px; border: 1px solid "
+"black;\">\n"
+"                                <t t-out=\"format_date(o['arrival_date'])\"/>"
+"\n"
+"                                <t t-out=\"o['arrival_time']\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 5px; border: 1px solid "
+"black;\">\n"
+"                                <t t-out=\"format_date(o['departure_date'])"
+"\"/>\n"
+"                                <t t-out=\"o['departure_time']\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 5px; border: 1px solid "
+"black;\">\n"
+"                                <t t-out=\"o['notes']\"/>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                \n"
+"            </div>\n"
+"        "
 
 #. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_group_name_company_uniq
@@ -189,6 +294,8 @@ msgid ""
 "A stay already exists for guest '%(guest)s' with arrival date %"
 "(arrival_date)s (%(stay)s)."
 msgstr ""
+"Esiste già un soggiorno per l'ospite '%(guest)s' con data di arrivo %"
+"(arrival_date)s (%(stay)s)."
 
 #. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_stay_name_company_uniq
@@ -303,7 +410,7 @@ msgstr "Note arrivo"
 #: model:ir.actions.act_window,name:stay.stay_arrival_journal_print_action
 #: model:ir.ui.menu,name:stay.stay_arrival_journal_print_menu
 msgid "Arrival Report"
-msgstr ""
+msgstr "Resoconto arrivi"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__arrival_time
@@ -331,6 +438,8 @@ msgstr "Elenco arrivo"
 #: code:addons/stay/models/stay.py:0
 msgid "Arrival time cannot be set to unknown if the stay is confirmed!"
 msgstr ""
+"L'ora di arrivo non può essere impostata su sconosciuta se il soggiorno è "
+"confermato!"
 
 #. module: stay
 #. odoo-javascript
@@ -361,7 +470,7 @@ msgstr "Arrivi/partenze domani"
 #: model:ir.actions.act_window,name:stay.stay_room_mass_assign_action
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
 msgid "Assign Rooms"
-msgstr ""
+msgstr "Assegna camere"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__assign_status
@@ -372,7 +481,7 @@ msgstr "Assegna stato"
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room_mass_assign__assign_type
 msgid "Assignation"
-msgstr ""
+msgstr "Assegnazione"
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_stay__assign_status__assigned
@@ -413,14 +522,14 @@ msgstr "Colazioni"
 #: model:ir.model.fields,field_description:stay.field_stay_room__building_id
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_search
 msgid "Building"
-msgstr ""
+msgstr "Edificio"
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_building_action
 #: model:ir.model,name:stay.model_stay_building
 #: model:ir.ui.menu,name:stay.stay_building_menu
 msgid "Buildings"
-msgstr ""
+msgstr "Edifici"
 
 #. module: stay
 #. odoo-python
@@ -432,7 +541,7 @@ msgstr "COSTRUZIONE"
 #: model:ir.actions.act_window,name:stay.stay_stay_xlsx_action
 #: model:ir.ui.menu,name:stay.stay_stay_xlsx_menu
 msgid "Calendar XLSX"
-msgstr ""
+msgstr "Calendario XLSX"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
@@ -480,7 +589,7 @@ msgstr "Codice"
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_tag__color
 msgid "Color"
-msgstr ""
+msgstr "Colore"
 
 #. module: stay
 #: model:ir.model,name:stay.model_res_company
@@ -528,13 +637,13 @@ msgstr "Confermato"
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_search
 msgid "Confirmed and Current Lines"
-msgstr ""
+msgstr "Righe confermate e in corso"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__conflict_room_ids
 #: model:ir.model.fields,field_description:stay.field_stay_room_mass_assign__conflict_room_ids
 msgid "Conflict Rooms"
-msgstr ""
+msgstr "Camere in conflitto"
 
 #. module: stay
 #. odoo-python
@@ -563,7 +672,7 @@ msgstr "Contatto"
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line_mass_update__convert_lunch_to_picnic
 msgid "Convert Lunches to Picnics"
-msgstr ""
+msgstr "Converti i pranzi in picnic"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_multi_duplicate__create_state
@@ -683,13 +792,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stay/static/src/views/stay_dashboard.xml:0
 msgid "Departures"
-msgstr ""
+msgstr "Partenze"
 
 #. module: stay
 #. odoo-javascript
 #: code:addons/stay/static/src/views/stay_dashboard.xml:0
 msgid "Dinner"
-msgstr ""
+msgstr "Cena"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line__dinner_qty
@@ -728,7 +837,7 @@ msgstr "Bozza"
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "Draft, Confirmed and Current Stays"
-msgstr ""
+msgstr "Soggiorni in bozza, confermati e in corso"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line_mass_update__end_date
@@ -752,12 +861,12 @@ msgstr "Sera"
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room__fire_report_exclude
 msgid "Exclude from Fire Report"
-msgstr ""
+msgstr "Escludi dal resoconto incendi"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_search
 msgid "Excluded from Fire Report"
-msgstr ""
+msgstr "Escluso dal resoconto incendi"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay_xlsx__file_xlsx
@@ -780,14 +889,14 @@ msgstr "Finito"
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_journal_print__report_type__fire
 msgid "Fire"
-msgstr ""
+msgstr "Incendio"
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_fire_journal_print_action
 #: model:ir.actions.report,name:stay.report_stay_fire
 #: model:ir.ui.menu,name:stay.stay_fire_journal_print_menu
 msgid "Fire Report"
-msgstr ""
+msgstr "Resoconto incendi"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_follower_ids
@@ -848,7 +957,7 @@ msgstr "Generale"
 #: model:ir.actions.act_window,name:stay.stay_general_journal_print_action
 #: model:ir.ui.menu,name:stay.stay_general_journal_print_menu
 msgid "General Report"
-msgstr ""
+msgstr "Resoconto generale"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_multi_duplicate_form
@@ -860,7 +969,7 @@ msgstr "Genera soggiorni"
 #: model_terms:ir.ui.view,arch_db:stay.stay_stay_xlsx_form
 #: model_terms:ir.ui.view,arch_db:stay.stay_toclean_print_form
 msgid "Get Report"
-msgstr ""
+msgstr "Genera resoconto"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line__group_id
@@ -905,7 +1014,7 @@ msgstr "Ospite"
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room_assign__partner_name_room
 msgid "Guest (optional)"
-msgstr ""
+msgstr "Ospite (facoltativo)"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalmeal_document
@@ -1021,7 +1130,7 @@ msgstr "Se l'ospite è anonimo lasciare il campo vuoto."
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__res_config_settings__stay_room_transition__immediate
 msgid "Immediate"
-msgstr ""
+msgstr "Immediata"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_is_follower
@@ -1035,6 +1144,8 @@ msgid ""
 "It doesn't make sense to enable both the options 'No Lunches' and 'Convert "
 "Lunches to Picnics'."
 msgstr ""
+"Non ha senso attivare entrambe le opzioni 'Nessun pranzo' e 'Converti i "
+"pranzi in picnic'."
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_multi_duplicate__keep_notes
@@ -1095,7 +1206,7 @@ msgstr "Ultimo aggiornamento il"
 #. odoo-javascript
 #: code:addons/stay/static/src/views/stay_dashboard.xml:0
 msgid "Lunch"
-msgstr ""
+msgstr "Pranzo"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line__lunch_qty
@@ -1113,13 +1224,13 @@ msgstr "Gestione colazione"
 #: model:ir.model.fields,field_description:stay.field_res_config_settings__group_stay_picnic
 #: model:res.groups,name:stay.group_stay_picnic
 msgid "Manage Picnic"
-msgstr ""
+msgstr "Gestione picnic"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_res_config_settings__group_stay_group
 #: model:res.groups,name:stay.group_stay_group
 msgid "Manage Stay Groups"
-msgstr ""
+msgstr "Gestione gruppi di soggiorno"
 
 #. module: stay
 #: model:ir.module.category,description:stay.module_category_stay
@@ -1145,7 +1256,7 @@ msgstr "Assegnazione messa per camere soggiorno"
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_room_mass_assign__assign_type__full
 msgid "Maximum Capacity"
-msgstr ""
+msgstr "Capacità massima"
 
 #. module: stay
 #: model:ir.actions.report,name:stay.report_stay_journal_meal
@@ -1161,7 +1272,7 @@ msgstr "Pasti"
 #: model:ir.actions.act_window,name:stay.stay_meal_journal_print_action
 #: model:ir.ui.menu,name:stay.stay_meal_journal_print_menu
 msgid "Meals Report"
-msgstr ""
+msgstr "Resoconto pasti"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_has_error
@@ -1211,7 +1322,7 @@ msgstr "Scadenza mia attività"
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_search
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
 msgid "My Stay Group"
-msgstr ""
+msgstr "Il mio gruppo di soggiorno"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_building__name
@@ -1250,52 +1361,55 @@ msgstr "Tipo prossima attività"
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room__next_stay_id
 msgid "Next Stay"
-msgstr ""
+msgstr "Soggiorno successivo"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room__next_stay_arrival_date
 msgid "Next Stay Arrival Date"
-msgstr ""
+msgstr "Data di arrivo del soggiorno successivo"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room__next_stay_arrival_time
 msgid "Next Stay Arrival Time"
-msgstr ""
+msgstr "Ora di arrivo del soggiorno successivo"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room__next_stay_partner_name
 msgid "Next Stay Partner Name"
-msgstr ""
+msgstr "Nome del partner del soggiorno successivo"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__clash_time_next_stay_id
 msgid "Next Stay which arrives before"
-msgstr ""
+msgstr "Soggiorno successivo che arriva prima"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__same_time_next_stay_id
 msgid "Next Stay which arrives on same time slot"
-msgstr ""
+msgstr "Soggiorno successivo che arriva nella stessa fascia oraria"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
 msgid "Next stay"
-msgstr ""
+msgstr "Soggiorno successivo"
 
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__clash_time_next_stay_id
 msgid "Next stay which arrives before the departure in the same room(s)"
 msgstr ""
+"Soggiorno successivo che arriva prima della partenza nelle stesse camere"
 
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__same_time_next_stay_id
 msgid "Next stay which arrives on the same time slot in the same room(s)"
 msgstr ""
+"Soggiorno successivo che arriva nella stessa fascia oraria nelle stesse "
+"camere"
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__res_config_settings__stay_room_transition__night
 msgid "Night"
-msgstr ""
+msgstr "Notte"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalmeal_document
@@ -1353,7 +1467,7 @@ msgstr "Nessuna partenza il %s."
 #. odoo-python
 #: code:addons/stay/wizard/stay_line_mass_update.py:0
 msgid "No stay lines to update."
-msgstr ""
+msgstr "Nessuna riga di soggiorno da aggiornare."
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room__notes
@@ -1367,7 +1481,7 @@ msgstr "Note"
 #: model_terms:ir.ui.view,arch_db:stay.stay_tree_reverse_order
 #: model_terms:ir.ui.view,arch_db:stay.stay_tree_with_kpis
 msgid "Notify by E-mail"
-msgstr ""
+msgstr "Notifica via e-mail"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__message_needaction_counter
@@ -1397,7 +1511,7 @@ msgstr "Numero di messaggi con errore di consegna"
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__res_config_settings__stay_room_transition__one_empty_period
 msgid "One Empty Period"
-msgstr ""
+msgstr "Un periodo vuoto"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.res_config_settings_view_form
@@ -1409,21 +1523,27 @@ msgid ""
 "in the afternoon, the next guest can arrive in the morning: he will have the "
 "room for the night."
 msgstr ""
+"Un periodo vuoto: quando un ospite lascia la camera al mattino, l'ospite "
+"successivo può occupare la camera nel pomeriggio dello stesso giorno, ma non "
+"al mattino. Immediata: l'ospite successivo può iniziare il soggiorno al "
+"mattino. Lo stesso vale per il pomeriggio rispetto alla sera. Notte: quando "
+"un ospite lascia la camera nel pomeriggio, l'ospite successivo può arrivare "
+"al mattino e disporrà della camera per la notte."
 
 #. module: stay
 #: model:ir.model.fields.selection,name:stay.selection__stay_room_mass_assign__assign_type__single
 msgid "One Guest per Room"
-msgstr ""
+msgstr "Un ospite per camera"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_tree
 msgid "Open Stay"
-msgstr ""
+msgstr "Apri soggiorno"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_room__fire_report_sequence
 msgid "Order for Fire Report"
-msgstr ""
+msgstr "Ordine per il resoconto incendi"
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_date_label_action
@@ -1444,38 +1564,39 @@ msgstr "Parziale"
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_room_assign_search
 msgid "Past Month, Current and Future"
-msgstr ""
+msgstr "Mese precedente, attuali e futuri"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_line__picnic_lunch_qty
 #: model_terms:ir.ui.view,arch_db:stay.report_stayjournalmeal_document
 msgid "Picnic"
-msgstr ""
+msgstr "Picnic"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__clash_time_preceding_stay_id
 msgid "Preceding Stay which leaves later"
-msgstr ""
+msgstr "Soggiorno precedente che parte più tardi"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_stay__same_time_preceding_stay_id
 msgid "Preceding Stay which leaves on same time slot"
-msgstr ""
+msgstr "Soggiorno precedente che parte nella stessa fascia oraria"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
 msgid "Preceding stay"
-msgstr ""
+msgstr "Soggiorno precedente"
 
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__clash_time_preceding_stay_id
 msgid "Preceding stay which leaves later that the arrival in the same room(s)"
-msgstr ""
+msgstr "Soggiorno precedente che parte dopo l'arrivo nelle stesse camere"
 
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__same_time_preceding_stay_id
 msgid "Preceding stay which leaves on the same time slot in the same room(s)"
 msgstr ""
+"Soggiorno precedente che parte nella stessa fascia oraria nelle stesse camere"
 
 #. module: stay
 #: model:ir.model,name:stay.model_stay_stay_xlsx
@@ -1577,7 +1698,7 @@ msgstr "Assegnazione camera"
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_res_config_settings__stay_room_transition
 msgid "Room Transition"
-msgstr ""
+msgstr "Avvicendamento delle camere"
 
 #. module: stay
 #: model:ir.model,name:stay.model_stay_room_assign
@@ -1604,7 +1725,7 @@ msgstr "Camere"
 #. odoo-python
 #: code:addons/stay/wizard/stay_journal_print.py:0
 msgid "Rooms %s are not linked to a building."
-msgstr ""
+msgstr "Le camere %s non sono associate a un edificio."
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_room_to_clean_action
@@ -1701,7 +1822,7 @@ msgstr "Il soggiorno '%s' non è nello stato 'Attuale'."
 #. odoo-python
 #: code:addons/stay/wizard/stay_room_mass_assign.py:0
 msgid "Stay '%s' is not in Draft, Confirmed nor Current state."
-msgstr ""
+msgstr "Il soggiorno '%s' non è nello stato Bozza, Confermato o In corso."
 
 #. module: stay
 #: model:ir.model,name:stay.model_stay_date_label
@@ -1746,7 +1867,7 @@ msgstr "Assegnazione messa camera soggiorno"
 #. module: stay
 #: model:ir.model,name:stay.model_stay_tag
 msgid "Stay Tags"
-msgstr ""
+msgstr "Etichette soggiorno"
 
 #. module: stay
 #: model:mail.template,name:stay.stay_notify
@@ -1756,7 +1877,7 @@ msgstr "Soggiorno: notifica arrivi"
 #. module: stay
 #: model:mail.template,name:stay.stay_notify_selection
 msgid "Stay: Notify selected stays"
-msgstr ""
+msgstr "Soggiorno: notifica i soggiorni selezionati"
 
 #. module: stay
 #: model:ir.actions.server,name:stay.stay_arrival_notify_cron_ir_actions_server
@@ -1790,7 +1911,7 @@ msgstr "Soggiorni - %s"
 #. module: stay
 #: model:mail.template,subject:stay.stay_notify_selection
 msgid "Stays info"
-msgstr ""
+msgstr "Informazioni sui soggiorni"
 
 #. module: stay
 #: model:ir.actions.act_window,name:stay.stay_tag_action
@@ -1798,7 +1919,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stay.field_stay_stay__tag_ids
 #: model:ir.ui.menu,name:stay.stay_tag_menu
 msgid "Tags"
-msgstr ""
+msgstr "Etichette"
 
 #. module: stay
 #. odoo-python
@@ -1842,6 +1963,8 @@ msgid ""
 "The room '%(room)s' cannot be archived because the stay %(stay)s which ends "
 "on %(departure_date)s uses that room."
 msgstr ""
+"La camera '%(room)s' non può essere archiviata perché è utilizzata dal "
+"soggiorno %(stay)s, che termina il %(departure_date)s."
 
 #. module: stay
 #. odoo-python
@@ -1854,6 +1977,8 @@ msgstr "La data inizio %s è nel passato!"
 #: code:addons/stay/wizard/stay_line_mass_update.py:0
 msgid "The start date (%(start_date)s) is after the end date (%(end_date)s)."
 msgstr ""
+"La data di inizio (%(start_date)s) è successiva alla data di fine (%"
+"(end_date)s)."
 
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__no_meals
@@ -1873,7 +1998,7 @@ msgstr "Non ci sono soggiorni il %(date)s nell'azienda %(company)s."
 #. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_building_name_uniq
 msgid "This building already exists."
-msgstr ""
+msgstr "Questo edificio esiste già."
 
 #. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_date_label_date_uniq
@@ -1909,7 +2034,7 @@ msgstr ""
 #. module: stay
 #: model:ir.model.constraint,message:stay.constraint_stay_tag_name_uniq
 msgid "This tag already exists."
-msgstr ""
+msgstr "Questa etichetta esiste già."
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_search
@@ -1934,7 +2059,7 @@ msgstr "Resoconto da pulire"
 #: code:addons/stay/static/src/views/stay_dashboard.xml:0
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_search
 msgid "Today"
-msgstr ""
+msgstr "Oggi"
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_search
@@ -1946,7 +2071,7 @@ msgstr "Oggi e i prossimi 30 giorni"
 #: code:addons/stay/static/src/views/stay_dashboard.xml:0
 #: model_terms:ir.ui.view,arch_db:stay.stay_line_search
 msgid "Tomorrow"
-msgstr ""
+msgstr "Domani"
 
 #. module: stay
 #: model:ir.model.fields,help:stay.field_stay_stay__activity_exception_decoration
@@ -1991,7 +2116,7 @@ msgstr "Utente avvisato per e-mail"
 #: model:ir.model.fields,field_description:stay.field_res_config_settings__stay_notify_user_ids
 #: model_terms:ir.ui.view,arch_db:stay.res_config_settings_view_form
 msgid "Users Notified by E-mail for Stays without Group"
-msgstr ""
+msgstr "Utenti notificati via e-mail per i soggiorni senza gruppo"
 
 #. module: stay
 #: model:res.groups,name:stay.group_stay_viewer
@@ -2034,6 +2159,7 @@ msgstr ""
 #: code:addons/stay/models/stay.py:0
 msgid "Wrong value for config parameter 'stay.room_transition'."
 msgstr ""
+"Valore errato per il parametro di configurazione 'stay.room_transition'."
 
 #. module: stay
 #. odoo-python
@@ -2048,11 +2174,15 @@ msgid ""
 "You must check at least one option! You didn't check any... To reset to "
 "default settings, please use the appropriate wizard 'Reset All Stay Lines'."
 msgstr ""
+"È necessario selezionare almeno un'opzione. Non ne è stata selezionata "
+"nessuna. Per ripristinare le impostazioni predefinite, utilizzare la "
+"procedura guidata appropriata 'Reimposta tutte le righe di soggiorno'."
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
 msgid "arrives before the departure time of this stay in the same room(s)."
 msgstr ""
+"arriva prima dell'ora di partenza di questo soggiorno nelle stesse camere."
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
@@ -2060,6 +2190,8 @@ msgid ""
 "arrives in the same time slot than the departure of this stay in the same "
 "room(s)."
 msgstr ""
+"arriva nella stessa fascia oraria della partenza di questo soggiorno nelle "
+"stesse camere."
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
@@ -2067,11 +2199,13 @@ msgid ""
 "leaves in the same time slot than the arrival of this stay in the same "
 "room(s)."
 msgstr ""
+"parte nella stessa fascia oraria dell'arrivo di questo soggiorno nelle "
+"stesse camere."
 
 #. module: stay
 #: model_terms:ir.ui.view,arch_db:stay.stay_form
 msgid "leaves later than the arrival time of this stay in the same room(s)."
-msgstr ""
+msgstr "parte dopo l'ora di arrivo di questo soggiorno nelle stesse camere."
 
 #. module: stay
 #: model:ir.model,name:stay.model_stay_line_mass_update
