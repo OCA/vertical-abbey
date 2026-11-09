@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-01 15:25+0000\n"
-"PO-Revision-Date: 2026-11-05 10:46+0000\n"
+"PO-Revision-Date: 2026-11-09 17:46+0000\n"
 "Last-Translator: Alexis de Lattre <alexis@via.ecp.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -2114,7 +2114,7 @@ msgstr "Utilisateur"
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_stay_group__notify_user_ids
 msgid "Users Notified by E-mail"
-msgstr "Les utilisateurs ont été informés par e-mail"
+msgstr "Utilisateurs notifiés par e-mail"
 
 #. module: stay
 #: model:ir.model.fields,field_description:stay.field_res_company__stay_notify_user_ids
