@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-10-28 13:12+0000\n"
-"Last-Translator: Ivorra78 <informatica@totmaterial.es>\n"
+"PO-Revision-Date: 2026-11-11 12:46+0000\n"
+"Last-Translator: Carlos Dauden <carlos.dauden@tecnativa.com>\n"
 "Language-Team: none\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: mass
 #. odoo-python
@@ -258,7 +258,7 @@ msgstr "Compañía"
 #: model:ir.model.fields,field_description:mass.field_mass_request__company_currency_id
 #: model:ir.model.fields,field_description:mass.field_mass_request_transfer__company_currency_id
 msgid "Company Currency"
-msgstr "Divisa de la Compañía"
+msgstr "Moneda de la Compañía"
 
 #. module: mass
 #: model:ir.model,name:mass.model_res_config_settings
@@ -1009,7 +1009,7 @@ msgstr ""
 #. module: mass
 #: model:ir.model.fields,help:mass.field_mass_request__offering
 msgid "The total offering amount in company currency."
-msgstr "Importe total de la oferta en divisa de la compañía."
+msgstr "Importe total de la oferta en moneda de la compañía."
 
 #. module: mass
 #. odoo-python
@@ -1026,7 +1026,7 @@ msgstr ""
 #: model:ir.model.fields,help:mass.field_mass_request__unit_offering
 msgid "This field is the offering amount per mass in company currency."
 msgstr ""
-"Este campo es el importe de la oferta por misa en divisa de la compañía."
+"Este campo es el importe de la oferta por misa en moneda de la compañía."
 
 #. module: mass
 #: model_terms:ir.ui.view,arch_db:mass.report_massrequesttransfer
